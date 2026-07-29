@@ -3,13 +3,16 @@ import { TUNING } from '../config/tuning.js'
 import Player from '../entities/Player.js'
 import { playSfx } from '../systems/sfx.js'
 
-// Grey-box rush level: ~3 screens wide (BRIEF-01).
-export const WORLD_WIDTH = 1440
-export const WORLD_HEIGHT = 270
-
-export default class PlaygroundScene extends Phaser.Scene {
+// Generic level scene: boots any Tiled map by key (assets/maps/README.md
+// documents the conventions). The map supplies geometry, spawn points,
+// zones, and rush parameters; gameplay systems are shared across levels.
+export default class LevelScene extends Phaser.Scene {
   constructor() {
-    super('Playground')
+    super('Level')
+  }
+
+  init(data) {
+    this.mapKey = data.mapKey || 'coatroom'
   }
 
   create() {
@@ -21,23 +24,20 @@ export default class PlaygroundScene extends Phaser.Scene {
     this.cleanStreak = 0
     this.intensity = 1.0
     this.multiplier = 1.0
-    this.timeLeft = TUNING.rushSeconds
     this.runOver = false
 
-    this.physics.world.setBounds(0, 0, WORLD_WIDTH, WORLD_HEIGHT)
+    this.buildMap()
+    this.timeLeft = this.levelProps.rushSeconds ?? TUNING.rushSeconds
 
-    this.platforms = this.physics.add.staticGroup()
-    this.buildLevel()
+    this.player = new Player(this, this.playerSpawn.x, this.playerSpawn.y)
+    this.physics.add.collider(this.player.sprite, this.mainLayer)
 
-    this.player = new Player(this, 60, 190)
-    this.physics.add.collider(this.player.sprite, this.platforms)
-
-    this.cameras.main.setBounds(0, 0, WORLD_WIDTH, WORLD_HEIGHT)
+    this.cameras.main.setBounds(0, 0, this.worldWidth, this.worldHeight)
     this.cameras.main.startFollow(this.player.sprite, true, 0.15, 0.15)
 
     // tagging
     this.items = this.physics.add.group()
-    this.physics.add.collider(this.items, this.platforms)
+    this.physics.add.collider(this.items, this.mainLayer)
     this.target = null
     this.hold = null
     this.targetGfx = this.add.graphics().setDepth(10)
@@ -79,6 +79,39 @@ export default class PlaygroundScene extends Phaser.Scene {
     this.emitHud()
   }
 
+  // ---- map ----
+
+  buildMap() {
+    const map = this.make.tilemap({ key: this.mapKey })
+    const tileset = map.addTilesetImage('placeholder', 'tiles')
+    map.createLayer('bg2', tileset).setDepth(-4)
+    map.createLayer('bg1', tileset).setDepth(-3)
+    this.mainLayer = map.createLayer('main', tileset).setDepth(-2)
+    map.createLayer('fg', tileset).setDepth(8)
+    this.mainLayer.setCollisionByExclusion([-1])
+
+    this.map = map
+    this.worldWidth = map.widthInPixels
+    this.worldHeight = map.heightInPixels
+    this.physics.world.setBounds(0, 0, this.worldWidth, this.worldHeight)
+
+    this.levelProps = {}
+    for (const p of map.properties ?? []) this.levelProps[p.name] = p.value
+
+    const spawns = map.getObjectLayer('spawns').objects
+    this.playerSpawn = spawns.find((o) => o.name === 'player')
+    this.itemSpawnPoints = spawns.filter((o) => o.name.startsWith('item'))
+    this.zones = (map.getObjectLayer('zones')?.objects ?? []).slice() // reserved for later chunks
+  }
+
+  itemSpawnPoint(name) {
+    if (name && name !== 'any') {
+      const pt = this.itemSpawnPoints.find((o) => o.name === name)
+      if (pt) return pt
+    }
+    return Phaser.Utils.Array.GetRandom(this.itemSpawnPoints)
+  }
+
   // ---- rush schedule ----
 
   scheduleNextWave() {
@@ -102,16 +135,20 @@ export default class PlaygroundScene extends Phaser.Scene {
     const budget = Math.max(0, TUNING.maxItemsOnField - onField)
     const count = Math.min(budget, Math.max(1, Math.round(TUNING.itemsPerWave * this.intensity)))
     for (let i = 0; i < count; i++) {
-      const x = Phaser.Math.Between(30, WORLD_WIDTH - 30)
+      const pt = this.itemSpawnPoint('any')
       const heavy = Math.random() < TUNING.heavyItemChance
-      this.spawnItem(x, -12, heavy) // items rain in from above
+      this.spawnItem(pt.x, pt.y, heavy)
     }
   }
 
   spawnEnemy() {
     if (this.enemies.countActive() >= 6) return
     const fromLeft = Math.random() < 0.5
-    const enemy = this.enemies.create(fromLeft ? -12 : WORLD_WIDTH + 12, Phaser.Math.Between(40, 190), 'ticket')
+    const enemy = this.enemies.create(
+      fromLeft ? -12 : this.worldWidth + 12,
+      Phaser.Math.Between(40, this.worldHeight - 80),
+      'ticket'
+    )
     enemy.body.setAllowGravity(false)
     enemy.setData('seed', Math.random() * 1000)
   }
@@ -181,8 +218,8 @@ export default class PlaygroundScene extends Phaser.Scene {
   }
 
   onEnemyTouchPlayer(playerSprite, enemy) {
-    // paper can't hurt Chexy in the grey-box, but a hit breaks a hold —
-    // unless the ticket is stunned; dazed paper is harmless
+    // paper can't hurt Chexy, but a hit breaks a hold — unless the
+    // ticket is stunned; dazed paper is harmless
     if (this.hold && !enemy.getData('stunnedUntil')) this.interruptHold()
   }
 
@@ -199,7 +236,7 @@ export default class PlaygroundScene extends Phaser.Scene {
     this.emitHud()
   }
 
-  // ---- adaptive intensity & score multiplier (DESIGN.md §2.5 skeleton) ----
+  // ---- adaptive intensity & score multiplier (DESIGN.md §2.5) ----
 
   setIntensity(value) {
     const band = TUNING.adaptiveBand
@@ -272,6 +309,7 @@ export default class PlaygroundScene extends Phaser.Scene {
   spawnItem(x, y, heavy) {
     const item = this.items.create(x, y, heavy ? 'item-heavy' : 'item-standard')
     item.setData('heavy', heavy)
+    item.setTint(0xfe701e) // coats — category colors go data-driven in Chunk 2
     item.setBounce(0.1)
     item.setCollideWorldBounds(true)
     playSfx('spawn', this.panFor(x))
@@ -346,6 +384,7 @@ export default class PlaygroundScene extends Phaser.Scene {
       return
     }
     if (this.player.tagPressed && this.target) {
+      // rescue is ALWAYS instant tap (DESIGN.md §2 item 4b)
       if (this.isStunnable(this.target)) this.stunEnemy(this.target, time)
       else if (this.target.getData('heavy')) this.startHold(time)
       else this.completeTag(this.target)
@@ -353,7 +392,8 @@ export default class PlaygroundScene extends Phaser.Scene {
   }
 
   // one tag press on a carrying ticket: stun it and drop the item, taggable
-  // again. No score/streak — the reward is the rescue itself.
+  // again. No score/streak/adaptive effect — rescue is damage prevention,
+  // not a reward loop (DESIGN.md §2 item 4b).
   stunEnemy(enemy, time) {
     const item = enemy.getData('carrying')
     enemy.setData('carrying', null)
@@ -476,30 +516,11 @@ export default class PlaygroundScene extends Phaser.Scene {
     this.onStruggle()
   }
 
-  buildLevel() {
-    const slab = (x, y, w, h) => {
-      const p = this.platforms.create(x + w / 2, y + h / 2, 'platform')
-      p.setDisplaySize(w, h).refreshBody()
-      return p
-    }
-    // Reachability: default tuning gives ~61px max jump height
-    // (jumpVelocity 340, gravity 950). Every hop below is 42-48px —
-    // low platforms reachable from the ground, high ones chain.
-    slab(0, 254, WORLD_WIDTH, 16) // ground (top at y=254)
-    slab(160, 210, 90, 10) // 44 up from ground
-    slab(330, 168, 90, 10) // 42 up from the 210 platform
-    slab(500, 210, 100, 10) // 44 up from ground
-    slab(650, 164, 110, 10) // 46 up from the 210 platform
-    slab(820, 118, 90, 10) // 46 up from the 164 platform
-    slab(1000, 206, 100, 10) // 48 up from ground
-    slab(1180, 160, 110, 10) // 46 up from the 206 platform
-  }
-
   update(time, delta) {
     if (this.runOver) {
       if (Phaser.Input.Keyboard.JustDown(this.keyR)) {
         this.game.events.emit('run-reset')
-        this.scene.restart()
+        this.scene.restart({ mapKey: this.mapKey })
       }
       return
     }

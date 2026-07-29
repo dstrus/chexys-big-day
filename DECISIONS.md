@@ -139,6 +139,16 @@ revisit steal pressure.
 - BRIEF-02 started; this session covers Chunks 1-2 (level pipeline
   + data-driven waves).
 
+## 2026-07-29 — BRIEF-02 Chunk 1 COMPLETE (Tiled level pipeline)
+
+Playground scene deleted; generic LevelScene boots any Tiled map by
+key. coatroom.json (100×17 tiles, ~3.3 screens) with documented
+conventions (assets/maps/README.md): bg2/bg1/main/fg tile layers,
+spawns/zones object layers, levelId/rushSeconds/waveFile map
+properties. Maps load via ESM import → tilemap cache (Vite bundles
+them; no publicDir config needed). Placeholder tileset generated at
+runtime in Boot. Verified: boots into coatroom, no console errors.
+
 ## 2026-07-29 — Handoff 2026-07-29-g applied
 
 - Item 1: DESIGN.md §2 gains rescue item 4b.
