@@ -1,0 +1,36 @@
+GIMP Palette
+Name: Chexology Brand
+Columns: 8
+#
+254 112  30	Chexology Orange
+248 245 243	Background Tan
+ 21  40 166	Action Blue
+230 239 252	Action Blue Light
+ 18 183 106	Success Green
+234  81  81	Alert Red
+255 225  35	Warning Yellow
+233  23  23	Tag Red
+104 161  28	Tag Green
+  0 100 131	Tag Teal
+243 176  36	Tag Gold
+255 192 203	Tag Pink
+119  64 104	Tag Plum
+ 89  89  91	Tag Gray
+255 255 255	Tag White
+231  98  86	Accent Coral
+166  71  98	Accent Berry
+113  38 118	Accent Purple
+ 64  32 118	Accent Indigo
+ 45  83 120	Accent Steel Blue
+ 56 110 111	Accent Teal Green
+252 252 253	Gray 25
+249 250 251	Gray 50
+242 244 247	Gray 100
+234 236 240	Gray 200
+208 213 221	Gray 300
+152 162 179	Gray 400
+102 112 133	Gray 500
+ 71  84 103	Gray 600
+ 52  64  84	Gray 700
+ 29  41  57	Gray 800
+ 16  24  40	Gray 900

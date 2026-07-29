@@ -85,3 +85,20 @@ updated to 32×32 to match.
   (player.x/y). Identical to body center on the grey-box rect, but
   will diverge by ~8px vertically once the 48×48 sprite anchors
   bottom-center — switch to body.center at art integration.
+
+## 2026-07-29 — Palette files generated (handoff 2026-07-29-f)
+
+chexy-sprite.gpl (16 colors, snapped from mascot extraction)
+and chexology-brand.gpl (32 brand colors). Chexy sprite work
+starts at 16 colors; expansion up to 32 allowed per DESIGN.md
+§5 if needed. OpenArt used for pose reference generation only —
+AI output never ships as game art.
+
+## 2026-07-29 — Handoff 2026-07-29-f applied
+
+- Item 0: verified art/palettes/chexy-sprite.gpl,
+  art/palettes/chexology-brand.gpl, and
+  art/reference/openart-prompts-chexy.md present (first attempt
+  found the prompts file missing and a stray palette-brand.md
+  duplicate in art/reference/ — human fixed both before apply).
+- Item 1: palette decision logged (entry above).
