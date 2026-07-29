@@ -20,7 +20,10 @@
       "Bash(curl -s http://localhost:5199/)",
       "Bash(curl -s -o /dev/null -w \"main.js: %{http_code}\\\\n\" http://localhost:5199/src/main.js)",
       "Bash(git add *)",
-      "Bash(git commit -m 'Scaffold: Phaser 3 + Vite, 480x270 integer-scaled, Boot/Title/Playground/UIOverlay scenes *)"
+      "Bash(git commit -m 'Scaffold: Phaser 3 + Vite, 480x270 integer-scaled, Boot/Title/Playground/UIOverlay scenes *)",
+      "Bash(node --check src/entities/Player.js)",
+      "Bash(node --check src/scenes/PlaygroundScene.js)",
+      "Bash(git commit --quiet -m 'Player: accel-based movement, variable jump, coyote time, jump buffering, dash stub *)"
     ]
   }
 }

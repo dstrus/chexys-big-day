@@ -13,6 +13,7 @@ export const TUNING = {
   jumpCutMultiplier: 0.45,
   coyoteMs: 100,
   bufferMs: 120,
+  fallMaxSpeed: 520,
 
   // dash (stub — implemented but disabled for the grey-box)
   dashEnabled: false,

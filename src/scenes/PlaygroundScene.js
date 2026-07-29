@@ -1,5 +1,6 @@
 import Phaser from 'phaser'
 import { TUNING } from '../config/tuning.js'
+import Player from '../entities/Player.js'
 
 // Grey-box rush level: ~3 screens wide (BRIEF-01).
 export const WORLD_WIDTH = 1440
@@ -16,12 +17,11 @@ export default class PlaygroundScene extends Phaser.Scene {
     this.platforms = this.physics.add.staticGroup()
     this.buildLevel()
 
-    this.player = this.physics.add.sprite(60, 190, 'chexy')
-    this.player.setCollideWorldBounds(true)
-    this.physics.add.collider(this.player, this.platforms)
+    this.player = new Player(this, 60, 190)
+    this.physics.add.collider(this.player.sprite, this.platforms)
 
     this.cameras.main.setBounds(0, 0, WORLD_WIDTH, WORLD_HEIGHT)
-    this.cameras.main.startFollow(this.player, true, 0.15, 0.15)
+    this.cameras.main.startFollow(this.player.sprite, true, 0.15, 0.15)
   }
 
   buildLevel() {
@@ -39,8 +39,10 @@ export default class PlaygroundScene extends Phaser.Scene {
     slab(1210, 150, 110, 10)
   }
 
-  update() {
+  update(time, delta) {
     // gravity is read live so the tuning panel affects it immediately
     this.physics.world.gravity.y = TUNING.gravity
+
+    this.player.update(time, delta)
   }
 }
