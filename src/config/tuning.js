@@ -9,7 +9,7 @@ export const TUNING = {
   moveAccel: 1600,
   moveDecel: 2400,
   maxSpeed: 150,
-  playerSize: 44,
+  playerSize: 32,
   jumpVelocity: -340, // max jump height = v^2/2g ≈ 61px at gravity 950
   jumpCutMultiplier: 0.45,
   coyoteMs: 100,
