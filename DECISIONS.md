@@ -19,3 +19,9 @@ DESIGN.md v1.0 and CLAUDE.md approved. Key decisions locked:
 - Guest-matching mechanic: deferred to v2.
 - Next milestone: Gate 1 (grey-box prototype is FUN). First agent
   session brief: BRIEF-01.md.
+
+## 2026-07-29 — Handoff protocol adopted (handoff 2026-07-29-b)
+
+Chat sessions produce HANDOFF blocks or replaced docs; agent
+applies literally, logs here, commits with handoff ID. Repo is
+now the single source of truth for all docs.

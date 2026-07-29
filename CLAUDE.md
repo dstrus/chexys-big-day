@@ -63,3 +63,28 @@ and confirm they want to amend it first.
 - Log gate decisions and spec changes in DECISIONS.md (append-only).
 - Placeholder art is always acceptable to keep the code track
   unblocked; never block a gameplay task waiting on final sprites.
+
+## Handoff protocol (chat → repo)
+
+Design thinking happens in external chat sessions. Decisions arrive
+in one of two forms:
+
+- **HANDOFF blocks** — numbered, literal instructions pasted into a
+  session, identified as "HANDOFF <date>-<letter>".
+- **Replaced doc files** — a full DESIGN.md / brief dropped into the
+  repo, announced as "updated externally".
+
+Rules for both:
+- Apply LITERALLY. This is transcription, not design. Do not
+  reinterpret, improve, or expand scope.
+- Log every handoff in DECISIONS.md (append-only) with its ID and a
+  one-line summary per numbered item.
+- Commit as "Apply handoff <ID>" (or "Sync <file> from design
+  session <date>").
+- If a handoff contradicts DESIGN.md, the handoff wins: update
+  DESIGN.md to match and note the amendment in DECISIONS.md.
+- For replaced doc files: read the new version, summarize what
+  changed, and flag any existing code the change invalidates
+  before doing anything else.
+- If a handoff item is ambiguous or impossible, STOP and ask the
+  human — never guess on a transcription task.
