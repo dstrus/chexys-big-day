@@ -389,13 +389,17 @@ export default class PlaygroundScene extends Phaser.Scene {
       p.setDisplaySize(w, h).refreshBody()
       return p
     }
-    slab(0, 254, WORLD_WIDTH, 16) // ground
-    slab(180, 196, 90, 10)
-    slab(360, 150, 90, 10)
-    slab(620, 180, 110, 10)
-    slab(820, 130, 90, 10)
-    slab(1000, 190, 100, 10)
-    slab(1210, 150, 110, 10)
+    // Reachability: default tuning gives ~61px max jump height
+    // (jumpVelocity 340, gravity 950). Every hop below is 42-48px —
+    // low platforms reachable from the ground, high ones chain.
+    slab(0, 254, WORLD_WIDTH, 16) // ground (top at y=254)
+    slab(160, 210, 90, 10) // 44 up from ground
+    slab(330, 168, 90, 10) // 42 up from the 210 platform
+    slab(500, 210, 100, 10) // 44 up from ground
+    slab(650, 164, 110, 10) // 46 up from the 210 platform
+    slab(820, 118, 90, 10) // 46 up from the 164 platform
+    slab(1000, 206, 100, 10) // 48 up from ground
+    slab(1180, 160, 110, 10) // 46 up from the 206 platform
   }
 
   update(time, delta) {

@@ -9,7 +9,7 @@ export const TUNING = {
   moveAccel: 1600,
   moveDecel: 2400,
   maxSpeed: 150,
-  jumpVelocity: -290,
+  jumpVelocity: -340, // max jump height = v^2/2g ≈ 61px at gravity 950
   jumpCutMultiplier: 0.45,
   coyoteMs: 100,
   bufferMs: 120,
@@ -51,7 +51,9 @@ export const TUNING_SCHEMA = [
   { key: 'moveAccel', label: 'Move accel', min: 400, max: 4000, step: 50 },
   { key: 'moveDecel', label: 'Move decel', min: 400, max: 5000, step: 50 },
   { key: 'maxSpeed', label: 'Max speed', min: 60, max: 320, step: 5 },
-  { key: 'jumpVelocity', label: 'Jump velocity', min: -520, max: -120, step: 5 },
+  // negate: value is stored negative (up = -y) but the slider shows its
+  // magnitude so dragging right = jumping higher
+  { key: 'jumpVelocity', label: 'Jump velocity', min: 120, max: 520, step: 5, negate: true },
   { key: 'jumpCutMultiplier', label: 'Jump cut mult', min: 0.1, max: 1, step: 0.05 },
   { key: 'coyoteMs', label: 'Coyote (ms)', min: 0, max: 300, step: 10 },
   { key: 'bufferMs', label: 'Jump buffer (ms)', min: 0, max: 300, step: 10 },

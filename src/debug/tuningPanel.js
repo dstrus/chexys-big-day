@@ -77,7 +77,7 @@ function rowShell(labelText) {
   return { row, value }
 }
 
-function sliderRow({ key, label, min, max, step }) {
+function sliderRow({ key, label, min, max, step, negate }) {
   const { row, value } = rowShell(label)
   value.textContent = TUNING[key]
 
@@ -86,10 +86,11 @@ function sliderRow({ key, label, min, max, step }) {
   input.min = min
   input.max = max
   input.step = step
-  input.value = TUNING[key]
+  input.value = negate ? -TUNING[key] : TUNING[key]
   input.style.cssText = 'width:100%;margin:1px 0 0'
   input.addEventListener('input', () => {
-    TUNING[key] = parseFloat(input.value)
+    const raw = parseFloat(input.value)
+    TUNING[key] = negate ? -raw : raw
     value.textContent = TUNING[key]
   })
   // give focus back to the game so arrow keys keep moving Chexy
