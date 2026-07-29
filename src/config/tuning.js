@@ -65,6 +65,8 @@ export const TUNING_SCHEMA = [
   { key: 'coyoteMs', label: 'Coyote (ms)', min: 0, max: 300, step: 10 },
   { key: 'bufferMs', label: 'Jump buffer (ms)', min: 0, max: 300, step: 10 },
   { key: 'dashEnabled', label: 'Dash enabled', type: 'flag' },
+  { key: 'dashSpeed', label: 'Dash speed', min: 180, max: 600, step: 10 },
+  { key: 'dashDurationMs', label: 'Dash duration (ms)', min: 60, max: 400, step: 10 },
   { key: 'holdTagMs', label: 'Hold-tag (ms)', min: 100, max: 800, step: 10 },
   { key: 'targetRadius', label: 'Target radius', min: 20, max: 160, step: 2 },
   { key: 'enemyStunMs', label: 'Enemy stun (ms)', min: 300, max: 4000, step: 100 },

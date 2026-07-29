@@ -109,9 +109,18 @@ export default class Player {
       !dashing
     ) {
       this.dashUntil = time + TUNING.dashDurationMs
+      // raise the cap NOW — the frame-start value would clamp the burst
+      // back to run speed before the dash flag is ever seen
+      body.setMaxVelocity(TUNING.dashSpeed, TUNING.fallMaxSpeed)
       body.setVelocityX(TUNING.dashSpeed * this.facing)
       body.setVelocityY(0)
     }
+
+    // white flash while dashing so the burst reads even on a grey-box rect
+    const dashingNow = time < this.dashUntil
+    if (dashingNow) this.sprite.setTintFill(0xffffff)
+    else if (this.wasDashing) this.sprite.clearTint()
+    this.wasDashing = dashingNow
 
     this.tagPressed = JustDown(this.keys.Z) || JustDown(this.keys.J)
     this.tagHeld = this.keys.Z.isDown || this.keys.J.isDown
