@@ -9,6 +9,7 @@ export const TUNING = {
   moveAccel: 1600,
   moveDecel: 2400,
   maxSpeed: 150,
+  playerSize: 44,
   jumpVelocity: -340, // max jump height = v^2/2g ≈ 61px at gravity 950
   jumpCutMultiplier: 0.45,
   coyoteMs: 100,
@@ -43,11 +44,15 @@ export const TUNING = {
   // scoring
   standardItemScore: 100,
   heavyItemScore: 300,
+
+  // debug helpers
+  godMode: false, // steals still happen but never count toward the 3-lost fail
 }
 
 // Slider metadata for the debug tuning panel.
 export const TUNING_SCHEMA = [
   { key: 'gravity', label: 'Gravity', min: 300, max: 2000, step: 10 },
+  { key: 'playerSize', label: 'Player size', min: 24, max: 72, step: 2 },
   { key: 'moveAccel', label: 'Move accel', min: 400, max: 4000, step: 50 },
   { key: 'moveDecel', label: 'Move decel', min: 400, max: 5000, step: 50 },
   { key: 'maxSpeed', label: 'Max speed', min: 60, max: 320, step: 5 },
@@ -62,4 +67,5 @@ export const TUNING_SCHEMA = [
   { key: 'targetRadius', label: 'Target radius', min: 20, max: 160, step: 2 },
   { key: 'adaptiveBand', label: 'Adaptive band', min: 0, max: 0.6, step: 0.05 },
   { key: 'multiplierFloor', label: 'Multiplier floor', min: 0.4, max: 1, step: 0.05 },
+  { key: 'godMode', label: 'God mode', type: 'flag' },
 ]

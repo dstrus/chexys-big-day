@@ -9,6 +9,7 @@ export default class Player {
     this.scene = scene
     this.sprite = scene.physics.add.sprite(x, y, 'chexy')
     this.sprite.setCollideWorldBounds(true)
+    this.sprite.setDisplaySize(TUNING.playerSize, TUNING.playerSize)
 
     const kb = scene.input.keyboard
     this.cursors = kb.createCursorKeys()
@@ -46,6 +47,11 @@ export default class Player {
     const { body } = this
     const JustDown = Phaser.Input.Keyboard.JustDown
     const JustUp = Phaser.Input.Keyboard.JustUp
+
+    // live-sync sprite size with the tuning slider (arcade body follows scale)
+    if (this.sprite.displayWidth !== TUNING.playerSize) {
+      this.sprite.setDisplaySize(TUNING.playerSize, TUNING.playerSize)
+    }
 
     const dashing = time < this.dashUntil
     body.setMaxVelocity(dashing ? TUNING.dashSpeed : TUNING.maxSpeed, TUNING.fallMaxSpeed)

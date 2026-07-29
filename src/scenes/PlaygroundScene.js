@@ -170,11 +170,13 @@ export default class PlaygroundScene extends Phaser.Scene {
     const pan = this.panFor(enemy.x)
     item.destroy()
     enemy.destroy()
-    this.lostItems += 1
     playSfx('lose', pan)
     this.onStruggle()
+    if (!TUNING.godMode) {
+      this.lostItems += 1
+      if (this.lostItems >= 3) this.endRun(false)
+    }
     this.emitHud()
-    if (this.lostItems >= 3) this.endRun(false)
   }
 
   // ---- adaptive intensity & score multiplier (DESIGN.md §2.5 skeleton) ----
