@@ -26,13 +26,10 @@ export const TUNING = {
   targetRadius: 66,
   hitstopMs: 45,
 
-  // rush / spawning
+  // rush / spawning — schedules live in assets/waves/*.json now;
+  // rushSeconds is a fallback when a map omits the property
   rushSeconds: 150,
-  itemWaveIntervalSec: 9,
-  itemsPerWave: 3,
-  heavyItemChance: 0.25,
   maxItemsOnField: 12,
-  enemySpawnSec: 7,
   enemySpeed: 55,
   enemyStunMs: 1500,
   enemyStealGraceMs: 1000, // no re-steal window after a stun wears off

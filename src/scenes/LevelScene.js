@@ -1,6 +1,9 @@
 import Phaser from 'phaser'
 import { TUNING } from '../config/tuning.js'
+import { categoryColor } from '../config/itemCategories.js'
+import { getWaveSchedule } from '../config/waveRegistry.js'
 import Player from '../entities/Player.js'
+import WaveRunner from '../systems/WaveRunner.js'
 import { playSfx } from '../systems/sfx.js'
 
 // Generic level scene: boots any Tiled map by key (assets/maps/README.md
@@ -66,10 +69,12 @@ export default class LevelScene extends Phaser.Scene {
     this.keyR = this.input.keyboard.addKey('R')
     this.pauseKeys = this.input.keyboard.addKeys('ESC,P')
 
-    // rush schedule: an opening wave, then intensity-scaled timers
-    this.spawnWave()
-    this.scheduleNextWave()
-    this.scheduleNextEnemy()
+    // the rush is entirely data-driven: the map's waveFile property
+    // names the schedule, WaveRunner plays it back
+    this.waveRunner = new WaveRunner(this, getWaveSchedule(this.levelProps.waveFile), {
+      spawnItem: (spawnPoint, category, tier) => this.spawnScheduledItem(spawnPoint, category, tier),
+      spawnEnemy: () => this.spawnEnemy(),
+    })
     this.clockTimer = this.time.addEvent({
       delay: 1000,
       loop: true,
@@ -112,36 +117,18 @@ export default class LevelScene extends Phaser.Scene {
     return Phaser.Utils.Array.GetRandom(this.itemSpawnPoints)
   }
 
-  // ---- rush schedule ----
+  // ---- rush schedule (data-driven; see assets/waves/README.md) ----
 
-  scheduleNextWave() {
-    const delay = (TUNING.itemWaveIntervalSec / this.intensity) * 1000
-    this.waveTimer = this.time.delayedCall(delay, () => {
-      this.spawnWave()
-      this.scheduleNextWave()
-    })
-  }
-
-  scheduleNextEnemy() {
-    const delay = (TUNING.enemySpawnSec / this.intensity) * 1000
-    this.enemyTimer = this.time.delayedCall(delay, () => {
-      this.spawnEnemy()
-      this.scheduleNextEnemy()
-    })
-  }
-
-  spawnWave() {
+  spawnScheduledItem(spawnPointName, category, tier) {
+    if (this.runOver) return // late delayedCalls from a fired entry
     const onField = this.items.getChildren().filter((i) => this.isTaggable(i)).length
-    const budget = Math.max(0, TUNING.maxItemsOnField - onField)
-    const count = Math.min(budget, Math.max(1, Math.round(TUNING.itemsPerWave * this.intensity)))
-    for (let i = 0; i < count; i++) {
-      const pt = this.itemSpawnPoint('any')
-      const heavy = Math.random() < TUNING.heavyItemChance
-      this.spawnItem(pt.x, pt.y, heavy)
-    }
+    if (onField >= TUNING.maxItemsOnField) return // schedule pressure valve
+    const pt = this.itemSpawnPoint(spawnPointName)
+    this.spawnItem(pt.x, pt.y, tier, category)
   }
 
   spawnEnemy() {
+    if (this.runOver) return
     if (this.enemies.countActive() >= 6) return
     const fromLeft = Math.random() < 0.5
     const enemy = this.enemies.create(
@@ -285,8 +272,6 @@ export default class LevelScene extends Phaser.Scene {
     if (this.runOver) return
     this.runOver = true
     this.physics.pause()
-    this.waveTimer?.remove()
-    this.enemyTimer?.remove()
     this.clockTimer?.remove()
     this.clearHold()
     this.targetGfx.clear()
@@ -306,10 +291,12 @@ export default class LevelScene extends Phaser.Scene {
     return Phaser.Math.Clamp((x - this.player.x) / 360, -1, 1)
   }
 
-  spawnItem(x, y, heavy) {
+  spawnItem(x, y, tier = 1, category = 'coat') {
+    const heavy = tier >= 3
     const item = this.items.create(x, y, heavy ? 'item-heavy' : 'item-standard')
     item.setData('heavy', heavy)
-    item.setTint(0xfe701e) // coats — category colors go data-driven in Chunk 2
+    item.setData('category', category)
+    item.setTint(categoryColor(category)) // ChexApp tag colors
     item.setBounce(0.1)
     item.setCollideWorldBounds(true)
     playSfx('spawn', this.panFor(x))
@@ -539,6 +526,7 @@ export default class LevelScene extends Phaser.Scene {
     // gravity is read live so the tuning panel affects it immediately
     this.physics.world.gravity.y = TUNING.gravity
 
+    this.waveRunner.update(delta, this.intensity)
     this.player.update(time, delta)
     this.updateTargeting()
     this.updateTagging(time)

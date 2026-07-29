@@ -149,6 +149,22 @@ properties. Maps load via ESM import → tilemap cache (Vite bundles
 them; no publicDir config needed). Placeholder tileset generated at
 runtime in Boot. Verified: boots into coatroom, no console errors.
 
+## 2026-07-29 — BRIEF-02 Chunk 2 COMPLETE (data-driven waves)
+
+Wave schedules live in assets/waves/*.json (schema documented in
+that README); WaveRunner plays the timeline back. coatroom-waves.json
+drives the whole 2:30 rush: 17 item entries (escalating counts, ALL
+weight tier 1 — weight tiers debut in Level 2 per DESIGN.md §3.2, so
+the Coatroom has no hold-tags) + 20 enemy entries with late double
+spawns. Item categories tint with the real ChexApp tag colors
+(src/config/itemCategories.js). Adaptive intensity scales entry
+counts and within-entry intervals in the clamped band; the
+maxItemsOnField cap acts as the pressure valve. Obsolete spawn keys
+removed from tuning.js. Verified: boots and runs clean; editing the
+JSON changes the level with no code changes (registry + import).
+NOTE: 60fps re-verify (DESIGN.md §7) still needs a human check —
+headless Chrome cannot measure frame rate.
+
 ## 2026-07-29 — Handoff 2026-07-29-g applied
 
 - Item 1: DESIGN.md §2 gains rescue item 4b.

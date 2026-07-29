@@ -1,0 +1,277 @@
+{
+  "entries": [
+    {
+      "time": 0.5,
+      "type": "items",
+      "spawnPoint": "any",
+      "itemCategory": "coat",
+      "weightTier": 1,
+      "count": 4,
+      "interval": 0.35
+    },
+    {
+      "time": 9.5,
+      "type": "items",
+      "spawnPoint": "any",
+      "itemCategory": "coat",
+      "weightTier": 1,
+      "count": 3,
+      "interval": 0.35
+    },
+    {
+      "time": 10,
+      "type": "enemy",
+      "count": 1,
+      "interval": 0.6
+    },
+    {
+      "time": 17,
+      "type": "enemy",
+      "count": 1,
+      "interval": 0.6
+    },
+    {
+      "time": 18.5,
+      "type": "items",
+      "spawnPoint": "any",
+      "itemCategory": "coat",
+      "weightTier": 1,
+      "count": 3,
+      "interval": 0.35
+    },
+    {
+      "time": 24,
+      "type": "enemy",
+      "count": 1,
+      "interval": 0.6
+    },
+    {
+      "time": 27.5,
+      "type": "items",
+      "spawnPoint": "any",
+      "itemCategory": "coat",
+      "weightTier": 1,
+      "count": 3,
+      "interval": 0.35
+    },
+    {
+      "time": 31,
+      "type": "enemy",
+      "count": 1,
+      "interval": 0.6
+    },
+    {
+      "time": 36.5,
+      "type": "items",
+      "spawnPoint": "any",
+      "itemCategory": "coat",
+      "weightTier": 1,
+      "count": 3,
+      "interval": 0.35
+    },
+    {
+      "time": 38,
+      "type": "enemy",
+      "count": 1,
+      "interval": 0.6
+    },
+    {
+      "time": 45,
+      "type": "enemy",
+      "count": 1,
+      "interval": 0.6
+    },
+    {
+      "time": 45.5,
+      "type": "items",
+      "spawnPoint": "any",
+      "itemCategory": "coat",
+      "weightTier": 1,
+      "count": 4,
+      "interval": 0.35
+    },
+    {
+      "time": 52,
+      "type": "enemy",
+      "count": 1,
+      "interval": 0.6
+    },
+    {
+      "time": 54.5,
+      "type": "items",
+      "spawnPoint": "any",
+      "itemCategory": "coat",
+      "weightTier": 1,
+      "count": 3,
+      "interval": 0.35
+    },
+    {
+      "time": 59,
+      "type": "enemy",
+      "count": 1,
+      "interval": 0.6
+    },
+    {
+      "time": 63.5,
+      "type": "items",
+      "spawnPoint": "any",
+      "itemCategory": "coat",
+      "weightTier": 1,
+      "count": 4,
+      "interval": 0.35
+    },
+    {
+      "time": 66,
+      "type": "enemy",
+      "count": 1,
+      "interval": 0.6
+    },
+    {
+      "time": 72.5,
+      "type": "items",
+      "spawnPoint": "any",
+      "itemCategory": "coat",
+      "weightTier": 1,
+      "count": 3,
+      "interval": 0.35
+    },
+    {
+      "time": 73,
+      "type": "enemy",
+      "count": 1,
+      "interval": 0.6
+    },
+    {
+      "time": 80,
+      "type": "enemy",
+      "count": 1,
+      "interval": 0.6
+    },
+    {
+      "time": 81.5,
+      "type": "items",
+      "spawnPoint": "any",
+      "itemCategory": "coat",
+      "weightTier": 1,
+      "count": 4,
+      "interval": 0.35
+    },
+    {
+      "time": 87,
+      "type": "enemy",
+      "count": 1,
+      "interval": 0.6
+    },
+    {
+      "time": 90.5,
+      "type": "items",
+      "spawnPoint": "any",
+      "itemCategory": "coat",
+      "weightTier": 1,
+      "count": 4,
+      "interval": 0.35
+    },
+    {
+      "time": 94,
+      "type": "enemy",
+      "count": 1,
+      "interval": 0.6
+    },
+    {
+      "time": 99.5,
+      "type": "items",
+      "spawnPoint": "any",
+      "itemCategory": "coat",
+      "weightTier": 1,
+      "count": 4,
+      "interval": 0.35
+    },
+    {
+      "time": 101,
+      "type": "enemy",
+      "count": 1,
+      "interval": 0.6
+    },
+    {
+      "time": 108,
+      "type": "enemy",
+      "count": 2,
+      "interval": 0.6
+    },
+    {
+      "time": 108.5,
+      "type": "items",
+      "spawnPoint": "any",
+      "itemCategory": "coat",
+      "weightTier": 1,
+      "count": 4,
+      "interval": 0.35
+    },
+    {
+      "time": 115,
+      "type": "enemy",
+      "count": 1,
+      "interval": 0.6
+    },
+    {
+      "time": 117.5,
+      "type": "items",
+      "spawnPoint": "any",
+      "itemCategory": "coat",
+      "weightTier": 1,
+      "count": 5,
+      "interval": 0.35
+    },
+    {
+      "time": 122,
+      "type": "enemy",
+      "count": 1,
+      "interval": 0.6
+    },
+    {
+      "time": 126.5,
+      "type": "items",
+      "spawnPoint": "any",
+      "itemCategory": "coat",
+      "weightTier": 1,
+      "count": 5,
+      "interval": 0.35
+    },
+    {
+      "time": 129,
+      "type": "enemy",
+      "count": 2,
+      "interval": 0.6
+    },
+    {
+      "time": 135.5,
+      "type": "items",
+      "spawnPoint": "any",
+      "itemCategory": "coat",
+      "weightTier": 1,
+      "count": 5,
+      "interval": 0.35
+    },
+    {
+      "time": 136,
+      "type": "enemy",
+      "count": 1,
+      "interval": 0.6
+    },
+    {
+      "time": 143,
+      "type": "enemy",
+      "count": 1,
+      "interval": 0.6
+    },
+    {
+      "time": 144.5,
+      "type": "items",
+      "spawnPoint": "any",
+      "itemCategory": "coat",
+      "weightTier": 1,
+      "count": 3,
+      "interval": 0.35
+    }
+  ]
+}
