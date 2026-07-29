@@ -13,6 +13,17 @@ export default class PlaygroundScene extends Phaser.Scene {
   }
 
   create() {
+    // run state
+    this.score = 0
+    this.lostItems = 0
+    this.tagsCollected = 0
+    this.itemsReturned = 0
+    this.cleanStreak = 0
+    this.intensity = 1.0
+    this.multiplier = 1.0
+    this.timeLeft = TUNING.rushSeconds
+    this.runOver = false
+
     this.physics.world.setBounds(0, 0, WORLD_WIDTH, WORLD_HEIGHT)
 
     this.platforms = this.physics.add.staticGroup()
@@ -41,13 +52,190 @@ export default class PlaygroundScene extends Phaser.Scene {
       })
       .setDepth(9)
 
-    // starter items so tagging is playable before the wave scheduler lands
-    this.spawnItem(200, 160, false)
-    this.spawnItem(300, 220, false)
-    this.spawnItem(400, 110, false)
-    this.spawnItem(560, 220, true)
-    this.spawnItem(680, 140, false)
-    this.spawnItem(860, 90, true)
+    // ticket enemies (paper — the villain)
+    this.enemies = this.physics.add.group({ allowGravity: false })
+    this.physics.add.overlap(this.enemies, this.items, (enemy, item) =>
+      this.onEnemyTouchItem(enemy, item)
+    )
+    this.physics.add.overlap(this.player.sprite, this.enemies, () => this.onEnemyTouchPlayer())
+
+    this.keyR = this.input.keyboard.addKey('R')
+
+    // rush schedule: an opening wave, then intensity-scaled timers
+    this.spawnWave()
+    this.scheduleNextWave()
+    this.scheduleNextEnemy()
+    this.clockTimer = this.time.addEvent({
+      delay: 1000,
+      loop: true,
+      callback: () => this.tickClock(),
+    })
+
+    this.emitHud()
+  }
+
+  // ---- rush schedule ----
+
+  scheduleNextWave() {
+    const delay = (TUNING.itemWaveIntervalSec / this.intensity) * 1000
+    this.waveTimer = this.time.delayedCall(delay, () => {
+      this.spawnWave()
+      this.scheduleNextWave()
+    })
+  }
+
+  scheduleNextEnemy() {
+    const delay = (TUNING.enemySpawnSec / this.intensity) * 1000
+    this.enemyTimer = this.time.delayedCall(delay, () => {
+      this.spawnEnemy()
+      this.scheduleNextEnemy()
+    })
+  }
+
+  spawnWave() {
+    const onField = this.items.getChildren().filter((i) => this.isTaggable(i)).length
+    const budget = Math.max(0, TUNING.maxItemsOnField - onField)
+    const count = Math.min(budget, Math.max(1, Math.round(TUNING.itemsPerWave * this.intensity)))
+    for (let i = 0; i < count; i++) {
+      const x = Phaser.Math.Between(30, WORLD_WIDTH - 30)
+      const heavy = Math.random() < TUNING.heavyItemChance
+      this.spawnItem(x, -12, heavy) // items rain in from above
+    }
+  }
+
+  spawnEnemy() {
+    if (this.enemies.countActive() >= 6) return
+    const fromLeft = Math.random() < 0.5
+    const enemy = this.enemies.create(fromLeft ? -12 : WORLD_WIDTH + 12, Phaser.Math.Between(40, 190), 'ticket')
+    enemy.body.setAllowGravity(false)
+    enemy.setData('seed', Math.random() * 1000)
+  }
+
+  tickClock() {
+    this.timeLeft -= 1
+    this.emitHud()
+    if (this.timeLeft <= 0) this.endRun(true)
+  }
+
+  // ---- enemies ----
+
+  updateEnemies(time) {
+    for (const enemy of this.enemies.getChildren()) {
+      const carried = enemy.getData('carrying')
+      if (carried) {
+        // fleeing upward with the goods; off the top = item lost
+        carried.setPosition(enemy.x, enemy.y + 10)
+        if (enemy.y < -24) this.onItemLost(enemy, carried)
+        continue
+      }
+
+      let nearest = null
+      let nearestD = Infinity
+      for (const item of this.items.getChildren()) {
+        if (!this.isTaggable(item)) continue
+        const d = Phaser.Math.Distance.Between(enemy.x, enemy.y, item.x, item.y)
+        if (d < nearestD) {
+          nearestD = d
+          nearest = item
+        }
+      }
+
+      const goal = nearest || this.player.sprite // no loot left: loiter near Chexy
+      const angle = Phaser.Math.Angle.Between(enemy.x, enemy.y, goal.x, goal.y)
+      const bob = Math.sin(time / 300 + enemy.getData('seed')) * 18
+      enemy.body.setVelocity(
+        Math.cos(angle) * TUNING.enemySpeed,
+        Math.sin(angle) * TUNING.enemySpeed + bob
+      )
+    }
+  }
+
+  onEnemyTouchItem(enemy, item) {
+    if (enemy.getData('carrying') || !this.isTaggable(item)) return
+    item.setData('stolen', true)
+    item.body.enable = false
+    enemy.setData('carrying', item)
+    enemy.body.setVelocity(Phaser.Math.Between(-20, 20), -90)
+    playSfx('steal')
+  }
+
+  onEnemyTouchPlayer() {
+    // paper can't hurt Chexy in the grey-box, but a hit breaks a hold
+    if (this.hold) this.interruptHold()
+  }
+
+  onItemLost(enemy, item) {
+    item.destroy()
+    enemy.destroy()
+    this.lostItems += 1
+    playSfx('lose')
+    this.onStruggle()
+    this.emitHud()
+    if (this.lostItems >= 3) this.endRun(false)
+  }
+
+  // ---- adaptive intensity & score multiplier (DESIGN.md §2.5 skeleton) ----
+
+  setIntensity(value) {
+    const band = TUNING.adaptiveBand
+    this.intensity = Phaser.Math.Clamp(value, 1 - band, 1 + band)
+    // 1.0x at baseline, multiplierFloor at the easiest band edge, and a
+    // symmetric bonus above baseline so full heat pays
+    if (band === 0) {
+      this.multiplier = 1
+    } else {
+      const slope = (1 - TUNING.multiplierFloor) / band
+      this.multiplier = Math.round((1 + (this.intensity - 1) * slope) * 100) / 100
+      this.multiplier = Math.max(TUNING.multiplierFloor, this.multiplier)
+    }
+  }
+
+  onStruggle() {
+    this.cleanStreak = 0
+    this.setIntensity(this.intensity - TUNING.adaptiveStep)
+    this.emitHud()
+  }
+
+  onCleanProgress() {
+    this.cleanStreak += 1
+    if (this.cleanStreak < TUNING.cleanStreakForRamp) return
+    this.cleanStreak = 0
+    const before = this.intensity
+    this.setIntensity(this.intensity + TUNING.adaptiveStep)
+    if (this.intensity > before) {
+      playSfx('heatUp')
+      this.game.events.emit('heat-up')
+    }
+  }
+
+  // ---- run lifecycle ----
+
+  emitHud() {
+    this.game.events.emit('hud', {
+      score: this.score,
+      lost: this.lostItems,
+      multiplier: this.multiplier,
+      timeLeft: this.timeLeft,
+    })
+  }
+
+  endRun(cleared) {
+    if (this.runOver) return
+    this.runOver = true
+    this.physics.pause()
+    this.waveTimer?.remove()
+    this.enemyTimer?.remove()
+    this.clockTimer?.remove()
+    this.clearHold()
+    this.targetGfx.clear()
+    playSfx(cleared ? 'runClear' : 'runFail')
+    this.game.events.emit('run-over', {
+      cleared,
+      score: this.score,
+      itemsReturned: this.itemsReturned,
+      tagsCollected: this.tagsCollected,
+      lost: this.lostItems,
+    })
   }
 
   spawnItem(x, y, heavy) {
@@ -161,7 +349,9 @@ export default class PlaygroundScene extends Phaser.Scene {
 
     // 2-3 frames of hitstop
     this.physics.pause()
-    this.time.delayedCall(TUNING.hitstopMs, () => this.physics.resume())
+    this.time.delayedCall(TUNING.hitstopMs, () => {
+      if (!this.runOver) this.physics.resume()
+    })
 
     this.tagParticles.emitParticleAt(item.x, item.y)
     playSfx(heavy ? 'heavyTag' : 'tag')
@@ -180,10 +370,18 @@ export default class PlaygroundScene extends Phaser.Scene {
     this.onItemTagged(heavy)
   }
 
-  // scoring/adaptive hooks — filled in by the rush deliverable
-  onItemTagged(heavy) {}
+  onItemTagged(heavy) {
+    this.tagsCollected += 1
+    this.itemsReturned += 1
+    const base = heavy ? TUNING.heavyItemScore : TUNING.standardItemScore
+    this.score += Math.round(base * this.multiplier)
+    this.onCleanProgress()
+    this.emitHud()
+  }
 
-  onHoldInterrupted() {}
+  onHoldInterrupted() {
+    this.onStruggle()
+  }
 
   buildLevel() {
     const slab = (x, y, w, h) => {
@@ -201,11 +399,20 @@ export default class PlaygroundScene extends Phaser.Scene {
   }
 
   update(time, delta) {
+    if (this.runOver) {
+      if (Phaser.Input.Keyboard.JustDown(this.keyR)) {
+        this.game.events.emit('run-reset')
+        this.scene.restart()
+      }
+      return
+    }
+
     // gravity is read live so the tuning panel affects it immediately
     this.physics.world.gravity.y = TUNING.gravity
 
     this.player.update(time, delta)
     this.updateTargeting()
     this.updateTagging(time)
+    this.updateEnemies(time)
   }
 }

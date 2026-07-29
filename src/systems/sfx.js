@@ -41,6 +41,10 @@ const SFX = {
   },
   interrupt: () => tone({ type: 'sawtooth', from: 420, to: 120, dur: 0.14, vol: 0.11 }),
   steal: () => tone({ type: 'square', from: 240, to: 90, dur: 0.18, vol: 0.11 }),
+  lose: () => {
+    tone({ type: 'square', from: 200, to: 100, dur: 0.15, vol: 0.12 })
+    tone({ type: 'square', from: 100, to: 60, dur: 0.2, delay: 0.12, vol: 0.12 })
+  },
   heatUp: () => {
     tone({ from: 523, dur: 0.06, vol: 0.08 })
     tone({ from: 659, dur: 0.06, delay: 0.06, vol: 0.08 })

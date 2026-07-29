@@ -25,7 +25,9 @@
       "Bash(node --check src/scenes/PlaygroundScene.js)",
       "Bash(git commit --quiet -m 'Player: accel-based movement, variable jump, coyote time, jump buffering, dash stub *)",
       "Bash(node --check src/systems/sfx.js)",
-      "Bash(git commit --quiet -m 'Tagging: instant tap + hold-to-tag with radial meter, auto-target outline, hitstop, particles, SFX *)"
+      "Bash(git commit --quiet -m 'Tagging: instant tap + hold-to-tag with radial meter, auto-target outline, hitstop, particles, SFX *)",
+      "Bash(node --check src/scenes/UIOverlayScene.js)",
+      "Bash(git commit --quiet -m 'Grey-box rush: waves, ticket enemy, adaptive multiplier, HUD, results + retry *)"
     ]
   }
 }
