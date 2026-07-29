@@ -130,6 +130,15 @@ excluded from persisted scores. Watch item for Gate 2: if
 3-lost-items failure proves too rare in Coatroom playtests,
 revisit steal pressure.
 
+## 2026-07-29 — BRIEF-02 inputs resolved; brief started
+
+- Dash decision: KEEP for Level 2 (per DESIGN.md §2.2/§3.2); stub
+  stays disabled in tuning until then.
+- Gate 1 tuning: committed tuning.js defaults confirmed final by
+  the human (no further copy-values export).
+- BRIEF-02 started; this session covers Chunks 1-2 (level pipeline
+  + data-driven waves).
+
 ## 2026-07-29 — Handoff 2026-07-29-g applied
 
 - Item 1: DESIGN.md §2 gains rescue item 4b.
