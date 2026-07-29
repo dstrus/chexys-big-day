@@ -103,6 +103,14 @@ AI output never ships as game art.
   duplicate in art/reference/ — human fixed both before apply).
 - Item 1: palette decision logged (entry above).
 
+## 2026-07-29 — Gate 1 PASSED
+
+Grey-box prototype accepted by the human: the core loop is FUN.
+Verdict includes the in-session playtest additions (stun-to-rescue,
+directional item hints, pause, dash fix). DESIGN.md fold-in of the
+session-originated mechanics to arrive via handoff from the design
+chat.
+
 ## 2026-07-29 — Grey-box playtest addition: stun-to-rescue
 
 Human call during Gate 1 playtesting: losing a snatched item with
