@@ -42,6 +42,8 @@ export default class PlaygroundScene extends Phaser.Scene {
     this.hold = null
     this.targetGfx = this.add.graphics().setDepth(10)
     this.holdGfx = this.add.graphics().setDepth(11)
+    // screen-space edge arrows pointing at off-screen untagged items
+    this.indicatorGfx = this.add.graphics().setScrollFactor(0).setDepth(20)
     this.tagParticles = this.add
       .particles(0, 0, 'pixel', {
         emitting: false,
@@ -156,7 +158,7 @@ export default class PlaygroundScene extends Phaser.Scene {
     item.body.enable = false
     enemy.setData('carrying', item)
     enemy.body.setVelocity(Phaser.Math.Between(-20, 20), -90)
-    playSfx('steal')
+    playSfx('steal', this.panFor(item.x))
   }
 
   onEnemyTouchPlayer() {
@@ -165,10 +167,11 @@ export default class PlaygroundScene extends Phaser.Scene {
   }
 
   onItemLost(enemy, item) {
+    const pan = this.panFor(enemy.x)
     item.destroy()
     enemy.destroy()
     this.lostItems += 1
-    playSfx('lose')
+    playSfx('lose', pan)
     this.onStruggle()
     this.emitHud()
     if (this.lostItems >= 3) this.endRun(false)
@@ -228,6 +231,7 @@ export default class PlaygroundScene extends Phaser.Scene {
     this.clockTimer?.remove()
     this.clearHold()
     this.targetGfx.clear()
+    this.indicatorGfx.clear()
     playSfx(cleared ? 'runClear' : 'runFail')
     this.game.events.emit('run-over', {
       cleared,
@@ -238,11 +242,17 @@ export default class PlaygroundScene extends Phaser.Scene {
     })
   }
 
+  // stereo position of a world x relative to the player: -1 left .. 1 right
+  panFor(x) {
+    return Phaser.Math.Clamp((x - this.player.x) / 360, -1, 1)
+  }
+
   spawnItem(x, y, heavy) {
     const item = this.items.create(x, y, heavy ? 'item-heavy' : 'item-standard')
     item.setData('heavy', heavy)
     item.setBounce(0.1)
     item.setCollideWorldBounds(true)
+    playSfx('spawn', this.panFor(x))
     return item
   }
 
@@ -252,6 +262,31 @@ export default class PlaygroundScene extends Phaser.Scene {
 
   // auto-target: nearest valid item within TUNING.targetRadius, with a
   // visible outline so the player always knows what a press will do
+  // pulsing edge arrows for untagged items outside the camera view,
+  // color-coded by weight, vertically tracking the item
+  updateIndicators(time) {
+    this.indicatorGfx.clear()
+    const view = this.cameras.main.worldView
+    const pulse = 0.55 + 0.35 * Math.sin(time / 150)
+    for (const item of this.items.getChildren()) {
+      if (!this.isTaggable(item)) continue
+      let edgeX = 0
+      let dir = 0
+      if (item.x < view.x - 8) {
+        edgeX = 8
+        dir = -1
+      } else if (item.x > view.right + 8) {
+        edgeX = this.scale.width - 8
+        dir = 1
+      } else {
+        continue
+      }
+      const y = Phaser.Math.Clamp(item.y - view.y, 20, this.scale.height - 24)
+      this.indicatorGfx.fillStyle(item.getData('heavy') ? 0x9b6ee8 : 0x59c2e8, pulse)
+      this.indicatorGfx.fillTriangle(edgeX + dir * 5, y, edgeX - dir * 3, y - 5, edgeX - dir * 3, y + 5)
+    }
+  }
+
   updateTargeting() {
     let best = null
     let bestD = TUNING.targetRadius
@@ -418,5 +453,6 @@ export default class PlaygroundScene extends Phaser.Scene {
     this.updateTargeting()
     this.updateTagging(time)
     this.updateEnemies(time)
+    this.updateIndicators(time)
   }
 }
