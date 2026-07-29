@@ -47,3 +47,20 @@ now the single source of truth for all docs.
 - Item 2: art track decisions logged (entry above).
 - Item 3: BRIEF-ART-01 checked against CLAUDE.md and DESIGN.md §5
   — no conflicts found.
+
+## 2026-07-29 — Brand palette added from official Brand Guidelines (handoff 2026-07-29-d)
+
+UI keys on brand hexes
+(#FE701E etc.); Chexy sprite keys on mascot extraction.
+In-game item category colors will use the real ChexApp tag
+colors. DESIGN.md §5 palette TODO closed.
+
+## 2026-07-29 — Handoff 2026-07-29-d applied
+
+- Item 0: verified art/palette-brand.md present in repo.
+- Item 1: DESIGN.md §5 palette TODO sentence replaced with pointer
+  to art/palette-brand.md and the brand-vs-sprite palette split.
+- Item 2: brand palette decision logged (entry above).
+- Item 3: noted standing rule — any future src/config colors/theme
+  file sources UI hexes from art/palette-brand.md; no grey-box
+  restyle now (none exists yet, nothing to change).

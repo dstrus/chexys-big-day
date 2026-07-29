@@ -133,8 +133,10 @@ it. Victory screen shows "99% Item Return Rate."
   Never smooth-scale. Nearest-neighbor only.
 - **Palette:** per-asset palettes, 16–32 colors per sprite, no global
   cap. Alpha blending, additive glow, and gradients are allowed and
-  encouraged. Brand colors: pull exact hexes from Chexology marketing
-  material into `art/palette-brand.md` (TODO).
+  encouraged. Official brand hexes live in
+  art/palette-brand.md (from Chexology Brand Guidelines). UI/HUD/
+  menus key on brand colors; the Chexy sprite keys on the
+  mascot-extracted palette in BRIEF-ART-01 §2.
 - **Sprite sizes:** Chexy is squat — target 40×40 to 48×48 (wider
   than tall reads better for stubby proportions); run cycle 8–12
   frames. The tail is the personality workhorse: it should have
