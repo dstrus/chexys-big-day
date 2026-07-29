@@ -142,7 +142,7 @@ export default class PlaygroundScene extends Phaser.Scene {
         }
       }
 
-      const goal = nearest || this.player.sprite // no loot left: loiter near Chexy
+      const goal = nearest || this.player // no loot left: loiter near Chexy (body center)
       const angle = Phaser.Math.Angle.Between(enemy.x, enemy.y, goal.x, goal.y)
       const bob = Math.sin(time / 300 + enemy.getData('seed')) * 18
       enemy.body.setVelocity(
@@ -351,8 +351,10 @@ export default class PlaygroundScene extends Phaser.Scene {
   }
 
   drawHoldMeter(progress) {
+    // anchored above the physics body so tail/canvas overhang on the art
+    // sprite won't push the meter around
     const x = this.player.x
-    const y = this.player.y - 32
+    const y = this.player.body.top - 16
     this.holdGfx.clear()
     this.holdGfx.lineStyle(3, 0x101018, 1)
     this.holdGfx.beginPath()

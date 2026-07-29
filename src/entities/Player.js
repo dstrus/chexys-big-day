@@ -31,12 +31,16 @@ export default class Player {
     return this.sprite.body
   }
 
+  // Gameplay position = physics body center, NOT the sprite center.
+  // Identical on the grey-box rect, but once the 48x48 art sprite anchors
+  // bottom-center over the 32x32 body they diverge (DESIGN.md §5 locks
+  // targeting to the body).
   get x() {
-    return this.sprite.x
+    return this.body.center.x
   }
 
   get y() {
-    return this.sprite.y
+    return this.body.center.y
   }
 
   onGround() {
