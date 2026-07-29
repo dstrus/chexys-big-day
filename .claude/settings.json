@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm --version)",
+      "Read(//Users/dstrus/.nvm/versions/**)",
+      "Read(//opt/homebrew/opt/**)",
+      "Bash(/opt/homebrew/bin/node --version)",
+      "Bash(asdf list *)",
+      "Read(//Users/dstrus/**)",
+      "Bash(asdf --version)",
+      "Bash(asdf install *)",
+      "Bash(git init *)",
+      "Bash(npm init *)",
+      "Bash(npm install *)",
+      "Bash(node -e \"const p=require\\('./package.json'\\); console.log\\('phaser', p.dependencies.phaser, 'vite', p.devDependencies.vite\\)\")",
+      "Skill(update-config)",
+      "Skill(update-config:*)",
+      "Bash(node -e \"console.log\\('phaser', require\\('phaser/package.json'\\).version\\)\")",
+      "Bash(npm run *)",
+      "Bash(curl -s http://localhost:5199/)",
+      "Bash(curl -s -o /dev/null -w \"main.js: %{http_code}\\\\n\" http://localhost:5199/src/main.js)",
+      "Bash(git add *)",
+      "Bash(git commit -m 'Scaffold: Phaser 3 + Vite, 480x270 integer-scaled, Boot/Title/Playground/UIOverlay scenes *)"
+    ]
+  }
+}

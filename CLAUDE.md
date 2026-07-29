@@ -1,0 +1,65 @@
+# CLAUDE.md — The Biggest Day (Chexology retro game)
+
+Project constitution. Every agent session must follow this file.
+When this file conflicts with a prompt, STOP and ask the human.
+
+## What this project is
+
+**The Biggest Day** — a 32-bit-style pixel-art side-scrolling
+browser game for the Chexology team. The player character is
+**Chexy**, a squat anthropomorphic squirrel. Requirements live in
+DESIGN.md — it is the contract.
+
+## Branding rules (locked)
+
+- The game is "The Biggest Day". Never retitle in code, UI, or docs.
+- The company is "Chexology" — never use its legacy pre-rebrand
+  name anywhere (code, comments, assets, or copy), even in jokes.
+If a task is ambiguous, check DESIGN.md first, then ask; never guess
+on gameplay or art-spec questions.
+
+## Tech stack (locked)
+
+- **Engine:** Phaser 3 (latest stable), JavaScript ES modules.
+  No TypeScript migration, no framework swaps, no build-tool churn.
+- **Build:** Vite. `npm run dev` for local, `npm run build` for dist.
+- **Levels:** Tiled JSON maps in `assets/maps/`, loaded natively.
+- **Deploy target:** static hosting (GitHub Pages / itch.io).
+
+## Rendering rules (locked — see DESIGN.md §5)
+
+- Internal resolution 480×270. Integer scaling only.
+- `pixelArt: true` in Phaser config; nearest-neighbor everywhere.
+- 60fps on mid-range laptop is an acceptance criterion for every
+  task that touches rendering. If a change drops frames, flag it.
+
+## Code conventions
+
+- Small scenes: one Phaser Scene per level plus Boot, Title, UI.
+- Tunable gameplay values (gravity, speeds, timers) live in
+  `src/config/tuning.js` — never hardcoded in scene logic. The
+  debug tuning panel reads/writes this file's values.
+- No new runtime dependencies without asking. Phaser + Vite is
+  the whole stack.
+- Every task ends with the game running (`npm run dev` boots, no
+  console errors) before it is considered done.
+
+## Scope guardrails (hard NO without explicit human approval)
+
+- Online leaderboards / any backend / any network calls
+- Cutscenes, dialogue systems
+- Second playable character
+- Procedural generation
+- Mobile/touch controls, gamepad support
+- New levels or mechanics not in DESIGN.md §3
+
+If the human asks for one of these in a prompt, point at this list
+and confirm they want to amend it first.
+
+## Workflow rules
+
+- Small, verifiable tasks. One feature per session where possible.
+- Commit after every accepted task with a descriptive message.
+- Log gate decisions and spec changes in DECISIONS.md (append-only).
+- Placeholder art is always acceptable to keep the code track
+  unblocked; never block a gameplay task waiting on final sprites.
