@@ -29,7 +29,17 @@
       "Bash(node --check src/scenes/UIOverlayScene.js)",
       "Bash(git commit --quiet -m 'Grey-box rush: waves, ticket enemy, adaptive multiplier, HUD, results + retry *)",
       "Bash(node --check src/debug/tuningPanel.js)",
-      "Bash(git commit --quiet -m 'Debug tuning panel: backtick toggles live sliders + copy-values JSON export *)"
+      "Bash(git commit --quiet -m 'Debug tuning panel: backtick toggles live sliders + copy-values JSON export *)",
+      "Read(//Users/dstrus/Library/Caches/**)",
+      "Bash(npm ls *)",
+      "Read(//Applications/Google Chrome.app/**)",
+      "Bash(\"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome\" --headless=new --remote-debugging-port=9223 --user-data-dir=/private/tmp/claude-501/-Users-dstrus-code-chexology-biggest-day/51fad371-8b85-440c-a967-6da26194a8a2/scratchpad/chrome-profile --no-first-run --disable-gpu --disable-background-timer-throttling --disable-renderer-backgrounding about:blank)",
+      "Bash(node /private/tmp/claude-501/-Users-dstrus-code-chexology-biggest-day/51fad371-8b85-440c-a967-6da26194a8a2/scratchpad/verify.mjs)",
+      "Bash(curl -s http://127.0.0.1:9223/json/list)",
+      "Bash(node /private/tmp/claude-501/-Users-dstrus-code-chexology-biggest-day/51fad371-8b85-440c-a967-6da26194a8a2/scratchpad/verify2.mjs)",
+      "Bash(curl -s -o /dev/null -w \"favicon: %{http_code}\\\\n\" http://localhost:5199/favicon.ico)",
+      "Bash(python3 -)",
+      "Bash(git commit --quiet -m 'Housekeeping: inline SVG favicon \\(kills the only console error\\), dontAsk permission mode *)"
     ]
   }
 }
