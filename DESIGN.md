@@ -155,6 +155,14 @@ it. Victory screen shows "99% Item Return Rate."
   idle+run, one item, one enemy, full background stack) and review in
   motion before any other final art is produced. Purchased asset
   packs + palette-swap scripts are an approved fallback.
+- **Hitbox vs. sprite (locked):** Chexy's physics body is
+  32×32 — the body mass only. The sprite renders on a 48×48
+  canvas; the tail (and any hair/ear overhang) is visual-only
+  and NEVER collides. Sprite anchor: bottom-center of the
+  48×48 canvas aligned to bottom-center of the 32×32 physics
+  body, so feet sit on platforms and tail overhang extends
+  behind/above. Tag auto-target radius measures from the
+  physics body center, not the sprite canvas.
 
 ## 6. Audio
 

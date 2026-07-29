@@ -64,3 +64,24 @@ colors. DESIGN.md §5 palette TODO closed.
 - Item 3: noted standing rule — any future src/config colors/theme
   file sources UI hexes from art/palette-brand.md; no grey-box
   restyle now (none exists yet, nothing to change).
+
+## 2026-07-29 — Hitbox/sprite split locked (handoff 2026-07-29-e)
+
+32×32 physics body = Chexy's body mass; 48×48
+sprite canvas; tail/overhang visual-only, no collision.
+Anchor bottom-center to bottom-center. Auto-target radius
+measures from physics body center. Grey-box placeholder rect
+updated to 32×32 to match.
+
+## 2026-07-29 — Handoff 2026-07-29-e applied
+
+- Item 1: DESIGN.md §5 gains the locked hitbox-vs-sprite bullet.
+- Item 2: BRIEF-ART-01 §3 canvas line replaced (32×32 body region
+  anchored bottom-center, overhang visual-only, Aseprite guide).
+- Item 3: decision logged (entry above).
+- Item 4: audit — enemy/steal/hold-interrupt contacts already use
+  arcade physics bodies (correct). FLAG: tag auto-target distance,
+  enemy seek goal, and stereo pan measure from the SPRITE center
+  (player.x/y). Identical to body center on the grey-box rect, but
+  will diverge by ~8px vertically once the 48×48 sprite anchors
+  bottom-center — switch to body.center at art integration.

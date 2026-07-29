@@ -52,8 +52,12 @@ gradients on the character (background layers may dither).
 
 ## 3. Sprite spec
 
-- **Canvas:** 48×48. Body mass ~26–30px tall (squat!), tail uses
-  the remaining canvas behind/above. Wider-than-tall reads right.
+- **Canvas:** 48×48, but the BODY must fit within a 32×32
+  region anchored bottom-center (this is the physics hitbox —
+  confirmed in grey-box tuning). Tail, ears, and hair may
+  overhang the 32×32 freely; they are visual-only and never
+  collide. Draw the 32×32 guide as a reference layer in the
+  Aseprite file.
 - **Primary view: SIDE PROFILE** (side-scroller). This drawing
   does not exist in canon and is the sheet's core deliverable:
   - Muzzle becomes a short cream snout; one big eye + lashes.
