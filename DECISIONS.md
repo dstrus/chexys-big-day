@@ -102,3 +102,12 @@ AI output never ships as game art.
   found the prompts file missing and a stray palette-brand.md
   duplicate in art/reference/ — human fixed both before apply).
 - Item 1: palette decision logged (entry above).
+
+## 2026-07-29 — Grey-box playtest addition: stun-to-rescue
+
+Human call during Gate 1 playtesting: losing a snatched item with
+no recourse felt bad. New mechanic — tagging (Z/J) a ticket that
+is carrying an item stuns it (tunable duration) and drops the item,
+taggable again; brief no-steal grace on wake. No score/streak for
+the stun itself. Not yet in DESIGN.md §2 — fold into the design
+doc via handoff if it survives Gate 1 evaluation.

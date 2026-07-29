@@ -59,7 +59,9 @@ export default class PlaygroundScene extends Phaser.Scene {
     this.physics.add.overlap(this.enemies, this.items, (enemy, item) =>
       this.onEnemyTouchItem(enemy, item)
     )
-    this.physics.add.overlap(this.player.sprite, this.enemies, () => this.onEnemyTouchPlayer())
+    this.physics.add.overlap(this.player.sprite, this.enemies, (p, e) =>
+      this.onEnemyTouchPlayer(p, e)
+    )
 
     this.keyR = this.input.keyboard.addKey('R')
     this.pauseKeys = this.input.keyboard.addKeys('ESC,P')
@@ -124,6 +126,19 @@ export default class PlaygroundScene extends Phaser.Scene {
 
   updateEnemies(time) {
     for (const enemy of this.enemies.getChildren()) {
+      const stunnedUntil = enemy.getData('stunnedUntil')
+      if (stunnedUntil) {
+        if (time < stunnedUntil) {
+          enemy.body.setVelocity(0, 0) // dazed paper just hangs there
+          continue
+        }
+        // wake up, with a short no-steal grace so it can't instantly
+        // re-grab the item it just dropped
+        enemy.setData('stunnedUntil', null)
+        enemy.setData('stealGraceUntil', time + TUNING.enemyStealGraceMs)
+        enemy.clearTint()
+      }
+
       const carried = enemy.getData('carrying')
       if (carried) {
         // fleeing upward with the goods; off the top = item lost
@@ -155,6 +170,9 @@ export default class PlaygroundScene extends Phaser.Scene {
 
   onEnemyTouchItem(enemy, item) {
     if (enemy.getData('carrying') || !this.isTaggable(item)) return
+    if (enemy.getData('stunnedUntil')) return
+    const grace = enemy.getData('stealGraceUntil')
+    if (grace && this.time.now < grace) return
     item.setData('stolen', true)
     item.body.enable = false
     enemy.setData('carrying', item)
@@ -162,9 +180,10 @@ export default class PlaygroundScene extends Phaser.Scene {
     playSfx('steal', this.panFor(item.x))
   }
 
-  onEnemyTouchPlayer() {
-    // paper can't hurt Chexy in the grey-box, but a hit breaks a hold
-    if (this.hold) this.interruptHold()
+  onEnemyTouchPlayer(playerSprite, enemy) {
+    // paper can't hurt Chexy in the grey-box, but a hit breaks a hold —
+    // unless the ticket is stunned; dazed paper is harmless
+    if (this.hold && !enemy.getData('stunnedUntil')) this.interruptHold()
   }
 
   onItemLost(enemy, item) {
@@ -263,8 +282,6 @@ export default class PlaygroundScene extends Phaser.Scene {
     return item.active && !item.getData('tagged') && !item.getData('stolen')
   }
 
-  // auto-target: nearest valid item within TUNING.targetRadius, with a
-  // visible outline so the player always knows what a press will do
   // pulsing edge arrows for untagged items outside the camera view,
   // color-coded by weight, vertically tracking the item
   updateIndicators(time) {
@@ -290,16 +307,29 @@ export default class PlaygroundScene extends Phaser.Scene {
     }
   }
 
+  // a ticket fleeing with an item can be tagged to stun it and free the loot
+  isStunnable(enemy) {
+    return enemy.active && enemy.getData('carrying') && !enemy.getData('stunnedUntil')
+  }
+
+  // auto-target: nearest valid target within TUNING.targetRadius — untagged
+  // items and carrying tickets both count — with a visible outline so the
+  // player always knows what a press will do
   updateTargeting() {
     let best = null
     let bestD = TUNING.targetRadius
-    for (const item of this.items.getChildren()) {
-      if (!this.isTaggable(item)) continue
-      const d = Phaser.Math.Distance.Between(this.player.x, this.player.y, item.x, item.y)
+    const consider = (obj) => {
+      const d = Phaser.Math.Distance.Between(this.player.x, this.player.y, obj.x, obj.y)
       if (d <= bestD) {
         bestD = d
-        best = item
+        best = obj
       }
+    }
+    for (const item of this.items.getChildren()) {
+      if (this.isTaggable(item)) consider(item)
+    }
+    for (const enemy of this.enemies.getChildren()) {
+      if (this.isStunnable(enemy)) consider(enemy)
     }
     this.target = best
     this.targetGfx.clear()
@@ -316,9 +346,32 @@ export default class PlaygroundScene extends Phaser.Scene {
       return
     }
     if (this.player.tagPressed && this.target) {
-      if (this.target.getData('heavy')) this.startHold(time)
+      if (this.isStunnable(this.target)) this.stunEnemy(this.target, time)
+      else if (this.target.getData('heavy')) this.startHold(time)
       else this.completeTag(this.target)
     }
+  }
+
+  // one tag press on a carrying ticket: stun it and drop the item, taggable
+  // again. No score/streak — the reward is the rescue itself.
+  stunEnemy(enemy, time) {
+    const item = enemy.getData('carrying')
+    enemy.setData('carrying', null)
+    enemy.setData('stunnedUntil', time + TUNING.enemyStunMs)
+    enemy.setTint(0x777777)
+    enemy.body.setVelocity(0, 0)
+
+    item.setData('stolen', false)
+    item.body.enable = true
+    item.setPosition(enemy.x, enemy.y + 10)
+    item.body.setVelocity(Phaser.Math.Between(-30, 30), -60) // pop free
+
+    this.physics.pause()
+    this.time.delayedCall(TUNING.hitstopMs, () => {
+      if (!this.runOver) this.physics.resume()
+    })
+    this.tagParticles.emitParticleAt(enemy.x, enemy.y)
+    playSfx('stun', this.panFor(enemy.x))
   }
 
   startHold(time) {

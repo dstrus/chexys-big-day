@@ -56,6 +56,11 @@ const SFX = {
   },
   // soft directional cue when a new item drops in
   spawn: (pan) => tone({ type: 'triangle', from: 480, to: 640, dur: 0.09, vol: 0.06, pan }),
+  // paper crumple: tagging a carrying ticket stuns it and frees the item
+  stun: (pan) => {
+    tone({ type: 'sawtooth', from: 900, to: 200, dur: 0.08, vol: 0.12, pan })
+    tone({ type: 'square', from: 500, to: 700, dur: 0.07, delay: 0.06, vol: 0.1, pan })
+  },
   heatUp: (pan) => {
     tone({ from: 523, dur: 0.06, vol: 0.08, pan })
     tone({ from: 659, dur: 0.06, delay: 0.06, vol: 0.08, pan })
