@@ -188,11 +188,7 @@ it. Victory screen shows "99% Item Return Rate."
 
 ## 10. Open Questions
 
-1. Chexy's uniform element: vest, lanyard, or cap? (Decide at
-   character-sheet time, Phase 2 — not a Gate 0 blocker.)
-
-**All Gate 0 blockers are resolved. This document is ready for
-final sign-off.**
+*None. All questions resolved.*
 
 ### Resolved
 
@@ -210,3 +206,7 @@ final sign-off.**
 - ~~Title~~ → **The Biggest Day**.
 - Do not reference the decade-old former company name anywhere in
   the game, docs, or code.
+- ~~Chexy's uniform element~~ → **None required on the gameplay
+  sprite.** The canon chest badge appears in larger art (title,
+  results, portraits) but may be omitted at 48×48
+  (see BRIEF-ART-01 §1).

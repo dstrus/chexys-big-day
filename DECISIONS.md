@@ -25,3 +25,25 @@ DESIGN.md v1.0 and CLAUDE.md approved. Key decisions locked:
 Chat sessions produce HANDOFF blocks or replaced docs; agent
 applies literally, logs here, commits with handoff ID. Repo is
 now the single source of truth for all docs.
+
+## 2026-07-29 — Art track decisions (BRIEF-ART-01)
+
+- Canonical Chexy reference received: art/reference/Chexy.png.
+- Canonical palette extracted and recorded in BRIEF-ART-01 §2
+  (body orange #F06018, cream #F0F0D8, maroon ramp, #180000
+  outlines — no pure black).
+- Uniform question CLOSED: no uniform element on the gameplay
+  sprite; chest badge is canon in larger art only (title/
+  results/portraits). Gameplay sprite identity = tail + eyes +
+  muzzle. Mirror-flipping is therefore fully clean.
+- DESIGN.md open-questions list is now empty.
+
+## 2026-07-29 — Handoff 2026-07-29-c applied
+
+- Item 0: verified BRIEF-ART-01.md and art/reference/Chexy.png
+  are present in the repo.
+- Item 1: DESIGN.md §10 open questions emptied; uniform
+  resolution added to the Resolved list.
+- Item 2: art track decisions logged (entry above).
+- Item 3: BRIEF-ART-01 checked against CLAUDE.md and DESIGN.md §5
+  — no conflicts found.
