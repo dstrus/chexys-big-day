@@ -30,18 +30,57 @@ export default class UIOverlayScene extends Phaser.Scene {
       .setAlpha(0)
 
     this.buildResultsPanel()
+    this.buildPausePanel()
 
     const bus = this.game.events
     bus.on('hud', this.onHud, this)
     bus.on('run-over', this.onRunOver, this)
     bus.on('run-reset', this.onRunReset, this)
     bus.on('heat-up', this.onHeatUp, this)
+    bus.on('paused', this.onPaused, this)
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
       bus.off('hud', this.onHud, this)
       bus.off('run-over', this.onRunOver, this)
       bus.off('run-reset', this.onRunReset, this)
       bus.off('heat-up', this.onHeatUp, this)
+      bus.off('paused', this.onPaused, this)
     })
+  }
+
+  buildPausePanel() {
+    this.pausePanel = this.add.container(0, 0, [
+      this.add
+        .rectangle(GAME_WIDTH / 2, GAME_HEIGHT / 2, GAME_WIDTH, GAME_HEIGHT, 0x101018, 0.7)
+        .setOrigin(0.5),
+      this.add
+        .text(GAME_WIDTH / 2, 118, 'PAUSED', { ...TEXT_STYLE, fontSize: '16px', fontStyle: 'bold' })
+        .setOrigin(0.5),
+      this.add
+        .text(GAME_WIDTH / 2, 145, 'ESC OR P TO RESUME', { ...TEXT_STYLE, color: '#98a2b3' })
+        .setOrigin(0.5),
+    ])
+    this.pausePanel.setVisible(false)
+
+    this.pauseKeys = this.input.keyboard.addKeys('ESC,P')
+    this.pausedAt = 0
+  }
+
+  onPaused() {
+    this.pausedAt = this.time.now
+    this.pausePanel.setVisible(true)
+  }
+
+  update(time) {
+    if (!this.pausePanel.visible) return
+    // small delay so the keypress that paused can't also resume
+    if (time - this.pausedAt < 250) return
+    if (
+      Phaser.Input.Keyboard.JustDown(this.pauseKeys.ESC) ||
+      Phaser.Input.Keyboard.JustDown(this.pauseKeys.P)
+    ) {
+      this.pausePanel.setVisible(false)
+      this.scene.resume('Playground')
+    }
   }
 
   buildResultsPanel() {

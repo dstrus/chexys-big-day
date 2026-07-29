@@ -62,6 +62,7 @@ export default class PlaygroundScene extends Phaser.Scene {
     this.physics.add.overlap(this.player.sprite, this.enemies, () => this.onEnemyTouchPlayer())
 
     this.keyR = this.input.keyboard.addKey('R')
+    this.pauseKeys = this.input.keyboard.addKeys('ESC,P')
 
     // rush schedule: an opening wave, then intensity-scaled timers
     this.spawnWave()
@@ -447,6 +448,17 @@ export default class PlaygroundScene extends Phaser.Scene {
         this.game.events.emit('run-reset')
         this.scene.restart()
       }
+      return
+    }
+
+    // Esc/P pauses the whole scene (physics, timers, tweens);
+    // UIOverlay stays live and owns the resume
+    if (
+      Phaser.Input.Keyboard.JustDown(this.pauseKeys.ESC) ||
+      Phaser.Input.Keyboard.JustDown(this.pauseKeys.P)
+    ) {
+      this.game.events.emit('paused')
+      this.scene.pause()
       return
     }
 
