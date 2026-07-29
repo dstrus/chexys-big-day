@@ -119,3 +119,30 @@ is carrying an item stuns it (tunable duration) and drops the item,
 taggable again; brief no-steal grace on wake. No score/streak for
 the stun itself. Not yet in DESIGN.md §2 — fold into the design
 doc via handoff if it survives Gate 1 evaluation.
+
+## 2026-07-29 — Gate 1 session mechanics ratified (handoff 2026-07-29-g)
+
+Stun-to-rescue canonized (§2 item 4b, always
+tap, no score/streak/adaptive effects, urgency feedback);
+directional hints canonized for ALL levels as §2.4 (arrows
+encode urgency, stereo cues, future toggles); god-mode runs
+excluded from persisted scores. Watch item for Gate 2: if
+3-lost-items failure proves too rare in Coatroom playtests,
+revisit steal pressure.
+
+## 2026-07-29 — Handoff 2026-07-29-g applied
+
+- Item 1: DESIGN.md §2 gains rescue item 4b.
+- Item 2: DESIGN.md gains §2.4 attention & feedback systems.
+- Item 3: DESIGN.md §2.5 gains the rescue-neutrality line.
+- Item 4: standing guard recorded — god-mode runs never write
+  persisted best scores; implement when score persistence lands
+  (BRIEF-02 Chunk 6 localStorage).
+- Item 5: ratification logged (entry above).
+- Code-vs-canon flags (future work, no change requested now):
+  grey-box arrows do not yet encode urgency (fixed pulse, no
+  Alert Red shift; item expiry does not exist yet); rescue
+  feedback is placeholder (grey tint + particles, no dizzy
+  effect); settings-menu toggles for §2.4 systems do not exist.
+  Current code already matches: rescue always-tap, and rescues
+  are adaptive-neutral (no streak/intensity effect).

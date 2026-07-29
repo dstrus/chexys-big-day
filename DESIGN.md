@@ -32,6 +32,18 @@ violence against people — the only thing you ever destroy is paper.
 3. Checked items score points; guests send happy text bubbles.
 4. Paper-ticket enemies interfere: block paths, steal untagged items,
    litter the floor with slippery ticket stubs.
+
+   4b. **Rescue:** tagging a ticket enemy that is carrying a
+   stolen item stuns it (tunable, default 1500ms) and drops the
+   item, which becomes taggable again. The enemy gets a no-steal
+   grace on waking (default 1000ms). Rescue interactions are
+   ALWAYS instant tap, even for heavy items — the charged hold
+   applies only to grounded heavy items. Rescues award no score
+   and no clean-streak progress, and do not count against the
+   player for adaptive difficulty: rescue is damage prevention,
+   not a reward loop. Rescue gets distinct feedback (paper poof
+   + dizzy effect) so it reads as its own verb result.
+
 5. Rush ends when the timer expires. Performance graded on items
    returned, guests served, and NFC tags collected.
 
@@ -67,6 +79,20 @@ violence against people — the only thing you ever destroy is paper.
 - All three values (hold duration, interrupt behavior, radius) live
   in `src/config/tuning.js` and get sliders on the debug panel.
 
+### 2.4 Attention & feedback systems
+
+The game tests prioritization, not information-gathering.
+Off-screen untagged items are always signaled, in all levels:
+- **Edge arrows:** pulsing screen-edge indicators, color-coded
+  standard vs. heavy. Arrows encode urgency: pulse rate
+  increases and color shifts toward Alert Red (#EA5151) as an
+  item nears expiry or a thief approaches it.
+- **Stereo audio cues:** item spawns, steals, and losses are
+  stereo-panned relative to the player position.
+Both systems get on/off toggles when a settings menu exists
+(v1 requirement, low priority). Difficulty comes from wave
+pressure, never from hiding information.
+
 ## 2.5 Difficulty & Run Length (RESOLVED)
 
 - **Adaptive difficulty with a score trade-off.** Each level has a
@@ -79,7 +105,8 @@ violence against people — the only thing you ever destroy is paper.
   rewards playing at full heat. The current multiplier is always
   visible on the HUD so the trade is legible, and a small "heating
   up" cue plays when it ramps back — comeback should feel good, not
-  punitive.
+  punitive. Rescues are neutral: they neither ease intensity nor
+  advance the clean-streak recovery.
 - Adaptation range is clamped per level (a tunable ±band around
   baseline) so the finale still feels like a finale even on the
   easiest band. All knobs live in `tuning.js`.
