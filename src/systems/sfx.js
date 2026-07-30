@@ -50,6 +50,12 @@ const SFX = {
   },
   interrupt: (pan) => tone({ type: 'sawtooth', from: 420, to: 120, dur: 0.14, vol: 0.11, pan }),
   steal: (pan) => tone({ type: 'square', from: 240, to: 90, dur: 0.18, vol: 0.11, pan }),
+  // nasal taunt for the gloat beat — the carrier showing off its catch
+  gloat: (pan) => {
+    tone({ type: 'square', from: 240, to: 90, dur: 0.14, vol: 0.11, pan })
+    tone({ type: 'square', from: 620, to: 520, dur: 0.09, delay: 0.12, vol: 0.09, pan })
+    tone({ type: 'square', from: 520, to: 760, dur: 0.12, delay: 0.22, vol: 0.09, pan })
+  },
   lose: (pan) => {
     tone({ type: 'square', from: 200, to: 100, dur: 0.15, vol: 0.12, pan })
     tone({ type: 'square', from: 100, to: 60, dur: 0.2, delay: 0.12, vol: 0.12, pan })

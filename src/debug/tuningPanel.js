@@ -6,10 +6,18 @@ import { TUNING, TUNING_SCHEMA } from '../config/tuning.js'
 // src/config/tuning.js. This is how feel gets tuned — no code round-trips.
 
 let panelEl = null
+let statusEl = null
 
 // used by in-game debug overlays that should only draw while tuning
 export function isTuningPanelOpen() {
   return !!panelEl && panelEl.style.display !== 'none'
+}
+
+// live readout line at the panel's foot (e.g. the steal-fairness assertion)
+export function setPanelReadout(text, ok) {
+  if (!statusEl) return
+  statusEl.textContent = text
+  statusEl.style.color = ok ? '#12b76a' : '#ea5151'
 }
 
 export function initTuningPanel() {
@@ -41,6 +49,10 @@ export function initTuningPanel() {
   for (const entry of TUNING_SCHEMA) {
     panel.appendChild(entry.type === 'flag' ? flagRow(entry) : sliderRow(entry))
   }
+
+  statusEl = document.createElement('div')
+  statusEl.style.cssText = 'margin-top:8px;font-size:10px;line-height:1.4'
+  panel.appendChild(statusEl)
 
   const copyBtn = document.createElement('button')
   copyBtn.textContent = 'Copy values'

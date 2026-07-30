@@ -34,6 +34,13 @@ export const TUNING = {
   // spawn fairness (DESIGN.md §2.4 — unconditional, outside the adaptive band)
   spawnFairnessGraceMs: 600,
   freshItemGraceMs: 800,
+  // steal fairness (DESIGN.md §2.4 — unconditional)
+  carrierSpeedFactor: 0.6, // carrying encumbers a ticket
+  gloatMs: 700, // taunt beat before the carrier moves
+  stealCooldownMs: 6000, // gates steal INITIATIONS only (menace is free,
+  // commitments are spaced); per-level override via map property, trending
+  // down as player mobility grows (Coatroom 6000 ... finale ~4000)
+  stealFairnessMarginMs: 500, // slack the (c) escape-time assertion must hold by
   enemyStunMs: 1500,
   enemyStealGraceMs: 1000, // no re-steal window after a stun wears off
 
@@ -73,6 +80,10 @@ export const TUNING_SCHEMA = [
   { key: 'enemyStunMs', label: 'Enemy stun (ms)', min: 300, max: 4000, step: 100 },
   { key: 'spawnFairnessGraceMs', label: 'Spawn fairness grace (ms)', min: 0, max: 2000, step: 50 },
   { key: 'freshItemGraceMs', label: 'Fresh item grace (ms)', min: 0, max: 3000, step: 50 },
+  { key: 'carrierSpeedFactor', label: 'Carrier speed factor', min: 0.2, max: 1, step: 0.05 },
+  { key: 'gloatMs', label: 'Gloat beat (ms)', min: 0, max: 2500, step: 50 },
+  { key: 'stealCooldownMs', label: 'Steal cooldown (ms)', min: 0, max: 10000, step: 250 },
+  { key: 'stealFairnessMarginMs', label: 'Steal margin (ms)', min: 0, max: 2000, step: 50 },
   { key: 'adaptiveBand', label: 'Adaptive band', min: 0, max: 0.6, step: 0.05 },
   { key: 'multiplierFloor', label: 'Multiplier floor', min: 0.4, max: 1, step: 0.05 },
   { key: 'godMode', label: 'God mode', type: 'flag' },

@@ -107,6 +107,24 @@ must trace to player routing decisions, never to spawn
 placement luck. Items neglected after their fresh window are
 fair game at any enemy proximity.
 
+**Steal fairness (unconditional):** at the moment an enemy
+grabs an item, interception must be possible-in-principle
+for a player committing fully from their current position —
+losses trace to triage choices, never to unwinnable chases.
+Mechanisms: (a) carriers are encumbered — carrying reduces
+enemy speed (carrierSpeedFactor, default 0.6); (b) grabs
+trigger a gloat beat (gloatMs, default 700) with distinct
+SFX and an urgency-arrow spike before the carrier moves;
+(c) tuning constraint, asserted in a debug check: worst-case
+carrier escape time (nearest-exit distance at encumbered
+speed + gloat) must be ≥ max-effort player traversal from
+the far end of the level (dash included); (d) steal
+initiations respect a global cooldown
+(stealCooldownMs, per-level tunable) so simultaneous
+opposite-end steals cannot occur. This does NOT promise
+every steal is saveable in practice — choosing not to chase
+is the game.
+
 ## 2.5 Difficulty & Run Length (RESOLVED)
 
 - **Adaptive difficulty with a score trade-off.** Each level has a

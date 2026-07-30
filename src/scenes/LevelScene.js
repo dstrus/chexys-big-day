@@ -5,7 +5,7 @@ import { getWaveSchedule } from '../config/waveRegistry.js'
 import Player from '../entities/Player.js'
 import WaveRunner from '../systems/WaveRunner.js'
 import { playSfx } from '../systems/sfx.js'
-import { isTuningPanelOpen } from '../debug/tuningPanel.js'
+import { isTuningPanelOpen, setPanelReadout } from '../debug/tuningPanel.js'
 
 // Generic level scene: boots any Tiled map by key (assets/maps/README.md
 // documents the conventions). The map supplies geometry, spawn points,
@@ -78,6 +78,15 @@ export default class LevelScene extends Phaser.Scene {
       spawnEnemy: () => this.spawnEnemy(),
     })
     this.fairnessGfx = this.add.graphics().setDepth(19)
+
+    // steal fairness (DESIGN.md §2.4)
+    this.lastStealAt = -Infinity
+    this.stealFairnessWasOk = true
+    this.time.addEvent({
+      delay: 500,
+      loop: true,
+      callback: () => this.updateStealFairnessReadout(),
+    })
     this.clockTimer = this.time.addEvent({
       delay: 1000,
       loop: true,
@@ -191,6 +200,49 @@ export default class LevelScene extends Phaser.Scene {
     }
   }
 
+  // (c) tuning assertion: worst-case carrier escape time must be >= a
+  // max-effort player traversal from the far end of the level. Escape =
+  // longest nearest-exit run (ground grab to the top edge) at encumbered
+  // speed, plus the gloat beat. Traversal = level width at max speed;
+  // when dash is enabled, its burst gain is added assuming ~one dash/sec.
+  checkStealFairness() {
+    const escapeMs =
+      ((this.worldHeight + 24) / (TUNING.enemySpeed * TUNING.carrierSpeedFactor)) * 1000 +
+      TUNING.gloatMs
+    const dashBonus = TUNING.dashEnabled
+      ? (TUNING.dashSpeed - TUNING.maxSpeed) * (TUNING.dashDurationMs / 1000)
+      : 0
+    const traverseMs = (this.worldWidth / (TUNING.maxSpeed + dashBonus)) * 1000
+    const ok = escapeMs >= traverseMs + TUNING.stealFairnessMarginMs
+    return { ok, escapeMs, traverseMs }
+  }
+
+  updateStealFairnessReadout() {
+    const { ok, escapeMs, traverseMs } = this.checkStealFairness()
+    if (isTuningPanelOpen()) {
+      setPanelReadout(
+        `steal fairness (c): escape ${(escapeMs / 1000).toFixed(1)}s ${ok ? '≥' : '<'} ` +
+          `traverse ${(traverseMs / 1000).toFixed(1)}s + ${TUNING.stealFairnessMarginMs}ms margin`,
+        ok
+      )
+    }
+    if (!ok && this.stealFairnessWasOk) {
+      const deficit = Math.round(traverseMs + TUNING.stealFairnessMarginMs - escapeMs)
+      const needFactor =
+        (this.worldHeight + 24) /
+        (((traverseMs + TUNING.stealFairnessMarginMs - TUNING.gloatMs) / 1000) * TUNING.enemySpeed)
+      const needGloat = Math.round(TUNING.gloatMs + deficit)
+      console.warn(
+        `Steal fairness (c) VIOLATED by ${deficit}ms for this level ` +
+          `(width ${this.worldWidth}px): carrierSpeedFactor=${TUNING.carrierSpeedFactor}, ` +
+          `gloatMs=${TUNING.gloatMs}, enemySpeed=${TUNING.enemySpeed}, ` +
+          `maxSpeed=${TUNING.maxSpeed}, dashEnabled=${TUNING.dashEnabled}. ` +
+          `To pass: carrierSpeedFactor <= ${needFactor.toFixed(2)} OR gloatMs >= ${needGloat}.`
+      )
+    }
+    this.stealFairnessWasOk = ok
+  }
+
   // ---- rush schedule (data-driven; see assets/waves/README.md) ----
 
   spawnScheduledItem(spawnPointName, category, tier, fallbackSpawnPoints = []) {
@@ -239,9 +291,15 @@ export default class LevelScene extends Phaser.Scene {
 
       const carried = enemy.getData('carrying')
       if (carried) {
-        // fleeing upward with the goods; off the top = item lost
         carried.setPosition(enemy.x, enemy.y + 10)
-        if (enemy.y < -24) this.onItemLost(enemy, carried)
+        if (time < (enemy.getData('gloatUntil') ?? 0)) {
+          enemy.body.setVelocity(0, 0) // gloat beat: taunting before the getaway
+        } else {
+          // encumbered getaway: carrying slows the ticket (steal fairness)
+          const speed = TUNING.enemySpeed * TUNING.carrierSpeedFactor
+          enemy.body.setVelocity(enemy.getData('carryDriftX') ?? 0, -speed)
+        }
+        if (enemy.y < -24) this.onItemLost(enemy, carried) // off the top = lost
         continue
       }
 
@@ -271,16 +329,28 @@ export default class LevelScene extends Phaser.Scene {
     return this.time.now - (item.getData('spawnedAt') ?? 0) < TUNING.freshItemGraceMs
   }
 
+  // per-level steal-initiation spacing; map property overrides the default
+  stealCooldown() {
+    return this.levelProps.stealCooldownMs ?? TUNING.stealCooldownMs
+  }
+
   onEnemyTouchItem(enemy, item) {
     if (enemy.getData('carrying') || !this.isTaggable(item) || this.isFreshItem(item)) return
     if (enemy.getData('stunnedUntil')) return
     const grace = enemy.getData('stealGraceUntil')
     if (grace && this.time.now < grace) return
+    // global cooldown gates steal INITIATIONS only — enemies still exist
+    // and menace freely; only the chase-starting event is spaced
+    if (this.time.now - this.lastStealAt < this.stealCooldown()) return
+
+    this.lastStealAt = this.time.now
     item.setData('stolen', true)
     item.body.enable = false
     enemy.setData('carrying', item)
-    enemy.body.setVelocity(Phaser.Math.Between(-20, 20), -90)
-    playSfx('steal', this.panFor(item.x))
+    enemy.setData('gloatUntil', this.time.now + TUNING.gloatMs)
+    enemy.setData('carryDriftX', Phaser.Math.Between(-12, 12))
+    enemy.body.setVelocity(0, 0) // frozen mid-taunt; getaway starts after the gloat
+    playSfx('gloat', this.panFor(item.x))
   }
 
   onEnemyTouchPlayer(playerSprite, enemy) {
@@ -411,6 +481,36 @@ export default class LevelScene extends Phaser.Scene {
       this.indicatorGfx.fillStyle(item.getData('heavy') ? 0x9b6ee8 : 0x59c2e8, pulse)
       this.indicatorGfx.fillTriangle(edgeX + dir * 5, y, edgeX - dir * 3, y - 5, edgeX - dir * 3, y + 5)
     }
+
+    // off-screen carriers get Alert Red arrows; during the gloat beat they
+    // spike (bigger, faster pulse) — the "go now" signal (steal fairness)
+    for (const enemy of this.enemies.getChildren()) {
+      if (!enemy.active || !enemy.getData('carrying')) continue
+      let edgeX = 0
+      let dir = 0
+      if (enemy.x < view.x - 8) {
+        edgeX = 8
+        dir = -1
+      } else if (enemy.x > view.right + 8) {
+        edgeX = this.scale.width - 8
+        dir = 1
+      } else {
+        continue
+      }
+      const gloating = this.time.now < (enemy.getData('gloatUntil') ?? 0)
+      const alpha = gloating ? 0.6 + 0.4 * Math.sin(time / 60) : pulse
+      const size = gloating ? 8 : 5
+      const y = Phaser.Math.Clamp(enemy.y - view.y, 20, this.scale.height - 24)
+      this.indicatorGfx.fillStyle(0xea5151, alpha)
+      this.indicatorGfx.fillTriangle(
+        edgeX + dir * size,
+        y,
+        edgeX - dir * (size - 2),
+        y - size,
+        edgeX - dir * (size - 2),
+        y + size
+      )
+    }
   }
 
   // a ticket fleeing with an item can be tagged to stun it and free the loot
@@ -465,6 +565,7 @@ export default class LevelScene extends Phaser.Scene {
   stunEnemy(enemy, time) {
     const item = enemy.getData('carrying')
     enemy.setData('carrying', null)
+    enemy.setData('gloatUntil', null)
     enemy.setData('stunnedUntil', time + TUNING.enemyStunMs)
     enemy.setTint(0x777777)
     enemy.body.setVelocity(0, 0)

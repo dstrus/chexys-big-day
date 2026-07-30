@@ -130,6 +130,23 @@ excluded from persisted scores. Watch item for Gate 2: if
 3-lost-items failure proves too rare in Coatroom playtests,
 revisit steal pressure.
 
+## 2026-07-29 — Handoff 2026-07-29-g applied
+
+- Item 1: DESIGN.md §2 gains rescue item 4b.
+- Item 2: DESIGN.md gains §2.4 attention & feedback systems.
+- Item 3: DESIGN.md §2.5 gains the rescue-neutrality line.
+- Item 4: standing guard recorded — god-mode runs never write
+  persisted best scores; implement when score persistence lands
+  (BRIEF-02 Chunk 6 localStorage).
+- Item 5: ratification logged (entry above).
+- Code-vs-canon flags (future work, no change requested now):
+  grey-box arrows do not yet encode urgency (fixed pulse, no
+  Alert Red shift; item expiry does not exist yet); rescue
+  feedback is placeholder (grey tint + particles, no dizzy
+  effect); settings-menu toggles for §2.4 systems do not exist.
+  Current code already matches: rescue always-tap, and rescues
+  are adaptive-neutral (no streak/intensity effect).
+
 ## 2026-07-29 — BRIEF-02 inputs resolved; brief started
 
 - Dash decision: KEEP for Level 2 (per DESIGN.md §2.2/§3.2); stub
@@ -382,19 +399,39 @@ net for player misjudgment, not a tax on spawn luck.
   assets/waves/README.md).
 - Item 3: decision logged (entry above).
 
-## 2026-07-29 — Handoff 2026-07-29-g applied
+## 2026-07-30 — Steal fairness added (handoff 2026-07-30-d)
 
-- Item 1: DESIGN.md §2 gains rescue item 4b.
-- Item 2: DESIGN.md gains §2.4 attention & feedback systems.
-- Item 3: DESIGN.md §2.5 gains the rescue-neutrality line.
-- Item 4: standing guard recorded — god-mode runs never write
-  persisted best scores; implement when score persistence lands
-  (BRIEF-02 Chunk 6 localStorage).
-- Item 5: ratification logged (entry above).
-- Code-vs-canon flags (future work, no change requested now):
-  grey-box arrows do not yet encode urgency (fixed pulse, no
-  Alert Red shift; item expiry does not exist yet); rescue
-  feedback is placeholder (grey tint + particles, no dizzy
-  effect); settings-menu toggles for §2.4 systems do not exist.
-  Current code already matches: rescue always-tap, and rescues
-  are adaptive-neutral (no streak/intensity effect).
+After playtests showed uninterceptable steals. Encumbered
+carriers, gloat beat, carry-time floor asserted against
+level geometry, steal-event spacing. Refined contract:
+every loss must be a declined chase, never an impossible
+one.
+
+## 2026-07-30 — Handoff 2026-07-30-d applied
+
+- Sequence check: -c present in log ✓.
+- Item 1: DESIGN.md §2.4 gains the steal-fairness block verbatim.
+- Item 2 (with human clarifications): the fourth tuning value is
+  stealFairnessMarginMs (default 500 — agent pick, tune freely);
+  stealCooldownMs defaults to 6000 with per-level overrides via
+  the stealCooldownMs map property, trending down as mobility
+  grows (Coatroom 6000, Bell Desk ~5000, Valet/Stroller ~4500,
+  finale ~4000 — guesses to tune; the downward shape is the
+  intent). Cooldown gates steal INITIATIONS only — menace is
+  free, commitments are spaced. Implemented: encumbered getaway
+  (carrierSpeedFactor), gloat beat (frozen taunt + distinct
+  'gloat' SFX + Alert Red urgency-arrow spike for off-screen
+  carriers), cooldown gate, and the (c) assertion as a live
+  panel readout (green/red) + console warning naming the
+  violating values and passing thresholds.
+- Item 3: decision logged (entry above).
+- FLAG for design: the (c) assertion is RED for the Coatroom
+  with the handoff-locked defaults — worst-case carrier escape
+  9.7s < max-effort traversal 10.7s + 500ms margin, violated by
+  ~1.5s. To pass: carrierSpeedFactor ≤ 0.51, or gloatMs ≥ 2200,
+  or slower enemies / narrower level / smaller margin. Defaults
+  applied as specified; the tuning call belongs to the design
+  chat.
+- Log housekeeping: the "Handoff 2026-07-29-g applied" entry had
+  been sitting at end-of-file due to an append-anchoring slip;
+  relocated (byte-identical) to its chronological position.
