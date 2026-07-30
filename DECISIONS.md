@@ -297,6 +297,21 @@ left unmodified.
   not the title. DECISIONS.md history untouched.
 - Item 6: decision logged (entry above).
 
+## 2026-07-30 — Chunk 4 atlas-loading spec amendment (design-chat note)
+
+Native Aseprite pipeline confirmed as the only path for character
+sprites: load.aseprite + anims.createFromAseprite; the .ase file is
+the single source of truth for animation timing — frame rates and
+durations are never redefined in code or tuning.js; no hand-rolled
+frame configs; future tags (run, jump, ...) are picked up with zero
+code changes. Implementation detail: createFromAseprite looks
+frames up by numeric index, but Aseprite GUI exports default to
+filename keys + json-hash — Boot now normalizes any export shape
+to index-named frames at load (order/durations untouched), so GUI
+and CLI exports both work. Verified against the real 11-frame idle
+export: anim auto-created with per-frame durations (150/200/100ms)
+straight from the .ase; no console errors.
+
 ## 2026-07-29 — Handoff 2026-07-29-g applied
 
 - Item 1: DESIGN.md §2 gains rescue item 4b.

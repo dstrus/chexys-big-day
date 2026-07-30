@@ -17,9 +17,13 @@ Save the source as `art/aseprite/chexy.ase`, then:
 
 (wraps `aseprite -b --sheet ... --data ... --format json-array
 --sheet-type packed --list-tags --filename-format '{frame}'`; set
-`ASEPRITE=/path/to/aseprite` if the CLI isn't on PATH). The
-`{frame}` filename format is required — Phaser's createFromAseprite
-looks frames up by numeric index.
+`ASEPRITE=/path/to/aseprite` if the CLI isn't on PATH).
+
+GUI exports (File → Export Sprite Sheet) also work — the game
+normalizes frame keys at load. Just make sure **Meta: Tags** is
+checked so `frameTags` land in the JSON, and export PNG + JSON to
+the names above. Frame durations come from the .ase file either
+way — timing is never redefined in code.
 
 ## Frame-tag conventions (BRIEF-02 Chunk 4)
 

@@ -18,9 +18,19 @@ const ATLAS_PNG = import.meta.glob('../../assets/sprites/chexy.png', {
 })
 const ATLAS_JSON = import.meta.glob('../../assets/sprites/chexy.json', {
   eager: true,
-  query: '?url',
   import: 'default',
 })
+
+// Phaser's createFromAseprite looks frames up by numeric index, but GUI
+// exports default to filename keys ("chexy 0.aseprite") and json-hash.
+// Normalize any export shape to index-named json-array — order and
+// per-frame durations pass through untouched (the .ase file is the
+// single source of truth for animation timing; never redefine timing
+// in code or tuning.js).
+function normalizeAsepriteAtlas(data) {
+  const frames = Array.isArray(data.frames) ? data.frames : Object.values(data.frames)
+  return { ...data, frames: frames.map((f, i) => ({ ...f, filename: String(i) })) }
+}
 const IDLE_PNG = import.meta.glob('../../assets/sprites/chexy-idle.png', {
   eager: true,
   query: '?url',
@@ -36,7 +46,11 @@ export default class BootScene extends Phaser.Scene {
     const atlasPng = Object.values(ATLAS_PNG)[0]
     const atlasJson = Object.values(ATLAS_JSON)[0]
     if (atlasPng && atlasJson) {
-      this.load.aseprite('chexy-atlas', atlasPng, atlasJson)
+      const normalized = normalizeAsepriteAtlas(atlasJson)
+      const blobUrl = URL.createObjectURL(
+        new Blob([JSON.stringify(normalized)], { type: 'application/json' })
+      )
+      this.load.aseprite('chexy-atlas', atlasPng, blobUrl)
     } else {
       const idle = Object.values(IDLE_PNG)[0]
       if (idle) this.load.image('chexy-idle', idle)
