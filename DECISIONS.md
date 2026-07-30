@@ -239,6 +239,26 @@ in-game readability) still pending before Gate 2 art sign-off.
 - Item 1: style-proof economics logged (entry above). No code or
   doc changes required.
 
+## 2026-07-29 — STYLE-PROOF PASSED (handoff 2026-07-29-l)
+
+Human sign-off on the art half of Gate 2: the side-profile
+idle frame reads as canon Chexy in-game at gameplay zoom,
+in both facings. Current art choices stand as drawn —
+including the darker body plane (#D84818 as brightest body
+color, Body Orange #F06018 unused) and current cream levels.
+These are now the sprite style reference for all future
+frames. Art production is cleared to proceed at full speed:
+idle cycle, then run cycle, then remainder of BRIEF-ART-01
+§4 table. Gate 2 as a whole remains open pending the code
+half (BRIEF-02 complete: Coatroom playable end-to-end with
+sound and sprite hooks).
+
+## 2026-07-29 — Handoff 2026-07-29-l applied
+
+- Sequence check: -k present in log ✓.
+- Item 1: style-proof pass logged (entry above). Log-only; no code
+  or doc changes required.
+
 ## 2026-07-29 — Handoff 2026-07-29-g applied
 
 - Item 1: DESIGN.md §2 gains rescue item 4b.
