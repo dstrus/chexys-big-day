@@ -312,6 +312,30 @@ and CLI exports both work. Verified against the real 11-frame idle
 export: anim auto-created with per-frame durations (150/200/100ms)
 straight from the .ase; no console errors.
 
+## 2026-07-30 — Phaser Aseprite integration verified against 3.90.0 source (handoff 2026-07-30-a)
+
+Tag names = global
+keys, per-frame durations honored, .ase is timing authority,
+once-per-boot registration avoids stale-tag hazard. Policy
+set: player owns global anim namespace; all other characters
+register sprite-locally via target param. Export script to
+emit numeric frame keys ({frame} filename format); Boot
+normalizer retained as warning fallback. No current
+collisions found.
+
+## 2026-07-30 — Handoff 2026-07-30-a applied
+
+- Sequence check: first handoff of 2026-07-30; prior day's
+  sequence (-a..-m) complete in log ✓.
+- Item 1: DESIGN.md §5 gains the locked animation key policy.
+- Item 2: export-sprites.sh already emits --filename-format
+  '{frame}' (since the Chunk 4 fix); Boot normalizer now logs a
+  console warning when it actually rewrites keys, so a
+  misconfigured export is visible. NOTE: the committed
+  chexy.png/json is a GUI export, so the warning will appear
+  until the next export runs through the script or with {frame}.
+- Item 3: verification decision logged (entry above).
+
 ## 2026-07-29 — Handoff 2026-07-29-g applied
 
 - Item 1: DESIGN.md §2 gains rescue item 4b.

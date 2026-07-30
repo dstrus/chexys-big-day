@@ -29,6 +29,15 @@ const ATLAS_JSON = import.meta.glob('../../assets/sprites/chexy.json', {
 // in code or tuning.js).
 function normalizeAsepriteAtlas(data) {
   const frames = Array.isArray(data.frames) ? data.frames : Object.values(data.frames)
+  const rewrites = !Array.isArray(data.frames) || frames.some((f, i) => f.filename !== String(i))
+  if (rewrites) {
+    // fallback only — a correct export needs no rewriting (handoff 2026-07-30-a)
+    console.warn(
+      'Aseprite atlas frame keys were normalized at load. Export with ' +
+        "--filename-format '{frame}' (scripts/export-sprites.sh does this) " +
+        'so frame keys are numeric.'
+    )
+  }
   return { ...data, frames: frames.map((f, i) => ({ ...f, filename: String(i) })) }
 }
 const IDLE_PNG = import.meta.glob('../../assets/sprites/chexy-idle.png', {

@@ -196,6 +196,15 @@ it. Victory screen shows "99% Item Return Rate."
   canvas). Code applies horizontal flip (flipX) for rightward
   movement. Every animation frame for a character uses the
   same native facing.
+- **Animation key policy (locked):** the player (Chexy) owns
+  the global animation namespace — raw Aseprite tag names
+  ('idle', 'run', 'jump', 'fall', 'land', 'tag', 'hold',
+  'hit', 'win', 'lose') are global keys via
+  createFromAseprite. ALL other animated characters (enemies,
+  bosses, NPCs) must register sprite-locally by passing the
+  target parameter to createFromAseprite — never globally.
+  Their .ase tags may then reuse plain names (an enemy 'idle'
+  is fine) with zero collision risk.
 
 ## 6. Audio
 
