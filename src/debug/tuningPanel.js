@@ -5,8 +5,16 @@ import { TUNING, TUNING_SCHEMA } from '../config/tuning.js'
 // current settings on the clipboard as JSON for pasting back into
 // src/config/tuning.js. This is how feel gets tuned — no code round-trips.
 
+let panelEl = null
+
+// used by in-game debug overlays that should only draw while tuning
+export function isTuningPanelOpen() {
+  return !!panelEl && panelEl.style.display !== 'none'
+}
+
 export function initTuningPanel() {
   const panel = document.createElement('div')
+  panelEl = panel
   panel.id = 'tuning-panel'
   panel.style.cssText = [
     'position:fixed',

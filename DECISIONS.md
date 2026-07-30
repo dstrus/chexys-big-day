@@ -358,6 +358,30 @@ errors if both exist. No file renames required.
   the GUI export is gone. Verified in-game: 11-frame idle, clean
   console.
 
+## 2026-07-30 — Spawn fairness rule added (handoff 2026-07-30-c)
+
+After playtests showed items spawning unreachably close to
+enemies. Placement validation + fresh-item grace, both
+unconditional (outside the adaptive band). Rescue remains the
+net for player misjudgment, not a tax on spawn luck.
+
+## 2026-07-30 — Handoff 2026-07-30-c applied
+
+- Sequence check: -b present in log ✓.
+- Item 1: DESIGN.md §2.4 gains the spawn-fairness rule verbatim.
+- Item 2: implemented — spawnFairnessGraceMs (600) and
+  freshItemGraceMs (800) in tuning.js with panel sliders;
+  fairness check at spawn (straight-line travel-time estimates;
+  carrying/stunned enemies excluded as threats); wave entries
+  accept optional fallbackSpawnPoints, tried in order, with
+  least-unfair-point fallback so spawns are never dropped;
+  enemies skip fresh items in both seek and steal; "Fairness
+  overlay" panel flag draws green/red rings per spawn point plus
+  a line to the beating enemy, only while the panel is open.
+  Documented in assets/maps/README.md (+ schema row in
+  assets/waves/README.md).
+- Item 3: decision logged (entry above).
+
 ## 2026-07-29 — Handoff 2026-07-29-g applied
 
 - Item 1: DESIGN.md §2 gains rescue item 4b.

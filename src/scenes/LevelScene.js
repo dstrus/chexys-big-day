@@ -5,6 +5,7 @@ import { getWaveSchedule } from '../config/waveRegistry.js'
 import Player from '../entities/Player.js'
 import WaveRunner from '../systems/WaveRunner.js'
 import { playSfx } from '../systems/sfx.js'
+import { isTuningPanelOpen } from '../debug/tuningPanel.js'
 
 // Generic level scene: boots any Tiled map by key (assets/maps/README.md
 // documents the conventions). The map supplies geometry, spawn points,
@@ -72,9 +73,11 @@ export default class LevelScene extends Phaser.Scene {
     // the rush is entirely data-driven: the map's waveFile property
     // names the schedule, WaveRunner plays it back
     this.waveRunner = new WaveRunner(this, getWaveSchedule(this.levelProps.waveFile), {
-      spawnItem: (spawnPoint, category, tier) => this.spawnScheduledItem(spawnPoint, category, tier),
+      spawnItem: (spawnPoint, category, tier, fallbacks) =>
+        this.spawnScheduledItem(spawnPoint, category, tier, fallbacks),
       spawnEnemy: () => this.spawnEnemy(),
     })
+    this.fairnessGfx = this.add.graphics().setDepth(19)
     this.clockTimer = this.time.addEvent({
       delay: 1000,
       loop: true,
@@ -117,13 +120,84 @@ export default class LevelScene extends Phaser.Scene {
     return Phaser.Utils.Array.GetRandom(this.itemSpawnPoints)
   }
 
+  // ---- spawn fairness (DESIGN.md §2.4: unconditional, not adaptive) ----
+
+  // seconds of slack for the player to contest an item at pt; positive =
+  // fair. Straight-line distance / entity speed per spec — no pathfinding.
+  fairnessMargin(pt) {
+    const playerTime =
+      Phaser.Math.Distance.Between(this.player.x, this.player.y, pt.x, pt.y) / TUNING.maxSpeed
+    let enemyTime = Infinity
+    for (const enemy of this.enemies.getChildren()) {
+      if (!enemy.active || enemy.getData('carrying') || enemy.getData('stunnedUntil')) continue
+      const t = Phaser.Math.Distance.Between(enemy.x, enemy.y, pt.x, pt.y) / TUNING.enemySpeed
+      if (t < enemyTime) enemyTime = t
+    }
+    if (enemyTime === Infinity) return Infinity // no threats: always fair
+    return enemyTime + TUNING.spawnFairnessGraceMs / 1000 - playerTime
+  }
+
+  // first fair candidate wins (list order = priority); if nothing passes,
+  // the spawn is never dropped — use the least-unfair point
+  pickFairSpawnPoint(spawnPointName, fallbackNames = []) {
+    let candidates
+    if (!spawnPointName || spawnPointName === 'any') {
+      candidates = Phaser.Utils.Array.Shuffle([...this.itemSpawnPoints])
+    } else {
+      candidates = [spawnPointName, ...fallbackNames]
+        .map((name) => this.itemSpawnPoints.find((o) => o.name === name))
+        .filter(Boolean)
+      if (!candidates.length) candidates = [this.itemSpawnPoint('any')]
+    }
+    let best = candidates[0]
+    let bestMargin = -Infinity
+    for (const pt of candidates) {
+      const margin = this.fairnessMargin(pt)
+      if (margin >= 0) return pt
+      if (margin > bestMargin) {
+        bestMargin = margin
+        best = pt
+      }
+    }
+    return best
+  }
+
+  // debug overlay: spawn points ringed green (fair) / red (unfair), with a
+  // line to the enemy that currently beats the player there
+  updateFairnessDebug() {
+    this.fairnessGfx.clear()
+    if (!TUNING.fairnessDebug || !isTuningPanelOpen()) return
+    for (const pt of this.itemSpawnPoints) {
+      const margin = this.fairnessMargin(pt)
+      const fair = margin >= 0
+      this.fairnessGfx.lineStyle(1, fair ? 0x12b76a : 0xea5151, 0.9)
+      this.fairnessGfx.strokeCircle(pt.x, pt.y, 6)
+      if (!fair) {
+        let culprit = null
+        let culpritTime = Infinity
+        for (const enemy of this.enemies.getChildren()) {
+          if (!enemy.active || enemy.getData('carrying') || enemy.getData('stunnedUntil')) continue
+          const t = Phaser.Math.Distance.Between(enemy.x, enemy.y, pt.x, pt.y) / TUNING.enemySpeed
+          if (t < culpritTime) {
+            culpritTime = t
+            culprit = enemy
+          }
+        }
+        if (culprit) {
+          this.fairnessGfx.lineStyle(1, 0xea5151, 0.35)
+          this.fairnessGfx.lineBetween(pt.x, pt.y, culprit.x, culprit.y)
+        }
+      }
+    }
+  }
+
   // ---- rush schedule (data-driven; see assets/waves/README.md) ----
 
-  spawnScheduledItem(spawnPointName, category, tier) {
+  spawnScheduledItem(spawnPointName, category, tier, fallbackSpawnPoints = []) {
     if (this.runOver) return // late delayedCalls from a fired entry
     const onField = this.items.getChildren().filter((i) => this.isTaggable(i)).length
     if (onField >= TUNING.maxItemsOnField) return // schedule pressure valve
-    const pt = this.itemSpawnPoint(spawnPointName)
+    const pt = this.pickFairSpawnPoint(spawnPointName, fallbackSpawnPoints)
     this.spawnItem(pt.x, pt.y, tier, category)
   }
 
@@ -174,7 +248,7 @@ export default class LevelScene extends Phaser.Scene {
       let nearest = null
       let nearestD = Infinity
       for (const item of this.items.getChildren()) {
-        if (!this.isTaggable(item)) continue
+        if (!this.isTaggable(item) || this.isFreshItem(item)) continue
         const d = Phaser.Math.Distance.Between(enemy.x, enemy.y, item.x, item.y)
         if (d < nearestD) {
           nearestD = d
@@ -192,8 +266,13 @@ export default class LevelScene extends Phaser.Scene {
     }
   }
 
+  // enemies ignore items still inside their fresh-spawn window
+  isFreshItem(item) {
+    return this.time.now - (item.getData('spawnedAt') ?? 0) < TUNING.freshItemGraceMs
+  }
+
   onEnemyTouchItem(enemy, item) {
-    if (enemy.getData('carrying') || !this.isTaggable(item)) return
+    if (enemy.getData('carrying') || !this.isTaggable(item) || this.isFreshItem(item)) return
     if (enemy.getData('stunnedUntil')) return
     const grace = enemy.getData('stealGraceUntil')
     if (grace && this.time.now < grace) return
@@ -297,6 +376,7 @@ export default class LevelScene extends Phaser.Scene {
     const item = this.items.create(x, y, heavy ? 'item-heavy' : 'item-standard')
     item.setData('heavy', heavy)
     item.setData('category', category)
+    item.setData('spawnedAt', this.time.now) // fresh-item grace (DESIGN.md §2.4)
     item.setTint(categoryColor(category)) // ChexApp tag colors
     item.setBounce(0.1)
     item.setCollideWorldBounds(true)
@@ -535,5 +615,6 @@ export default class LevelScene extends Phaser.Scene {
     this.updateTagging(time)
     this.updateEnemies(time)
     this.updateIndicators(time)
+    this.updateFairnessDebug()
   }
 }

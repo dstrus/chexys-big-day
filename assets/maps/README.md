@@ -40,6 +40,20 @@ one row). The matching texture is generated at runtime in Boot —
 there is no PNG on disk yet; final tile art will replace it under
 the same name and layout.
 
+## Spawn fairness (DESIGN.md §2.4)
+
+Items only spawn where the player can plausibly contest them: at
+spawn time the game compares straight-line travel-time estimates
+(player vs. nearest enemy + `spawnFairnessGraceMs`). A wave entry
+may list an optional `fallbackSpawnPoints` array (spawn-point names
+from this map's `spawns` layer) — if the primary point fails the
+check, fallbacks are tried in order; if nothing passes, the
+least-unfair point is used rather than dropping the spawn. Place
+enough spawn points per area that fallbacks exist. Enemies also
+ignore items younger than `freshItemGraceMs`. The tuning panel's
+"Fairness overlay" flag draws the live check (green/red rings per
+point) while the panel is open.
+
 ## Layout rule (grey-box tuning)
 
 Max jump height with default tuning is ~61px. Keep platform hops at

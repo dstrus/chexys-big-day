@@ -23,6 +23,7 @@ new files in `src/config/waveRegistry.js` (ESM import, Vite-bundled).
 | `time` | Seconds from rush start. The timeline is fixed; sort not required but keep files readable. |
 | `type` | `"items"` (default) or `"enemy"` |
 | `spawnPoint` | A named point from the map's `spawns` layer, or `"any"` for a random one |
+| `fallbackSpawnPoints` | Optional array of point names tried in order when `spawnPoint` fails the spawn-fairness check (see assets/maps/README.md) |
 | `itemCategory` | Key in `src/config/itemCategories.js` — drives the ChexApp tag color tint |
 | `weightTier` | `1` = standard (instant tap), `3` = heavy (charged hold). Coatroom uses tier 1 only — weight tiers debut in Level 2 (DESIGN.md §3.2). |
 | `count` | Spawns fired by this entry |

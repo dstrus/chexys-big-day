@@ -31,6 +31,9 @@ export const TUNING = {
   rushSeconds: 150,
   maxItemsOnField: 12,
   enemySpeed: 55,
+  // spawn fairness (DESIGN.md §2.4 — unconditional, outside the adaptive band)
+  spawnFairnessGraceMs: 600,
+  freshItemGraceMs: 800,
   enemyStunMs: 1500,
   enemyStealGraceMs: 1000, // no re-steal window after a stun wears off
 
@@ -46,6 +49,7 @@ export const TUNING = {
 
   // debug helpers
   godMode: false, // steals still happen but never count toward the 3-lost fail
+  fairnessDebug: false, // draw spawn-fairness estimates while the panel is open
 }
 
 // Slider metadata for the debug tuning panel.
@@ -67,7 +71,10 @@ export const TUNING_SCHEMA = [
   { key: 'holdTagMs', label: 'Hold-tag (ms)', min: 100, max: 800, step: 10 },
   { key: 'targetRadius', label: 'Target radius', min: 20, max: 160, step: 2 },
   { key: 'enemyStunMs', label: 'Enemy stun (ms)', min: 300, max: 4000, step: 100 },
+  { key: 'spawnFairnessGraceMs', label: 'Spawn fairness grace (ms)', min: 0, max: 2000, step: 50 },
+  { key: 'freshItemGraceMs', label: 'Fresh item grace (ms)', min: 0, max: 3000, step: 50 },
   { key: 'adaptiveBand', label: 'Adaptive band', min: 0, max: 0.6, step: 0.05 },
   { key: 'multiplierFloor', label: 'Multiplier floor', min: 0.4, max: 1, step: 0.05 },
   { key: 'godMode', label: 'God mode', type: 'flag' },
+  { key: 'fairnessDebug', label: 'Fairness overlay', type: 'flag' },
 ]

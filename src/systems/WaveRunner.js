@@ -32,7 +32,8 @@ export default class WaveRunner {
               this.spawnItem(
                 entry.spawnPoint ?? 'any',
                 entry.itemCategory ?? 'coat',
-                entry.weightTier ?? 1
+                entry.weightTier ?? 1,
+                entry.fallbackSpawnPoints ?? []
               )
       if (i === 0) spawn()
       else this.scene.time.delayedCall(i * intervalMs, spawn)

@@ -94,6 +94,19 @@ Both systems get on/off toggles when a settings menu exists
 (v1 requirement, low priority). Difficulty comes from wave
 pressure, never from hiding information.
 
+**Spawn fairness (unconditional, not adaptive):** an item may
+only spawn at a point the player can plausibly contest. At
+spawn time, validate: estimated player travel time to the
+item ≤ nearest enemy's estimated travel time + grace
+(straight-line distance / entity speed is sufficient; no
+pathfinding required). If the wave file's spawn point fails,
+fall back to the next-best listed spawn point for that wave
+entry rather than dropping the spawn. Additionally, enemies
+ignore items younger than a fresh-item grace period. Losses
+must trace to player routing decisions, never to spawn
+placement luck. Items neglected after their fresh window are
+fair game at any enemy proximity.
+
 ## 2.5 Difficulty & Run Length (RESOLVED)
 
 - **Adaptive difficulty with a score trade-off.** Each level has a
