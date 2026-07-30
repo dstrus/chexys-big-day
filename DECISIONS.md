@@ -435,3 +435,19 @@ one.
 - Log housekeeping: the "Handoff 2026-07-29-g applied" entry had
   been sitting at end-of-file due to an append-anchoring slip;
   relocated (byte-identical) to its chronological position.
+
+## 2026-07-30 — stealCooldownMs default set to 6000 (handoff 2026-07-30-e)
+
+Derived from worst-case chase-resolution time
+under the steal-fairness inequality; per-level overrides
+tighten as player mobility grows.
+
+## 2026-07-30 — Handoff 2026-07-30-e applied
+
+- Sequence check: -d present in log ✓. Arrived after the -f
+  sequence stop caught it missing; applied before -f.
+- Item 1: DESIGN.md §2.4 (d) clause amended with the 6000 default,
+  map-property overrides, and the initiations-only boundary.
+  Implementation already conformed (built from the human's
+  clarification during -d) — no code changes.
+- Item 2: decision logged (entry above).

@@ -119,9 +119,12 @@ SFX and an urgency-arrow spike before the carrier moves;
 carrier escape time (nearest-exit distance at encumbered
 speed + gloat) must be ≥ max-effort player traversal from
 the far end of the level (dash included); (d) steal
-initiations respect a global cooldown
-(stealCooldownMs, per-level tunable) so simultaneous
-opposite-end steals cannot occur. This does NOT promise
+initiations respect a global cooldown — stealCooldownMs,
+default 6000 (Coatroom baseline); per-level overrides live
+in the level's map properties (belldesk ~5000, later levels
+4000–4500, tune in Phase 3) — so simultaneous opposite-end
+steals cannot occur. The cooldown gates steal INITIATIONS
+only: enemy spawning, pursuit, and menace are unaffected. This does NOT promise
 every steal is saveable in practice — choosing not to chase
 is the game.
 
