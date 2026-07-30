@@ -1,4 +1,4 @@
-# DECISIONS.md — The Biggest Day (append-only)
+# DECISIONS.md — Chexy's BIG DAY (append-only)
 
 ## 2026-07-29 — Gate 0 PASSED
 
@@ -273,6 +273,29 @@ Phaser's createFromAseprite looks frames up by index.
 tools/flipbook.html previews strips/atlases from file:// with
 auto-reload, tag buttons, fps override, zoom, and flip. 60fps
 re-verify still requires the human (headless limitation).
+
+## 2026-07-29 — Title changed to "Chexy's BIG DAY" (handoff 2026-07-29-m)
+
+Superseding "The Biggest Day" now that Chexy
+is established as the player character. "Chexy's BIGGEST DAY"
+reserved for v2/sequel. Branding rule in CLAUDE.md amended
+accordingly; repo-wide rename applied; DECISIONS.md history
+left unmodified.
+
+## 2026-07-29 — Handoff 2026-07-29-m applied
+
+- Sequence check: -l present in log ✓.
+- Item 1: title amendment acknowledged; BIGGEST reserved for v2.
+- Item 2: CLAUDE.md header + branding bullet replaced verbatim.
+- Item 3: DESIGN.md H1 + Title line replaced verbatim.
+- Item 4: DESIGN.md §8 gains the sequel-title reservation.
+- Item 5: repo-wide rename — CLAUDE.md intro, DESIGN.md §10
+  Resolved title line, TitleScene display text, index.html
+  <title>, package.json name (chexys-big-day; npm forbids
+  apostrophes) + description, chexy-sprite.gpl palette name.
+  DESIGN.md §1 "venue's biggest day ever" kept — premise prose,
+  not the title. DECISIONS.md history untouched.
+- Item 6: decision logged (entry above).
 
 ## 2026-07-29 — Handoff 2026-07-29-g applied
 

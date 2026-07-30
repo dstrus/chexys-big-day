@@ -1,6 +1,7 @@
-# THE BIGGEST DAY — Game Design Document
+# CHEXY'S BIG DAY — Game Design Document
 
-**Title:** The Biggest Day *(from Derek's "Big Day!" catchphrase)*
+**Title:** Chexy's BIG DAY *(from Derek's "Big Day!"
+catchphrase; BIGGEST reserved for v2)*
 **Status:** v1.0 — APPROVED (Gate 0 passed 2026-07-29). Changes now require a logged amendment in DECISIONS.md.
 **Genre:** 32-bit-style pixel-art side-scrolling action game
 **Platform:** Browser (HTML5), desktop keyboard only for v1
@@ -217,6 +218,7 @@ it. Victory screen shows "99% Item Return Rate."
 - Mobile / touch controls
 - Gamepad support
 - Guest-matching mechanic (deferred from §3.2 — confirmed v2)
+- Sequel title reserved: Chexy's BIGGEST DAY
 
 ## 9. Milestone Gates
 
@@ -245,7 +247,7 @@ it. Victory screen shows "99% Item Return Rate."
 
 - ~~Character design~~ → **Chexy**, squat anthropomorphic squirrel
   (see §1, §5).
-- ~~Title~~ → **The Biggest Day**.
+- ~~Title~~ → **Chexy's BIG DAY**.
 - Do not reference the decade-old former company name anywhere in
   the game, docs, or code.
 - ~~Chexy's uniform element~~ → **None required on the gameplay

@@ -1,18 +1,21 @@
-# CLAUDE.md — The Biggest Day (Chexology retro game)
+# CLAUDE.md — Chexy's BIG DAY (Chexology retro game)
 
 Project constitution. Every agent session must follow this file.
 When this file conflicts with a prompt, STOP and ask the human.
 
 ## What this project is
 
-**The Biggest Day** — a 32-bit-style pixel-art side-scrolling
+**Chexy's BIG DAY** — a 32-bit-style pixel-art side-scrolling
 browser game for the Chexology team. The player character is
 **Chexy**, a squat anthropomorphic squirrel. Requirements live in
 DESIGN.md — it is the contract.
 
 ## Branding rules (locked)
 
-- The game is "The Biggest Day". Never retitle in code, UI, or docs.
+- The game is "Chexy's BIG DAY" (this casing everywhere).
+  Never retitle in code, UI, or docs without an explicit
+  handoff. "Chexy's BIGGEST DAY" is reserved for a possible
+  sequel and must not appear in v1.
 - The company is "Chexology" — never use its legacy pre-rebrand
   name anywhere (code, comments, assets, or copy), even in jokes.
 If a task is ambiguous, check DESIGN.md first, then ask; never guess

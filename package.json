@@ -1,7 +1,7 @@
 {
-  "name": "the-biggest-day",
+  "name": "chexys-big-day",
   "version": "0.1.0",
-  "description": "The Biggest Day — a 32-bit-style pixel-art side-scroller for the Chexology team",
+  "description": "Chexy's BIG DAY — a 32-bit-style pixel-art side-scroller for the Chexology team",
   "private": true,
   "type": "module",
   "scripts": {

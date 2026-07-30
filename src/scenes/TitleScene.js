@@ -9,7 +9,7 @@ export default class TitleScene extends Phaser.Scene {
 
   create() {
     this.add
-      .text(GAME_WIDTH / 2, 92, 'THE BIGGEST DAY', {
+      .text(GAME_WIDTH / 2, 92, "Chexy's BIG DAY", {
         fontFamily: 'monospace',
         fontSize: '28px',
         fontStyle: 'bold',
