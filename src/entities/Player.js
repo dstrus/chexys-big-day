@@ -7,20 +7,36 @@ import { TUNING } from '../config/tuning.js'
 export default class Player {
   constructor(scene, x, y) {
     this.scene = scene
-    // style-proof: use the real idle frame when the art export exists,
-    // otherwise the grey-box rect
-    this.usingArtFrame = scene.textures.exists('chexy-idle')
-    this.sprite = scene.physics.add.sprite(x, y, this.usingArtFrame ? 'chexy-idle' : 'chexy')
+    // Sprite source priority (BRIEF-02 Chunk 4): Aseprite atlas export >
+    // static style-proof frame > grey-box rect. See assets/sprites/README.md.
+    this.mode = scene.textures.exists('chexy-atlas')
+      ? 'atlas'
+      : scene.textures.exists('chexy-idle')
+        ? 'frame'
+        : 'rect'
+    const textureKey = { atlas: 'chexy-atlas', frame: 'chexy-idle', rect: 'chexy' }[this.mode]
+    // atlas frames are tag-named (idle_0, ...) — pass the first explicitly
+    // or Phaser warns about a missing default frame "0"
+    const firstFrame =
+      this.mode === 'atlas' ? scene.textures.get(textureKey).getFrameNames()[0] : undefined
+    this.sprite = scene.physics.add.sprite(x, y, textureKey, firstFrame)
     this.sprite.setCollideWorldBounds(true)
-    if (this.usingArtFrame) {
-      // DESIGN.md §5 (locked): 48x48 canvas over a 32x32 physics body,
+    if (this.mode === 'rect') {
+      this.sprite.setDisplaySize(TUNING.playerSize, TUNING.playerSize)
+    } else {
+      // DESIGN.md §5 (locked): art canvas over a 32x32 physics body,
       // bottom-centers aligned — tail/ear overhang never collides
       this.sprite.body.setSize(32, 32)
       this.sprite.body.setOffset((this.sprite.width - 32) / 2, this.sprite.height - 32)
       this.sprite.setFlipX(true) // default spawn facing: right (levels scroll rightward)
-    } else {
-      this.sprite.setDisplaySize(TUNING.playerSize, TUNING.playerSize)
     }
+
+    // animation state (atlas mode only)
+    this.stateAnim = null
+    this.animLock = false
+    this.endPosed = false
+    this.wasAirborne = false
+    if (this.mode === 'atlas') this.playState('idle')
 
     const kb = scene.input.keyboard
     this.cursors = kb.createCursorKeys()
@@ -64,8 +80,8 @@ export default class Player {
     const JustUp = Phaser.Input.Keyboard.JustUp
 
     // live-sync sprite size with the tuning slider (arcade body follows
-    // scale) — rect only; the art frame's canvas/body split is fixed
-    if (!this.usingArtFrame && this.sprite.displayWidth !== TUNING.playerSize) {
+    // scale) — rect only; art modes' canvas/body split is fixed
+    if (this.mode === 'rect' && this.sprite.displayWidth !== TUNING.playerSize) {
       this.sprite.setDisplaySize(TUNING.playerSize, TUNING.playerSize)
     }
 
@@ -80,7 +96,7 @@ export default class Player {
     // Facing convention (DESIGN.md §5, locked): character sprites are
     // LEFT-FACING native; flipX for rightward movement. Mirror-flip is
     // clean — no badge on the gameplay sprite.
-    if (this.usingArtFrame) this.sprite.setFlipX(this.facing === 1)
+    if (this.mode !== 'rect') this.sprite.setFlipX(this.facing === 1)
 
     if (this.frozen) {
       body.setAccelerationX(0)
@@ -140,5 +156,53 @@ export default class Player {
 
     this.tagPressed = JustDown(this.keys.Z) || JustDown(this.keys.J)
     this.tagHeld = this.keys.Z.isDown || this.keys.J.isDown
+
+    if (this.mode === 'atlas') this.updateAnimState()
+  }
+
+  // ---- animations (atlas mode; frame tags per assets/sprites/README.md) ----
+
+  updateAnimState() {
+    const grounded = this.onGround()
+    if (grounded && this.wasAirborne) this.triggerAnim('land')
+    this.wasAirborne = !grounded
+    if (this.animLock) return
+
+    let next
+    if (this.frozen) next = 'hold'
+    else if (!grounded) next = this.body.velocity.y < 0 ? 'jump' : 'fall'
+    else next = Math.abs(this.body.velocity.x) > 10 ? 'run' : 'idle'
+    this.playState(next)
+  }
+
+  // looping state anim; missing tags fall back to idle so incremental
+  // art drops (idle first, run later...) never break
+  playState(name) {
+    if (this.mode !== 'atlas' || this.animLock) return
+    if (!this.scene.anims.exists(name)) name = 'idle'
+    if (this.stateAnim === name || !this.scene.anims.exists(name)) return
+    this.stateAnim = name
+    this.sprite.play({ key: name, repeat: -1 }, true)
+  }
+
+  // one-shot anim (land/tag/hit); locks the state machine until complete
+  triggerAnim(name) {
+    if (this.mode !== 'atlas' || this.endPosed || !this.scene.anims.exists(name)) return
+    this.animLock = true
+    this.stateAnim = null
+    this.sprite.play(name, true)
+    this.sprite.once(Phaser.Animations.Events.ANIMATION_COMPLETE_KEY + name, () => {
+      this.animLock = false
+    })
+  }
+
+  // results pose — loops until the scene restarts
+  playEndPose(cleared) {
+    const name = cleared ? 'win' : 'lose'
+    if (this.mode !== 'atlas' || !this.scene.anims.exists(name)) return
+    this.endPosed = true
+    this.animLock = true
+    this.stateAnim = null
+    this.sprite.play({ key: name, repeat: -1 }, true)
   }
 }

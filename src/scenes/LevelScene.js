@@ -276,6 +276,7 @@ export default class LevelScene extends Phaser.Scene {
     this.clearHold()
     this.targetGfx.clear()
     this.indicatorGfx.clear()
+    this.player.playEndPose(cleared)
     playSfx(cleared ? 'runClear' : 'runFail')
     this.game.events.emit('run-over', {
       cleared,
@@ -457,6 +458,7 @@ export default class LevelScene extends Phaser.Scene {
   interruptHold() {
     this.clearHold()
     playSfx('interrupt')
+    this.player.triggerAnim('hit')
     this.player.sprite.setTint(0xff6666)
     this.time.delayedCall(150, () => this.player.sprite.clearTint())
     this.onHoldInterrupted()
@@ -475,6 +477,7 @@ export default class LevelScene extends Phaser.Scene {
 
     this.tagParticles.emitParticleAt(item.x, item.y)
     playSfx(heavy ? 'heavyTag' : 'tag')
+    this.player.triggerAnim('tag')
 
     // checked in: flash green, then whisk it away
     item.setTint(0x7ee87e)

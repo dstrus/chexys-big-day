@@ -4,11 +4,24 @@ import coatroomMap from '../../assets/maps/coatroom.json'
 // Placeholder art only: every "sprite" is a generated texture. Maps are
 // real Tiled JSON (assets/maps/), imported through Vite and injected
 // into the tilemap cache here.
-// Style-proof drop-in: if the art track has exported a static idle frame,
-// bundle and load it; otherwise the placeholder rect carries on. Vite's
-// glob returns an empty object when the file is absent, so the build
-// never breaks on a missing sprite.
-const STYLE_PROOF_FRAME = import.meta.glob('../../assets/sprites/chexy-idle.png', {
+// Art-track handshake (BRIEF-02 Chunk 4). Sprite source priority:
+//   1. Aseprite atlas export  (assets/sprites/chexy.png + chexy.json)
+//   2. static style-proof frame (assets/sprites/chexy-idle.png)
+//   3. grey-box rect
+// Vite globs return an empty object when a file is absent, so dropping
+// exports in (or deleting them) needs zero code changes and never
+// breaks the build. Frame-tag conventions: assets/sprites/README.md.
+const ATLAS_PNG = import.meta.glob('../../assets/sprites/chexy.png', {
+  eager: true,
+  query: '?url',
+  import: 'default',
+})
+const ATLAS_JSON = import.meta.glob('../../assets/sprites/chexy.json', {
+  eager: true,
+  query: '?url',
+  import: 'default',
+})
+const IDLE_PNG = import.meta.glob('../../assets/sprites/chexy-idle.png', {
   eager: true,
   query: '?url',
   import: 'default',
@@ -20,11 +33,21 @@ export default class BootScene extends Phaser.Scene {
   }
 
   preload() {
-    const url = Object.values(STYLE_PROOF_FRAME)[0]
-    if (url) this.load.image('chexy-idle', url)
+    const atlasPng = Object.values(ATLAS_PNG)[0]
+    const atlasJson = Object.values(ATLAS_JSON)[0]
+    if (atlasPng && atlasJson) {
+      this.load.aseprite('chexy-atlas', atlasPng, atlasJson)
+    } else {
+      const idle = Object.values(IDLE_PNG)[0]
+      if (idle) this.load.image('chexy-idle', idle)
+    }
   }
 
   create() {
+    if (this.textures.exists('chexy-atlas')) {
+      // one anim per Aseprite frame tag (idle, run, jump, ...)
+      this.anims.createFromAseprite('chexy-atlas')
+    }
     const g = this.add.graphics()
     const make = (key, w, h, color) => {
       g.clear()

@@ -259,6 +259,21 @@ sound and sprite hooks).
 - Item 1: style-proof pass logged (entry above). Log-only; no code
   or doc changes required.
 
+## 2026-07-29 — BRIEF-02 Chunk 4 COMPLETE (sprite/atlas hooks)
+
+Art-track handshake live. Sprite priority: Aseprite atlas
+(chexy.png+json) > static idle frame > rect; drop-in/delete needs
+zero code changes (verified both directions via headless CDP with a
+test atlas). Player animation state machine wired to the frame-tag
+conventions (idle/run/jump/fall/land/tag/hold/hit/win/lose); missing
+tags fall back to idle so incremental art drops always work.
+scripts/export-sprites.sh wraps the Aseprite CLI — NOTE: exports
+must use --filename-format '{frame}' (numeric frame names) because
+Phaser's createFromAseprite looks frames up by index.
+tools/flipbook.html previews strips/atlases from file:// with
+auto-reload, tag buttons, fps override, zoom, and flip. 60fps
+re-verify still requires the human (headless limitation).
+
 ## 2026-07-29 — Handoff 2026-07-29-g applied
 
 - Item 1: DESIGN.md §2 gains rescue item 4b.

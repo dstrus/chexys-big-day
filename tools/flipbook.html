@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Chexy Flipbook</title>
+<style>
+  :root { color-scheme: dark; }
+  body {
+    margin: 0; padding: 16px; background: #101018; color: #f2ecd8;
+    font: 13px/1.5 ui-monospace, Menlo, monospace;
+  }
+  h1 { font-size: 14px; color: #59c2e8; margin: 0 0 10px; }
+  .row { display: flex; gap: 16px; flex-wrap: wrap; align-items: center; margin-bottom: 10px; }
+  label { display: inline-flex; gap: 6px; align-items: center; }
+  input[type="number"] { width: 60px; }
+  button {
+    background: #2a2a3a; color: #f2ecd8; border: 1px solid #3a3a4a;
+    padding: 3px 10px; cursor: pointer; font: inherit;
+  }
+  button.active { background: #59c2e8; color: #101018; border-color: #59c2e8; }
+  #stage { border: 1px solid #3a3a4a; image-rendering: pixelated; }
+  #stage.light { background: #f8f5f3; }
+  #stage.checker {
+    background: repeating-conic-gradient(#2a2a3a 0% 25%, #1a1a26 0% 50%) 0 0 / 16px 16px;
+  }
+  #status { color: #98a2b3; }
+  #frameinfo { min-width: 130px; display: inline-block; }
+</style>
+</head>
+<body>
+<h1>CHEXY FLIPBOOK — PNG strip / Aseprite atlas previewer</h1>
+
+<div class="row">
+  <label>sheet (PNG) <input type="file" id="png" accept=".png" /></label>
+  <label>atlas (JSON, optional) <input type="file" id="json" accept=".json" /></label>
+  <label><input type="checkbox" id="watch" checked /> auto-reload</label>
+  <span id="status">pick a PNG to start — with no JSON it plays as a horizontal strip of square frames</span>
+</div>
+
+<div class="row" id="tags"></div>
+
+<div class="row">
+  <button id="play" class="active">pause</button>
+  <label>fps override <input type="number" id="fps" min="0" max="60" value="0" />
+    <span>(0 = frame durations)</span></label>
+  <label>zoom <input type="range" id="zoom" min="1" max="12" value="6" /></label>
+  <label><input type="checkbox" id="flip" /> flipX</label>
+  <label>bg
+    <select id="bg">
+      <option value="">dark</option>
+      <option value="light">light</option>
+      <option value="checker">checker</option>
+    </select>
+  </label>
+  <span id="frameinfo"></span>
+</div>
+
+<canvas id="stage" width="480" height="320"></canvas>
+
+<script>
+'use strict'
+const $ = (id) => document.getElementById(id)
+const ctx = $('stage').getContext('2d')
+ctx.imageSmoothingEnabled = false
+
+const state = {
+  img: null,          // ImageBitmap
+  frames: [],         // [{x,y,w,h,duration}]
+  tags: [],           // [{name,from,to}]
+  tag: null,          // active tag name or null = all frames
+  idx: 0,
+  clock: 0,
+  playing: true,
+  pngFile: null,
+  jsonFile: null,
+  pngStamp: '',
+  jsonStamp: '',
+}
+
+function setStatus(msg) { $('status').textContent = msg }
+
+function activeFrames() {
+  if (!state.tag) return state.frames
+  const t = state.tags.find((t) => t.name === state.tag)
+  return t ? state.frames.slice(t.from, t.to + 1) : state.frames
+}
+
+async function loadPng(file) {
+  state.img = await createImageBitmap(file)
+  if (!state.jsonFile) {
+    // no atlas: horizontal strip of square frames (frame size = height)
+    const h = state.img.height
+    const count = Math.max(1, Math.floor(state.img.width / h))
+    state.frames = Array.from({ length: count }, (_, i) => ({
+      x: i * h, y: 0, w: h, h, duration: 100,
+    }))
+    state.tags = []
+    buildTagButtons()
+  }
+  setStatus(`${file.name}: ${state.img.width}x${state.img.height}, ${state.frames.length} frame(s)`)
+}
+
+async function loadJson(file) {
+  const data = JSON.parse(await file.text())
+  // Aseprite json-array (frames: []) or json-hash (frames: {})
+  const rawFrames = Array.isArray(data.frames) ? data.frames : Object.values(data.frames ?? {})
+  state.frames = rawFrames.map((f) => ({
+    x: f.frame.x, y: f.frame.y, w: f.frame.w, h: f.frame.h,
+    duration: f.duration ?? 100,
+  }))
+  state.tags = (data.meta && data.meta.frameTags) || []
+  state.tag = state.tags[0]?.name ?? null
+  state.idx = 0
+  buildTagButtons()
+  setStatus(`${file.name}: ${state.frames.length} frames, ${state.tags.length} tag(s)`)
+}
+
+function buildTagButtons() {
+  const box = $('tags')
+  box.innerHTML = ''
+  if (!state.tags.length) return
+  const mk = (label, tag) => {
+    const b = document.createElement('button')
+    b.textContent = label
+    if (state.tag === tag) b.classList.add('active')
+    b.onclick = () => {
+      state.tag = tag
+      state.idx = 0
+      state.clock = 0
+      buildTagButtons()
+    }
+    box.appendChild(b)
+  }
+  mk('all', null)
+  for (const t of state.tags) mk(`${t.name} (${t.to - t.from + 1})`, t.name)
+}
+
+// ---- hot reload: re-read picked files; Chromium re-reads changed files
+// from <input> handles, other browsers may throw -> ask for a re-pick
+async function stampOf(file) {
+  try {
+    const buf = await file.slice(0, 64 * 1024).arrayBuffer()
+    let hash = 0
+    const view = new Uint8Array(buf)
+    for (let i = 0; i < view.length; i += 97) hash = (hash * 31 + view[i]) | 0
+    return `${file.size}:${hash}`
+  } catch {
+    return null // file changed on disk and the handle went stale
+  }
+}
+
+setInterval(async () => {
+  if (!$('watch').checked) return
+  if (state.pngFile) {
+    const s = await stampOf(state.pngFile)
+    if (s === null) setStatus('sheet changed on disk — re-pick the PNG to reload')
+    else if (s !== state.pngStamp) {
+      state.pngStamp = s
+      await loadPng(state.pngFile)
+    }
+  }
+  if (state.jsonFile) {
+    const s = await stampOf(state.jsonFile)
+    if (s === null) setStatus('atlas changed on disk — re-pick the JSON to reload')
+    else if (s !== state.jsonStamp) {
+      state.jsonStamp = s
+      await loadJson(state.jsonFile)
+    }
+  }
+}, 600)
+
+$('png').onchange = async (e) => {
+  state.pngFile = e.target.files[0]
+  if (!state.pngFile) return
+  state.pngStamp = await stampOf(state.pngFile)
+  await loadPng(state.pngFile)
+}
+$('json').onchange = async (e) => {
+  state.jsonFile = e.target.files[0]
+  if (!state.jsonFile) return
+  state.jsonStamp = await stampOf(state.jsonFile)
+  await loadJson(state.jsonFile)
+}
+$('play').onclick = () => {
+  state.playing = !state.playing
+  $('play').textContent = state.playing ? 'pause' : 'play'
+  $('play').classList.toggle('active', state.playing)
+}
+$('bg').onchange = () => ($('stage').className = $('bg').value)
+
+// ---- render loop
+let last = performance.now()
+function frameDuration(f) {
+  const fps = parseFloat($('fps').value)
+  return fps > 0 ? 1000 / fps : f.duration
+}
+function tick(now) {
+  const dt = now - last
+  last = now
+  const frames = activeFrames()
+  if (state.img && frames.length) {
+    if (state.idx >= frames.length) state.idx = 0
+    if (state.playing) {
+      state.clock += dt
+      while (state.clock >= frameDuration(frames[state.idx])) {
+        state.clock -= frameDuration(frames[state.idx])
+        state.idx = (state.idx + 1) % frames.length
+      }
+    }
+    const f = frames[state.idx]
+    const zoom = parseInt($('zoom').value, 10)
+    const cv = $('stage')
+    ctx.clearRect(0, 0, cv.width, cv.height)
+    ctx.save()
+    const dx = (cv.width - f.w * zoom) / 2
+    const dy = (cv.height - f.h * zoom) / 2
+    if ($('flip').checked) {
+      ctx.translate(cv.width, 0)
+      ctx.scale(-1, 1)
+      ctx.drawImage(state.img, f.x, f.y, f.w, f.h, dx, dy, f.w * zoom, f.h * zoom)
+    } else {
+      ctx.drawImage(state.img, f.x, f.y, f.w, f.h, dx, dy, f.w * zoom, f.h * zoom)
+    }
+    ctx.restore()
+    $('frameinfo').textContent =
+      `frame ${state.idx + 1}/${frames.length} · ${Math.round(frameDuration(f))}ms`
+  }
+  requestAnimationFrame(tick)
+}
+requestAnimationFrame(tick)
+</script>
+</body>
+</html>

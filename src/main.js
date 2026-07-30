@@ -44,4 +44,7 @@ const game = new Phaser.Game({
 
 window.addEventListener('resize', () => game.scale.setZoom(integerZoom()))
 
+// dev-only handle for debugging/verification tooling
+if (import.meta.env.DEV) window.__game = game
+
 initTuningPanel()
