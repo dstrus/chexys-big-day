@@ -79,7 +79,7 @@ block on the art track.
 - Anchor per DESIGN.md §5: 48×48 sprite bottom-center aligned to
   the 32×32 physics body bottom-center. Physics untouched.
 - Write `scripts/export-sprites.sh`: wraps the Aseprite CLI
-  (`aseprite -b art/aseprite/chexy.ase --sheet ... --data ...`)
+  (`aseprite -b art/aseprite/chexy.aseprite --sheet ... --data ...`)
   so the art-to-game path is one command. Degrade gracefully if
   Aseprite isn't installed (print instructions, don't fail the
   build).

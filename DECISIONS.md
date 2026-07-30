@@ -336,6 +336,28 @@ collisions found.
   until the next export runs through the script or with {frame}.
 - Item 3: verification decision logged (entry above).
 
+## 2026-07-30 — Sprite source naming (handoff 2026-07-30-b)
+
+Canonical source is art/aseprite/<name>.aseprite (app
+default extension); export script accepts .aseprite or .ase,
+errors if both exist. No file renames required.
+
+## 2026-07-30 — Handoff 2026-07-30-b applied
+
+- Sequence check: -a present in log ✓.
+- Item 1: export script resolves <name>.aseprite first, then
+  .ase; clear errors when neither or both exist; structured as a
+  per-character loop for future sprites.
+- Item 2: docs swept — assets/sprites/README.md and BRIEF-02.md
+  updated to .aseprite (BRIEF-ART-01 had no .ase references;
+  DECISIONS history untouched).
+- Item 3: decision logged (entry above).
+- Bonus: art/aseprite/chexy.aseprite exists, so the script ran a
+  real export — chexy.json is now proper json-array with numeric
+  frame keys ({frame} format); the Boot normalizer warning from
+  the GUI export is gone. Verified in-game: 11-frame idle, clean
+  console.
+
 ## 2026-07-29 — Handoff 2026-07-29-g applied
 
 - Item 1: DESIGN.md §2 gains rescue item 4b.

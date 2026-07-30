@@ -9,7 +9,8 @@ back. **Zero code changes either way.** Priority:
 
 ## Exporting from Aseprite
 
-Save the source as `art/aseprite/chexy.ase`, then:
+Save the source as `art/aseprite/chexy.aseprite` (the app's default
+extension; `.ase` also works — but not both), then:
 
 ```
 ./scripts/export-sprites.sh
