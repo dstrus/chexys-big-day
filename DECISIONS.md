@@ -178,6 +178,22 @@ spawn facing right.
 - Item 3: BRIEF-ART-01 §3 notes native-LEFT facing for all frames.
 - Item 4: decision logged (entry above).
 
+## 2026-07-29 — Dash decision (handoff 2026-07-29-h)
+
+KEEP.
+Dash ships in Level 2 (The Bell Desk) alongside weight tiers,
+per DESIGN.md §3.2. Remains disabled until Level 2's unlock
+moment. Velocity-clamp bug fixed in grey-box session;
+dashSpeed and dashDurationMs stay in tuning.js. BRIEF-02
+input requirements are now fully satisfied.
+
+## 2026-07-29 — Handoff 2026-07-29-h applied
+
+- Item 1: dash decision logged (entry above). Applied after
+  handoff -i (arrived out of sequence; append-only order kept).
+  Consistent with the provisional keep-for-L2 call already made
+  when BRIEF-02 started — no code changes needed.
+
 ## 2026-07-29 — Handoff 2026-07-29-g applied
 
 - Item 1: DESIGN.md §2 gains rescue item 4b.
