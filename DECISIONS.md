@@ -451,3 +451,28 @@ tighten as player mobility grows.
   Implementation already conformed (built from the human's
   clarification during -d) — no code changes.
 - Item 2: decision logged (entry above).
+
+## 2026-07-30 — Target lock added (handoff 2026-07-30-f)
+
+After
+continued unfairness reports: enemies commit to their
+acquired target until it becomes unavailable (definition in
+§2.4). Completes the fairness stack: spawn placement (-c),
+interception guarantees (-d/-e), and now legible intent.
+Predictability compensated via wave pressure, not
+retargeting.
+
+## 2026-07-30 — Handoff 2026-07-30-f applied
+
+- Sequence check: initially STOPPED — -e was missing from the log;
+  human supplied -e, which was applied first. -e now present ✓.
+- Item 1: DESIGN.md §2.4 gains the target-lock block verbatim.
+- Item 2: implemented — lock state on enemy AI (lockedTarget);
+  lock released only when the target stops being taggable
+  (tagged/stolen-by-another/despawned/carried-out) or on rescue
+  stun (re-acquires on waking; no-steal grace unchanged);
+  acquisition respects fresh-item grace; grab consumes the lock.
+  "Target lock lines" panel flag draws enemy→target lines while
+  the panel is open. Boss minions will inherit via the shared
+  enemy update path.
+- Item 3: decision logged (entry above).

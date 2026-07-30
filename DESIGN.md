@@ -128,6 +128,23 @@ only: enemy spawning, pursuit, and menace are unaffected. This does NOT promise
 every steal is saveable in practice — choosing not to chase
 is the game.
 
+**Target lock (unconditional):** when an enemy acquires an
+item target, it is locked to that target until the target
+becomes UNAVAILABLE, defined as: tagged/checked by the
+player, returned, stolen by a different enemy, despawned,
+or (for carriers) successfully carried out. Only then may
+the enemy re-acquire, and re-acquisition respects the
+fresh-item grace period as usual. Enemies never switch
+targets because a better option appears — enemy intent is
+information the player is entitled to plan against.
+Interactions: (a) a rescue-stunned enemy loses its lock and
+re-acquires on waking (its no-steal grace unchanged);
+(b) acquisition itself remains subject to fresh-item grace;
+(c) boss minions inherit this rule. Balance note: target
+lock makes enemies more predictable by design — if
+difficulty drops, compensate with spawn frequency/count in
+wave files, never by re-enabling retargeting.
+
 ## 2.5 Difficulty & Run Length (RESOLVED)
 
 - **Adaptive difficulty with a score trade-off.** Each level has a

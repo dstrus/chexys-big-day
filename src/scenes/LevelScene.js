@@ -171,11 +171,23 @@ export default class LevelScene extends Phaser.Scene {
     return best
   }
 
-  // debug overlay: spawn points ringed green (fair) / red (unfair), with a
-  // line to the enemy that currently beats the player there
+  // debug overlays (drawn only while the tuning panel is open):
+  // - fairnessDebug: spawn points ringed green (fair) / red (unfair), with
+  //   a line to the enemy that currently beats the player there
+  // - targetLockDebug: a line from each enemy to its locked target
   updateFairnessDebug() {
     this.fairnessGfx.clear()
-    if (!TUNING.fairnessDebug || !isTuningPanelOpen()) return
+    if (!isTuningPanelOpen()) return
+    if (TUNING.targetLockDebug) {
+      for (const enemy of this.enemies.getChildren()) {
+        if (!enemy.active) continue
+        const locked = enemy.getData('lockedTarget')
+        if (!locked || !locked.active) continue
+        this.fairnessGfx.lineStyle(1, 0xffe066, 0.5)
+        this.fairnessGfx.lineBetween(enemy.x, enemy.y, locked.x, locked.y)
+      }
+    }
+    if (!TUNING.fairnessDebug) return
     for (const pt of this.itemSpawnPoints) {
       const margin = this.fairnessMargin(pt)
       const fair = margin >= 0
@@ -303,18 +315,29 @@ export default class LevelScene extends Phaser.Scene {
         continue
       }
 
-      let nearest = null
-      let nearestD = Infinity
-      for (const item of this.items.getChildren()) {
-        if (!this.isTaggable(item) || this.isFreshItem(item)) continue
-        const d = Phaser.Math.Distance.Between(enemy.x, enemy.y, item.x, item.y)
-        if (d < nearestD) {
-          nearestD = d
-          nearest = item
+      // target lock (DESIGN.md §2.4): once acquired, an enemy commits to
+      // its target until the target becomes unavailable — never because a
+      // better option appears. Enemy intent is plannable information.
+      let locked = enemy.getData('lockedTarget')
+      if (locked && !this.isTaggable(locked)) {
+        enemy.setData('lockedTarget', null)
+        locked = null
+      }
+      if (!locked) {
+        // (re-)acquisition: nearest item, respecting fresh-item grace
+        let nearestD = Infinity
+        for (const item of this.items.getChildren()) {
+          if (!this.isTaggable(item) || this.isFreshItem(item)) continue
+          const d = Phaser.Math.Distance.Between(enemy.x, enemy.y, item.x, item.y)
+          if (d < nearestD) {
+            nearestD = d
+            locked = item
+          }
         }
+        if (locked) enemy.setData('lockedTarget', locked)
       }
 
-      const goal = nearest || this.player // no loot left: loiter near Chexy (body center)
+      const goal = locked || this.player // no loot left: loiter near Chexy (body center)
       const angle = Phaser.Math.Angle.Between(enemy.x, enemy.y, goal.x, goal.y)
       const bob = Math.sin(time / 300 + enemy.getData('seed')) * 18
       enemy.body.setVelocity(
@@ -347,6 +370,7 @@ export default class LevelScene extends Phaser.Scene {
     item.setData('stolen', true)
     item.body.enable = false
     enemy.setData('carrying', item)
+    enemy.setData('lockedTarget', null) // lock consumed by the grab
     enemy.setData('gloatUntil', this.time.now + TUNING.gloatMs)
     enemy.setData('carryDriftX', Phaser.Math.Between(-12, 12))
     enemy.body.setVelocity(0, 0) // frozen mid-taunt; getaway starts after the gloat
@@ -566,6 +590,7 @@ export default class LevelScene extends Phaser.Scene {
     const item = enemy.getData('carrying')
     enemy.setData('carrying', null)
     enemy.setData('gloatUntil', null)
+    enemy.setData('lockedTarget', null) // stun breaks the lock; re-acquires on waking
     enemy.setData('stunnedUntil', time + TUNING.enemyStunMs)
     enemy.setTint(0x777777)
     enemy.body.setVelocity(0, 0)

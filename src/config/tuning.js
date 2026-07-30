@@ -57,6 +57,7 @@ export const TUNING = {
   // debug helpers
   godMode: false, // steals still happen but never count toward the 3-lost fail
   fairnessDebug: false, // draw spawn-fairness estimates while the panel is open
+  targetLockDebug: false, // draw enemy -> locked-target lines while the panel is open
 }
 
 // Slider metadata for the debug tuning panel.
@@ -88,4 +89,5 @@ export const TUNING_SCHEMA = [
   { key: 'multiplierFloor', label: 'Multiplier floor', min: 0.4, max: 1, step: 0.05 },
   { key: 'godMode', label: 'God mode', type: 'flag' },
   { key: 'fairnessDebug', label: 'Fairness overlay', type: 'flag' },
+  { key: 'targetLockDebug', label: 'Target lock lines', type: 'flag' },
 ]
