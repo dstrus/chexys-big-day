@@ -224,6 +224,21 @@ in arrival order per append-only log.
 Note: the historical Gate 0 entry above still cites 200–400ms;
 left untouched (append-only log records what was true then).
 
+## 2026-07-29 — Style-proof economics (handoff 2026-07-29-k)
+
+First production frame (side-profile idle) took ~90 min
+including one-time costs. Projected full ~40-frame set:
+20–28 hours, viable at hobby pace. Animation plan in
+BRIEF-ART-01 §4 stands as written — no trimming, no
+asset-pack fallback. Visual half of the style-proof (in-motion
+in-game readability) still pending before Gate 2 art sign-off.
+
+## 2026-07-29 — Handoff 2026-07-29-k applied
+
+- Sequence check: -j present in log ✓ (day sequence -a..-k complete).
+- Item 1: style-proof economics logged (entry above). No code or
+  doc changes required.
+
 ## 2026-07-29 — Handoff 2026-07-29-g applied
 
 - Item 1: DESIGN.md §2 gains rescue item 4b.
