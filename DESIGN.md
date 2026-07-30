@@ -68,7 +68,7 @@ violence against people — the only thing you ever destroy is paper.
   hitstop, particle burst, punchy SFX. Item spread in level design
   must make positioning matter (no stand-and-mash spots).
 - **Heavy items** (weight tier 3, introduced Level 2): charged hold,
-  200–400ms (tunable), radial meter on Chexy. While holding, Chexy
+  250–350ms (tunable), radial meter on Chexy. While holding, Chexy
   is stationary and vulnerable — paper enemies can interrupt the
   hold, resetting the meter. This is the game's deliberate tension
   beat against the fast tap baseline.

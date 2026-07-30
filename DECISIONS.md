@@ -209,6 +209,21 @@ before applying a new one.
 - Item 2: CLAUDE.md handoff protocol gains the sequence-check rule.
 - Item 3: decision logged (entry above).
 
+## 2026-07-29 — Hold duration narrowed (handoff 2026-07-29-a, applied late)
+
+Hold duration narrowed after grey-box
+testing felt sluggish at 400ms.
+
+## 2026-07-29 — Handoff 2026-07-29-a applied
+
+Arrived after -j (re-sent following the missing--a flag); applied
+in arrival order per append-only log.
+- Item 1: DESIGN.md §2.3 hold range 200–400ms → 250–350ms.
+- Item 2: decision logged (entry above).
+- Item 3: tuning.js holdTagMs already 300 — no change needed.
+Note: the historical Gate 0 entry above still cites 200–400ms;
+left untouched (append-only log records what was true then).
+
 ## 2026-07-29 — Handoff 2026-07-29-g applied
 
 - Item 1: DESIGN.md §2 gains rescue item 4b.
