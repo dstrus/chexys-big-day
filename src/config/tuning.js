@@ -35,7 +35,7 @@ export const TUNING = {
   spawnFairnessGraceMs: 600,
   freshItemGraceMs: 800,
   // steal fairness (DESIGN.md §2.4 — unconditional)
-  carrierSpeedFactor: 0.6, // carrying encumbers a ticket
+  carrierSpeedFactor: 0.5, // carrying encumbers a ticket (locked, handoff 2026-07-30-g)
   gloatMs: 700, // taunt beat before the carrier moves
   stealCooldownMs: 6000, // gates steal INITIATIONS only (menace is free,
   // commitments are spaced); per-level override via map property, trending

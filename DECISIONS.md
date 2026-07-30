@@ -476,3 +476,28 @@ retargeting.
   the panel is open. Boss minions will inherit via the shared
   enemy update path.
 - Item 3: decision logged (entry above).
+
+## 2026-07-30 — Fairness stack closed (handoff 2026-07-30-g)
+
+carrierSpeedFactor 0.5 locked, assertion green expected;
+wave pressure, lock-baiting, and steal cooldown confirmed
+as-is from playtest ('barely succeeding' = Level 1 target
+texture). BIG DAY! perfect-clear bonus added: +25% score
+line, results stamp, per-level medal; celebration-only,
+never gating.
+
+## 2026-07-30 — Handoff 2026-07-30-g applied
+
+- Sequence check: -f present in log ✓.
+- Item 1: carrierSpeedFactor 0.6 → 0.5 in tuning.js. VERIFIED
+  GREEN: worst-case carrier escape 11.46s ≥ traversal 10.67s +
+  500ms margin (~290ms slack); no assertion warning fired in a
+  live headless run — first fully clean console since -d.
+  Wave pressure, lock-baiting, stealCooldownMs untouched.
+- Item 2: DESIGN.md §2.5 gains the BIG DAY! bonus block verbatim.
+  Implementation note: the bonus line, stamp animation, medal,
+  and localStorage all belong to BRIEF-02 Chunk 6 (results
+  screen + persistence, incl. the standing godMode exclusion);
+  bigDayBonusFactor enters tuning.js when that code lands — no
+  code written now per the handoff's design-append scope.
+- Item 3: decision logged (entry above).

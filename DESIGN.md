@@ -159,6 +159,17 @@ wave files, never by re-enabling retargeting.
   up" cue plays when it ramps back — comeback should feel good, not
   punitive. Rescues are neutral: they neither ease intensity nor
   advance the clean-streak recovery.
+
+  **BIG DAY! bonus:** completing a rush with ZERO lost items
+  awards a score bonus of +25% of the level score
+  (bigDayBonusFactor, tunable), applied at the results screen
+  as its own labeled line, and a "BIG DAY!" stamp animation on
+  the results screen (rubber-stamp slam, Chexology Orange
+  #FE701E, echoing the boss-ending stamp language). The
+  level-select entry shows a persistent BIG DAY medal per level
+  (localStorage, alongside best score; godMode exclusion
+  applies as ever). The bonus is additive celebration only —
+  never a requirement for progression, unlocks, or content.
 - Adaptation range is clamped per level (a tunable ±band around
   baseline) so the finale still feels like a finale even on the
   easiest band. All knobs live in `tuning.js`.
