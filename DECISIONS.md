@@ -165,6 +165,19 @@ JSON changes the level with no code changes (registry + import).
 NOTE: 60fps re-verify (DESIGN.md §7) still needs a human check —
 headless Chrome cannot measure frame rate.
 
+## 2026-07-29 — Sprite facing convention (handoff 2026-07-29-i)
+
+Left-facing native, code flips for rightward movement, default
+spawn facing right.
+
+## 2026-07-29 — Handoff 2026-07-29-i applied
+
+- Item 1: DESIGN.md §5 gains the locked facing-convention bullet.
+- Item 2: Player flip logic confirmed (unflipped left, flipped
+  right) and default spawn facing set to right.
+- Item 3: BRIEF-ART-01 §3 notes native-LEFT facing for all frames.
+- Item 4: decision logged (entry above).
+
 ## 2026-07-29 — Handoff 2026-07-29-g applied
 
 - Item 1: DESIGN.md §2 gains rescue item 4b.

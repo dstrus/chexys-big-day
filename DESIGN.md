@@ -190,6 +190,11 @@ it. Victory screen shows "99% Item Return Rate."
   body, so feet sit on platforms and tail overhang extends
   behind/above. Tag auto-target radius measures from the
   physics body center, not the sprite canvas.
+- **Sprite facing convention (locked):** all character sprites
+  are drawn LEFT-FACING native (tail on the right side of the
+  canvas). Code applies horizontal flip (flipX) for rightward
+  movement. Every animation frame for a character uses the
+  same native facing.
 
 ## 6. Audio
 

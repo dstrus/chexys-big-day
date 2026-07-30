@@ -17,6 +17,7 @@ export default class Player {
       // bottom-centers aligned — tail/ear overhang never collides
       this.sprite.body.setSize(32, 32)
       this.sprite.body.setOffset((this.sprite.width - 32) / 2, this.sprite.height - 32)
+      this.sprite.setFlipX(true) // default spawn facing: right (levels scroll rightward)
     } else {
       this.sprite.setDisplaySize(TUNING.playerSize, TUNING.playerSize)
     }
@@ -76,9 +77,9 @@ export default class Player {
     const left = this.cursors.left.isDown
     const right = this.cursors.right.isDown
     if (left !== right) this.facing = left ? -1 : 1
-    // mirror-flip is clean (no badge on the gameplay sprite). The current
-    // idle export faces LEFT natively — flip to face movement. If future
-    // art exports standardize on right-facing, invert this condition.
+    // Facing convention (DESIGN.md §5, locked): character sprites are
+    // LEFT-FACING native; flipX for rightward movement. Mirror-flip is
+    // clean — no badge on the gameplay sprite.
     if (this.usingArtFrame) this.sprite.setFlipX(this.facing === 1)
 
     if (this.frozen) {

@@ -64,6 +64,8 @@ gradients on the character (background layers may dither).
   - Tail trails BEHIND the body, spiral curl above the back — it
     must never cover the face at rest.
   - Feet read as two dark ovals; hands visible in action poses.
+- Native facing is LEFT for all frames (locked, handoff
+  2026-07-29-i).
 - **Turnaround:** side (primary), 3/4 front (for UI/results
   screens — badge appears here), back (for the hold-tag pose if we
   face away — TBD). Mirror-flip for left-facing is fully clean now
