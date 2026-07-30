@@ -194,6 +194,21 @@ input requirements are now fully satisfied.
   Consistent with the provisional keep-for-L2 call already made
   when BRIEF-02 started — no code changes needed.
 
+## 2026-07-29 — Handoff sequence check added to protocol (handoff 2026-07-29-j)
+
+After -h was applied out of order.
+Agents now verify the prior handoff ID exists in DECISIONS.md
+before applying a new one.
+
+## 2026-07-29 — Handoff 2026-07-29-j applied
+
+- Item 1: verified -h already applied (its DECISIONS entry exists);
+  sequence -b through -j is complete. No -a entry exists — it would
+  predate the protocol's adoption in -b. FLAG per the new rule: if a
+  2026-07-29-a was issued externally, it never reached this repo.
+- Item 2: CLAUDE.md handoff protocol gains the sequence-check rule.
+- Item 3: decision logged (entry above).
+
 ## 2026-07-29 — Handoff 2026-07-29-g applied
 
 - Item 1: DESIGN.md §2 gains rescue item 4b.

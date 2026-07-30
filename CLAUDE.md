@@ -88,3 +88,8 @@ Rules for both:
   before doing anything else.
 - If a handoff item is ambiguous or impossible, STOP and ask the
   human — never guess on a transcription task.
+- **Sequence check:** handoff IDs are sequential per day
+  (-a, -b, -c...). Before applying any handoff, scan
+  DECISIONS.md for the immediately preceding ID. If it is
+  missing, STOP and tell the human which handoff appears to
+  have been skipped before proceeding.
