@@ -7,9 +7,19 @@ import { TUNING } from '../config/tuning.js'
 export default class Player {
   constructor(scene, x, y) {
     this.scene = scene
-    this.sprite = scene.physics.add.sprite(x, y, 'chexy')
+    // style-proof: use the real idle frame when the art export exists,
+    // otherwise the grey-box rect
+    this.usingArtFrame = scene.textures.exists('chexy-idle')
+    this.sprite = scene.physics.add.sprite(x, y, this.usingArtFrame ? 'chexy-idle' : 'chexy')
     this.sprite.setCollideWorldBounds(true)
-    this.sprite.setDisplaySize(TUNING.playerSize, TUNING.playerSize)
+    if (this.usingArtFrame) {
+      // DESIGN.md §5 (locked): 48x48 canvas over a 32x32 physics body,
+      // bottom-centers aligned — tail/ear overhang never collides
+      this.sprite.body.setSize(32, 32)
+      this.sprite.body.setOffset((this.sprite.width - 32) / 2, this.sprite.height - 32)
+    } else {
+      this.sprite.setDisplaySize(TUNING.playerSize, TUNING.playerSize)
+    }
 
     const kb = scene.input.keyboard
     this.cursors = kb.createCursorKeys()
@@ -52,8 +62,9 @@ export default class Player {
     const JustDown = Phaser.Input.Keyboard.JustDown
     const JustUp = Phaser.Input.Keyboard.JustUp
 
-    // live-sync sprite size with the tuning slider (arcade body follows scale)
-    if (this.sprite.displayWidth !== TUNING.playerSize) {
+    // live-sync sprite size with the tuning slider (arcade body follows
+    // scale) — rect only; the art frame's canvas/body split is fixed
+    if (!this.usingArtFrame && this.sprite.displayWidth !== TUNING.playerSize) {
       this.sprite.setDisplaySize(TUNING.playerSize, TUNING.playerSize)
     }
 
@@ -65,6 +76,10 @@ export default class Player {
     const left = this.cursors.left.isDown
     const right = this.cursors.right.isDown
     if (left !== right) this.facing = left ? -1 : 1
+    // mirror-flip is clean (no badge on the gameplay sprite). The current
+    // idle export faces LEFT natively — flip to face movement. If future
+    // art exports standardize on right-facing, invert this condition.
+    if (this.usingArtFrame) this.sprite.setFlipX(this.facing === 1)
 
     if (this.frozen) {
       body.setAccelerationX(0)

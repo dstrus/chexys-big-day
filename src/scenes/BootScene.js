@@ -4,9 +4,24 @@ import coatroomMap from '../../assets/maps/coatroom.json'
 // Placeholder art only: every "sprite" is a generated texture. Maps are
 // real Tiled JSON (assets/maps/), imported through Vite and injected
 // into the tilemap cache here.
+// Style-proof drop-in: if the art track has exported a static idle frame,
+// bundle and load it; otherwise the placeholder rect carries on. Vite's
+// glob returns an empty object when the file is absent, so the build
+// never breaks on a missing sprite.
+const STYLE_PROOF_FRAME = import.meta.glob('../../assets/sprites/chexy-idle.png', {
+  eager: true,
+  query: '?url',
+  import: 'default',
+})
+
 export default class BootScene extends Phaser.Scene {
   constructor() {
     super('Boot')
+  }
+
+  preload() {
+    const url = Object.values(STYLE_PROOF_FRAME)[0]
+    if (url) this.load.image('chexy-idle', url)
   }
 
   create() {
