@@ -1,5 +1,6 @@
 import Phaser from 'phaser'
 import { GAME_WIDTH, GAME_HEIGHT } from '../main.js'
+import { HAPPY_LINES, UNHAPPY_LINES } from '../config/guestLines.js'
 
 const TEXT_STYLE = {
   fontFamily: 'monospace',
@@ -34,19 +35,110 @@ export default class UIOverlayScene extends Phaser.Scene {
     this.buildResultsPanel()
     this.buildPausePanel()
 
+    // guest bubbles (BRIEF-02 Chunk 3)
+    this.bubbles = []
+    this.lastLine = { happy: -1, angry: -1 }
+
     const bus = this.game.events
     bus.on('hud', this.onHud, this)
     bus.on('run-over', this.onRunOver, this)
     bus.on('run-reset', this.onRunReset, this)
     bus.on('heat-up', this.onHeatUp, this)
     bus.on('paused', this.onPaused, this)
+    bus.on('guest-happy', this.onGuestHappy, this)
+    bus.on('guest-angry', this.onGuestAngry, this)
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
       bus.off('hud', this.onHud, this)
       bus.off('run-over', this.onRunOver, this)
       bus.off('run-reset', this.onRunReset, this)
       bus.off('heat-up', this.onHeatUp, this)
       bus.off('paused', this.onPaused, this)
+      bus.off('guest-happy', this.onGuestHappy, this)
+      bus.off('guest-angry', this.onGuestAngry, this)
     })
+  }
+
+  // ---- guest bubbles: brand-styled (art/palette-brand.md), queued
+  // bottom-right, max 3 visible, auto-dismiss; translucent per DESIGN.md §5
+
+  onGuestHappy() {
+    this.showBubble('happy')
+  }
+
+  onGuestAngry() {
+    this.showBubble('angry')
+  }
+
+  pickLine(kind) {
+    const pool = kind === 'happy' ? HAPPY_LINES : UNHAPPY_LINES
+    let i
+    do {
+      i = Phaser.Math.Between(0, pool.length - 1)
+    } while (pool.length > 1 && i === this.lastLine[kind])
+    this.lastLine[kind] = i
+    return pool[i]
+  }
+
+  showBubble(kind) {
+    const text = this.add.text(0, 0, this.pickLine(kind), {
+      fontFamily: 'monospace',
+      fontSize: '9px',
+      color: '#344054', // Gray-700 text on light
+      wordWrap: { width: 132 },
+    })
+    const w = Math.ceil(text.width) + 16
+    const h = Math.ceil(text.height) + 10
+    const g = this.add.graphics()
+    g.fillStyle(0xf8f5f3, 0.88) // Background Tan panel, translucent
+    g.fillRoundedRect(0, 0, w, h, 4)
+    // Success Green / Alert Red accent bar
+    g.fillStyle(kind === 'happy' ? 0x12b76a : 0xea5151, 1)
+    g.fillRoundedRect(0, 0, 3, h, { tl: 4, bl: 4, tr: 0, br: 0 })
+    text.setPosition(9, 5)
+
+    const bubble = this.add.container(GAME_WIDTH - 8 - w, GAME_HEIGHT, [g, text]).setDepth(25)
+    bubble.bubbleH = h
+    bubble.setAlpha(0)
+
+    this.bubbles.unshift(bubble)
+    while (this.bubbles.length > 3) this.dismissBubble(this.bubbles[3], true)
+    this.layoutBubbles()
+    this.tweens.add({ targets: bubble, alpha: 1, duration: 120 })
+    bubble.dismissTimer = this.time.delayedCall(2500, () => this.dismissBubble(bubble))
+  }
+
+  // stack upward from the bottom-right corner — clear of the HUD (top)
+  // and the play-area center
+  layoutBubbles() {
+    let y = GAME_HEIGHT - 8
+    for (const b of this.bubbles) {
+      y -= b.bubbleH
+      this.tweens.add({ targets: b, y, duration: 140, ease: 'Quad.easeOut' })
+      y -= 4
+    }
+  }
+
+  dismissBubble(bubble, instant = false) {
+    const idx = this.bubbles.indexOf(bubble)
+    if (idx === -1) return
+    this.bubbles.splice(idx, 1)
+    bubble.dismissTimer?.remove()
+    if (instant) {
+      bubble.destroy()
+    } else {
+      this.tweens.add({
+        targets: bubble,
+        alpha: 0,
+        x: bubble.x + 10,
+        duration: 200,
+        onComplete: () => bubble.destroy(),
+      })
+    }
+    this.layoutBubbles()
+  }
+
+  clearBubbles() {
+    for (const b of [...this.bubbles]) this.dismissBubble(b, true)
   }
 
   buildPausePanel() {
@@ -62,6 +154,7 @@ export default class UIOverlayScene extends Phaser.Scene {
         .setOrigin(0.5),
     ])
     this.pausePanel.setVisible(false)
+    this.pausePanel.setDepth(30) // above guest bubbles
 
     this.pauseKeys = this.input.keyboard.addKeys('ESC,P')
     this.pausedAt = 0
@@ -105,6 +198,7 @@ export default class UIOverlayScene extends Phaser.Scene {
       this.resultsPrompt,
     ])
     this.resultsPanel.setVisible(false)
+    this.resultsPanel.setDepth(30) // above guest bubbles
 
     this.tweens.add({
       targets: this.resultsPrompt,
@@ -171,5 +265,6 @@ export default class UIOverlayScene extends Phaser.Scene {
 
   onRunReset() {
     this.resultsPanel.setVisible(false)
+    this.clearBubbles()
   }
 }

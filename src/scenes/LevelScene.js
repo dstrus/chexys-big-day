@@ -23,6 +23,7 @@ export default class LevelScene extends Phaser.Scene {
     // run state
     this.score = 0
     this.lostItems = 0
+    this.guestCounter = 0 // guests are lightweight data: one per item
     this.tagsCollected = 0
     this.itemsReturned = 0
     this.cleanStreak = 0
@@ -385,9 +386,11 @@ export default class LevelScene extends Phaser.Scene {
 
   onItemLost(enemy, item) {
     const pan = this.panFor(enemy.x)
+    const guest = item.getData('guest')
     item.destroy()
     enemy.destroy()
     playSfx('lose', pan)
+    this.game.events.emit('guest-angry', { guest })
     this.onStruggle()
     if (!TUNING.godMode) {
       this.lostItems += 1
@@ -471,6 +474,7 @@ export default class LevelScene extends Phaser.Scene {
     item.setData('heavy', heavy)
     item.setData('category', category)
     item.setData('spawnedAt', this.time.now) // fresh-item grace (DESIGN.md §2.4)
+    item.setData('guest', ++this.guestCounter) // every item belongs to a guest
     item.setTint(categoryColor(category)) // ChexApp tag colors
     item.setBounce(0.1)
     item.setCollideWorldBounds(true)
@@ -684,6 +688,7 @@ export default class LevelScene extends Phaser.Scene {
     this.tagParticles.emitParticleAt(item.x, item.y)
     playSfx(heavy ? 'heavyTag' : 'tag')
     this.player.triggerAnim('tag')
+    this.game.events.emit('guest-happy', { guest: item.getData('guest') })
 
     // checked in: flash green, then whisk it away
     item.setTint(0x7ee87e)

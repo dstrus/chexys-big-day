@@ -522,3 +522,16 @@ gating in v1.
 - Item 4: decision logged (entry above).
 - Scope note: results-screen hanger slots + chimes, stamp, +25%
   line, and max-per-level persistence land with BRIEF-02 Chunk 6.
+
+## 2026-07-30 — BRIEF-02 Chunk 3 COMPLETE (guest text-bubble UI)
+
+Guests are lightweight data (one per item, id only). Returns and
+losses emit guest-happy / guest-angry; UIOverlay renders brand-
+styled bubbles (Background Tan translucent panel, Gray-700 text,
+Success Green / Alert Red accent bar) queued bottom-right, max 3
+visible, ~2.5s auto-dismiss, never obscuring HUD or play-area
+center; results/pause panels layered above. Copy: 9 happy + 5
+unhappy placeholder lines in src/config/guestLines.js (silly-
+affectionate; human to punch up). Verified in-game via event-driven
+headless run: styling correct, console clean. 60fps re-verify
+still owed a human check.
