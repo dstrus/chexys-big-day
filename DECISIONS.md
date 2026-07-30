@@ -501,3 +501,24 @@ never gating.
   bigDayBonusFactor enters tuning.js when that code lands — no
   code written now per the handoff's design-append scope.
 - Item 3: decision logged (entry above).
+
+## 2026-07-30 — Golden Hangers added (handoff 2026-07-30-h)
+
+3/2/1 hangers for 0/1/2-loss clears, 3 losses still Game
+Over. Absorbs the BIG DAY medal (stamp + 25% bonus now the
+3-hanger celebration); HUD loss indicator restyled as
+hangers; max-per-level persisted; celebration-only, no
+gating in v1.
+
+## 2026-07-30 — Handoff 2026-07-30-h applied
+
+- Sequence check: -g present in log ✓.
+- Item 1: DESIGN.md §2.5 BIG DAY! block replaced verbatim with
+  Golden Hangers & the BIG DAY! bonus.
+- Item 2: HUD restyled — "LOST n/3" text replaced by three
+  placeholder hanger glyphs (gold intact, grey + red break as
+  losses accrue); no new HUD element. Verified in-game.
+- Item 3: DESIGN.md §8 gains the cosmetic-spending v2 line.
+- Item 4: decision logged (entry above).
+- Scope note: results-screen hanger slots + chimes, stamp, +25%
+  line, and max-per-level persistence land with BRIEF-02 Chunk 6.

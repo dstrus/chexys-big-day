@@ -15,7 +15,9 @@ export default class UIOverlayScene extends Phaser.Scene {
   }
 
   create() {
-    this.lostText = this.add.text(8, 6, '', TEXT_STYLE)
+    // the run's prospective Golden Hangers (DESIGN.md §2.5): the loss
+    // counter re-expressed — hangers break as losses accrue
+    this.hangerGfx = this.add.graphics()
     this.timerText = this.add.text(GAME_WIDTH / 2, 6, '', TEXT_STYLE).setOrigin(0.5, 0)
     this.scoreText = this.add.text(GAME_WIDTH - 8, 6, '', TEXT_STYLE).setOrigin(1, 0)
     this.multText = this.add.text(GAME_WIDTH - 8, 19, '', TEXT_STYLE).setOrigin(1, 0)
@@ -113,13 +115,31 @@ export default class UIOverlayScene extends Phaser.Scene {
     })
   }
 
+  // gold hanger = still earnable, broken grey = a loss (placeholder art)
+  drawHangers(lost) {
+    const g = this.hangerGfx
+    g.clear()
+    for (let i = 0; i < 3; i++) {
+      const x = 10 + i * 17
+      const y = 7
+      const intact = i < 3 - lost
+      const color = intact ? 0xf3b024 : 0x59595b
+      g.lineStyle(1, color, intact ? 1 : 0.7)
+      g.lineBetween(x + 6, y, x + 6, y + 3) // hook
+      g.strokeTriangle(x, y + 10, x + 12, y + 10, x + 6, y + 3)
+      if (!intact) {
+        g.lineStyle(1, 0xea5151, 0.9) // the break
+        g.lineBetween(x + 2, y + 11, x + 10, y + 1)
+      }
+    }
+  }
+
   onHud({ score, lost, multiplier, timeLeft }) {
     const m = Math.floor(Math.max(0, timeLeft) / 60)
     const s = String(Math.max(0, timeLeft) % 60).padStart(2, '0')
     this.timerText.setText(`${m}:${s}`)
     this.scoreText.setText(`SCORE ${score}`)
-    this.lostText.setText(`LOST ${lost}/3`)
-    this.lostText.setColor(lost === 0 ? '#f2ecd8' : lost === 1 ? '#ffe066' : '#ff6666')
+    this.drawHangers(lost)
     this.multText.setText(`x${multiplier.toFixed(2)}`)
     this.multText.setColor(
       multiplier < 1 ? '#ff9966' : multiplier > 1 ? '#7ee87e' : '#f2ecd8'

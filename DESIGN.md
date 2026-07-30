@@ -160,16 +160,20 @@ wave files, never by re-enabling retargeting.
   punitive. Rescues are neutral: they neither ease intensity nor
   advance the clean-streak recovery.
 
-  **BIG DAY! bonus:** completing a rush with ZERO lost items
-  awards a score bonus of +25% of the level score
-  (bigDayBonusFactor, tunable), applied at the results screen
-  as its own labeled line, and a "BIG DAY!" stamp animation on
-  the results screen (rubber-stamp slam, Chexology Orange
-  #FE701E, echoing the boss-ending stamp language). The
-  level-select entry shows a persistent BIG DAY medal per level
-  (localStorage, alongside best score; godMode exclusion
-  applies as ever). The bonus is additive celebration only —
-  never a requirement for progression, unlocks, or content.
+  **Golden Hangers & the BIG DAY! bonus:** every completed
+  rush awards Golden Hangers by losses: 0 losses = 3 hangers,
+  1 loss = 2, 2 losses = 1. (3 losses remains Game Over — the
+  hanger meter IS the loss counter, re-expressed.) Results
+  screen shows the three hanger slots filling with a chime per
+  hanger; a 3-hanger clear additionally triggers the BIG DAY!
+  rubber-stamp animation (Chexology Orange #FE701E) and the
+  +25% score line (bigDayBonusFactor, tunable). Level select
+  displays best hangers earned per level (0–3 icons);
+  persistent value is the MAX across runs, never downgraded.
+  localStorage alongside best score; godMode runs record
+  nothing. Hangers are celebration and collection only — they
+  never gate progression, levels, or content in v1 (cosmetic
+  spending is a v2-list idea).
 - Adaptation range is clamped per level (a tunable ±band around
   baseline) so the finale still feels like a finale even on the
   easiest band. All knobs live in `tuning.js`.
@@ -290,6 +294,8 @@ it. Victory screen shows "99% Item Return Rate."
 - Gamepad support
 - Guest-matching mechanic (deferred from §3.2 — confirmed v2)
 - Sequel title reserved: Chexy's BIGGEST DAY
+- Golden Hanger cosmetic spending (title-screen Chexy poses,
+  leaderboard flair)
 
 ## 9. Milestone Gates
 
