@@ -3,13 +3,7 @@ import { GAME_WIDTH, GAME_HEIGHT } from '../main.js'
 import { TUNING } from '../config/tuning.js'
 import { HAPPY_LINES, UNHAPPY_LINES } from '../config/guestLines.js'
 import { audio } from '../systems/AudioBus.js'
-
-// hanger glyph shared by the HUD row (s=1) and the results row (s=2)
-function drawHanger(g, x, y, s, color, alpha) {
-  g.lineStyle(Math.max(1, Math.round(s)), color, alpha)
-  g.lineBetween(x + 6 * s, y, x + 6 * s, y + 3 * s) // hook
-  g.strokeTriangle(x, y + 10 * s, x + 12 * s, y + 10 * s, x + 6 * s, y + 3 * s)
-}
+import { drawHanger } from '../ui/hanger.js'
 
 const TEXT_STYLE = {
   fontFamily: 'monospace',
@@ -196,7 +190,7 @@ export default class UIOverlayScene extends Phaser.Scene {
       .text(GAME_WIDTH / 2, 130, '', { ...TEXT_STYLE, align: 'center', lineSpacing: 6 })
       .setOrigin(0.5)
     this.resultsPrompt = this.add
-      .text(GAME_WIDTH / 2, 185, 'PRESS R TO RETRY', { ...TEXT_STYLE, color: '#ffffff' })
+      .text(GAME_WIDTH / 2, 185, 'R RETRY · C CONTINUE', { ...TEXT_STYLE, color: '#ffffff' })
       .setOrigin(0.5)
     // Golden Hanger row: the screen's visual second beat (handoff -i)
     this.resultHangerGfx = this.add.graphics()
@@ -293,7 +287,17 @@ export default class UIOverlayScene extends Phaser.Scene {
     }
   }
 
-  onRunOver({ cleared, score, itemsReturned, tagsCollected, lost }) {
+  onRunOver({
+    cleared,
+    score,
+    bonus,
+    itemsReturned,
+    guestsServed,
+    tagsCollected,
+    lost,
+    bestMultiplier,
+    returnRate,
+  }) {
     this.hangerTimers.forEach((t) => t.remove())
     this.hangerTimers = []
     this.resultHangerGfx.clear()
@@ -320,14 +324,16 @@ export default class UIOverlayScene extends Phaser.Scene {
     }
 
     // clear layout (handoff 2026-07-30-i): success text → hanger row →
-    // score lines → actions; 8-point gaps (16 / 8 / 24), stack centered
-    // as a group whether the score block is 3 or 4 lines
+    // grading (DESIGN.md §2) → actions; 8-point gaps (16 / 8 / 24),
+    // stack centered as a group regardless of line count
     const hangers = Math.max(0, 3 - lost)
-    const bonus = hangers === 3 ? Math.round(score * TUNING.bigDayBonusFactor) : 0
 
     const lines = [
       `ITEMS RETURNED  ${itemsReturned}`,
+      `GUESTS SERVED  ${guestsServed}`,
       `TAGS COLLECTED  ${tagsCollected}`,
+      `ITEM RETURN RATE  ${returnRate}%`,
+      `BEST MULTIPLIER  x${bestMultiplier.toFixed(2)}`,
       `SCORE  ${score}`,
     ]
     if (bonus > 0) lines.push(`BIG DAY! BONUS  +${bonus}`)

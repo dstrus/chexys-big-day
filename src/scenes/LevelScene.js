@@ -5,6 +5,7 @@ import { getWaveSchedule } from '../config/waveRegistry.js'
 import Player from '../entities/Player.js'
 import WaveRunner from '../systems/WaveRunner.js'
 import { audio } from '../systems/AudioBus.js'
+import { recordRun } from '../systems/progress.js'
 import { isTuningPanelOpen, setPanelReadout } from '../debug/tuningPanel.js'
 
 // Generic level scene: boots any Tiled map by key (assets/maps/README.md
@@ -29,6 +30,7 @@ export default class LevelScene extends Phaser.Scene {
     this.cleanStreak = 0
     this.intensity = 1.0
     this.multiplier = 1.0
+    this.bestMultiplier = 1.0
     this.runOver = false
 
     this.buildMap()
@@ -69,6 +71,7 @@ export default class LevelScene extends Phaser.Scene {
     )
 
     this.keyR = this.input.keyboard.addKey('R')
+    this.keyC = this.input.keyboard.addKey('C')
     this.pauseKeys = this.input.keyboard.addKeys('ESC,P')
 
     // the rush is entirely data-driven: the map's waveFile property
@@ -424,6 +427,7 @@ export default class LevelScene extends Phaser.Scene {
       this.multiplier = Math.round((1 + (this.intensity - 1) * slope) * 100) / 100
       this.multiplier = Math.max(TUNING.multiplierFloor, this.multiplier)
     }
+    this.bestMultiplier = Math.max(this.bestMultiplier ?? 1, this.multiplier)
   }
 
   onStruggle() {
@@ -468,12 +472,25 @@ export default class LevelScene extends Phaser.Scene {
     this.player.playEndPose(cleared)
     audio.duckMusic() // music dips under the results screen
     audio.play(cleared ? 'runClear' : 'runFail')
+
+    // grading per DESIGN.md §2 + the Golden Hanger / BIG DAY math (§2.5)
+    const hangers = cleared ? Math.max(0, 3 - this.lostItems) : 0
+    const bonus = hangers === 3 ? Math.round(this.score * TUNING.bigDayBonusFactor) : 0
+    const contested = this.itemsReturned + this.lostItems
+    const returnRate = contested === 0 ? 100 : Math.round((this.itemsReturned / contested) * 100)
+    const levelId = this.levelProps.levelId ?? this.mapKey
+    if (cleared) recordRun(levelId, { finalScore: this.score + bonus, hangers })
+
     this.game.events.emit('run-over', {
       cleared,
       score: this.score,
+      bonus,
       itemsReturned: this.itemsReturned,
+      guestsServed: this.itemsReturned, // one guest per item (Chunk 3 model)
       tagsCollected: this.tagsCollected,
       lost: this.lostItems,
+      bestMultiplier: this.bestMultiplier,
+      returnRate,
     })
   }
 
@@ -737,6 +754,13 @@ export default class LevelScene extends Phaser.Scene {
         audio.play('uiSelect')
         this.game.events.emit('run-reset')
         this.scene.restart({ mapKey: this.mapKey })
+      } else if (Phaser.Input.Keyboard.JustDown(this.keyC)) {
+        // continue: back to the shift board
+        audio.play('uiSelect')
+        audio.stopMusic()
+        this.game.events.emit('run-reset')
+        this.scene.stop('UIOverlay')
+        this.scene.start('LevelSelect')
       }
       return
     }

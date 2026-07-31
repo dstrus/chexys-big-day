@@ -578,3 +578,22 @@ panel sliders. Docs: assets/audio/README.md.
 BONUS FIX: pause-resume had been silently broken since Chunk 1 —
 UIOverlay still resumed the deleted 'Playground' scene key; now
 resumes 'Level'. 60fps re-verify still owed a human check.
+
+## 2026-07-31 — BRIEF-02 Chunk 6 COMPLETE (results + level flow + persistence)
+
+Full loop: Title → level select ("SELECT YOUR SHIFT") → level →
+results → continue back to select (or R to retry). Coatroom
+unlocked; slots 2–5 shown as "???". Results grading per DESIGN.md
+§2: items returned, guests served, tags collected, item return rate
+% (the 99% joke's payoff meter), best multiplier held, score, and
+the BIG DAY! bonus line — layered onto the -i hanger ceremony.
+Persistence (localStorage, the one storage dependency, guarded for
+blocked storage): best score per level (bonus included) and max
+hangers, never downgraded; god-mode runs record nothing. Level
+select shows BEST score + 0–3 hanger icons per level. Verified end
+to end via headless CDP including the max-merge case (a worse-hanger
+higher-score run raises the score, keeps the hangers). BRIEF-02 exit
+condition met: Coatroom fully playable end to end, data-driven,
+sound hooks live, sprite hooks receiving real art, results/flow in
+place. Gate 2 code half done — the gate itself needs human sign-off
+(and the standing 60fps check).

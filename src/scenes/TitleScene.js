@@ -45,8 +45,7 @@ export default class TitleScene extends Phaser.Scene {
     this.input.keyboard.once('keydown', () => {
       unlockAudio() // first user gesture — safe to create the AudioContext
       audio.play('uiSelect')
-      this.scene.launch('UIOverlay')
-      this.scene.start('Level', { mapKey: 'coatroom' })
+      this.scene.start('LevelSelect')
     })
   }
 }
