@@ -4,20 +4,25 @@
 
 export const HAPPY_LINES = [
   'Got my coat, thanks! 🎉',
-  'That was FAST. Five stars.',
-  'My phone IS my ticket?! The future.',
-  'You are my favorite squirrel employee.',
-  'Checked in before I finished my latte!',
-  'No paper ticket? No problem. Amazing.',
-  "Tell Chexy I said hi. Wait — you ARE Chexy!",
-  'Smoothest check-in of my LIFE.',
+  'That was FAST!',
+  '⭐️⭐️⭐️⭐️⭐️',
+  'I *am* my claim ticket ticket?! 🤯',
+  "Great service! Squirrel, you know it's true!",
+  "So fast! Squirrel can't help it!",
+  'No paper? No problem. Amazing.',
+  "I've been waiting for a squirrel like you!",
+  'smoothest check-in of my life fr',
   'Last time I waited 45 minutes. This took 4 seconds.',
+  "Chexy is this season's It Squirrel!",
+  'Who needs flying cars? This is the future!',
+  'chexmaxxing at da club is the new meta',
+  'no paper lol so random lol',
 ]
 
 export const UNHAPPY_LINES = [
   'Hey!! That ticket took my coat!',
   'My stuff!! It went THAT way!',
-  'A piece of paper just carried off my bag?!',
+  'Where is that piece of paper taking my bag?!',
   'One star. ONE. STAR.',
-  'The paperwork has gone feral again.',
+  'The paper has gone feral again.',
 ]
