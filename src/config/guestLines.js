@@ -22,7 +22,7 @@ export const HAPPY_LINES = [
   'I think I have a squirrel crush!',
   'Squirrel Power!',
   'Squirrels 5eva!',
-  'Chexy is such a sqirrelboss!',
+  'Chexy is such a squirrelboss!',
 ]
 
 export const UNHAPPY_LINES = [
