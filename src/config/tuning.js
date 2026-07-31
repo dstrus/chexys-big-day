@@ -53,6 +53,7 @@ export const TUNING = {
   // scoring
   standardItemScore: 100,
   heavyItemScore: 300,
+  bigDayBonusFactor: 0.25, // 3-hanger clear bonus (DESIGN.md §2.5)
 
   // debug helpers
   godMode: false, // steals still happen but never count toward the 3-lost fail

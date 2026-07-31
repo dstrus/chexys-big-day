@@ -67,6 +67,16 @@ const SFX = {
     tone({ type: 'sawtooth', from: 900, to: 200, dur: 0.08, vol: 0.12, pan })
     tone({ type: 'square', from: 500, to: 700, dur: 0.07, delay: 0.06, vol: 0.1, pan })
   },
+  // bright ding for each Golden Hanger filling on the results screen
+  chime: (pan) => {
+    tone({ type: 'triangle', from: 880, to: 1320, dur: 0.12, vol: 0.12, pan })
+    tone({ type: 'triangle', from: 1760, dur: 0.08, delay: 0.05, vol: 0.06, pan })
+  },
+  // rubber-stamp slam for the BIG DAY! celebration
+  stamp: (pan) => {
+    tone({ type: 'square', from: 130, to: 60, dur: 0.12, vol: 0.16, pan })
+    tone({ type: 'sawtooth', from: 90, to: 45, dur: 0.16, delay: 0.03, vol: 0.1, pan })
+  },
   heatUp: (pan) => {
     tone({ from: 523, dur: 0.06, vol: 0.08, pan })
     tone({ from: 659, dur: 0.06, delay: 0.06, vol: 0.08, pan })

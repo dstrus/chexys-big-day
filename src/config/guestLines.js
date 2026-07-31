@@ -17,12 +17,22 @@ export const HAPPY_LINES = [
   'Who needs flying cars? This is the future!',
   'chexmaxxing at da club is the new meta',
   'no paper lol so random lol',
+  'got my coat kthnxbai',
+  'Atta squirrel, Chexy!',
+  'I think I have a squirrel crush!',
+  'Squirrel Power!',
+  'Squirrels 5eva!',
+  'Chexy is such a sqirrelboss!',
 ]
 
 export const UNHAPPY_LINES = [
   'Hey!! That ticket took my coat!',
+  "losing my stuff is nobody's vibe",
   'My stuff!! It went THAT way!',
   'Where is that piece of paper taking my bag?!',
   'One star. ONE. STAR.',
   'The paper has gone feral again.',
+  'my stuuuuuuff',
+  'ughghgh',
+  
 ]

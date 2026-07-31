@@ -1,6 +1,15 @@
 import Phaser from 'phaser'
 import { GAME_WIDTH, GAME_HEIGHT } from '../main.js'
+import { TUNING } from '../config/tuning.js'
 import { HAPPY_LINES, UNHAPPY_LINES } from '../config/guestLines.js'
+import { playSfx } from '../systems/sfx.js'
+
+// hanger glyph shared by the HUD row (s=1) and the results row (s=2)
+function drawHanger(g, x, y, s, color, alpha) {
+  g.lineStyle(Math.max(1, Math.round(s)), color, alpha)
+  g.lineBetween(x + 6 * s, y, x + 6 * s, y + 3 * s) // hook
+  g.strokeTriangle(x, y + 10 * s, x + 12 * s, y + 10 * s, x + 6 * s, y + 3 * s)
+}
 
 const TEXT_STYLE = {
   fontFamily: 'monospace',
@@ -188,6 +197,20 @@ export default class UIOverlayScene extends Phaser.Scene {
     this.resultsPrompt = this.add
       .text(GAME_WIDTH / 2, 185, 'PRESS R TO RETRY', { ...TEXT_STYLE, color: '#ffffff' })
       .setOrigin(0.5)
+    // Golden Hanger row: the screen's visual second beat (handoff -i)
+    this.resultHangerGfx = this.add.graphics()
+    this.hangerTimers = []
+    // BIG DAY! rubber stamp — Chexology Orange, slams over the title region
+    this.stampText = this.add
+      .text(GAME_WIDTH / 2 + 108, 60, 'BIG DAY!', {
+        fontFamily: 'monospace',
+        fontSize: '22px',
+        fontStyle: 'bold',
+        color: '#fe701e',
+      })
+      .setOrigin(0.5)
+      .setRotation(-0.21)
+      .setVisible(false)
 
     this.resultsPanel = this.add.container(0, 0, [
       this.add
@@ -195,7 +218,9 @@ export default class UIOverlayScene extends Phaser.Scene {
         .setOrigin(0.5),
       this.resultsTitle,
       this.resultsBody,
+      this.resultHangerGfx,
       this.resultsPrompt,
+      this.stampText,
     ])
     this.resultsPanel.setVisible(false)
     this.resultsPanel.setDepth(30) // above guest bubbles
@@ -217,10 +242,7 @@ export default class UIOverlayScene extends Phaser.Scene {
       const x = 10 + i * 17
       const y = 7
       const intact = i < 3 - lost
-      const color = intact ? 0xf3b024 : 0x59595b
-      g.lineStyle(1, color, intact ? 1 : 0.7)
-      g.lineBetween(x + 6, y, x + 6, y + 3) // hook
-      g.strokeTriangle(x, y + 10, x + 12, y + 10, x + 6, y + 3)
+      drawHanger(g, x, y, 1, intact ? 0xf3b024 : 0x59595b, intact ? 1 : 0.7)
       if (!intact) {
         g.lineStyle(1, 0xea5151, 0.9) // the break
         g.lineBetween(x + 2, y + 11, x + 10, y + 1)
@@ -252,19 +274,111 @@ export default class UIOverlayScene extends Phaser.Scene {
     })
   }
 
-  onRunOver({ cleared, score, itemsReturned, tagsCollected }) {
+  // results hanger row at 2x scale: three slots always shown — unearned
+  // slots stay as tarnished outlines so what was left on the table reads
+  drawResultHangers(filled, earned) {
+    const g = this.resultHangerGfx
+    g.clear()
+    const y = this.hangerRowY
+    for (let i = 0; i < 3; i++) {
+      const x = GAME_WIDTH / 2 - 44 + i * 32
+      if (i < filled) {
+        drawHanger(g, x, y, 2, 0xf3b024, 1) // earned + landed
+      } else if (i < earned) {
+        drawHanger(g, x, y, 2, 0xf3b024, 0.15) // earned, about to land
+      } else {
+        drawHanger(g, x, y, 2, 0x59595b, 0.6) // left on the table
+      }
+    }
+  }
+
+  onRunOver({ cleared, score, itemsReturned, tagsCollected, lost }) {
+    this.hangerTimers.forEach((t) => t.remove())
+    this.hangerTimers = []
+    this.resultHangerGfx.clear()
+    this.stampText.setVisible(false)
+
     this.resultsTitle.setText(cleared ? 'RUSH SURVIVED!' : 'TOO MANY LOST ITEMS')
     this.resultsTitle.setColor(cleared ? '#7ee87e' : '#ff6666')
-    this.resultsBody.setText(
-      [`ITEMS RETURNED  ${itemsReturned}`, `TAGS COLLECTED  ${tagsCollected}`, `SCORE  ${score}`].join(
-        '\n'
+
+    if (!cleared) {
+      // fail layout unchanged: no hanger ceremony on a game over
+      this.resultsTitle.setY(84)
+      this.resultsBody.setOrigin(0.5, 0.5)
+      this.resultsBody.setY(130)
+      this.resultsPrompt.setY(185)
+      this.resultsBody.setText(
+        [
+          `ITEMS RETURNED  ${itemsReturned}`,
+          `TAGS COLLECTED  ${tagsCollected}`,
+          `SCORE  ${score}`,
+        ].join('\n')
       )
-    )
+      this.resultsPanel.setVisible(true)
+      return
+    }
+
+    // clear layout (handoff 2026-07-30-i): success text → hanger row →
+    // score lines → actions; 8-point gaps (16 / 8 / 24), stack centered
+    // as a group whether the score block is 3 or 4 lines
+    const hangers = Math.max(0, 3 - lost)
+    const bonus = hangers === 3 ? Math.round(score * TUNING.bigDayBonusFactor) : 0
+
+    const lines = [
+      `ITEMS RETURNED  ${itemsReturned}`,
+      `TAGS COLLECTED  ${tagsCollected}`,
+      `SCORE  ${score}`,
+    ]
+    if (bonus > 0) lines.push(`BIG DAY! BONUS  +${bonus}`)
+    this.resultsBody.setOrigin(0.5, 0)
+    this.resultsBody.setText(lines.join('\n'))
+
+    const HANGER_H = 20 // 2x glyph height
+    const total = 16 + 16 + HANGER_H + 8 + this.resultsBody.height + 24 + 12
+    const top = Math.round((GAME_HEIGHT - total) / 2)
+    this.resultsTitle.setY(top + 8) // 16px title, origin-centered
+    this.hangerRowY = top + 32
+    this.resultsBody.setY(top + 32 + HANGER_H + 8)
+    this.resultsPrompt.setY(top + 32 + HANGER_H + 8 + this.resultsBody.height + 24 + 6)
+    this.stampText.setY(this.resultsTitle.y - 4) // overlaps the title region
+
+    // sequential fill is the screen's second beat: chime per hanger
+    this.drawResultHangers(0, hangers)
+    for (let i = 1; i <= hangers; i++) {
+      this.hangerTimers.push(
+        this.time.delayedCall(400 * i, () => {
+          this.drawResultHangers(i, hangers)
+          playSfx('chime')
+          if (i === 3) this.slamStamp()
+        })
+      )
+    }
+
     this.resultsPanel.setVisible(true)
+  }
+
+  // BIG DAY! rubber-stamp slam — overlaps the title region, clear of the
+  // hanger row (handoff -i item 3)
+  slamStamp() {
+    this.stampText.setVisible(true)
+    this.stampText.setScale(3)
+    this.stampText.setAlpha(0)
+    playSfx('stamp')
+    this.tweens.add({
+      targets: this.stampText,
+      scale: 1,
+      alpha: 1,
+      duration: 180,
+      ease: 'Back.easeIn',
+    })
   }
 
   onRunReset() {
     this.resultsPanel.setVisible(false)
+    this.hangerTimers.forEach((t) => t.remove())
+    this.hangerTimers = []
+    this.resultHangerGfx.clear()
+    this.stampText.setVisible(false)
     this.clearBubbles()
   }
 }

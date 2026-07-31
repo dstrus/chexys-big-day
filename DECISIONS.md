@@ -535,3 +535,28 @@ unhappy placeholder lines in src/config/guestLines.js (silly-
 affectionate; human to punch up). Verified in-game via event-driven
 headless run: styling correct, console clean. 60fps re-verify
 still owed a human check.
+
+## 2026-07-30 — Results layout (handoff 2026-07-30-i)
+
+Hanger row centered between success
+text and score; empty slots always shown; sequential fill
+is the screen's second beat.
+
+## 2026-07-30 — Handoff 2026-07-30-i applied
+
+- Sequence check: -h present in log ✓.
+- Item 1: clear-results stack implemented — success text → hanger
+  row (3 slots, earned fill sequentially at 400ms with a chime;
+  unearned render as tarnished outlines) → score lines (BIG DAY!
+  +25% line when 3 hangers; bigDayBonusFactor added to tuning) →
+  retry prompt. Fail layout unchanged (no ceremony on game over).
+- Item 2: 8-point gaps (16 / 8 / 24) with the stack computed and
+  centered as a group for both 3- and 4-line score blocks.
+- Item 3: verified at 1, 2, and 3 hangers via crafted run-over
+  events + screenshots; the stamp slams over the title region
+  (space is tight at 480×270, per the item's allowance) and never
+  touches the hanger row. New 'chime' and 'stamp' SFX.
+- Item 4: decision logged (entry above).
+- Note: this pulls the ceremony's display half forward from
+  Chunk 6; persistence (max hangers, best score, godMode
+  exclusion) still lands with Chunk 6.
