@@ -118,6 +118,15 @@ export default class LevelScene extends Phaser.Scene {
 
     const spawns = map.getObjectLayer('spawns').objects
     this.playerSpawn = spawns.find((o) => o.name === 'player')
+    // an embedded spawn defeats arcade separation and parks the body on
+    // the world floor below the tiles — never let that be silent
+    const spawnTile = this.mainLayer.getTileAtWorldXY(this.playerSpawn.x, this.playerSpawn.y)
+    if (spawnTile && spawnTile.collides) {
+      console.warn(
+        `Player spawn (${this.playerSpawn.x}, ${this.playerSpawn.y}) is inside a ` +
+          'colliding tile — move the spawn point in the map.'
+      )
+    }
     this.itemSpawnPoints = spawns.filter((o) => o.name.startsWith('item'))
     this.zones = (map.getObjectLayer('zones')?.objects ?? []).slice() // reserved for later chunks
   }

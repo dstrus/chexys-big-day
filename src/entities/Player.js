@@ -25,7 +25,9 @@ export default class Player {
       this.sprite.setDisplaySize(TUNING.playerSize, TUNING.playerSize)
     } else {
       // DESIGN.md §5 (locked): art canvas over a 32x32 physics body,
-      // bottom-centers aligned — tail/ear overhang never collides
+      // bottom-centers aligned — tail/ear overhang never collides.
+      // Offset (8, 16) per handoff 2026-07-29-e: horizontally centered,
+      // flush with the texture bottom (texture bottom == body bottom).
       this.sprite.body.setSize(32, 32)
       this.sprite.body.setOffset((this.sprite.width - 32) / 2, this.sprite.height - 32)
       this.sprite.setFlipX(true) // default spawn facing: right (levels scroll rightward)
