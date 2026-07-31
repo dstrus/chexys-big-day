@@ -1,5 +1,6 @@
 import Phaser from 'phaser'
 import coatroomMap from '../../assets/maps/coatroom.json'
+import { audio } from '../systems/AudioBus.js'
 
 // Placeholder art only: every "sprite" is a generated texture. Maps are
 // real Tiled JSON (assets/maps/), imported through Vite and injected
@@ -52,6 +53,7 @@ export default class BootScene extends Phaser.Scene {
   }
 
   preload() {
+    audio.preload(this) // queue any dropped-in audio files
     const atlasPng = Object.values(ATLAS_PNG)[0]
     const atlasJson = Object.values(ATLAS_JSON)[0]
     if (atlasPng && atlasJson) {
@@ -67,6 +69,7 @@ export default class BootScene extends Phaser.Scene {
   }
 
   create() {
+    audio.init(this.game)
     if (this.textures.exists('chexy-atlas')) {
       // one anim per Aseprite frame tag (idle, run, jump, ...)
       this.anims.createFromAseprite('chexy-atlas')

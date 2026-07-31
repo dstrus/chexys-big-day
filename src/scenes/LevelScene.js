@@ -4,7 +4,7 @@ import { categoryColor } from '../config/itemCategories.js'
 import { getWaveSchedule } from '../config/waveRegistry.js'
 import Player from '../entities/Player.js'
 import WaveRunner from '../systems/WaveRunner.js'
-import { playSfx } from '../systems/sfx.js'
+import { audio } from '../systems/AudioBus.js'
 import { isTuningPanelOpen, setPanelReadout } from '../debug/tuningPanel.js'
 
 // Generic level scene: boots any Tiled map by key (assets/maps/README.md
@@ -94,6 +94,8 @@ export default class LevelScene extends Phaser.Scene {
       callback: () => this.tickClock(),
     })
 
+    audio.play('rushStart')
+    audio.startMusic(this.levelProps.levelId ?? this.mapKey) // loop hook per level
     this.emitHud()
   }
 
@@ -384,7 +386,7 @@ export default class LevelScene extends Phaser.Scene {
     enemy.setData('gloatUntil', this.time.now + TUNING.gloatMs)
     enemy.setData('carryDriftX', Phaser.Math.Between(-12, 12))
     enemy.body.setVelocity(0, 0) // frozen mid-taunt; getaway starts after the gloat
-    playSfx('gloat', this.panFor(item.x))
+    audio.play('gloat', this.panFor(item.x))
   }
 
   onEnemyTouchPlayer(playerSprite, enemy) {
@@ -398,7 +400,7 @@ export default class LevelScene extends Phaser.Scene {
     const guest = item.getData('guest')
     item.destroy()
     enemy.destroy()
-    playSfx('lose', pan)
+    audio.play('lose', pan)
     this.game.events.emit('guest-angry', { guest })
     this.onStruggle()
     if (!TUNING.godMode) {
@@ -426,7 +428,9 @@ export default class LevelScene extends Phaser.Scene {
 
   onStruggle() {
     this.cleanStreak = 0
+    const before = this.intensity
     this.setIntensity(this.intensity - TUNING.adaptiveStep)
+    if (this.intensity < before) audio.play('multiplierDown')
     this.emitHud()
   }
 
@@ -437,7 +441,7 @@ export default class LevelScene extends Phaser.Scene {
     const before = this.intensity
     this.setIntensity(this.intensity + TUNING.adaptiveStep)
     if (this.intensity > before) {
-      playSfx('heatUp')
+      audio.play('heatUp')
       this.game.events.emit('heat-up')
     }
   }
@@ -462,7 +466,8 @@ export default class LevelScene extends Phaser.Scene {
     this.targetGfx.clear()
     this.indicatorGfx.clear()
     this.player.playEndPose(cleared)
-    playSfx(cleared ? 'runClear' : 'runFail')
+    audio.duckMusic() // music dips under the results screen
+    audio.play(cleared ? 'runClear' : 'runFail')
     this.game.events.emit('run-over', {
       cleared,
       score: this.score,
@@ -487,7 +492,7 @@ export default class LevelScene extends Phaser.Scene {
     item.setTint(categoryColor(category)) // ChexApp tag colors
     item.setBounce(0.1)
     item.setCollideWorldBounds(true)
-    playSfx('spawn', this.panFor(x))
+    audio.play('spawn', this.panFor(x))
     return item
   }
 
@@ -618,13 +623,13 @@ export default class LevelScene extends Phaser.Scene {
       if (!this.runOver) this.physics.resume()
     })
     this.tagParticles.emitParticleAt(enemy.x, enemy.y)
-    playSfx('stun', this.panFor(enemy.x))
+    audio.play('stun', this.panFor(enemy.x))
   }
 
   startHold(time) {
     this.hold = { item: this.target, startedAt: time }
     this.player.frozen = true
-    playSfx('holdStart')
+    audio.play('holdStart')
   }
 
   updateHold(time) {
@@ -676,7 +681,7 @@ export default class LevelScene extends Phaser.Scene {
   // a hit or deliberate movement breaks the hold — the meter resets
   interruptHold() {
     this.clearHold()
-    playSfx('interrupt')
+    audio.play('interrupt')
     this.player.triggerAnim('hit')
     this.player.sprite.setTint(0xff6666)
     this.time.delayedCall(150, () => this.player.sprite.clearTint())
@@ -695,7 +700,7 @@ export default class LevelScene extends Phaser.Scene {
     })
 
     this.tagParticles.emitParticleAt(item.x, item.y)
-    playSfx(heavy ? 'heavyTag' : 'tag')
+    audio.play(heavy ? 'heavyTag' : 'tag')
     this.player.triggerAnim('tag')
     this.game.events.emit('guest-happy', { guest: item.getData('guest') })
 
@@ -729,6 +734,7 @@ export default class LevelScene extends Phaser.Scene {
   update(time, delta) {
     if (this.runOver) {
       if (Phaser.Input.Keyboard.JustDown(this.keyR)) {
+        audio.play('uiSelect')
         this.game.events.emit('run-reset')
         this.scene.restart({ mapKey: this.mapKey })
       }

@@ -55,6 +55,11 @@ export const TUNING = {
   heavyItemScore: 300,
   bigDayBonusFactor: 0.25, // 3-hanger clear bonus (DESIGN.md §2.5)
 
+  // audio (master/sfx/music mix — AudioBus + synth read these live)
+  masterVolume: 1,
+  sfxVolume: 1,
+  musicVolume: 0.5,
+
   // debug helpers
   godMode: false, // steals still happen but never count toward the 3-lost fail
   fairnessDebug: false, // draw spawn-fairness estimates while the panel is open
@@ -88,6 +93,9 @@ export const TUNING_SCHEMA = [
   { key: 'stealFairnessMarginMs', label: 'Steal margin (ms)', min: 0, max: 2000, step: 50 },
   { key: 'adaptiveBand', label: 'Adaptive band', min: 0, max: 0.6, step: 0.05 },
   { key: 'multiplierFloor', label: 'Multiplier floor', min: 0.4, max: 1, step: 0.05 },
+  { key: 'masterVolume', label: 'Master volume', min: 0, max: 1, step: 0.05 },
+  { key: 'sfxVolume', label: 'SFX volume', min: 0, max: 1, step: 0.05 },
+  { key: 'musicVolume', label: 'Music volume', min: 0, max: 1, step: 0.05 },
   { key: 'godMode', label: 'God mode', type: 'flag' },
   { key: 'fairnessDebug', label: 'Fairness overlay', type: 'flag' },
   { key: 'targetLockDebug', label: 'Target lock lines', type: 'flag' },

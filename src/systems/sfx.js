@@ -1,7 +1,10 @@
 // Placeholder jsfxr-style SFX, synthesized with the Web Audio API so the
-// grey-box ships zero audio assets and zero dependencies.
+// grey-box ships zero audio assets and zero dependencies. Play through
+// systems/AudioBus.js — it prefers dropped-in files and falls back here.
 // playSfx(name, pan) pans -1 (hard left) .. 1 (hard right) so world events
 // off to the side of the player read directionally in stereo.
+
+import { TUNING } from '../config/tuning.js'
 
 let ctx = null
 
@@ -14,6 +17,15 @@ export function unlockAudio() {
   if (ctx && ctx.state === 'suspended') ctx.resume()
 }
 
+export function getAudioContext() {
+  return ctx
+}
+
+function sfxGain() {
+  const v = TUNING.masterVolume * TUNING.sfxVolume
+  return Math.max(0, Math.min(1, v))
+}
+
 function tone({ type = 'square', from = 880, to = from, dur = 0.08, vol = 0.14, delay = 0, pan = 0 }) {
   if (!ctx) return
   const t0 = ctx.currentTime + delay
@@ -22,7 +34,8 @@ function tone({ type = 'square', from = 880, to = from, dur = 0.08, vol = 0.14, 
   osc.type = type
   osc.frequency.setValueAtTime(from, t0)
   osc.frequency.exponentialRampToValueAtTime(Math.max(1, to), t0 + dur)
-  gain.gain.setValueAtTime(vol, t0)
+  const v = Math.max(0.001, vol * sfxGain())
+  gain.gain.setValueAtTime(v, t0)
   gain.gain.exponentialRampToValueAtTime(0.001, t0 + dur)
   osc.connect(gain)
   if (ctx.createStereoPanner && pan !== 0) {
@@ -92,9 +105,88 @@ const SFX = {
     tone({ from: 784, dur: 0.08, delay: 0.16, vol: 0.1, pan })
     tone({ from: 1047, dur: 0.18, delay: 0.24, vol: 0.1, pan })
   },
+  // adaptive intensity easing off — the multiplier dipped
+  multiplierDown: (pan) => {
+    tone({ from: 659, to: 620, dur: 0.07, vol: 0.07, pan })
+    tone({ from: 523, to: 490, dur: 0.1, delay: 0.07, vol: 0.07, pan })
+  },
+  // the rush begins
+  rushStart: (pan) => {
+    tone({ from: 392, dur: 0.07, vol: 0.1, pan })
+    tone({ from: 523, dur: 0.07, delay: 0.07, vol: 0.1, pan })
+    tone({ from: 659, dur: 0.07, delay: 0.14, vol: 0.1, pan })
+    tone({ from: 784, dur: 0.16, delay: 0.21, vol: 0.11, pan })
+  },
+  uiSelect: (pan) => tone({ type: 'triangle', from: 880, to: 1100, dur: 0.05, vol: 0.09, pan }),
 }
 
 export function playSfx(name, pan = 0) {
   const fx = SFX[name]
   if (fx) fx(pan)
+}
+
+// Generated 4-bar chiptune stub — the music placeholder until a real
+// loop lands in assets/audio/music/. Returns { setVolume, stop }.
+export function startMusicStub() {
+  unlockAudio()
+  if (!ctx) return null
+
+  const bus = ctx.createGain()
+  bus.gain.value = 0.5
+  bus.connect(ctx.destination)
+
+  const BPM = 118
+  const beat = 60 / BPM
+  const bar = beat * 4
+  const BASS = [36, 43, 45, 41] // C2 G2 A2 F2 — one root per bar
+  const MELODY = [
+    [60, 63, 67, 63, 60, 63, 67, 70],
+    [59, 62, 67, 62, 59, 62, 67, 62],
+    [57, 60, 64, 60, 57, 60, 64, 69],
+    [57, 60, 65, 60, 57, 60, 65, 60],
+  ]
+  const freq = (n) => 440 * Math.pow(2, (n - 69) / 12)
+  const note = (type, midi, t, dur, vol) => {
+    const o = ctx.createOscillator()
+    const g = ctx.createGain()
+    o.type = type
+    o.frequency.setValueAtTime(freq(midi), t)
+    g.gain.setValueAtTime(vol, t)
+    g.gain.exponentialRampToValueAtTime(0.001, t + dur)
+    o.connect(g)
+    g.connect(bus)
+    o.start(t)
+    o.stop(t + dur + 0.02)
+  }
+
+  let running = true
+  let timer = null
+  let barIndex = 0
+  let nextBarTime = ctx.currentTime + 0.1
+  const scheduleBar = () => {
+    if (!running) return
+    const t0 = nextBarTime
+    const b = barIndex % 4
+    for (let i = 0; i < 8; i++) {
+      const t = t0 + i * (beat / 2)
+      if (i % 2 === 0) note('square', BASS[b], t, beat * 0.45, 0.055)
+      note('triangle', MELODY[b][i], t, beat * 0.4, 0.045)
+    }
+    barIndex += 1
+    nextBarTime = t0 + bar
+    timer = setTimeout(scheduleBar, (nextBarTime - ctx.currentTime - 0.25) * 1000)
+  }
+  scheduleBar()
+
+  return {
+    setVolume(v) {
+      bus.gain.setTargetAtTime(Math.max(0.0001, v * 0.9), ctx.currentTime, 0.1)
+    },
+    stop() {
+      running = false
+      clearTimeout(timer)
+      bus.gain.setTargetAtTime(0.0001, ctx.currentTime, 0.05)
+      setTimeout(() => bus.disconnect(), 500)
+    },
+  }
 }

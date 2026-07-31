@@ -560,3 +560,21 @@ is the screen's second beat.
 - Note: this pulls the ceremony's display half forward from
   Chunk 6; persistence (max hangers, best score, godMode
   exclusion) still lands with Chunk 6.
+
+## 2026-07-30 — BRIEF-02 Chunk 5 COMPLETE (audio bus + placeholder SFX)
+
+Central AudioBus: named events resolve to dropped-in files
+(assets/audio/<event>.wav|mp3|ogg) with the generated jsfxr-style
+synth as the placeholder fallback — same drop-in/delete contract as
+sprites; pulling any file never crashes (verified both directions
+with generated test WAVs). Canonical event names per the brief
+(tag/holdStart/holdComplete/holdInterrupt/itemLost/multiplierUp/
+multiplierDown/rushStart/rushEnd/uiSelect) with finer game events
+aliasing onto them; new multiplierDown/rushStart/uiSelect synths.
+Music: per-level loop hook (assets/audio/music/<levelId>) with a
+generated 4-bar chiptune stub fallback; ducks to 30% under results,
+restores on retry. master/sfx/music volumes in tuning.js with live
+panel sliders. Docs: assets/audio/README.md.
+BONUS FIX: pause-resume had been silently broken since Chunk 1 —
+UIOverlay still resumed the deleted 'Playground' scene key; now
+resumes 'Level'. 60fps re-verify still owed a human check.

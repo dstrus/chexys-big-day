@@ -1,6 +1,7 @@
 import Phaser from 'phaser'
 import { GAME_WIDTH, GAME_HEIGHT } from '../main.js'
 import { unlockAudio } from '../systems/sfx.js'
+import { audio } from '../systems/AudioBus.js'
 
 export default class TitleScene extends Phaser.Scene {
   constructor() {
@@ -43,6 +44,7 @@ export default class TitleScene extends Phaser.Scene {
 
     this.input.keyboard.once('keydown', () => {
       unlockAudio() // first user gesture — safe to create the AudioContext
+      audio.play('uiSelect')
       this.scene.launch('UIOverlay')
       this.scene.start('Level', { mapKey: 'coatroom' })
     })

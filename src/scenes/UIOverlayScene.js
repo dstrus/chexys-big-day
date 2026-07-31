@@ -2,7 +2,7 @@ import Phaser from 'phaser'
 import { GAME_WIDTH, GAME_HEIGHT } from '../main.js'
 import { TUNING } from '../config/tuning.js'
 import { HAPPY_LINES, UNHAPPY_LINES } from '../config/guestLines.js'
-import { playSfx } from '../systems/sfx.js'
+import { audio } from '../systems/AudioBus.js'
 
 // hanger glyph shared by the HUD row (s=1) and the results row (s=2)
 function drawHanger(g, x, y, s, color, alpha) {
@@ -175,6 +175,7 @@ export default class UIOverlayScene extends Phaser.Scene {
   }
 
   update(time) {
+    audio.refreshVolumes() // volume sliders apply live
     if (!this.pausePanel.visible) return
     // small delay so the keypress that paused can't also resume
     if (time - this.pausedAt < 250) return
@@ -183,7 +184,7 @@ export default class UIOverlayScene extends Phaser.Scene {
       Phaser.Input.Keyboard.JustDown(this.pauseKeys.P)
     ) {
       this.pausePanel.setVisible(false)
-      this.scene.resume('Playground')
+      this.scene.resume('Level') // was 'Playground' — stale since Chunk 1
     }
   }
 
@@ -348,7 +349,7 @@ export default class UIOverlayScene extends Phaser.Scene {
       this.hangerTimers.push(
         this.time.delayedCall(400 * i, () => {
           this.drawResultHangers(i, hangers)
-          playSfx('chime')
+          audio.play('chime')
           if (i === 3) this.slamStamp()
         })
       )
@@ -363,7 +364,7 @@ export default class UIOverlayScene extends Phaser.Scene {
     this.stampText.setVisible(true)
     this.stampText.setScale(3)
     this.stampText.setAlpha(0)
-    playSfx('stamp')
+    audio.play('stamp')
     this.tweens.add({
       targets: this.stampText,
       scale: 1,
