@@ -6,7 +6,7 @@ export const HAPPY_LINES = [
   'Got my coat, thanks! 🎉',
   'That was FAST!',
   '⭐️⭐️⭐️⭐️⭐️',
-  'I *am* my claim ticket ticket?! 🤯',
+  'I *am* my claim ticket?! 🤯',
   "Great service! Squirrel, you know it's true!",
   "So fast! Squirrel can't help it!",
   'No paper? No problem. Amazing.',
