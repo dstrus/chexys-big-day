@@ -40,7 +40,7 @@ export default class LevelScene extends Phaser.Scene {
     this.physics.add.collider(this.player.sprite, this.mainLayer)
 
     this.cameras.main.setBounds(0, 0, this.worldWidth, this.worldHeight)
-    this.cameras.main.startFollow(this.player.sprite, true, 0.15, 0.15)
+    // camera follow is manual + pixel-coherent — see updateCamera()
 
     // tagging
     this.items = this.physics.add.group()
@@ -800,6 +800,7 @@ export default class LevelScene extends Phaser.Scene {
 
     this.waveRunner.update(delta, this.intensity)
     this.player.update(time, delta)
+    this.updateCamera()
     this.updateTargeting()
     this.updateTagging(time)
     this.updateEnemies(time)
@@ -808,33 +809,68 @@ export default class LevelScene extends Phaser.Scene {
     this.updateJitterProbe(delta)
   }
 
+  // Pixel-coherent hard follow. Phaser's lerped follow floors the scroll
+  // and stores it back (Camera.preRender), so the world advances in an
+  // uneven px cadence against the player's fractional motion — player and
+  // tiles round on different frames, which reads as jitter/ghosting, and
+  // the post-stop lerp settles through floor() in irregular 1px steps
+  // (jitter while idle). Deriving scroll from the ROUNDED player position
+  // quantizes player and world to the same grid: the player renders at a
+  // constant screen x and the world scrolls exactly its integer delta.
+  updateCamera() {
+    const cam = this.cameras.main
+    cam.setScroll(
+      Phaser.Math.Clamp(
+        Math.round(this.player.x) - this.scale.width / 2,
+        0,
+        this.worldWidth - this.scale.width
+      ),
+      0
+    )
+  }
+
   // per-rendered-frame movement deltas: the smoking gun for fixed-step
   // physics rendering at a higher display rate is dx alternating 0 / 2x
   updateJitterProbe(delta) {
     const px = this.player.sprite.x
+    const py = this.player.sprite.y
     const cx = this.cameras.main.scrollX
+    const cy = this.cameras.main.scrollY
     const dxP = px - this.prevPlayerX
+    const dyP = py - (this.prevPlayerY ?? py)
     const dxC = cx - this.prevCamX
+    const dyC = cy - (this.prevCamY ?? cy)
     this.prevPlayerX = px
+    this.prevPlayerY = py
     this.prevCamX = cx
+    this.prevCamY = cy
 
     if (Phaser.Input.Keyboard.JustDown(this.keyF) && !this.jitterCapture) {
       this.jitterCapture = []
       console.log('[jitter-probe] capturing 60 frames — keep moving...')
     }
     if (this.jitterCapture) {
-      this.jitterCapture.push({ dxP: +dxP.toFixed(3), dxC: +dxC.toFixed(3), ms: +delta.toFixed(2) })
+      this.jitterCapture.push({
+        dxP: +dxP.toFixed(3),
+        dyP: +dyP.toFixed(3),
+        dxC: +dxC.toFixed(3),
+        dyC: +dyC.toFixed(3),
+        ms: +delta.toFixed(2),
+      })
       if (this.jitterCapture.length >= 60) {
         const cam = this.cameras.main
-        const dxs = this.jitterCapture.map((s) => s.dxP)
-        const zeros = dxs.filter((d) => Math.abs(d) < 0.01).length
-        const mean = dxs.reduce((a, b) => a + b, 0) / dxs.length
-        const sd = Math.sqrt(dxs.reduce((a, b) => a + (b - mean) ** 2, 0) / dxs.length)
+        const stats = (key) => {
+          const vals = this.jitterCapture.map((s) => s[key])
+          const zeros = vals.filter((d) => Math.abs(d) < 0.01).length
+          const mean = vals.reduce((a, b) => a + b, 0) / vals.length
+          const sd = Math.sqrt(vals.reduce((a, b) => a + (b - mean) ** 2, 0) / vals.length)
+          return `${key}: zeros=${zeros}/60 mean=${mean.toFixed(2)} sd=${sd.toFixed(2)}`
+        }
         console.log(
           `[jitter-probe] fps=${this.game.loop.actualFps.toFixed(1)} ` +
             `physSteps=${this.stepRate}/s fixedStep=${this.physics.world.fixedStep} ` +
             `camLerp=(${cam.lerp.x},${cam.lerp.y}) roundPixels=${cam.roundPixels} | ` +
-            `player dx: zeros=${zeros}/60 mean=${mean.toFixed(2)} sd=${sd.toFixed(2)}`
+            `${stats('dxP')} | ${stats('dyP')} | ${stats('dxC')} | ${stats('dyC')}`
         )
         console.log('[jitter-probe] frames:', JSON.stringify(this.jitterCapture))
         this.jitterCapture = null
