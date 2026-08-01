@@ -872,6 +872,21 @@ export default class LevelScene extends Phaser.Scene {
             `camLerp=(${cam.lerp.x},${cam.lerp.y}) roundPixels=${cam.roundPixels} | ` +
             `${stats('dxP')} | ${stats('dyP')} | ${stats('dxC')} | ${stats('dyC')}`
         )
+        // presentation-layer diagnostics: the game can be pixel-perfect in
+        // world space and still shimmer if the canvas-to-device-pixel scale
+        // is fractional (page zoom, fractional DPR, CSS rounding)
+        const canvas = this.game.canvas
+        const rect = canvas.getBoundingClientRect()
+        const dpr = window.devicePixelRatio
+        const scaleX = (rect.width * dpr) / canvas.width
+        const scaleY = (rect.height * dpr) / canvas.height
+        const integerScale = Number.isInteger(+scaleX.toFixed(4)) && Number.isInteger(+scaleY.toFixed(4))
+        console.log(
+          `[jitter-probe/display] dpr=${dpr} zoom=${this.game.scale.zoom} ` +
+            `canvas=${canvas.width}x${canvas.height} cssRect=${rect.width.toFixed(2)}x${rect.height.toFixed(2)} ` +
+            `devicePxScale=(${scaleX.toFixed(4)}, ${scaleY.toFixed(4)}) INTEGER=${integerScale}` +
+            (integerScale ? '' : '  <-- FRACTIONAL SCALE: this shimmers moving pixels')
+        )
         console.log('[jitter-probe] frames:', JSON.stringify(this.jitterCapture))
         this.jitterCapture = null
       }
