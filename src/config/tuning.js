@@ -61,7 +61,11 @@ export const TUNING = {
   musicVolume: 0.5,
 
   // debug helpers
-  physicsFixedStep: false, // live A/B for the jitter hunt: true = fixed 60Hz steps
+  // fixed 60Hz physics steps. A/B testing on real hardware showed the
+  // variable-step mode (fixedStep=false) produces a per-frame position
+  // alternation ("two copies of the sprite"); fixed step does not. The
+  // toggle remains on the panel for future investigation.
+  physicsFixedStep: true,
   godMode: false, // steals still happen but never count toward the 3-lost fail
   fairnessDebug: false, // draw spawn-fairness estimates while the panel is open
   targetLockDebug: false, // draw enemy -> locked-target lines while the panel is open
