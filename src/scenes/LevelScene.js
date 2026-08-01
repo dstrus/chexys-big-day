@@ -850,12 +850,30 @@ export default class LevelScene extends Phaser.Scene {
       console.log('[jitter-probe] capturing 60 frames — keep moving...')
     }
     if (this.jitterCapture) {
+      const sp = this.player.sprite
+      // also watch the on-screen item nearest the player ("one item jitters")
+      let watch = null
+      let watchD = Infinity
+      for (const item of this.items.getChildren()) {
+        if (!item.active) continue
+        const d = Math.abs(item.x - px)
+        if (d < watchD) {
+          watchD = d
+          watch = item
+        }
+      }
+      const iy = watch ? watch.y : 0
+      const dyI = iy - (this.prevItemY ?? iy)
+      this.prevItemY = iy
       this.jitterCapture.push({
         dxP: +dxP.toFixed(3),
         dyP: +dyP.toFixed(3),
         dxC: +dxC.toFixed(3),
         dyC: +dyC.toFixed(3),
+        dyI: +dyI.toFixed(3),
         ms: +delta.toFixed(2),
+        anim: `${sp.anims.currentAnim?.key ?? '-'}#${sp.anims.currentFrame?.frame.name ?? '-'}`,
+        st: `${this.player.stateAnim}|lock=${this.player.animLock}|gnd=${this.player.onGround()}`,
       })
       if (this.jitterCapture.length >= 60) {
         const cam = this.cameras.main
@@ -872,6 +890,9 @@ export default class LevelScene extends Phaser.Scene {
             `camLerp=(${cam.lerp.x},${cam.lerp.y}) roundPixels=${cam.roundPixels} | ` +
             `${stats('dxP')} | ${stats('dyP')} | ${stats('dxC')} | ${stats('dyC')}`
         )
+        const animsSeen = {}
+        for (const s of this.jitterCapture) animsSeen[s.anim] = (animsSeen[s.anim] ?? 0) + 1
+        console.log('[jitter-probe/anim] frames shown:', JSON.stringify(animsSeen))
         // presentation-layer diagnostics: the game can be pixel-perfect in
         // world space and still shimmer if the canvas-to-device-pixel scale
         // is fractional (page zoom, fractional DPR, CSS rounding)
