@@ -61,6 +61,7 @@ export const TUNING = {
   musicVolume: 0.5,
 
   // debug helpers
+  physicsFixedStep: false, // live A/B for the jitter hunt: true = fixed 60Hz steps
   godMode: false, // steals still happen but never count toward the 3-lost fail
   fairnessDebug: false, // draw spawn-fairness estimates while the panel is open
   targetLockDebug: false, // draw enemy -> locked-target lines while the panel is open
@@ -96,6 +97,7 @@ export const TUNING_SCHEMA = [
   { key: 'masterVolume', label: 'Master volume', min: 0, max: 1, step: 0.05 },
   { key: 'sfxVolume', label: 'SFX volume', min: 0, max: 1, step: 0.05 },
   { key: 'musicVolume', label: 'Music volume', min: 0, max: 1, step: 0.05 },
+  { key: 'physicsFixedStep', label: 'Fixed physics step', type: 'flag' },
   { key: 'godMode', label: 'God mode', type: 'flag' },
   { key: 'fairnessDebug', label: 'Fairness overlay', type: 'flag' },
   { key: 'targetLockDebug', label: 'Target lock lines', type: 'flag' },

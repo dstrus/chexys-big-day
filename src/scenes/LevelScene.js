@@ -797,6 +797,8 @@ export default class LevelScene extends Phaser.Scene {
 
     // gravity is read live so the tuning panel affects it immediately
     this.physics.world.gravity.y = TUNING.gravity
+    // jitter-hunt A/B: flip stepping mode live from the panel
+    this.physics.world.fixedStep = TUNING.physicsFixedStep
 
     this.waveRunner.update(delta, this.intensity)
     this.player.update(time, delta)
