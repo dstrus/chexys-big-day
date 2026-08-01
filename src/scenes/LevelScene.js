@@ -119,6 +119,33 @@ export default class LevelScene extends Phaser.Scene {
     audio.play('rushStart')
     audio.startMusic(this.levelProps.levelId ?? this.mapKey) // loop hook per level
     this.emitHud()
+
+    // Float-dust quantization (jitter fix, video-confirmed): arcade's
+    // Body.postUpdate accumulates sprite positions incrementally
+    // (gameObject.y += dy), so a stop/landing can park the running float
+    // sum exactly on a .5 rounding boundary; per-frame float dust then
+    // flips round() by 1px — rendered as two overlapping sprite copies.
+    // Snapping to 1/256px after physics makes positions bitwise-stable.
+    // Must run AFTER Body.postUpdate, hence the scene POST_UPDATE hook.
+    this.events.on(Phaser.Scenes.Events.POST_UPDATE, this.quantizePositions, this)
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
+      this.events.off(Phaser.Scenes.Events.POST_UPDATE, this.quantizePositions, this)
+    })
+  }
+
+  quantizePositions() {
+    const q = (v) => Math.round(v * 256) / 256
+    const s = this.player.sprite
+    s.x = q(s.x)
+    s.y = q(s.y)
+    for (const item of this.items.getChildren()) {
+      item.x = q(item.x)
+      item.y = q(item.y)
+    }
+    for (const enemy of this.enemies.getChildren()) {
+      enemy.x = q(enemy.x)
+      enemy.y = q(enemy.y)
+    }
   }
 
   // ---- map ----
@@ -868,11 +895,12 @@ export default class LevelScene extends Phaser.Scene {
       const dyI = iy - (this.prevItemY ?? iy)
       this.prevItemY = iy
       this.jitterCapture.push({
-        dxP: +dxP.toFixed(3),
-        dyP: +dyP.toFixed(3),
-        dxC: +dxC.toFixed(3),
-        dyC: +dyC.toFixed(3),
-        dyI: +dyI.toFixed(3),
+        // 7 decimals: float dust at rounding boundaries is real signal
+        dxP: +dxP.toFixed(7),
+        dyP: +dyP.toFixed(7),
+        dxC: +dxC.toFixed(7),
+        dyC: +dyC.toFixed(7),
+        dyI: +dyI.toFixed(7),
         ms: +delta.toFixed(2),
         anim: `${sp.anims.currentAnim?.key ?? '-'}#${sp.anims.currentFrame?.frame.name ?? '-'}`,
         st: `${this.player.stateAnim}|lock=${this.player.animLock}|gnd=${this.player.onGround()}`,
