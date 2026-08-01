@@ -6,18 +6,20 @@ import { TUNING, TUNING_SCHEMA } from '../config/tuning.js'
 // src/config/tuning.js. This is how feel gets tuned — no code round-trips.
 
 let panelEl = null
-let statusEl = null
+const statusEls = {}
 
 // used by in-game debug overlays that should only draw while tuning
 export function isTuningPanelOpen() {
   return !!panelEl && panelEl.style.display !== 'none'
 }
 
-// live readout line at the panel's foot (e.g. the steal-fairness assertion)
-export function setPanelReadout(text, ok) {
-  if (!statusEl) return
-  statusEl.textContent = text
-  statusEl.style.color = ok ? '#12b76a' : '#ea5151'
+// live readout lines at the panel's foot; slot 0 = steal fairness,
+// slot 1 = frame/physics rates (jitter probe)
+export function setPanelReadout(text, ok, slot = 0) {
+  const el = statusEls[slot]
+  if (!el) return
+  el.textContent = text
+  el.style.color = ok ? '#12b76a' : '#ea5151'
 }
 
 export function initTuningPanel() {
@@ -50,9 +52,11 @@ export function initTuningPanel() {
     panel.appendChild(entry.type === 'flag' ? flagRow(entry) : sliderRow(entry))
   }
 
-  statusEl = document.createElement('div')
-  statusEl.style.cssText = 'margin-top:8px;font-size:10px;line-height:1.4'
-  panel.appendChild(statusEl)
+  for (const slot of [0, 1]) {
+    statusEls[slot] = document.createElement('div')
+    statusEls[slot].style.cssText = 'margin-top:8px;font-size:10px;line-height:1.4'
+    panel.appendChild(statusEls[slot])
+  }
 
   const copyBtn = document.createElement('button')
   copyBtn.textContent = 'Copy values'

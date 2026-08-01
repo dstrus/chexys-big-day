@@ -74,6 +74,25 @@ export default class LevelScene extends Phaser.Scene {
     this.keyC = this.input.keyboard.addKey('C')
     this.pauseKeys = this.input.keyboard.addKeys('ESC,P')
 
+    // jitter instrumentation (bug investigation 2026-08-01): the panel
+    // shows live render-fps vs physics-step rate; F logs 60 consecutive
+    // frames of per-render-frame movement deltas to the console
+    this.keyF = this.input.keyboard.addKey('F')
+    this.stepCount = 0
+    this.stepRate = 0
+    this.physics.world.on(Phaser.Physics.Arcade.Events.WORLD_STEP, () => this.stepCount++)
+    this.time.addEvent({
+      delay: 1000,
+      loop: true,
+      callback: () => {
+        this.stepRate = this.stepCount
+        this.stepCount = 0
+      },
+    })
+    this.jitterCapture = null
+    this.prevPlayerX = 0
+    this.prevCamX = 0
+
     // the rush is entirely data-driven: the map's waveFile property
     // names the schedule, WaveRunner plays it back
     this.waveRunner = new WaveRunner(this, getWaveSchedule(this.levelProps.waveFile), {
@@ -786,5 +805,48 @@ export default class LevelScene extends Phaser.Scene {
     this.updateEnemies(time)
     this.updateIndicators(time)
     this.updateFairnessDebug()
+    this.updateJitterProbe(delta)
+  }
+
+  // per-rendered-frame movement deltas: the smoking gun for fixed-step
+  // physics rendering at a higher display rate is dx alternating 0 / 2x
+  updateJitterProbe(delta) {
+    const px = this.player.sprite.x
+    const cx = this.cameras.main.scrollX
+    const dxP = px - this.prevPlayerX
+    const dxC = cx - this.prevCamX
+    this.prevPlayerX = px
+    this.prevCamX = cx
+
+    if (Phaser.Input.Keyboard.JustDown(this.keyF) && !this.jitterCapture) {
+      this.jitterCapture = []
+      console.log('[jitter-probe] capturing 60 frames — keep moving...')
+    }
+    if (this.jitterCapture) {
+      this.jitterCapture.push({ dxP: +dxP.toFixed(3), dxC: +dxC.toFixed(3), ms: +delta.toFixed(2) })
+      if (this.jitterCapture.length >= 60) {
+        const cam = this.cameras.main
+        const dxs = this.jitterCapture.map((s) => s.dxP)
+        const zeros = dxs.filter((d) => Math.abs(d) < 0.01).length
+        const mean = dxs.reduce((a, b) => a + b, 0) / dxs.length
+        const sd = Math.sqrt(dxs.reduce((a, b) => a + (b - mean) ** 2, 0) / dxs.length)
+        console.log(
+          `[jitter-probe] fps=${this.game.loop.actualFps.toFixed(1)} ` +
+            `physSteps=${this.stepRate}/s fixedStep=${this.physics.world.fixedStep} ` +
+            `camLerp=(${cam.lerp.x},${cam.lerp.y}) roundPixels=${cam.roundPixels} | ` +
+            `player dx: zeros=${zeros}/60 mean=${mean.toFixed(2)} sd=${sd.toFixed(2)}`
+        )
+        console.log('[jitter-probe] frames:', JSON.stringify(this.jitterCapture))
+        this.jitterCapture = null
+      }
+    }
+
+    if (isTuningPanelOpen()) {
+      setPanelReadout(
+        `fps ${this.game.loop.actualFps.toFixed(1)} · phys ${this.stepRate} steps/s · F logs 60 frames`,
+        true,
+        1
+      )
+    }
   }
 }
