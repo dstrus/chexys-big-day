@@ -34,7 +34,18 @@ const game = new Phaser.Game({
     default: 'arcade',
     arcade: {
       gravity: { y: TUNING.gravity },
+      // Step physics once per rendered frame. The default fixed 60Hz
+      // accumulator beats against the display clock — during drift
+      // episodes some rendered frames get 0 steps and others 2, which
+      // reads as intermittent jitter/ghosting on ANY refresh rate.
+      fixedStep: false,
     },
+  },
+  fps: {
+    // clamp hitch deltas to 25ms so a single variable physics step can
+    // never move a terminal-velocity fall further than TILE_BIAS (16px)
+    // — thin platforms stay tunnel-proof
+    min: 40,
   },
   scale: {
     mode: Phaser.Scale.NONE,
