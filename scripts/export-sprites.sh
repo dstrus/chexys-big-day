@@ -52,11 +52,15 @@ for NAME in "${CHARACTERS[@]}"; do
 
   # NOTE: '{frame}' names frames by index ("0","1",...) — required:
   # Phaser's createFromAseprite looks frames up by numeric index.
+  # --extrude duplicates each frame's edge pixels so GPU nearest-neighbor
+  # sampling at exact texel boundaries can never bleed a row from the
+  # neighboring frame (machine-dependent 1px edge flicker otherwise).
   "$ASE_BIN" -b "$SRC" \
     --sheet "$SHEET" \
     --data "$DATA" \
     --format json-array \
     --sheet-type packed \
+    --extrude \
     --list-tags \
     --filename-format '{frame}'
 
