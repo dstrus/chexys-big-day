@@ -120,32 +120,42 @@ export default class LevelScene extends Phaser.Scene {
     audio.startMusic(this.levelProps.levelId ?? this.mapKey) // loop hook per level
     this.emitHud()
 
-    // Float-dust quantization (jitter fix, video-confirmed): arcade's
-    // Body.postUpdate accumulates sprite positions incrementally
-    // (gameObject.y += dy), so a stop/landing can park the running float
-    // sum exactly on a .5 rounding boundary; per-frame float dust then
-    // flips round() by 1px — rendered as two overlapping sprite copies.
-    // Snapping to 1/256px after physics makes positions bitwise-stable.
-    // Must run AFTER Body.postUpdate, hence the scene POST_UPDATE hook.
-    this.events.on(Phaser.Scenes.Events.POST_UPDATE, this.quantizePositions, this)
+    // RENDER SNAP (jitter fix, video-confirmed twice over): sprite
+    // positions are float sums that can sit exactly on .5 rounding
+    // boundaries — at rest via Body.postUpdate's incremental (+= dy)
+    // float dust, and at max speed metronomically (2.5px/frame puts
+    // frac(x) at exactly .5 every other frame). Either way round()
+    // flips the rendered pixel and the sprite "vibrates". Fix: after
+    // physics (POST_UPDATE, past Body.postUpdate) remember true
+    // positions and snap sprites to whole pixels for the render; on
+    // PRE_UPDATE (before the next physics step) restore the true
+    // values so physics never sees the snap — no speed corruption,
+    // no boundary left to flip.
+    this.events.on(Phaser.Scenes.Events.POST_UPDATE, this.snapForRender, this)
+    this.events.on(Phaser.Scenes.Events.PRE_UPDATE, this.restoreTruePositions, this)
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
-      this.events.off(Phaser.Scenes.Events.POST_UPDATE, this.quantizePositions, this)
+      this.events.off(Phaser.Scenes.Events.POST_UPDATE, this.snapForRender, this)
+      this.events.off(Phaser.Scenes.Events.PRE_UPDATE, this.restoreTruePositions, this)
     })
+    this.renderSnapped = null
   }
 
-  quantizePositions() {
-    const q = (v) => Math.round(v * 256) / 256
-    const s = this.player.sprite
-    s.x = q(s.x)
-    s.y = q(s.y)
-    for (const item of this.items.getChildren()) {
-      item.x = q(item.x)
-      item.y = q(item.y)
+  snapForRender() {
+    this.renderSnapped = []
+    const snap = (s) => {
+      if (!s.active) return
+      this.renderSnapped.push([s, s.x, s.y])
+      s.setPosition(Math.round(s.x), Math.round(s.y))
     }
-    for (const enemy of this.enemies.getChildren()) {
-      enemy.x = q(enemy.x)
-      enemy.y = q(enemy.y)
-    }
+    snap(this.player.sprite)
+    this.items.getChildren().forEach(snap)
+    this.enemies.getChildren().forEach(snap)
+  }
+
+  restoreTruePositions() {
+    if (!this.renderSnapped) return
+    for (const [s, x, y] of this.renderSnapped) s.setPosition(x, y)
+    this.renderSnapped = null
   }
 
   // ---- map ----
