@@ -777,6 +777,15 @@ export default class LevelScene extends Phaser.Scene {
     this.player.triggerAnim('tag')
     this.game.events.emit('guest-happy', { guest: item.getData('guest') })
 
+    // diegetic tagged-state (handoff 2026-08-01-b): apply the category
+    // tag chip. It position-syncs to the item every frame, so it
+    // persists through any carry/rescue and dies with the item.
+    const chip = this.add.image(0, 0, 'tag-chip').setDepth(1)
+    chip.setTint(categoryColor(item.getData('category')))
+    item.setData('chip', chip)
+    item.once(Phaser.GameObjects.Events.DESTROY, () => chip.destroy())
+    this.syncChip(item)
+
     // checked in: flash green, then whisk it away
     item.setTint(0x7ee87e)
     this.tweens.add({
@@ -789,6 +798,17 @@ export default class LevelScene extends Phaser.Scene {
     })
 
     this.onItemTagged(heavy)
+  }
+
+  // chip anchor: top-third of the item canvas, rack-hook side
+  syncChip(item) {
+    const chip = item.getData('chip')
+    if (!chip) return
+    chip.setPosition(
+      Math.round(item.x + item.displayWidth / 4),
+      Math.round(item.y - item.displayHeight / 6)
+    )
+    chip.setAlpha(item.alpha)
   }
 
   onItemTagged(heavy) {
@@ -846,6 +866,11 @@ export default class LevelScene extends Phaser.Scene {
     this.updateIndicators(time)
     this.updateFairnessDebug()
     this.updateJitterProbe(delta)
+
+    // tag chips ride their items (tween, carry, rescue — anything)
+    for (const item of this.items.getChildren()) {
+      if (item.getData('chip')) this.syncChip(item)
+    }
   }
 
   // Pixel-coherent hard follow. Phaser's lerped follow floors the scroll

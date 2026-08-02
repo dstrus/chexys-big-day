@@ -629,3 +629,39 @@ the human's scope ruling on the 'full art/audio' clause.
 - Sequence check: first handoff of 2026-08-01 ✓ (2026-07-30's
   sequence closed complete at -i).
 - Item 1: 60fps verification logged (entry above). Log-only.
+
+## 2026-08-01 — Item color correction (handoff 2026-08-01-b)
+
+Tag colors are the TAGS', not the items' — human product
+ruling. Items get varied garment colors; tagged state shown
+by an applied tag chip (8×8 template, runtime-tinted).
+Diegetic state readability replaces category color-coding.
+actors.gpl regenerated (v2) accordingly.
+
+## 2026-08-01 — Handoff 2026-08-01-b applied
+
+- Sequence check: -a present in log ✓. BRIEF-ART-02, BRIEF-ART-03,
+  actors.gpl (v2, replaced by the human mid-apply), and
+  coatroom-env.gpl arrived untracked alongside; committed here.
+- Item 1: BRIEF-ART-03 §0 bullet replaced verbatim.
+- Item 2: §1 coat variants amended to garment colors; tag-chip
+  deliverable added verbatim.
+- Item 3: implemented — 8×8 neutral chip template generated in
+  Boot (dark border survives tinting so the chip reads against
+  any item color); applied on successful tag, tinted per
+  category; position-synced to its item every frame (anchor:
+  top-third, hook side) and destroyed with it, so it
+  structurally persists through carry/rescue. Note: under
+  CURRENT mechanics tagged items despawn immediately and
+  enemies only steal untagged items, so the persist-through-
+  carry path is future-proofing, not yet observable.
+  Urgency/expiry/highlight overlays untouched.
+- Item 4: decision logged (entry above).
+- FLAGS for the design chat: (a) BRIEF-ART-03 §1's L2 forward
+  note still says "luggage = Tag Teal base" — inconsistent with
+  the new ruling; (b) grey-box item rects remain category-
+  tinted until the coat sprites land (out of this handoff's
+  scope); (c) BRIEF-ART-03 §4 references a "narrowed-A ruling"
+  for Gate 2 scope that has not arrived here as a handoff.
+- Housekeeping: art/reference/chexy.af~lock~ (Aseprite editor
+  lock file) was accidentally tracked; untracked + gitignored.

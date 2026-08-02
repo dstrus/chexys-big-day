@@ -88,6 +88,15 @@ export default class BootScene extends Phaser.Scene {
     make('item-heavy', 26, 30, 0xffffff)
     make('ticket', 18, 12, 0xf2ecd8) // paper claim ticket enemy
     make('pixel', 2, 2, 0xffffff)
+    // tag chip: neutral 8x8 template, runtime-tinted per category
+    // (handoff 2026-08-01-b) — dark border survives tinting so the chip
+    // reads even against a same-colored item
+    g.clear()
+    g.fillStyle(0x181818, 1)
+    g.fillRect(0, 0, 8, 8)
+    g.fillStyle(0xffffff, 1)
+    g.fillRect(1, 1, 6, 6)
+    g.generateTexture('tag-chip', 8, 8)
 
     // 8-tile placeholder tileset strip matching the maps' embedded
     // tileset (name 'placeholder', 16x16, one row of 8)

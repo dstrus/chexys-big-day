@@ -1,0 +1,32 @@
+GIMP Palette
+Name: Coatroom Environment (Chexy's BIG DAY)
+Columns: 7
+#
+ 10   6  24	Indigo Void
+ 20  12  46	Indigo Deep
+ 31  20  71	Indigo Dark
+ 44  29  94	Indigo Mid
+ 64  32 118	Accent Indigo (brand)
+ 51  18  64	Purple Deep
+ 74  26  88	Purple Dark
+ 95  33 104	Purple Mid
+113  38 118	Accent Purple (brand)
+138  61 126	Orchid Rim
+165  92 147	Orchid Light
+ 11  15  26	Near Black
+ 16  24  40	Gray 900 (brand)
+ 29  41  57	Gray 800 (brand)
+ 52  64  84	Gray 700 (brand)
+ 71  84 103	Gray 600 (brand)
+102 112 133	Gray 500 (brand)
+ 36  22  18	Wood Shadow
+ 58  36  28	Wood Dark
+ 82  51  42	Wood Mid
+107  68  56	Wood Light
+133  87  63	Wood Highlight
+ 92  36  16	Ember Dark
+147  64  15	Ember Mid
+200  90  18	Ember Bright
+254 112  30	Chexology Orange (lit accent)
+255 178 100	Glow Warm
+255 224 184	Glow Core
