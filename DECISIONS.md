@@ -614,3 +614,18 @@ only and are restored before the next step. Rendered positions are
 integers by construction; rounding boundaries cannot flip. The
 jitter probe (panel readouts, F-key 60-frame capture) remains in the
 debug panel for future regressions.
+
+## 2026-08-01 — 60fps human verification PASSED (handoff 2026-08-01-a)
+
+On the current build (render-snap architecture,
+real Chexy atlas, Chunks 1–6 complete). Clears the standing
+perf debt noted in Chunks 3, 5, and the Chunk 6 exit. Gate 2
+CODE HALF is now fully signed off: BRIEF-02 exit condition +
+perf criterion both met. Gate 2 overall remains open pending
+the human's scope ruling on the 'full art/audio' clause.
+
+## 2026-08-01 — Handoff 2026-08-01-a applied
+
+- Sequence check: first handoff of 2026-08-01 ✓ (2026-07-30's
+  sequence closed complete at -i).
+- Item 1: 60fps verification logged (entry above). Log-only.
