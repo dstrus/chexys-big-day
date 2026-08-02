@@ -698,3 +698,25 @@ fork of the tileset-roles question. coatroom.json re-placed
 (14 runs capped), role table documented in assets/maps/README.md,
 placeholder strip updated so caps are visually distinct in the
 grey-box. Runs shorter than 2 tiles are disallowed in layouts.
+
+## 2026-08-01 — Chexy locomotion set COMPLETE and verified in-game (handoff 2026-08-01-d)
+
+Idle (11f), run (8f), jump/
+fall/land (2+2+2), all tags live via createFromAseprite,
+.ase durations authoritative. Remaining character anims
+(tag, hold, hit, win, lose) are non-locomotion and trail
+per queue. Confirm in passing: Player.js triggerAnim calls
+for not-yet-drawn tags ('tag', 'hit') and playEndPose
+('win'/'lose') degrade gracefully (no-op or fallback, no
+console errors) until those tags exist.
+
+## 2026-08-01 — Handoff 2026-08-01-d applied
+
+- Sequence check: -c present in log ✓.
+- Item 1: logged (entry above). Verified in passing as asked:
+  atlas exports exactly idle(11) run(8) jump(2) fall(2) land(2),
+  all five registered by createFromAseprite; a live jump-land
+  cycle, a tag press (missing 'tag' anim), and a forced run end
+  (missing 'win' pose) all ran with zero console errors —
+  triggerAnim/playEndPose no-op on missing tags and playState
+  falls back to idle, per the Chunk 4 guards.
