@@ -102,13 +102,13 @@ export default class BootScene extends Phaser.Scene {
     // tileset (name 'placeholder', 16x16, one row of 8)
     const TILE_COLORS = [
       0x4a4a5a, // 1 ground
-      0x5f5f73, // 2 rack platform
+      0x5f5f73, // 2 rack platform MIDDLE
       0x6b4a32, // 3 counter wood
       0x2e2e3e, // 4 bg dressing near
       0x26263a, // 5 bg dressing far
-      0x7a3c3c, // 6 accent red
-      0x3c5a7a, // 7 accent blue
-      0x445c44, // 8 accent green
+      0x71718c, // 6 rack platform LEFT CAP
+      0x71718c, // 7 rack platform RIGHT CAP
+      0x445c44, // 8 spare
     ]
     g.clear()
     TILE_COLORS.forEach((color, i) => {

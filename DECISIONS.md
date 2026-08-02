@@ -689,3 +689,12 @@ ruled here.
   Deliverable C autonomous motion, final audio passes.
   BRIEF-ART-03 §4 now cites this handoff as the ruling's source.
 - Item 4: decision logged (entry above).
+
+## 2026-08-01 — Tileset convention: platform caps (human ruling)
+
+Platform strips use left cap / middle / right cap tiles (gids
+6 / 2 / 7) rather than self-tiling single-role strips — the (b)
+fork of the tileset-roles question. coatroom.json re-placed
+(14 runs capped), role table documented in assets/maps/README.md,
+placeholder strip updated so caps are visually distinct in the
+grey-box. Runs shorter than 2 tiles are disallowed in layouts.

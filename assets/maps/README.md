@@ -38,7 +38,22 @@ them and hot-reloads on edit).
 Maps use the embedded tileset named `placeholder` (16×16, 8 tiles,
 one row). The matching texture is generated at runtime in Boot —
 there is no PNG on disk yet; final tile art will replace it under
-the same name and layout.
+the same name, layout, and role assignments:
+
+| gid | Role |
+|-----|------|
+| 1 | Ground (surface + fill; bottom face never visible) |
+| 2 | Rack platform — MIDDLE (1-tile-thick: top and underside both exposed) |
+| 3 | Counter block (top row = standing surface, bottom row = fill) |
+| 4 | bg1 dressing (near, non-colliding) |
+| 5 | bg2 dressing (far, non-colliding) |
+| 6 | Rack platform — LEFT CAP |
+| 7 | Rack platform — RIGHT CAP |
+| 8 | spare |
+
+Platform strips are laid as `6 [2 ...] 7` (caps on both ends,
+middles between). Runs shorter than 2 tiles stay all-middle —
+avoid them in layouts.
 
 ## Spawn fairness (DESIGN.md §2.4)
 
