@@ -46,6 +46,13 @@ const IDLE_PNG = import.meta.glob('../../assets/sprites/chexy-idle.png', {
   query: '?url',
   import: 'default',
 })
+// real tileset art (BRIEF-ART-02): drop-in like sprites/audio — present
+// wins, absent falls back to the generated placeholder strip
+const TILES_PNG = import.meta.glob('../../assets/tiles/coatroom.png', {
+  eager: true,
+  query: '?url',
+  import: 'default',
+})
 
 export default class BootScene extends Phaser.Scene {
   constructor() {
@@ -54,6 +61,8 @@ export default class BootScene extends Phaser.Scene {
 
   preload() {
     audio.preload(this) // queue any dropped-in audio files
+    const tilesUrl = Object.values(TILES_PNG)[0]
+    if (tilesUrl) this.load.image('tiles', tilesUrl)
     const atlasPng = Object.values(ATLAS_PNG)[0]
     const atlasJson = Object.values(ATLAS_JSON)[0]
     if (atlasPng && atlasJson) {
@@ -98,8 +107,21 @@ export default class BootScene extends Phaser.Scene {
     g.fillRect(1, 1, 6, 6)
     g.generateTexture('tag-chip', 8, 8)
 
-    // 8-tile placeholder tileset strip matching the maps' embedded
-    // tileset (name 'placeholder', 16x16, one row of 8)
+    // placeholder tileset strip — only generated when no real tileset
+    // art was dropped in (name 'placeholder', 16x16, roles per
+    // assets/maps/README.md)
+    if (!this.textures.exists('tiles')) this.generatePlaceholderTiles(g)
+    g.destroy()
+
+    this.cache.tilemap.add('coatroom', {
+      format: Phaser.Tilemaps.Formats.TILED_JSON,
+      data: coatroomMap,
+    })
+
+    this.scene.start('Title')
+  }
+
+  generatePlaceholderTiles(g) {
     const TILE_COLORS = [
       0x4a4a5a, // 1 ground
       0x5f5f73, // 2 rack platform MIDDLE
@@ -116,13 +138,5 @@ export default class BootScene extends Phaser.Scene {
       g.fillRect(i * 16, 0, 16, 16)
     })
     g.generateTexture('tiles', 128, 16)
-    g.destroy()
-
-    this.cache.tilemap.add('coatroom', {
-      format: Phaser.Tilemaps.Formats.TILED_JSON,
-      data: coatroomMap,
-    })
-
-    this.scene.start('Title')
   }
 }

@@ -35,10 +35,12 @@ them and hot-reloads on edit).
 
 ## Tileset
 
-Maps use the embedded tileset named `placeholder` (16×16, 8 tiles,
-one row). The matching texture is generated at runtime in Boot —
-there is no PNG on disk yet; final tile art will replace it under
-the same name, layout, and role assignments:
+Maps use the embedded tileset named `placeholder` (16×16, 8 columns
+× 3 rows = 24 slots). Real art lives at `assets/tiles/coatroom.png`
+(drop-in: delete it and Boot regenerates a flat placeholder strip).
+Source: `art/aseprite/coatroom-tiles.aseprite`. Row 1 carries the
+structural roles below; rows 2–3 (gids 9–24) are reserved for
+dressing/expansion tiles:
 
 | gid | Role |
 |-----|------|

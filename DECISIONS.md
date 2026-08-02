@@ -720,3 +720,14 @@ console errors) until those tags exist.
   (missing 'win' pose) all ran with zero console errors —
   triggerAnim/playEndPose no-op on missing tags and playState
   falls back to idle, per the Chunk 4 guards.
+
+## 2026-08-02 — Structural tiles WIRED (Gate 2 narrowed-A item 1 of 3)
+
+Real Coatroom tileset art in-game: art/aseprite/coatroom-tiles
+.aseprite → assets/tiles/coatroom.png, loaded via the standard
+drop-in contract (delete = placeholder strip returns). Map tileset
+descriptor widened to 8×3 = 24 slots; row 1 = structural roles,
+rows 2–3 (gids 9–24) reserved for dressing. Verified in-game:
+parquet floor, carpeted platforms with caps, counter, dressing
+posts; squint test passes (Chexy pops). Console clean. Remaining
+for Gate 2: coat sprites, enemy V1.
