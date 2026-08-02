@@ -597,3 +597,20 @@ condition met: Coatroom fully playable end to end, data-driven,
 sound hooks live, sprite hooks receiving real art, results/flow in
 place. Gate 2 code half done — the gate itself needs human sign-off
 (and the standing 60fps check).
+
+## 2026-08-01 — Movement jitter resolved; render-snap architecture adopted
+
+A multi-day hunt (probes, live A/B toggle, two screen recordings with
+frame forensics) found four stacked defects: camera lerp quantization
+feedback + a 2px vertical scroll hunt (map 272px vs 270px viewport),
+atlas edge-bleed exposure (fixed via --extrude, now standard in the
+export script), float-dust rounding flips at rest, and a metronomic
+.5 rounding boundary at run speed (maxSpeed 150 = exactly 2.5px per
+frame). Standing architecture going forward: fixed-step physics
+(60Hz), a manual pixel-coherent camera (integer scroll derived from
+the rounded player position, scrollY pinned), and RENDER SNAP -
+physics integrates in floats, sprites snap to whole pixels for render
+only and are restored before the next step. Rendered positions are
+integers by construction; rounding boundaries cannot flip. The
+jitter probe (panel readouts, F-key 60-frame capture) remains in the
+debug panel for future regressions.
