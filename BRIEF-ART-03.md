@@ -48,10 +48,12 @@ studied. Their job is INSTANT recognition at a squint:
   do not draw per-state variants.
 - **Frames:** 1 static + optional 1-frame flutter alt for
   in-flight (deferrable). Items are props, not characters.
-- Forward note (L2+): luggage = Tag Teal #006483 base, three
-  weight-tier silhouettes (garment bag / roller / trunk) with
-  tier dots per BRIEF-03; valet cars and strollers get their
-  own one-page addenda when their levels enter production.
+- Forward note (L2+): luggage bodies in varied material colors
+  (leathers, fabrics — same garment-hue rules as coats); Tag
+  Teal arrives via the applied chip. Tier identity = silhouette
+  (garment bag / roller / trunk) + tier dots, per BRIEF-03;
+  valet cars and strollers get their own one-page addenda when
+  their levels enter production.
 
 ## 2. Enemies — paper ticket thieves
 
@@ -101,7 +103,7 @@ thief vs. loot is legible at pure color level.
 3. Stub particle + V1 enemy full set (1 session).
 4. V2 enemy (half session, deferrable past Gate 2).
 Total: ~2–2.5 sessions; steps 1–3 are the Gate-2-relevant set
-under the narrowed-A ruling.
+under the narrowed-A ruling (ruled in handoff 2026-08-01-c).
 
 ## 5. Agent wiring session (after step 2 lands)
 

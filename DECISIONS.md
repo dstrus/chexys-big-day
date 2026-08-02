@@ -665,3 +665,27 @@ actors.gpl regenerated (v2) accordingly.
   for Gate 2 scope that has not arrived here as a handoff.
 - Housekeeping: art/reference/chexy.af~lock~ (Aseprite editor
   lock file) was accidentally tracked; untracked + gitignored.
+
+## 2026-08-01 — Luggage note fix; interim tints accepted; GATE 2 SCOPE RULED (handoff 2026-08-01-c)
+
+BRIEF-ART-03 luggage note corrected to match
+the -b item-color ruling; interim tinted-rect state
+accepted; Gate 2 scope RULED: narrowed-A (handoff
+2026-08-01-c) — gate closes on structural tiles + coats +
+enemy V1 in-game; parallax depth, V2, motion polish, and
+final audio tracked as debt. Note: §4's earlier 'narrowed-A'
+reference predated ratification — flagged by the agent,
+ruled here.
+
+## 2026-08-01 — Handoff 2026-08-01-c applied
+
+- Sequence check: -b present in log ✓.
+- Item 1: BRIEF-ART-03 §1 luggage forward note replaced verbatim.
+- Item 2: acknowledged, no change — tinted rects + matching chips
+  stand until coat sprites land.
+- Item 3: Gate 2 scope = NARROWED-A. Gate closes on structural
+  tiles wired + coat sprites + enemy V1 in-game. Tracked polish
+  debt (NOT blockers): P2–P4 parallax, enemy V2, BRIEF-ART-02
+  Deliverable C autonomous motion, final audio passes.
+  BRIEF-ART-03 §4 now cites this handoff as the ruling's source.
+- Item 4: decision logged (entry above).
