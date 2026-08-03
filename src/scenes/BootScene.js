@@ -60,6 +60,18 @@ const COATS_PNG = import.meta.glob('../../assets/sprites/coats.png', {
   query: '?url',
   import: 'default',
 })
+// enemy V1 "Stub" atlas (BRIEF-ART-03 §2). Its anims register
+// SPRITE-LOCALLY per the 2026-07-30-a namespace policy — the enemy's
+// tag names (move/grab/carry/stun) never touch the global namespace.
+const ENEMY_PNG = import.meta.glob('../../assets/sprites/enemy-stub.png', {
+  eager: true,
+  query: '?url',
+  import: 'default',
+})
+const ENEMY_JSON = import.meta.glob('../../assets/sprites/enemy-stub.json', {
+  eager: true,
+  import: 'default',
+})
 
 export default class BootScene extends Phaser.Scene {
   constructor() {
@@ -72,6 +84,15 @@ export default class BootScene extends Phaser.Scene {
     if (tilesUrl) this.load.image('tiles', tilesUrl)
     const coatsUrl = Object.values(COATS_PNG)[0]
     if (coatsUrl) this.load.spritesheet('coats', coatsUrl, { frameWidth: 24, frameHeight: 24 })
+    const enemyPng = Object.values(ENEMY_PNG)[0]
+    const enemyJson = Object.values(ENEMY_JSON)[0]
+    if (enemyPng && enemyJson) {
+      const normalized = normalizeAsepriteAtlas(enemyJson)
+      const blobUrl = URL.createObjectURL(
+        new Blob([JSON.stringify(normalized)], { type: 'application/json' })
+      )
+      this.load.aseprite('enemy-atlas', enemyPng, blobUrl)
+    }
     const atlasPng = Object.values(ATLAS_PNG)[0]
     const atlasJson = Object.values(ATLAS_JSON)[0]
     if (atlasPng && atlasJson) {

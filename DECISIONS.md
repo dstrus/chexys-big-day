@@ -742,3 +742,20 @@ physics body 16×18 centered per BRIEF-ART-03 §1. Rect + category
 tint remains the fallback and the heavy-item path until luggage
 art (L2). Verified in-game, console clean. Remaining for Gate 2:
 enemy V1.
+
+## 2026-08-03 — Enemy V1 "Stub" WIRED (Gate 2 narrowed-A item 3 of 3, move set)
+
+art/aseprite/enemy-stub.aseprite (11-frame move loop incl. blink;
+artist expanded from the brief's 3 per craft judgment) exports via
+the standard script and loads as enemy-atlas. Anims register
+SPRITE-LOCALLY per the 2026-07-30-a policy — verified live: 'move'
+exists on the sprite, not in the global namespace. Enemy state →
+anim mapping wired with graceful fallback (stun/grab/carry fall
+back to 'move' and will light up automatically when drawn — the
+artist queues them next). Body 18×16 on the 24×24 canvas;
+left-facing native with velocity flip. A full Coatroom rush now
+renders with zero placeholder rectangles (heavy items keep the
+rect fallback but Coatroom waves are tier-1 only). Still queued
+from BRIEF-ART-03: remaining V1 anims, stub particle, hanger +
+NFC icons, remaining Chexy anims. Gate 2 close call is the
+human's once the V1 set completes (or is ruled sufficient as-is).

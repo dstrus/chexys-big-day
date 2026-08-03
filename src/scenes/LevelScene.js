@@ -340,13 +340,33 @@ export default class LevelScene extends Phaser.Scene {
     if (this.runOver) return
     if (this.enemies.countActive() >= 6) return
     const fromLeft = Math.random() < 0.5
+    const useArt = this.textures.exists('enemy-atlas')
     const enemy = this.enemies.create(
       fromLeft ? -12 : this.worldWidth + 12,
       Phaser.Math.Between(40, this.worldHeight - 80),
-      'ticket'
+      useArt ? 'enemy-atlas' : 'ticket',
+      useArt ? this.textures.get('enemy-atlas').getFrameNames()[0] : undefined
     )
     enemy.body.setAllowGravity(false)
     enemy.setData('seed', Math.random() * 1000)
+    if (useArt) {
+      enemy.body.setSize(18, 16) // visual mass ~18-22 on the 24x24 canvas
+      // sprite-LOCAL anims (2026-07-30-a policy): tags live on this
+      // sprite only, never in the global namespace
+      this.anims.createFromAseprite('enemy-atlas', undefined, enemy)
+      this.setEnemyAnim(enemy, 'move')
+    }
+  }
+
+  // enemy state anims with graceful fallback: not-yet-drawn tags
+  // (grab/carry/stun) fall back to 'move' and light up automatically
+  // when their frames land in the atlas
+  setEnemyAnim(enemy, name) {
+    if (!enemy.anims || !this.textures.exists('enemy-atlas')) return
+    const resolved = enemy.anims.exists(name) ? name : enemy.anims.exists('move') ? 'move' : null
+    if (!resolved || enemy.getData('animKey') === resolved) return
+    enemy.setData('animKey', resolved)
+    enemy.play({ key: resolved, repeat: -1 })
   }
 
   tickClock() {
@@ -363,6 +383,7 @@ export default class LevelScene extends Phaser.Scene {
       if (stunnedUntil) {
         if (time < stunnedUntil) {
           enemy.body.setVelocity(0, 0) // dazed paper just hangs there
+          this.setEnemyAnim(enemy, 'stun')
           continue
         }
         // wake up, with a short no-steal grace so it can't instantly
@@ -377,14 +398,17 @@ export default class LevelScene extends Phaser.Scene {
         carried.setPosition(enemy.x, enemy.y + 10)
         if (time < (enemy.getData('gloatUntil') ?? 0)) {
           enemy.body.setVelocity(0, 0) // gloat beat: taunting before the getaway
+          this.setEnemyAnim(enemy, 'grab')
         } else {
           // encumbered getaway: carrying slows the ticket (steal fairness)
           const speed = TUNING.enemySpeed * TUNING.carrierSpeedFactor
           enemy.body.setVelocity(enemy.getData('carryDriftX') ?? 0, -speed)
+          this.setEnemyAnim(enemy, 'carry')
         }
         if (enemy.y < -24) this.onItemLost(enemy, carried) // off the top = lost
         continue
       }
+      this.setEnemyAnim(enemy, 'move')
 
       // target lock (DESIGN.md §2.4): once acquired, an enemy commits to
       // its target until the target becomes unavailable — never because a
@@ -415,6 +439,8 @@ export default class LevelScene extends Phaser.Scene {
         Math.cos(angle) * TUNING.enemySpeed,
         Math.sin(angle) * TUNING.enemySpeed + bob
       )
+      // left-facing native, same flip convention as Chexy
+      enemy.setFlipX(enemy.body.velocity.x > 0)
     }
   }
 
