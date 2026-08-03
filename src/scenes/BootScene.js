@@ -145,12 +145,18 @@ export default class BootScene extends Phaser.Scene {
     }
     if (this.textures.exists('particle-atlas')) {
       const pData = Object.values(PARTICLE_JSON)[0]
-      const frames = Array.isArray(pData.frames) ? pData.frames : Object.values(pData.frames)
+      const all = Array.isArray(pData.frames) ? pData.frames : Object.values(pData.frames)
+      // use the 'poof' tag's range when present (future fx can share the
+      // file under their own tags); whole file if untagged
+      const tag = (pData.meta.frameTags ?? []).find((t) => t.name === 'poof')
+      const from = tag ? tag.from : 0
+      const to = tag ? tag.to : all.length - 1
+      const frames = all.slice(from, to + 1)
       this.anims.create({
         key: 'fx-stub-poof', // fx- prefix: never collides with character tags
         frames: frames.map((f, i) => ({
           key: 'particle-atlas',
-          frame: String(i),
+          frame: String(from + i),
           duration: f.duration,
         })),
         duration: frames.reduce((sum, f) => sum + f.duration, 0),
