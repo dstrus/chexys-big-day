@@ -72,6 +72,12 @@ const ENEMY_JSON = import.meta.glob('../../assets/sprites/enemy-stub.json', {
   eager: true,
   import: 'default',
 })
+// Golden Hanger icon strip (BRIEF-ART-03 §3): golden/tarnished/broken
+const HANGER_PNG = import.meta.glob('../../assets/sprites/hanger.png', {
+  eager: true,
+  query: '?url',
+  import: 'default',
+})
 
 export default class BootScene extends Phaser.Scene {
   constructor() {
@@ -84,6 +90,8 @@ export default class BootScene extends Phaser.Scene {
     if (tilesUrl) this.load.image('tiles', tilesUrl)
     const coatsUrl = Object.values(COATS_PNG)[0]
     if (coatsUrl) this.load.spritesheet('coats', coatsUrl, { frameWidth: 24, frameHeight: 24 })
+    const hangerUrl = Object.values(HANGER_PNG)[0]
+    if (hangerUrl) this.load.spritesheet('hanger', hangerUrl, { frameWidth: 12, frameHeight: 12 })
     const enemyPng = Object.values(ENEMY_PNG)[0]
     const enemyJson = Object.values(ENEMY_JSON)[0]
     if (enemyPng && enemyJson) {

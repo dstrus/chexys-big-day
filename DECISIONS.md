@@ -770,3 +770,14 @@ getaway→carry, rescue→stun, wake→move; sprite-local registration
 holds; console clean. All three narrowed-A Gate 2 items are now
 fully in-game with complete art. Gate close awaits the human's
 sign-off.
+
+## 2026-08-03 — Golden Hanger icons WIRED (BRIEF-ART-03 §3)
+
+assets/sprites/hanger.png (12×12 × 3 states: golden / tarnished /
+broken) replaces the placeholder glyphs in all three consumers via
+a unified createHanger API (image when the sheet exists, glyph
+fallback otherwise): HUD loss meter (golden→broken), results
+ceremony at 2× (tarnished slots land golden per chime), level
+select bests (golden/tarnished). Verified in all three, console
+clean. Remaining §3 art: NFC tag collectible (system itself is a
+future chunk), stub particle.

@@ -3,7 +3,7 @@ import { GAME_WIDTH, GAME_HEIGHT } from '../main.js'
 import { TUNING } from '../config/tuning.js'
 import { HAPPY_LINES, UNHAPPY_LINES } from '../config/guestLines.js'
 import { audio } from '../systems/AudioBus.js'
-import { drawHanger } from '../ui/hanger.js'
+import { createHanger } from '../ui/hanger.js'
 
 const TEXT_STYLE = {
   fontFamily: 'monospace',
@@ -21,7 +21,7 @@ export default class UIOverlayScene extends Phaser.Scene {
   create() {
     // the run's prospective Golden Hangers (DESIGN.md §2.5): the loss
     // counter re-expressed — hangers break as losses accrue
-    this.hangerGfx = this.add.graphics()
+    this.hudHangers = [0, 1, 2].map((i) => createHanger(this, 10 + i * 17, 5, 1))
     this.timerText = this.add.text(GAME_WIDTH / 2, 6, '', TEXT_STYLE).setOrigin(0.5, 0)
     this.scoreText = this.add.text(GAME_WIDTH - 8, 6, '', TEXT_STYLE).setOrigin(1, 0)
     this.multText = this.add.text(GAME_WIDTH - 8, 19, '', TEXT_STYLE).setOrigin(1, 0)
@@ -193,7 +193,7 @@ export default class UIOverlayScene extends Phaser.Scene {
       .text(GAME_WIDTH / 2, 185, 'R RETRY · C CONTINUE', { ...TEXT_STYLE, color: '#ffffff' })
       .setOrigin(0.5)
     // Golden Hanger row: the screen's visual second beat (handoff -i)
-    this.resultHangerGfx = this.add.graphics()
+    this.resultHangers = [0, 1, 2].map(() => createHanger(this, 0, 0, 2))
     this.hangerTimers = []
     // BIG DAY! rubber stamp — Chexology Orange, slams over the title region
     this.stampText = this.add
@@ -213,7 +213,7 @@ export default class UIOverlayScene extends Phaser.Scene {
         .setOrigin(0.5),
       this.resultsTitle,
       this.resultsBody,
-      this.resultHangerGfx,
+      ...this.resultHangers.map((h) => h.obj),
       this.resultsPrompt,
       this.stampText,
     ])
@@ -229,20 +229,9 @@ export default class UIOverlayScene extends Phaser.Scene {
     })
   }
 
-  // gold hanger = still earnable, broken grey = a loss (placeholder art)
+  // golden = still earnable, broken = a loss
   drawHangers(lost) {
-    const g = this.hangerGfx
-    g.clear()
-    for (let i = 0; i < 3; i++) {
-      const x = 10 + i * 17
-      const y = 7
-      const intact = i < 3 - lost
-      drawHanger(g, x, y, 1, intact ? 0xf3b024 : 0x59595b, intact ? 1 : 0.7)
-      if (!intact) {
-        g.lineStyle(1, 0xea5151, 0.9) // the break
-        g.lineBetween(x + 2, y + 11, x + 10, y + 1)
-      }
-    }
+    this.hudHangers.forEach((h, i) => h.setState(i < 3 - lost ? 'golden' : 'broken'))
   }
 
   onHud({ score, lost, multiplier, timeLeft }) {
@@ -269,22 +258,16 @@ export default class UIOverlayScene extends Phaser.Scene {
     })
   }
 
-  // results hanger row at 2x scale: three slots always shown — unearned
-  // slots stay as tarnished outlines so what was left on the table reads
-  drawResultHangers(filled, earned) {
-    const g = this.resultHangerGfx
-    g.clear()
-    const y = this.hangerRowY
-    for (let i = 0; i < 3; i++) {
-      const x = GAME_WIDTH / 2 - 44 + i * 32
-      if (i < filled) {
-        drawHanger(g, x, y, 2, 0xf3b024, 1) // earned + landed
-      } else if (i < earned) {
-        drawHanger(g, x, y, 2, 0xf3b024, 0.15) // earned, about to land
-      } else {
-        drawHanger(g, x, y, 2, 0x59595b, 0.6) // left on the table
-      }
-    }
+  // results hanger row at 2x scale: three slots always shown — slots
+  // still tarnished either land golden on their chime or stay as what
+  // was left on the table
+  drawResultHangers(filled) {
+    this.resultHangers.forEach((h, i) =>
+      h
+        .setPosition(GAME_WIDTH / 2 - 44 + i * 32, this.hangerRowY)
+        .setState(i < filled ? 'golden' : 'tarnished')
+        .setVisible(true)
+    )
   }
 
   onRunOver({
@@ -300,7 +283,7 @@ export default class UIOverlayScene extends Phaser.Scene {
   }) {
     this.hangerTimers.forEach((t) => t.remove())
     this.hangerTimers = []
-    this.resultHangerGfx.clear()
+    this.resultHangers.forEach((h) => h.setVisible(false)) // fail layout shows none
     this.stampText.setVisible(false)
 
     this.resultsTitle.setText(cleared ? 'RUSH SURVIVED!' : 'TOO MANY LOST ITEMS')
@@ -350,11 +333,11 @@ export default class UIOverlayScene extends Phaser.Scene {
     this.stampText.setY(this.resultsTitle.y - 4) // overlaps the title region
 
     // sequential fill is the screen's second beat: chime per hanger
-    this.drawResultHangers(0, hangers)
+    this.drawResultHangers(0)
     for (let i = 1; i <= hangers; i++) {
       this.hangerTimers.push(
         this.time.delayedCall(400 * i, () => {
-          this.drawResultHangers(i, hangers)
+          this.drawResultHangers(i)
           audio.play('chime')
           if (i === 3) this.slamStamp()
         })
@@ -384,7 +367,7 @@ export default class UIOverlayScene extends Phaser.Scene {
     this.resultsPanel.setVisible(false)
     this.hangerTimers.forEach((t) => t.remove())
     this.hangerTimers = []
-    this.resultHangerGfx.clear()
+    this.resultHangers.forEach((h) => h.setVisible(false))
     this.stampText.setVisible(false)
     this.clearBubbles()
   }

@@ -2,7 +2,7 @@ import Phaser from 'phaser'
 import { GAME_WIDTH } from '../main.js'
 import { LEVELS } from '../config/levels.js'
 import { levelBest } from '../systems/progress.js'
-import { drawHanger } from '../ui/hanger.js'
+import { createHanger } from '../ui/hanger.js'
 import { audio } from '../systems/AudioBus.js'
 
 const ROW_X = 96
@@ -29,7 +29,6 @@ export default class LevelSelectScene extends Phaser.Scene {
       })
       .setOrigin(0.5)
 
-    const bestsGfx = this.add.graphics()
     this.rowTexts = LEVELS.map((lvl, i) => {
       const y = ROW_Y0 + i * ROW_H
       const label = `${i + 1}  ${lvl.unlocked ? lvl.name : '???'}`
@@ -53,8 +52,9 @@ export default class LevelSelectScene extends Phaser.Scene {
         }
         // best hangers earned (0-3 icons), max across runs
         for (let h = 0; h < 3; h++) {
-          const earned = h < best.bestHangers
-          drawHanger(bestsGfx, GAME_WIDTH - 64 + h * 17, y - 6, 1, earned ? 0xf3b024 : 0x59595b, earned ? 1 : 0.5)
+          createHanger(this, GAME_WIDTH - 64 + h * 17, y - 6, 1).setState(
+            h < best.bestHangers ? 'golden' : 'tarnished'
+          )
         }
       }
       return row
