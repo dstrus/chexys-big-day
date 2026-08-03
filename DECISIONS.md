@@ -759,3 +759,14 @@ rect fallback but Coatroom waves are tier-1 only). Still queued
 from BRIEF-ART-03: remaining V1 anims, stub particle, hanger +
 NFC icons, remaining Chexy anims. Gate 2 close call is the
 human's once the V1 set completes (or is ruled sufficient as-is).
+
+## 2026-08-03 — Enemy V1 animation set COMPLETE
+
+enemy-stub atlas now carries the full BRIEF-ART-03 §2 set:
+move(11f) grab(2f) carry(3f) stun(5f). No code changes — the
+state mapping's fallbacks simply stopped falling back. Verified
+live through the full cycle: seek→move, steal→grab (gloat beat),
+getaway→carry, rescue→stun, wake→move; sprite-local registration
+holds; console clean. All three narrowed-A Gate 2 items are now
+fully in-game with complete art. Gate close awaits the human's
+sign-off.
