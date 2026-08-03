@@ -557,12 +557,24 @@ export default class LevelScene extends Phaser.Scene {
 
   spawnItem(x, y, tier = 1, category = 'coat') {
     const heavy = tier >= 3
-    const item = this.items.create(x, y, heavy ? 'item-heavy' : 'item-standard')
+    // real coat art (3 garment-colored variants) when the strip exists;
+    // rect + category tint as the fallback. Heavy items stay on the rect
+    // until luggage art exists (L2).
+    const useCoatArt = !heavy && this.textures.exists('coats')
+    const item = useCoatArt
+      ? this.items.create(x, y, 'coats', Phaser.Math.Between(0, 2))
+      : this.items.create(x, y, heavy ? 'item-heavy' : 'item-standard')
     item.setData('heavy', heavy)
     item.setData('category', category)
     item.setData('spawnedAt', this.time.now) // fresh-item grace (DESIGN.md §2.4)
     item.setData('guest', ++this.guestCounter) // every item belongs to a guest
-    item.setTint(categoryColor(category)) // ChexApp tag colors
+    if (useCoatArt) {
+      // garment colors are baked in (-b ruling: the chip carries the
+      // category); BRIEF-ART-03 §1: smaller centered physics body
+      item.body.setSize(16, 18)
+    } else {
+      item.setTint(categoryColor(category)) // ChexApp tag colors
+    }
     item.setBounce(0.1)
     item.setCollideWorldBounds(true)
     audio.play('spawn', this.panFor(x))

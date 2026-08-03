@@ -731,3 +731,14 @@ rows 2–3 (gids 9–24) reserved for dressing. Verified in-game:
 parquet floor, carpeted platforms with caps, counter, dressing
 posts; squint test passes (Chexy pops). Console clean. Remaining
 for Gate 2: coat sprites, enemy V1.
+
+## 2026-08-02 — Coat sprites WIRED (Gate 2 narrowed-A item 2 of 3)
+
+assets/sprites/coats.png (3-frame 24×24 strip: cobalt long coat,
+crimson overcoat, olive puffy jacket — garment colors per the -b
+ruling) loads via the drop-in contract. Tier-1 items spawn as a
+random coat variant, untinted (the tag chip carries category);
+physics body 16×18 centered per BRIEF-ART-03 §1. Rect + category
+tint remains the fallback and the heavy-item path until luggage
+art (L2). Verified in-game, console clean. Remaining for Gate 2:
+enemy V1.
