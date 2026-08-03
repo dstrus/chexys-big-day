@@ -9,7 +9,7 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-CHARACTERS=(chexy enemy-stub)
+CHARACTERS=(chexy enemy-stub particle)
 
 resolve_source() {
   local name="$1"

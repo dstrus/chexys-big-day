@@ -60,6 +60,21 @@ export default class LevelScene extends Phaser.Scene {
         scale: { start: 1, end: 0 },
       })
       .setDepth(9)
+    // stub paper-poof for rescues (BRIEF-ART-03 §2); the tag burst above
+    // stays a sparkle — check-ins shouldn't read as paper destruction
+    this.stubPoof = this.textures.exists('particle-atlas')
+      ? this.add
+          .particles(0, 0, 'particle-atlas', {
+            emitting: false,
+            anim: 'fx-stub-poof',
+            speed: { min: 30, max: 90 },
+            lifespan: 450, // outlives the 390ms poof cycle
+            quantity: 6,
+            gravityY: 120,
+            rotate: { min: -90, max: 90 },
+          })
+          .setDepth(9)
+      : null
 
     // ticket enemies (paper — the villain)
     this.enemies = this.physics.add.group({ allowGravity: false })
@@ -733,7 +748,7 @@ export default class LevelScene extends Phaser.Scene {
     this.time.delayedCall(TUNING.hitstopMs, () => {
       if (!this.runOver) this.physics.resume()
     })
-    this.tagParticles.emitParticleAt(enemy.x, enemy.y)
+    ;(this.stubPoof ?? this.tagParticles).emitParticleAt(enemy.x, enemy.y)
     audio.play('stun', this.panFor(enemy.x))
   }
 

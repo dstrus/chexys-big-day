@@ -781,3 +781,17 @@ ceremony at 2× (tarnished slots land golden per chime), level
 select bests (golden/tarnished). Verified in all three, console
 clean. Remaining §3 art: NFC tag collectible (system itself is a
 future chunk), stub particle.
+
+## 2026-08-03 — Stub particle WIRED (BRIEF-ART-03 §2 "highest-reuse asset")
+
+particle.aseprite (3 frames, 8×8, 130ms each) exports via the
+standard script. The file is untagged, so the anim is built
+programmatically under the namespaced key 'fx-stub-poof' with
+durations read from the export JSON (.ase timing stays
+authoritative; fx- prefix keeps the global namespace clear of
+character tag names). Rescue stuns now emit 6 tumbling paper
+scraps (speed spread, slight gravity, rotation) from a dedicated
+emitter; the tag burst stays on the sparkle emitter — check-ins
+must not read as paper destruction. Same asset reserved for enemy
+despawns and the boss finale confetti. Verified live, console
+clean.

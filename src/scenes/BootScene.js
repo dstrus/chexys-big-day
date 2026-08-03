@@ -78,6 +78,19 @@ const HANGER_PNG = import.meta.glob('../../assets/sprites/hanger.png', {
   query: '?url',
   import: 'default',
 })
+// stub particle (BRIEF-ART-03 §2, "highest-reuse asset"): rescue poof
+// now, boss confetti later. The export is untagged, so the anim is
+// built from the atlas under a namespaced fx key with the .ase
+// durations read from the JSON (timing stays authoritative).
+const PARTICLE_PNG = import.meta.glob('../../assets/sprites/particle.png', {
+  eager: true,
+  query: '?url',
+  import: 'default',
+})
+const PARTICLE_JSON = import.meta.glob('../../assets/sprites/particle.json', {
+  eager: true,
+  import: 'default',
+})
 
 export default class BootScene extends Phaser.Scene {
   constructor() {
@@ -92,6 +105,15 @@ export default class BootScene extends Phaser.Scene {
     if (coatsUrl) this.load.spritesheet('coats', coatsUrl, { frameWidth: 24, frameHeight: 24 })
     const hangerUrl = Object.values(HANGER_PNG)[0]
     if (hangerUrl) this.load.spritesheet('hanger', hangerUrl, { frameWidth: 12, frameHeight: 12 })
+    const particlePng = Object.values(PARTICLE_PNG)[0]
+    const particleJson = Object.values(PARTICLE_JSON)[0]
+    if (particlePng && particleJson) {
+      const normalized = normalizeAsepriteAtlas(particleJson)
+      const blobUrl = URL.createObjectURL(
+        new Blob([JSON.stringify(normalized)], { type: 'application/json' })
+      )
+      this.load.aseprite('particle-atlas', particlePng, blobUrl)
+    }
     const enemyPng = Object.values(ENEMY_PNG)[0]
     const enemyJson = Object.values(ENEMY_JSON)[0]
     if (enemyPng && enemyJson) {
@@ -120,6 +142,19 @@ export default class BootScene extends Phaser.Scene {
     if (this.textures.exists('chexy-atlas')) {
       // one anim per Aseprite frame tag (idle, run, jump, ...)
       this.anims.createFromAseprite('chexy-atlas')
+    }
+    if (this.textures.exists('particle-atlas')) {
+      const pData = Object.values(PARTICLE_JSON)[0]
+      const frames = Array.isArray(pData.frames) ? pData.frames : Object.values(pData.frames)
+      this.anims.create({
+        key: 'fx-stub-poof', // fx- prefix: never collides with character tags
+        frames: frames.map((f, i) => ({
+          key: 'particle-atlas',
+          frame: String(i),
+          duration: f.duration,
+        })),
+        duration: frames.reduce((sum, f) => sum + f.duration, 0),
+      })
     }
     const g = this.add.graphics()
     const make = (key, w, h, color) => {
