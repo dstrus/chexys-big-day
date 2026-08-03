@@ -24,8 +24,11 @@ still roots you when you arrive. Mobility feeds commitment.
 - Tier 2 (roller bags): hold-tag, SHORT duration (~60% of
   holdTagMs — new tuning value holdTier2Factor).
 - Tier 3 (trunks, golf bags): hold-tag, full holdTagMs.
-- Item category colors: luggage = Tag Teal #006483 base, with
-  tier badges (1/2/3 dots). Heavy items use the heavy-variant
+- Luggage bodies in varied material colors (leathers,
+  fabrics — garment-hue rules per BRIEF-ART-03 §0/§1); Tag
+  Teal #006483 arrives via the applied chip on check-in.
+  Tier identity = silhouette (garment bag / roller / trunk)
+  + tier badges (1/2/3 dots). Heavy items use the heavy-variant
   edge arrows already built in §2.4.
 
 ### Dash (unlock beat)
@@ -49,7 +52,7 @@ still roots you when you arrive. Mobility feeds commitment.
   not pass through walls. Dash does not tag anything.
 
 ## Wave design intent (coatroom-waves.json sibling:
-bellddesk-waves.json — agent drafts, human tunes)
+belldesk-waves.json — agent drafts, human tunes)
 
 Deliberately create dash-then-commit moments:
 - Opening 30s: tier 1 only, dash tutorial beat, generous spacing

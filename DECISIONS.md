@@ -795,3 +795,32 @@ emitter; the tag burst stays on the sparkle emitter — check-ins
 must not read as paper destruction. Same asset reserved for enemy
 despawns and the boss finale confetti. Verified live, console
 clean.
+
+## 2026-08-03 — BRIEF-03 presence discrepancy resolved (handoff 2026-08-03-a)
+
+Root cause: BRIEF-03.md has been in HEAD at the repo root since
+2026-07-30 — swept in silently by the agent's own `git add -A`
+during the "Apply handoff 2026-07-30-b" commit (56c9d50) after the
+human dropped it unannounced; it was never read or applied. The
+2026-08-03 status report's "never arrived" flag was written from
+memory without a filesystem or history search, and earlier globs
+(`ls BRIEF-ART*`) could not have matched it. Search that found it:
+ls *.md + find -iname '*brief*3*' + git log --all -- '*BRIEF-03*'.
+Weight-tier luggage line corrected to match -b ruling;
+belldesk-waves.json typo fixed (no references existed under the
+misspelled name — verified by repo-wide grep); referenced-artifact
+check added to CLAUDE.md protocol.
+
+## 2026-08-03 — Handoff 2026-08-03-a applied
+
+- Sequence check: first handoff of 2026-08-03 ✓.
+- Item 0: BRIEF-03 located in HEAD (root cause above); no stop
+  needed.
+- Item 1: luggage color line replaced verbatim.
+- Item 2: bellddesk → belldesk fixed; repo-wide grep confirmed no
+  file or code reference ever used the misspelled name.
+- Item 3: referenced-artifact check appended to CLAUDE.md verbatim.
+- Item 4: decision logged (entry above).
+- NOTE: BRIEF-03 (Bell Desk code brief) is now surfaced and unread
+  debt — it has never been reviewed or started; flagging for
+  scheduling in the design chat.

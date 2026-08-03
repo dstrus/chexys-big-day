@@ -96,3 +96,12 @@ Rules for both:
   DECISIONS.md for the immediately preceding ID. If it is
   missing, STOP and tell the human which handoff appears to
   have been skipped before proceeding.
+- **Referenced-artifact check:** when any repo document
+  references another repo artifact (briefs, specs, palette
+  files, maps), verify the referenced file exists in HEAD
+  before reporting on it or building against it. If a
+  reference dangles, search git history and common
+  locations BEFORE flagging it as missing — report "absent
+  from HEAD" only after an actual search, and include the
+  search performed. (Added after BRIEF-03 was flagged
+  missing while committed since 2026-07-30.)
