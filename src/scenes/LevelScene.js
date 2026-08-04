@@ -764,14 +764,35 @@ export default class LevelScene extends Phaser.Scene {
       this.updateHold(time)
       return
     }
-    if (this.player.tagPressed && this.target) {
+    const p = this.player
+    if (p.tagPressed && this.target) {
       // rescue is ALWAYS instant tap (DESIGN.md §2 item 4b)
-      if (this.isStunnable(this.target)) this.stunEnemy(this.target, time)
-      // weight tiers (BRIEF-03): tier 2+ are hold-tags — tier 2 short,
-      // tier 3 full; tier 1 stays the instant tap
-      else if ((this.target.getData('tier') ?? 1) >= 2) this.startHold(time)
-      else this.completeTag(this.target)
+      if (this.isStunnable(this.target)) {
+        this.stunEnemy(this.target, time)
+        return
+      }
+      // tier 1 stays the instant tap — and stays a PRESS event: a held
+      // button never repeat-fires taps (handoff 2026-08-03-d item 2)
+      if ((this.target.getData('tier') ?? 1) < 2) {
+        this.completeTag(this.target)
+        return
+      }
     }
+
+    // hold start for tier 2+, buffered like jump input (DESIGN.md §2.3,
+    // handoff 2026-08-03-d): held tag intent WAITS while movement keys
+    // are down and the hold starts the moment they release — input
+    // overlap at arrival can never fire an interrupt or struggle
+    // penalty. holdDeferredStart=false restores legacy press-start for
+    // playtest comparison.
+    const t = this.target
+    if (!t || this.isStunnable(t) || (t.getData('tier') ?? 1) < 2) return
+    const wantsHold = TUNING.holdDeferredStart ? p.tagHeld : p.tagPressed
+    if (!wantsHold) return
+    const moveInput =
+      p.cursors.left.isDown || p.cursors.right.isDown || p.cursors.up.isDown || p.keys.SPACE.isDown
+    if (TUNING.holdDeferredStart && moveInput) return // buffered: wait for release
+    this.startHold(time)
   }
 
   // one tag press on a carrying ticket: stun it and drop the item, taggable

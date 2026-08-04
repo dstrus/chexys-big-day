@@ -73,6 +73,18 @@ violence against people — the only thing you ever destroy is paper.
   is stationary and vulnerable — paper enemies can interrupt the
   hold, resetting the meter. This is the game's deliberate tension
   beat against the fast tap baseline.
+  **Hold start buffering (ruled 2026-08-03):** a hold does
+  not begin while movement input is held — pressing the tag
+  button early simply waits, and the hold starts the moment
+  movement keys are released (with Chexy in range of the
+  target). No interrupt, penalty, or struggle feedback can
+  fire from input overlap at hold start; the struggle path
+  (multiplier drop, streak reset, hit feedback) applies only
+  to abandoning a hold that has genuinely begun charging.
+  This is the hold-verb counterpart of jump input buffering —
+  intent waits for readiness. Implement as the default; keep
+  a tunable flag (holdDeferredStart, default true) for
+  playtest comparison.
 - **Targeting:** generous auto-target radius (tunable, start ~1.5×
   Chexy's width) hitting the nearest valid item; the current target
   gets a subtle highlight/outline so the player always knows what a

@@ -943,3 +943,22 @@ embeds and falls through — found and fixed during verification.
 
 Remaining acceptance (human): punch-list play session (part of the
 brief, not a follow-up), 60fps at ×2 confirmation, dash feel.
+
+## 2026-08-03 — Handoff 2026-08-03-d applied
+
+- Sequence check: 2026-08-03-c applied (entry above) ✓.
+- Item 1: hold-start-buffering paragraph appended to the DESIGN.md
+  §2.3 heavy-items bullet verbatim; implemented as default with
+  holdDeferredStart tunable flag (true) on the panel.
+- Item 2: confirmed at runtime — Z held while running past two
+  tier-1 items fired zero taps (tap remains a press event); arrival
+  + movement-key release near a trunk started the buffered hold
+  (300ms, zero struggle penalties) and completed to a tag.
+- Item 3: ruling entry appended verbatim below.
+
+2026-08-03 — Hold start buffering ruled (handoff
+2026-08-03-d): deferred start (option 2) — movement input
+at hold start waits rather than interrupting; struggle
+penalties price abandonment only, never arrival overlap.
+Framed as the hold-verb sibling of jump buffering.
+itemDragX slide bug separately fixed at 1929d0d.
