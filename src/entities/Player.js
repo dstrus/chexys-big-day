@@ -49,6 +49,8 @@ export default class Player {
     this.jumpPressedAt = -Infinity
     this.dashUntil = 0
     this.lastDashAt = -Infinity
+    this.airDashUsed = false // ONE air dash per airborne period (-g)
+    this.dashStartedGrounded = false
     this.lastTapAt = { left: -Infinity, right: -Infinity } // double-tap detection
     this.lastGhostAt = 0
     this.dashedOnce = false // first-dash confirmation bubble (BRIEF-03)
@@ -95,7 +97,10 @@ export default class Player {
     const dashing = time < this.dashUntil
     body.setMaxVelocity(dashing ? TUNING.dashSpeed : TUNING.maxSpeed, TUNING.fallMaxSpeed)
 
-    if (this.onGround()) this.lastGroundedAt = time
+    if (this.onGround()) {
+      this.lastGroundedAt = time
+      this.airDashUsed = false // the air dash refreshes on landing, not on cooldown (-g)
+    }
 
     const left = this.cursors.left.isDown
     const right = this.cursors.right.isDown
@@ -109,7 +114,9 @@ export default class Player {
       body.setAccelerationX(0)
       body.setVelocityX(0)
     } else if (dashing) {
+      // purely horizontal (-g): no steering, no vertical drift
       body.setAccelerationX(0)
+      body.setVelocityY(0)
     } else if (left !== right) {
       body.setAccelerationX(left ? -TUNING.moveAccel : TUNING.moveAccel)
     } else {
@@ -126,7 +133,9 @@ export default class Player {
     }
     const buffered = time - this.jumpPressedAt <= TUNING.bufferMs
     const grounded = time - this.lastGroundedAt <= TUNING.coyoteMs
-    if (buffered && grounded && !this.frozen) {
+    // jump cannot initiate mid-dash (-g) — the press above still records,
+    // so it buffers per the standard window and fires on dash end
+    if (buffered && grounded && !this.frozen && !dashing) {
       body.setVelocityY(TUNING.jumpVelocity)
       this.jumpPressedAt = -Infinity
       this.lastGroundedAt = -Infinity
@@ -158,8 +167,13 @@ export default class Player {
       (TUNING.dashEnabled || isDashUnlocked()) &&
       (!this.frozen || TUNING.dashCancelsHold) &&
       !dashing &&
-      time - this.lastDashAt >= TUNING.dashCooldownMs
+      time - this.lastDashAt >= TUNING.dashCooldownMs &&
+      // ONE air dash per airborne period (-g): airborne availability is
+      // landing-refreshed, never cooldown-refreshed — no hover-stalling
+      (this.onGround() || !this.airDashUsed)
     ) {
+      this.dashStartedGrounded = this.onGround()
+      if (!this.dashStartedGrounded) this.airDashUsed = true
       this.dashUntil = time + TUNING.dashDurationMs
       this.lastDashAt = time
       this.dashedOnce = true
@@ -168,7 +182,10 @@ export default class Player {
       // back to run speed before the dash flag is ever seen
       body.setMaxVelocity(TUNING.dashSpeed, TUNING.fallMaxSpeed)
       body.setVelocityX(TUNING.dashSpeed * dashDir)
+      // purely horizontal (-g): flatten any rise/fall instantly and
+      // suspend gravity for the duration
       body.setVelocityY(0)
+      body.setAllowGravity(false)
     }
 
     // white flash while dashing so the burst reads even on a grey-box
@@ -183,6 +200,13 @@ export default class Player {
       }
     } else if (this.wasDashing) {
       this.sprite.clearTint()
+      // dash end (-g): gravity resumes as a FRESH fall — vy starts from
+      // zero, never a resume of pre-dash momentum
+      body.setAllowGravity(true)
+      body.setVelocityY(0)
+      // a dash that carried us off a ledge edge: coyote counts from the
+      // dash ending, so the buffered jump window behaves at the brink
+      if (this.dashStartedGrounded && !this.onGround()) this.lastGroundedAt = time
     }
     this.wasDashing = dashingNow
 

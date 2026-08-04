@@ -1005,3 +1005,52 @@ the tag-button arm is consumed by the first action it
 produces (tap, stun, or hold start); unconsumed arms wait
 per -d. Closes the tap/stun boundary the code track flagged
 on -e.
+
+## 2026-08-04 — Handoff 2026-08-03-g applied (after BOSS-SPEC stop)
+
+- Sequence check: 2026-08-03-f applied (entry above) ✓.
+- STOP/RESUME: item 2(d) referenced BOSS-SPEC, absent from HEAD and
+  all history (searched: ls, find, git log --all, grep, git log -S;
+  only references were BRIEF-ART-03's dangling ones). Human added
+  BOSS-SPEC.md and chose to keep carpet IMPLEMENTATION deferred
+  (design tweaks expected); 2(d) therefore executed as a
+  spec-consistency read. BOSS-SPEC.md committed with this handoff.
+- Item 1: dash-trajectory block appended to DESIGN.md §3.2 verbatim.
+- Item 2 verified at runtime: (a) ledge dash — flat at constant y
+  for the full duration, past the edge, then fresh fall from vy 0;
+  (b) dash mid-fall — 206px/s descent arrested to flat instantly,
+  fresh fall on end; (c) jump pressed mid-dash never fires mid-air;
+  the buffered press fires on the first frame after a grounded dash
+  end (first (c) run "failed" — root cause was a legitimate
+  mezzanine-underside head bonk at the test venue, not a code
+  fault); air-dash cap isolated from cooldown — one air dash per
+  airborne period, second attempt blocked even with cooldown
+  elapsed, refresh on landing, grounded chaining unaffected.
+- Item 2(d) spec-consistency: Paper Carpet (BOSS-SPEC, phase 1) is
+  a reduced-traction floor zone (slipFactor). Grounded dash sets
+  velocity directly and zeroes acceleration — traction has no lever
+  on it; flat-air dash can no longer sag onto the carpet mid-flight
+  since gravity is suspended, so "dash crosses it clean" holds in
+  BOTH cases and the -g ruling strengthens it. Forward note for the
+  boss brief: implement slipFactor as accel/decel scaling (not
+  velocity clamps) and dash immunity falls out for free.
+- Item 3 findings: (a) routing — empirical max jump+air-dash reach
+  from a mezzanine edge ≈136px vs 368px minimum inter-strip gap; no
+  strip-to-strip skips; heavy-items-stay-low intent intact (a flat
+  dash ZEROES vy and never aids ascent); (b) fairness — belldesk (c)
+  readout GREEN: escape 11464ms ≥ traverse 10872ms + 500ms margin
+  (92ms slack). The in-code traversal model stays valid and
+  conservative: -g only restricts dash availability and grants no
+  new horizontal speed. Coatroom unaffected.
+- Item 4: ruling entry appended below with findings filled.
+
+2026-08-03 — Horizontal dash ruled (handoff 2026-08-03-g):
+gravity suspended, vy zeroed at start, fresh fall on end,
+one air-dash per airborne period (refresh on landing),
+jump-during-dash buffered not honored mid-air. Bell Desk
+routing and fairness inequality re-verified under the new
+traversal model: routing clean — max jump+air-dash reach
+≈136px against 368px minimum mezzanine gaps, no unintended
+skips, heavy-stays-low intact; fairness GREEN — escape
+11464ms ≥ traversal 10872ms + 500ms margin (92ms slack),
+traversal model unchanged and conservative.

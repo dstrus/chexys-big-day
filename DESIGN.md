@@ -218,6 +218,21 @@ dash unlock. (Guest-matching sub-mechanic deferred to v2 — see §8.)
 Dash is locked out during an active hold (tunable dashCancelsHold,
 default false). Dash unlocks via a 10s scripted beat at Bell Desk
 start; it persists for all subsequent levels.
+**Dash trajectory (ruled 2026-08-03):** dash is purely
+horizontal — gravity is suspended for the dash duration,
+and vertical velocity is ZEROED at dash start (a dash
+during a jump's rise or a fall flattens the trajectory
+instantly). On dash end, gravity resumes with vertical
+velocity starting from zero (a fresh fall, never a resume
+of pre-dash momentum). Vertical input has no effect during
+a dash. Jump cannot be initiated mid-dash; a jump input
+during a dash is buffered per the standard input-buffer
+window and honored on dash end if grounded (or within
+coyote time of the dash ending over a ledge edge).
+Air-dash count: ONE dash per airborne period — the dash
+refreshes on landing, not on cooldown, while airborne
+(dashCooldownMs still governs ground chaining). Prevents
+cooldown-cycled hover-stalling during long falls.
 
 ### 3.3 Level 3 — The Valet Garage
 Auto-scrolling parking structure. Sprint to retrieve the right car
