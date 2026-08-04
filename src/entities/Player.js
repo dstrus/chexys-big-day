@@ -244,20 +244,25 @@ export default class Player {
     if (this.animLock) return
 
     let next
-    if (this.frozen) next = 'hold'
+    // dash pose wins while dashing (grounded or flat-air — the -g
+    // trajectory makes them the same picture)
+    if (this.wasDashing && this.scene.anims.exists('dash')) next = 'dash'
+    else if (this.frozen) next = 'hold'
     else if (!grounded) next = this.body.velocity.y < 0 ? 'jump' : 'fall'
     else next = Math.abs(this.body.velocity.x) > 10 ? 'run' : 'idle'
     this.playState(next)
   }
 
   // looping state anim; missing tags fall back to idle so incremental
-  // art drops (idle first, run later...) never break
+  // art drops (idle first, run later...) never break. 'dash' plays ONCE
+  // and parks on its final frame — the pose holds for the dash's
+  // remainder (frame timing stays the .ase's; only the loop differs).
   playState(name) {
     if (this.mode !== 'atlas' || this.animLock) return
     if (!this.scene.anims.exists(name)) name = 'idle'
     if (this.stateAnim === name || !this.scene.anims.exists(name)) return
     this.stateAnim = name
-    this.sprite.play({ key: name, repeat: -1 }, true)
+    this.sprite.play({ key: name, repeat: name === 'dash' ? 0 : -1 }, true)
   }
 
   // one-shot anim (land/tag/hit); locks the state machine until complete

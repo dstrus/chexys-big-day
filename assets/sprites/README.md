@@ -31,10 +31,12 @@ way — timing is never redefined in code.
 Tag names in the Aseprite file become animation keys. The game's
 state machine uses:
 
-`idle` `run` `jump` `fall` `land` `tag` `hold` `hit` `win` `lose`
+`idle` `run` `jump` `fall` `land` `dash` `tag` `hold` `hit` `win` `lose`
 
 - `idle` / `run` / `jump` / `fall` / `hold` loop; `land` / `tag` /
   `hit` play once; `win` / `lose` loop on the results screen.
+- `dash` plays once and HOLDS its final frame for the rest of the
+  dash (2 frames: launch pose, then the held flight pose).
 - Tags may land incrementally — any missing tag falls back to `idle`,
   so an idle-only export already animates in-game.
 - Frame durations set in Aseprite are respected (createFromAseprite).
