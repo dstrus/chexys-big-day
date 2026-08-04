@@ -869,3 +869,26 @@ inert (timer-driven exit proven); the state-exit principle
 carries to the boss implementation brief instead. Open
 evaluation: urgency-arrow weighting for loitering vs.
 diving enemies, pending human loiter play-check.
+
+## 2026-08-03 — Handoff 2026-08-03-c applied
+
+- Sequence check: 2026-08-03-b applied (entry above) ✓.
+- Item 1: gate-close entry appended verbatim below.
+- Item 2: DESIGN.md §9 Gate 2 row marked PASSED 2026-08-03.
+
+2026-08-03 — GATE 2 PASSED (handoff 2026-08-03-c). Human
+inspection playthrough verdict: PASS under the narrowed-A
+scope (-c). The Coatroom is certified as a finished product
+slice: recognizably the game, zero placeholders, 60fps,
+ceremony and fairness texture intact. Loiter behavior
+accepted (no issues filed); urgency-arrow weighting for
+loitering enemies remains an open watch item per -b.
+PUNCH LIST → DEBT: floor/platform tile variety pass
+(sequence tiles + breakers per the 2026-08-02 design
+discussion) — deferred by the human, joins the polish
+ledger. Full debt ledger as of gate close: P2–P4 parallax,
+enemy V2, BRIEF-ART-02 Deliverable C (autonomous motion),
+final audio passes, tile variety pass, chip anchor
+documentation.
+PHASE 3 IS OPEN: BRIEF-03 (Bell Desk) is unblocked for
+execution — its prerequisite (Gate 2) is now satisfied.

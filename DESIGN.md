@@ -303,7 +303,7 @@ it. Victory screen shows "99% Item Return Rate."
 |------|-------------|--------------------|
 | 0 | DESIGN.md + CLAUDE.md approved | You'd sign it |
 | 1 | Grey-box prototype | The core loop is FUN |
-| 2 | Coatroom level, full art/audio + style-proof | Sustainable art pipeline proven |
+| 2 | Coatroom level, full art/audio + style-proof | Sustainable art pipeline proven — **PASSED 2026-08-03** (handoff 2026-08-03-c, narrowed-A scope per -c) |
 | 3 | All levels + boss playable | Full run start-to-finish |
 | 4 | Polish, playtests, deployed to itch.io / GitHub Pages | Shipped link in Slack |
 
