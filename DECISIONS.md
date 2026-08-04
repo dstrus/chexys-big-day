@@ -1119,3 +1119,23 @@ hold completions unaffected. Without tap art the tap degrades to
 instant. DESIGN.md §2.3 amended. Verified: frame-2 effect timing,
 forced stop and clean control return, whiff-on-steal, no console
 errors.
+
+## 2026-08-04 — Handoff 2026-08-04-b applied
+
+- Sequence check: 2026-08-04-a applied (entry above) ✓.
+- Item 1: §2.3 windup re-validation language amended to the explicit
+  no-retarget form; code comment tightened to match (behavior was
+  already press-time-target-only — no code change needed).
+- Item 2: confirmed at runtime — hitstop and particle burst both
+  fire 83ms after press (the effect frame), never on press.
+- Item 3: forward note appended to BOSS-SPEC.md's tuning-surface
+  section verbatim.
+- Item 4: ruling entry appended verbatim below.
+
+2026-08-04 — Tap windup ratified (handoff 2026-08-04-b):
+80ms to effect / 160ms rooted, .ase frame durations are
+the mechanic's timing authority; whiff = clean miss with
+no retarget (press-time target only); hitstop on effect
+frame; boss telegraph budgets carry the windup tax.
+Supersedes 'instant tap' language for standard items;
+rescue-stun instancy and hold mechanics unchanged.

@@ -930,8 +930,9 @@ export default class LevelScene extends Phaser.Scene {
     const act = this.tapAction
     if (!act.fired && time >= act.effectAt) {
       act.fired = true
-      // re-validate at the moment of effect: stolen mid-windup = whiff
-      // (the thief was faster — no tag, no penalty)
+      // re-validate the PRESS-TIME target only (-b ruling): invalid at
+      // landing = clean whiff — no retarget to other items in radius,
+      // no penalty, arm already consumed per -f
       if (this.isTaggable(act.item)) this.completeTag(act.item)
     }
     if (time >= act.endAt) {

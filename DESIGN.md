@@ -70,8 +70,11 @@ violence against people — the only thing you ever destroy is paper.
   tap animation's 2nd frame (~80ms) and Chexy is rooted for the
   full 2-frame animation (~160ms). Timing is authored in the
   .ase (frame durations ARE the mechanic). The effect
-  re-validates when it lands: an item stolen mid-windup is a
-  clean whiff — no tag, no penalty. Rescue stuns remain truly
+  re-validates when it lands, against the PRESS-TIME target
+  only: if that target is invalid at effect-landing (stolen,
+  expired, despawned), the tap whiffs — a clean miss with NO
+  retargeting to other items in radius, no penalty, and the
+  arm consumed per the one-press-one-action rule. Rescue stuns remain truly
   instant (item 4b); hold completions are unaffected (the meter
   is their commitment). Juice it hard: 2–3 frames of hitstop,
   particle burst, punchy SFX. Item spread in level design must

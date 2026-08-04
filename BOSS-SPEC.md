@@ -119,6 +119,11 @@ bossReturnThresholds[], stealRefund, slipFactor,
 bossSpeedByPhase[], grabMashMs, spewCountByPhase[],
 flyoffRateByPhase[], telegraphMsByPhase[].
 
+telegraphMsByPhase values must budget for the tap windup
+(~80ms to effect) — counter-tap windows are measured from
+press, and the fight is tuned against the windup verb, not
+the legacy instant tap. (Forward note, handoff 2026-08-04-b.)
+
 ## Explicitly out of scope
 
 No Chexy attack verb, no boss health bar UI beyond the ticket
