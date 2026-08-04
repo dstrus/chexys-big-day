@@ -1054,3 +1054,13 @@ traversal model: routing clean — max jump+air-dash reach
 skips, heavy-stays-low intact; fairness GREEN — escape
 11464ms ≥ traversal 10872ms + 500ms margin (92ms slack),
 traversal model unchanged and conservative.
+
+## 2026-08-04 — Dash feel tuned (human, via panel paste)
+
+dashSpeed 340→400, dashDurationMs 140→200; all other values
+unchanged. Downstream -g numbers refreshed: belldesk (c) readout
+GREEN with slack 92ms→1364ms (traverse 10872→9600ms — a faster
+player makes the inequality easier); coatroom GREEN (traverse
+8000ms). Routing: per-dash distance 47.6→80px, est. jump+air-dash
+reach ≈190px — still well under the 368px minimum mezzanine gap,
+no new skips. Afterimage cadence (duration/3) unaffected.

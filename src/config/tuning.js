@@ -19,8 +19,8 @@ export const TUNING = {
   // dash (BRIEF-03: unlocks via the Bell Desk scripted beat and persists
   // in progress; dashEnabled remains the debug/panel override)
   dashEnabled: false,
-  dashSpeed: 340,
-  dashDurationMs: 140,
+  dashSpeed: 400,
+  dashDurationMs: 200,
   dashCooldownMs: 900,
   dashDoubleTapMs: 250, // second ←/→ press within this window dashes
   dashCancelsHold: false, // locked out during a hold by default (DESIGN.md §3.2);
