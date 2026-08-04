@@ -1,5 +1,6 @@
 import Phaser from 'phaser'
 import { TUNING } from '../config/tuning.js'
+import { isDashUnlocked } from '../systems/progress.js'
 
 // Chexy (grey-box: a 44x44 rect). Platformer feel baseline per BRIEF-01:
 // acceleration/deceleration movement, variable jump height, coyote time,
@@ -47,6 +48,10 @@ export default class Player {
     this.lastGroundedAt = -Infinity
     this.jumpPressedAt = -Infinity
     this.dashUntil = 0
+    this.lastDashAt = -Infinity
+    this.lastTapAt = { left: -Infinity, right: -Infinity } // double-tap detection
+    this.lastGhostAt = 0
+    this.dashedOnce = false // first-dash confirmation bubble (BRIEF-03)
     this.facing = 1
     this.frozen = false // true while a hold-tag is charging
 
@@ -134,32 +139,76 @@ export default class Player {
       body.setVelocityY(body.velocity.y * TUNING.jumpCutMultiplier)
     }
 
-    // dash stub — fully wired, but TUNING.dashEnabled is false in the
-    // grey-box (dash unlocks in Level 2 per DESIGN.md)
+    // dash (BRIEF-03): X/K or a double-tap on ←/→. Enabled by the Bell
+    // Desk unlock beat (persists via progress) or the debug panel flag.
+    // Locked out during a hold unless dashCancelsHold trials the opposite.
+    let dashDir = 0
+    if (JustDown(this.keys.X) || JustDown(this.keys.K)) dashDir = this.facing
+    for (const [key, name, dir] of [
+      [this.cursors.left, 'left', -1],
+      [this.cursors.right, 'right', 1],
+    ]) {
+      if (JustDown(key)) {
+        if (time - this.lastTapAt[name] <= TUNING.dashDoubleTapMs) dashDir = dir
+        this.lastTapAt[name] = time
+      }
+    }
     if (
-      (JustDown(this.keys.X) || JustDown(this.keys.K)) &&
-      TUNING.dashEnabled &&
-      !this.frozen &&
-      !dashing
+      dashDir !== 0 &&
+      (TUNING.dashEnabled || isDashUnlocked()) &&
+      (!this.frozen || TUNING.dashCancelsHold) &&
+      !dashing &&
+      time - this.lastDashAt >= TUNING.dashCooldownMs
     ) {
       this.dashUntil = time + TUNING.dashDurationMs
+      this.lastDashAt = time
+      this.dashedOnce = true
+      this.facing = dashDir
       // raise the cap NOW — the frame-start value would clamp the burst
       // back to run speed before the dash flag is ever seen
       body.setMaxVelocity(TUNING.dashSpeed, TUNING.fallMaxSpeed)
-      body.setVelocityX(TUNING.dashSpeed * this.facing)
+      body.setVelocityX(TUNING.dashSpeed * dashDir)
       body.setVelocityY(0)
     }
 
-    // white flash while dashing so the burst reads even on a grey-box rect
+    // white flash while dashing so the burst reads even on a grey-box
+    // rect, plus a 2-3 ghost-frame afterimage (additive blend, DESIGN.md
+    // §5 effects language)
     const dashingNow = time < this.dashUntil
-    if (dashingNow) this.sprite.setTintFill(0xffffff)
-    else if (this.wasDashing) this.sprite.clearTint()
+    if (dashingNow) {
+      this.sprite.setTintFill(0xffffff)
+      if (time - this.lastGhostAt >= TUNING.dashDurationMs / 3) {
+        this.lastGhostAt = time
+        this.spawnGhost()
+      }
+    } else if (this.wasDashing) {
+      this.sprite.clearTint()
+    }
     this.wasDashing = dashingNow
 
     this.tagPressed = JustDown(this.keys.Z) || JustDown(this.keys.J)
     this.tagHeld = this.keys.Z.isDown || this.keys.J.isDown
 
     if (this.mode === 'atlas') this.updateAnimState()
+  }
+
+  // dash afterimage: a snapshot of the current sprite frame, additive
+  // blend, quick fade — 2-3 of these trail a full dash
+  spawnGhost() {
+    const s = this.sprite
+    const ghost = this.scene.add
+      .image(s.x, s.y, s.texture.key, s.frame.name)
+      .setFlipX(s.flipX)
+      .setDisplaySize(s.displayWidth, s.displayHeight)
+      .setBlendMode(Phaser.BlendModes.ADD)
+      .setAlpha(0.45)
+      .setDepth(s.depth - 1)
+    this.scene.tweens.add({
+      targets: ghost,
+      alpha: 0,
+      duration: 150,
+      onComplete: () => ghost.destroy(),
+    })
   }
 
   // ---- animations (atlas mode; frame tags per assets/sprites/README.md) ----

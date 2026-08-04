@@ -1,6 +1,6 @@
 import Phaser from 'phaser'
 import { GAME_WIDTH } from '../main.js'
-import { LEVELS } from '../config/levels.js'
+import { LEVELS, isLevelUnlocked } from '../config/levels.js'
 import { levelBest } from '../systems/progress.js'
 import { createHanger } from '../ui/hanger.js'
 import { audio } from '../systems/AudioBus.js'
@@ -29,9 +29,13 @@ export default class LevelSelectScene extends Phaser.Scene {
       })
       .setOrigin(0.5)
 
+    // unlock state resolves per-visit (progression-driven, BRIEF-03)
+    this.unlockedNow = LEVELS.map((lvl) => isLevelUnlocked(lvl))
+
     this.rowTexts = LEVELS.map((lvl, i) => {
       const y = ROW_Y0 + i * ROW_H
-      const label = `${i + 1}  ${lvl.unlocked ? lvl.name : '???'}`
+      const unlocked = this.unlockedNow[i]
+      const label = `${i + 1}  ${unlocked ? lvl.name : '???'}`
       const row = this.add
         .text(ROW_X, y, label, {
           fontFamily: 'monospace',
@@ -39,7 +43,7 @@ export default class LevelSelectScene extends Phaser.Scene {
           color: '#98a2b3',
         })
         .setOrigin(0, 0.5)
-      if (lvl.unlocked) {
+      if (unlocked) {
         const best = levelBest(lvl.id)
         if (best.bestScore > 0) {
           this.add
@@ -80,7 +84,7 @@ export default class LevelSelectScene extends Phaser.Scene {
   refresh() {
     this.marker.setY(ROW_Y0 + this.idx * ROW_H)
     this.rowTexts.forEach((row, i) =>
-      row.setColor(i === this.idx ? '#f2ecd8' : LEVELS[i].unlocked ? '#98a2b3' : '#475467')
+      row.setColor(i === this.idx ? '#f2ecd8' : this.unlockedNow[i] ? '#98a2b3' : '#475467')
     )
   }
 
@@ -98,7 +102,7 @@ export default class LevelSelectScene extends Phaser.Scene {
     }
     if (JustDown(this.keys.ENTER) || JustDown(this.keys.Z) || JustDown(this.keys.SPACE)) {
       const lvl = LEVELS[this.idx]
-      if (lvl.unlocked) {
+      if (this.unlockedNow[this.idx]) {
         audio.play('uiSelect')
         this.scene.launch('UIOverlay')
         this.scene.start('Level', { mapKey: lvl.mapKey })

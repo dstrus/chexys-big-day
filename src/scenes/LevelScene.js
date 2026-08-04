@@ -5,7 +5,7 @@ import { getWaveSchedule } from '../config/waveRegistry.js'
 import Player from '../entities/Player.js'
 import WaveRunner from '../systems/WaveRunner.js'
 import { audio } from '../systems/AudioBus.js'
-import { recordRun } from '../systems/progress.js'
+import { recordRun, isDashUnlocked, unlockDash } from '../systems/progress.js'
 import { isTuningPanelOpen, setPanelReadout } from '../debug/tuningPanel.js'
 
 // Generic level scene: boots any Tiled map by key (assets/maps/README.md
@@ -134,6 +134,22 @@ export default class LevelScene extends Phaser.Scene {
     audio.play('rushStart')
     audio.startMusic(this.levelProps.levelId ?? this.mapKey) // loop hook per level
     this.emitHud()
+
+    // dash unlock beat (BRIEF-03): a 10s scripted open — the bell
+    // captain (text bubble, no sprite) gifts "the Bell Desk hustle".
+    // No modal, no pause; the unlock is immediate and persists for all
+    // subsequent levels (DESIGN.md §3.2). Driven by the dashUnlockBeat
+    // map property so later levels never re-run it.
+    this.dashConfirmPending = false
+    if (this.levelProps.dashUnlockBeat) {
+      unlockDash()
+      this.dashConfirmPending = true
+      this.game.events.emit('system-bubble', {
+        text: 'Double-tap ← or → (or X/K) to dash!',
+        accent: 0xfe701e, // Chexology Orange — the captain's gift
+        holdMs: 10000, // the 10s beat
+      })
+    }
 
     // RENDER SNAP (jitter fix, video-confirmed twice over): sprite
     // positions are float sums that can sit exactly on .5 rounding
@@ -307,9 +323,10 @@ export default class LevelScene extends Phaser.Scene {
     const escapeMs =
       ((this.worldHeight + 24) / (TUNING.enemySpeed * TUNING.carrierSpeedFactor)) * 1000 +
       TUNING.gloatMs
-    const dashBonus = TUNING.dashEnabled
-      ? (TUNING.dashSpeed - TUNING.maxSpeed) * (TUNING.dashDurationMs / 1000)
-      : 0
+    const dashBonus =
+      TUNING.dashEnabled || isDashUnlocked()
+        ? (TUNING.dashSpeed - TUNING.maxSpeed) * (TUNING.dashDurationMs / 1000)
+        : 0
     const traverseMs = (this.worldWidth / (TUNING.maxSpeed + dashBonus)) * 1000
     const ok = escapeMs >= traverseMs + TUNING.stealFairnessMarginMs
     return { ok, escapeMs, traverseMs }
@@ -508,6 +525,8 @@ export default class LevelScene extends Phaser.Scene {
   }
 
   onEnemyTouchPlayer(playerSprite, enemy) {
+    // dash passes THROUGH ticket enemies — no contact (BRIEF-03)
+    if (this.time.now < this.player.dashUntil) return
     // paper can't hurt Chexy, but a hit breaks a hold — unless the
     // ticket is stunned; dazed paper is harmless
     if (this.hold && !enemy.getData('stunnedUntil')) this.interruptHold()
@@ -616,14 +635,17 @@ export default class LevelScene extends Phaser.Scene {
 
   spawnItem(x, y, tier = 1, category = 'coat') {
     const heavy = tier >= 3
-    // real coat art (3 garment-colored variants) when the strip exists;
-    // rect + category tint as the fallback. Heavy items stay on the rect
-    // until luggage art exists (L2).
-    const useCoatArt = !heavy && this.textures.exists('coats')
+    // real coat art (3 garment-colored variants) when the strip exists —
+    // coats only; luggage stays on the accepted interim convention
+    // (tinted rect + chip, BRIEF-03 execution note 3) until its art
+    // lands. Tier silhouette = rect size (small / medium / large).
+    const useCoatArt = tier === 1 && category === 'coat' && this.textures.exists('coats')
+    const rectKey = tier >= 3 ? 'item-heavy' : tier === 2 ? 'item-medium' : 'item-standard'
     const item = useCoatArt
       ? this.items.create(x, y, 'coats', Phaser.Math.Between(0, 2))
-      : this.items.create(x, y, heavy ? 'item-heavy' : 'item-standard')
+      : this.items.create(x, y, rectKey)
     item.setData('heavy', heavy)
+    item.setData('tier', tier)
     item.setData('category', category)
     item.setData('spawnedAt', this.time.now) // fresh-item grace (DESIGN.md §2.4)
     item.setData('guest', ++this.guestCounter) // every item belongs to a guest
@@ -664,7 +686,8 @@ export default class LevelScene extends Phaser.Scene {
         continue
       }
       const y = Phaser.Math.Clamp(item.y - view.y, 20, this.scale.height - 24)
-      this.indicatorGfx.fillStyle(item.getData('heavy') ? 0x9b6ee8 : 0x59c2e8, pulse)
+      // hold-tag tiers (2+) get the heavy-variant arrow color (BRIEF-03)
+      this.indicatorGfx.fillStyle((item.getData('tier') ?? 1) >= 2 ? 0x9b6ee8 : 0x59c2e8, pulse)
       this.indicatorGfx.fillTriangle(edgeX + dir * 5, y, edgeX - dir * 3, y - 5, edgeX - dir * 3, y + 5)
     }
 
@@ -740,7 +763,9 @@ export default class LevelScene extends Phaser.Scene {
     if (this.player.tagPressed && this.target) {
       // rescue is ALWAYS instant tap (DESIGN.md §2 item 4b)
       if (this.isStunnable(this.target)) this.stunEnemy(this.target, time)
-      else if (this.target.getData('heavy')) this.startHold(time)
+      // weight tiers (BRIEF-03): tier 2+ are hold-tags — tier 2 short,
+      // tier 3 full; tier 1 stays the instant tap
+      else if ((this.target.getData('tier') ?? 1) >= 2) this.startHold(time)
       else this.completeTag(this.target)
     }
   }
@@ -771,7 +796,13 @@ export default class LevelScene extends Phaser.Scene {
   }
 
   startHold(time) {
-    this.hold = { item: this.target, startedAt: time }
+    const item = this.target
+    // tier-2 rollers charge faster than tier-3 trunks (holdTier2Factor);
+    // duration is fixed at hold start so a mid-hold slider drag can't
+    // finish or extend a charge retroactively
+    const durationMs =
+      (item.getData('tier') ?? 3) === 2 ? TUNING.holdTagMs * TUNING.holdTier2Factor : TUNING.holdTagMs
+    this.hold = { item, startedAt: time, durationMs }
     this.player.frozen = true
     audio.play('holdStart')
   }
@@ -786,12 +817,15 @@ export default class LevelScene extends Phaser.Scene {
       this.clearHold() // target gone or button released: quiet reset
       return
     }
-    if (moveInput) {
+    // dashCancelsHold trial (BRIEF-03): a dash STARTED during this hold
+    // breaks it like deliberate movement would. With the flag off (the
+    // default lockout) Player never starts a dash while frozen.
+    if (moveInput || p.lastDashAt > this.hold.startedAt) {
       this.interruptHold()
       return
     }
 
-    const progress = (time - this.hold.startedAt) / TUNING.holdTagMs
+    const progress = (time - this.hold.startedAt) / this.hold.durationMs
     if (progress >= 1) {
       this.clearHold()
       this.completeTag(item)
@@ -930,6 +964,14 @@ export default class LevelScene extends Phaser.Scene {
 
     this.waveRunner.update(delta, this.intensity)
     this.player.update(time, delta)
+    // first dash of the beat run → Success Green confirmation (BRIEF-03)
+    if (this.dashConfirmPending && this.player.dashedOnce) {
+      this.dashConfirmPending = false
+      this.game.events.emit('system-bubble', {
+        text: "That's the hustle!",
+        accent: 0x12b76a, // Success Green
+      })
+    }
     this.updateCamera()
     this.updateTargeting()
     this.updateTagging(time)

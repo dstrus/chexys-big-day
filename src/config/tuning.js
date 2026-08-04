@@ -16,13 +16,19 @@ export const TUNING = {
   bufferMs: 120,
   fallMaxSpeed: 520,
 
-  // dash (stub — implemented but disabled for the grey-box)
+  // dash (BRIEF-03: unlocks via the Bell Desk scripted beat and persists
+  // in progress; dashEnabled remains the debug/panel override)
   dashEnabled: false,
   dashSpeed: 340,
   dashDurationMs: 140,
+  dashCooldownMs: 900,
+  dashDoubleTapMs: 250, // second ←/→ press within this window dashes
+  dashCancelsHold: false, // locked out during a hold by default (DESIGN.md §3.2);
+  // true lets a dash break the hold (playtest trial, BRIEF-03)
 
   // tagging
   holdTagMs: 300,
+  holdTier2Factor: 0.6, // tier-2 hold duration = holdTagMs * this (BRIEF-03)
   targetRadius: 66,
   hitstopMs: 45,
 
@@ -92,7 +98,10 @@ export const TUNING_SCHEMA = [
   { key: 'dashEnabled', label: 'Dash enabled', type: 'flag' },
   { key: 'dashSpeed', label: 'Dash speed', min: 180, max: 600, step: 10 },
   { key: 'dashDurationMs', label: 'Dash duration (ms)', min: 60, max: 400, step: 10 },
+  { key: 'dashCooldownMs', label: 'Dash cooldown (ms)', min: 0, max: 3000, step: 50 },
+  { key: 'dashCancelsHold', label: 'Dash cancels hold', type: 'flag' },
   { key: 'holdTagMs', label: 'Hold-tag (ms)', min: 100, max: 800, step: 10 },
+  { key: 'holdTier2Factor', label: 'Tier-2 hold factor', min: 0.3, max: 1, step: 0.05 },
   { key: 'targetRadius', label: 'Target radius', min: 20, max: 160, step: 2 },
   { key: 'enemyStunMs', label: 'Enemy stun (ms)', min: 300, max: 4000, step: 100 },
   { key: 'spawnFairnessGraceMs', label: 'Spawn fairness grace (ms)', min: 0, max: 2000, step: 50 },

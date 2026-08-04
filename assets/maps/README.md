@@ -57,6 +57,15 @@ Platform strips are laid as `6 [2 ...] 7` (caps on both ends,
 middles between). Runs shorter than 2 tiles stay all-middle —
 avoid them in layouts.
 
+## Item spawn heights
+
+Item spawn points must clear the LARGEST item silhouette (the tier-3
+trunk, 26×30): place points at least 20px above the floor surface
+(e.g. ground top y=240 → spawn y ≤ 220). A spawn that embeds the
+item's body in a solid tile defeats arcade separation and the item
+falls through the floor. (Found executing BRIEF-03 — the Coatroom
+never noticed because it only spawns tier-1 items.)
+
 ## Spawn fairness (DESIGN.md §2.4)
 
 Items only spawn where the player can plausibly contest them: at

@@ -1,5 +1,6 @@
 import Phaser from 'phaser'
 import coatroomMap from '../../assets/maps/coatroom.json'
+import belldeskMap from '../../assets/maps/belldesk.json'
 import { audio } from '../systems/AudioBus.js'
 
 // Placeholder art only: every "sprite" is a generated texture. Maps are
@@ -171,8 +172,11 @@ export default class BootScene extends Phaser.Scene {
     }
 
     make('chexy', 44, 44, 0xd98e32) // squat squirrel stand-in
-    // items are white so category tints (ChexApp tag colors) read true
+    // items are white so category tints (ChexApp tag colors) read true;
+    // three sizes = the weight-tier silhouettes (BRIEF-03 interim
+    // convention: small garment bag / medium roller / large trunk)
     make('item-standard', 14, 14, 0xffffff)
+    make('item-medium', 20, 22, 0xffffff)
     make('item-heavy', 26, 30, 0xffffff)
     make('ticket', 18, 12, 0xf2ecd8) // paper claim ticket enemy
     make('pixel', 2, 2, 0xffffff)
@@ -195,6 +199,10 @@ export default class BootScene extends Phaser.Scene {
     this.cache.tilemap.add('coatroom', {
       format: Phaser.Tilemaps.Formats.TILED_JSON,
       data: coatroomMap,
+    })
+    this.cache.tilemap.add('belldesk', {
+      format: Phaser.Tilemaps.Formats.TILED_JSON,
+      data: belldeskMap,
     })
 
     this.scene.start('Title')

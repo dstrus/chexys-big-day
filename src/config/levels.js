@@ -1,10 +1,18 @@
-// Level roster for the select screen (BRIEF-02 Chunk 6). Only the
-// Coatroom is unlocked in this phase; later levels show as "?" slots
-// until their maps land (DESIGN.md §3).
+import { levelCleared } from '../systems/progress.js'
+
+// Level roster for the select screen (BRIEF-02 Chunk 6). Later levels
+// show as "?" slots until their maps land (DESIGN.md §3). Unlock state
+// is progression-driven — resolve it via isLevelUnlocked, not the
+// static field (BRIEF-03: Bell Desk opens after a Coatroom clear).
 export const LEVELS = [
   { id: 'coatroom', name: 'THE COATROOM', mapKey: 'coatroom', unlocked: true },
-  { id: 'belldesk', name: '???', unlocked: false },
+  { id: 'belldesk', name: 'THE BELL DESK', mapKey: 'belldesk', requiresClear: 'coatroom' },
   { id: 'valet', name: '???', unlocked: false },
   { id: 'stroller', name: '???', unlocked: false },
   { id: 'exodus', name: '???', unlocked: false },
 ]
+
+export function isLevelUnlocked(lvl) {
+  if (lvl.requiresClear) return levelCleared(lvl.requiresClear)
+  return lvl.unlocked === true
+}

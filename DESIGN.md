@@ -60,7 +60,7 @@ violence against people — the only thing you ever destroy is paper.
 | ← / → | Move |
 | ↑ or Space | Jump |
 | Z or J | Tag (primary action) |
-| X or K | Dash (unlocked in Level 2) |
+| X or K | Dash (unlocks at Bell Desk start; double-tap direction or X/K) |
 | Esc / P | Pause |
 
 ### 2.3 Tagging model (RESOLVED — hybrid)
@@ -195,6 +195,9 @@ them before timers expire. Teaches: move, jump, tag, scoring.
 Boutique hotel lobby. Luggage in three weight tiers; heavy bags need
 a charged (held) tag per §2.3. **New mechanic:** weight tiers +
 dash unlock. (Guest-matching sub-mechanic deferred to v2 — see §8.)
+Dash is locked out during an active hold (tunable dashCancelsHold,
+default false). Dash unlocks via a 10s scripted beat at Bell Desk
+start; it persists for all subsequent levels.
 
 ### 3.3 Level 3 — The Valet Garage
 Auto-scrolling parking structure. Sprint to retrieve the right car

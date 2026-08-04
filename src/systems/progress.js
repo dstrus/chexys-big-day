@@ -27,6 +27,26 @@ export function levelBest(levelId) {
   return { bestScore: d.bestScore ?? 0, bestHangers: d.bestHangers ?? 0 }
 }
 
+// a cleared run always earns >= 1 hanger (3 losses is a fail), so
+// bestHangers > 0 <=> the level has been cleared at least once
+export function levelCleared(levelId) {
+  return levelBest(levelId).bestHangers > 0
+}
+
+// dash unlock (BRIEF-03 / DESIGN.md §3.2): granted by the Bell Desk
+// scripted beat, persists for all subsequent levels. A control unlock,
+// not a best — the godMode guard doesn't apply.
+export function isDashUnlocked() {
+  return load().dashUnlocked === true
+}
+
+export function unlockDash() {
+  const all = load()
+  if (all.dashUnlocked) return
+  all.dashUnlocked = true
+  save(all)
+}
+
 export function recordRun(levelId, { finalScore, hangers }) {
   // god-mode runs never write persisted bests (standing rule,
   // handoffs 2026-07-29-g / 2026-07-30-h)

@@ -50,6 +50,7 @@ export default class UIOverlayScene extends Phaser.Scene {
     bus.on('paused', this.onPaused, this)
     bus.on('guest-happy', this.onGuestHappy, this)
     bus.on('guest-angry', this.onGuestAngry, this)
+    bus.on('system-bubble', this.onSystemBubble, this)
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
       bus.off('hud', this.onHud, this)
       bus.off('run-over', this.onRunOver, this)
@@ -58,6 +59,7 @@ export default class UIOverlayScene extends Phaser.Scene {
       bus.off('paused', this.onPaused, this)
       bus.off('guest-happy', this.onGuestHappy, this)
       bus.off('guest-angry', this.onGuestAngry, this)
+      bus.off('system-bubble', this.onSystemBubble, this)
     })
   }
 
@@ -72,6 +74,12 @@ export default class UIOverlayScene extends Phaser.Scene {
     this.showBubble('angry')
   }
 
+  // scripted (non-guest) bubbles — e.g. the Bell Desk dash beat
+  // (BRIEF-03): custom text, accent color, and hold time
+  onSystemBubble(opts) {
+    this.showBubble('happy', opts)
+  }
+
   pickLine(kind) {
     const pool = kind === 'happy' ? HAPPY_LINES : UNHAPPY_LINES
     let i
@@ -82,8 +90,8 @@ export default class UIOverlayScene extends Phaser.Scene {
     return pool[i]
   }
 
-  showBubble(kind) {
-    const text = this.add.text(0, 0, this.pickLine(kind), {
+  showBubble(kind, opts = {}) {
+    const text = this.add.text(0, 0, opts.text ?? this.pickLine(kind), {
       fontFamily: 'monospace',
       fontSize: '9px',
       color: '#344054', // Gray-700 text on light
@@ -94,8 +102,8 @@ export default class UIOverlayScene extends Phaser.Scene {
     const g = this.add.graphics()
     g.fillStyle(0xf8f5f3, 0.88) // Background Tan panel, translucent
     g.fillRoundedRect(0, 0, w, h, 4)
-    // Success Green / Alert Red accent bar
-    g.fillStyle(kind === 'happy' ? 0x12b76a : 0xea5151, 1)
+    // Success Green / Alert Red accent bar (system bubbles override)
+    g.fillStyle(opts.accent ?? (kind === 'happy' ? 0x12b76a : 0xea5151), 1)
     g.fillRoundedRect(0, 0, 3, h, { tl: 4, bl: 4, tr: 0, br: 0 })
     text.setPosition(9, 5)
 
@@ -107,7 +115,9 @@ export default class UIOverlayScene extends Phaser.Scene {
     while (this.bubbles.length > 3) this.dismissBubble(this.bubbles[3], true)
     this.layoutBubbles()
     this.tweens.add({ targets: bubble, alpha: 1, duration: 120 })
-    bubble.dismissTimer = this.time.delayedCall(2500, () => this.dismissBubble(bubble))
+    bubble.dismissTimer = this.time.delayedCall(opts.holdMs ?? 2500, () =>
+      this.dismissBubble(bubble)
+    )
   }
 
   // stack upward from the bottom-right corner — clear of the HUD (top)

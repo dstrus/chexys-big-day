@@ -892,3 +892,54 @@ final audio passes, tile variety pass, chip anchor
 documentation.
 PHASE 3 IS OPEN: BRIEF-03 (Bell Desk) is unblocked for
 execution — its prerequisite (Gate 2) is now satisfied.
+
+## 2026-08-03 — BRIEF-03 executed: The Bell Desk (Phase 3, code track)
+
+Prerequisite verified: Gate 2 PASSED (-c above); BRIEF-02 systems
+(Tiled pipeline, waves, bubbles, audio bus, results flow) all
+present. Applied with the four execution-context updates.
+
+Shipped: belldesk.json (120×17 blockout: ground run, front-desk
+counter, four static luggage-cart platforms, mezzanine + upper
+strips, bell-cart return zone; props levelId/rushSeconds 180/
+waveFile/stealCooldownMs 5000 per -e trend/dashUnlockBeat) +
+belldesk-waves.json (opening tier-1 spacing after the 10s beat →
+tier-2 at far ends → tier-3 near enemy edges with rescue-spike
+tickets → final mixed swarm with the two-trunk multiplier bait).
+Weight tiers: tier data on items, tier 2 = short hold (new
+holdTier2Factor 0.6), tier 3 = full holdTagMs, interim silhouettes
+= rect sizes (14/20×22/26×30) + chips per the accepted convention.
+Dash: unlocks at Bell Desk start via one-bubble captain beat
+(persists in progress storage; godMode guard inapplicable — control
+unlock, not a best), double-tap ←/→ or X/K, dashCooldownMs 900,
+dashDoubleTapMs 250, 3-ghost additive afterimage, locked out during
+holds (dashCancelsHold flag trials the opposite — verified both
+ways), passes through tickets, no wall clip (collider untouched).
+First dash → Success Green confirmation bubble. Level select: THE
+BELL DESK unlocks on any Coatroom clear (bestHangers > 0).
+
+AMENDMENTS applied per the brief: DESIGN.md §3.2 dash-lockout
+paragraph appended verbatim; §2.2 dash row note updated.
+
+ACCEPTANCE ADDITION verified: (c) steal-fairness readout GREEN for
+belldesk geometry with dash factored — escape 11464ms ≥ traverse
+10872ms + 500ms margin (92ms slack; tight, flag if the level
+widens). Coatroom stays green post-unlock (9060+500 ≤ 11464).
+Verified headless: boots clean (zero console errors), map props
+live, beat + confirm bubbles, dash unlock/cooldown/double-tap/
+ghosts, tier-2 hold 180ms and tier-3 300ms both complete to tag,
+movement interrupt intact, dash-in-hold blocked (and cancels when
+flag on), Bell Desk locked without a Coatroom clear.
+
+Judgment calls (flagging, not silent): (1) tier-2 items use the
+heavy-variant edge arrow — brief groups hold-tiers as "heavy" for
+§2.4 arrows; (2) tier-2 scoring left at standardItemScore — brief
+silent on tier-2 value, needs a design ruling; (3) first-dash
+confirmation copy "That's the hustle!" is invented placeholder
+copy — brief specifies the bubble but not its text; (4) new map
+convention documented in assets/maps/README.md: item spawn points
+must clear the trunk silhouette (≥20px above floor) or the item
+embeds and falls through — found and fixed during verification.
+
+Remaining acceptance (human): punch-list play session (part of the
+brief, not a follow-up), 60fps at ×2 confirmation, dash feel.
