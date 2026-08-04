@@ -658,6 +658,10 @@ export default class LevelScene extends Phaser.Scene {
     }
     item.setBounce(0.1)
     item.setCollideWorldBounds(true)
+    // horizontal skid decay: without drag a rescue-dropped item keeps its
+    // pop velocity forever and slides to the nearest wall — invisible
+    // under instant taps, hostile under hold-tags (2026-08-03 fix)
+    item.body.setDragX(TUNING.itemDragX)
     audio.play('spawn', this.panFor(x))
     return item
   }

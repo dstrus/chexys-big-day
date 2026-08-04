@@ -36,6 +36,8 @@ export const TUNING = {
   // rushSeconds is a fallback when a map omits the property
   rushSeconds: 150,
   maxItemsOnField: 12,
+  itemDragX: 150, // ground skid decay — rescue-dropped items stop in ~0.25s
+  // instead of sliding forever (physics fix, 2026-08-03; hold-tags exposed it)
   enemySpeed: 55,
   // spawn fairness (DESIGN.md §2.4 — unconditional, outside the adaptive band)
   spawnFairnessGraceMs: 600,
@@ -106,6 +108,7 @@ export const TUNING_SCHEMA = [
   { key: 'enemyStunMs', label: 'Enemy stun (ms)', min: 300, max: 4000, step: 100 },
   { key: 'spawnFairnessGraceMs', label: 'Spawn fairness grace (ms)', min: 0, max: 2000, step: 50 },
   { key: 'freshItemGraceMs', label: 'Fresh item grace (ms)', min: 0, max: 3000, step: 50 },
+  { key: 'itemDragX', label: 'Item skid drag', min: 0, max: 600, step: 10 },
   { key: 'carrierSpeedFactor', label: 'Carrier speed factor', min: 0.2, max: 1, step: 0.05 },
   { key: 'gloatMs', label: 'Gloat beat (ms)', min: 0, max: 2500, step: 50 },
   { key: 'stealCooldownMs', label: 'Steal cooldown (ms)', min: 0, max: 10000, step: 250 },
