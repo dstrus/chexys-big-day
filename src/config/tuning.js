@@ -65,9 +65,12 @@ export const TUNING = {
   cleanStreakForRamp: 5,
   multiplierFloor: 0.7,
 
-  // scoring
+  // scoring — heavy items score by commitment (handoff 2026-08-04-a):
+  // tier 1 = standard, tier 2 = ×1.5, tier 3 = ×2.0; the adaptive
+  // multiplier and BIG DAY bonus apply on top as ever
   standardItemScore: 100,
-  heavyItemScore: 300,
+  tier2ScoreFactor: 1.5,
+  tier3ScoreFactor: 2.0,
   bigDayBonusFactor: 0.25, // 3-hanger clear bonus (DESIGN.md §2.5)
 
   // audio (master/sfx/music mix — AudioBus + synth read these live)

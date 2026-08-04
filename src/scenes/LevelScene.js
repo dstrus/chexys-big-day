@@ -939,7 +939,7 @@ export default class LevelScene extends Phaser.Scene {
       onComplete: () => item.destroy(),
     })
 
-    this.onItemTagged(heavy)
+    this.onItemTagged(item.getData('tier') ?? 1)
   }
 
   // chip anchor: top-third of the item canvas, rack-hook side
@@ -953,11 +953,14 @@ export default class LevelScene extends Phaser.Scene {
     chip.setAlpha(item.alpha)
   }
 
-  onItemTagged(heavy) {
+  onItemTagged(tier) {
     this.tagsCollected += 1
     this.itemsReturned += 1
-    const base = heavy ? TUNING.heavyItemScore : TUNING.standardItemScore
-    this.score += Math.round(base * this.multiplier)
+    // score by commitment (handoff 2026-08-04-a): 1× / 1.5× / 2× by
+    // weight tier, adaptive multiplier on top
+    const factor =
+      tier >= 3 ? TUNING.tier3ScoreFactor : tier === 2 ? TUNING.tier2ScoreFactor : 1
+    this.score += Math.round(TUNING.standardItemScore * factor * this.multiplier)
     this.onCleanProgress()
     this.emitHud()
   }
@@ -1005,7 +1008,7 @@ export default class LevelScene extends Phaser.Scene {
     if (this.dashConfirmPending && this.player.dashedOnce) {
       this.dashConfirmPending = false
       this.game.events.emit('system-bubble', {
-        text: "That's the hustle!",
+        text: "Let's gooooo!", // Chexology catchphrase — canon per 2026-08-04-a
         accent: 0x12b76a, // Success Green
       })
     }

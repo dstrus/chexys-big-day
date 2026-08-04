@@ -233,6 +233,11 @@ Air-dash count: ONE dash per airborne period — the dash
 refreshes on landing, not on cooldown, while airborne
 (dashCooldownMs still governs ground chaining). Prevents
 cooldown-cycled hover-stalling during long falls.
+**Tier scoring (ruled 2026-08-04):** heavy items score by
+commitment — tier 1 = standardItemScore, tier 2 = ×1.5,
+tier 3 = ×2.0 (tier2ScoreFactor / tier3ScoreFactor,
+tunable). The adaptive multiplier and BIG DAY bonus apply
+on top as ever.
 
 ### 3.3 Level 3 — The Valet Garage
 Auto-scrolling parking structure. Sprint to retrieve the right car

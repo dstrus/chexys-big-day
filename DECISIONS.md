@@ -1064,3 +1064,44 @@ player makes the inequality easier); coatroom GREEN (traverse
 8000ms). Routing: per-dash distance 47.6→80px, est. jump+air-dash
 reach ≈190px — still well under the 368px minimum mezzanine gap,
 no new skips. Afterimage cadence (duration/3) unaffected.
+
+## 2026-08-04 — Handoff 2026-08-04-a applied
+
+- Sequence check: first handoff of 2026-08-04; prior day closed at
+  -g ✓.
+- Item 1: tier scoring implemented — tier2ScoreFactor 1.5 /
+  tier3ScoreFactor 2.0 in tuning.js, results math scores
+  standardItemScore × factor × adaptive multiplier. heavyItemScore
+  (300) removed as superseded — nothing else consumed it. DESIGN.md
+  §3.2 updated. Verified live: +100/+150/+200 at 1.0×.
+- Item 2: confirmation copy replaced verbatim ("Let's gooooo!",
+  five o's) and marked canon in-code; captain's beat copy untouched.
+  Verified live.
+- Item 3: BRIEF-04 (Collectibles System) read and now tracked.
+  Summary: three §4 collectibles level-agnostic — NFC Tags (coin;
+  Tiled `collectibles` layer + stun drops; magnet pickup; 50/tag ×
+  adaptive), Contact Card (rare wave-spawned auto-return of the
+  MOST-ENDANGERED item via priority chain, streak-neutral like
+  rescues), Insights Report (×2 score 10s, multiplicative,
+  own HUD chip that never masks the adaptive readout) + a shared
+  collectible registry, tuning sliders, results lines, AudioBus
+  events, and DESIGN §4 / maps-README amendments on execution.
+  Renames Contact Card / Insights Report authoritative over §4.
+  EXECUTION GATED on human go. Flags for that session: (a) the
+  existing results "tags collected" counter increments on ITEM
+  check-ins (it always equals items returned) — BRIEF-04 §4 assumes
+  it means NFC tags, so its semantics must be split on execution;
+  (b) the Contact Card priority chain references item EXPIRY, which
+  exists in DESIGN §2.1 but has never been implemented in code —
+  needs a ruling or the chain's step 3 re-anchored (e.g. oldest
+  item) when the brief runs.
+- Item 4: dash-end skid left as-is — punch-list judgment.
+- Item 5: ruling entry appended verbatim below.
+
+2026-08-04 — Post-BRIEF-03 rulings (handoff 2026-08-04-a):
+tier scoring 1×/1.5×/2× by weight tier; dash confirmation
+copy ruled 'Let's gooooo!' (Chexology catchphrase),
+replacing the code-track placeholder; BRIEF-04 announced
+and tracked (execute on human go); dash-end skid deferred
+to punch list. BOSS-SPEC dangling-reference catch noted as
+the referenced-artifact check's first live save.
