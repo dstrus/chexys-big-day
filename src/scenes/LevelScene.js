@@ -48,6 +48,7 @@ export default class LevelScene extends Phaser.Scene {
     this.target = null
     this.hold = null
     this.holdArmed = false // fresh-press arm for deferred hold start (-e)
+    this.tapAction = null // in-flight tap windup (EXPERIMENT 2026-08-04)
     this.targetGfx = this.add.graphics().setDepth(10)
     this.holdGfx = this.add.graphics().setDepth(11)
     // screen-space edge arrows pointing at off-screen untagged items
@@ -761,6 +762,10 @@ export default class LevelScene extends Phaser.Scene {
   }
 
   updateTagging(time) {
+    if (this.tapAction) {
+      this.updateTapAction(time)
+      if (this.tapAction) return // still winding up: one action at a time
+    }
     if (this.hold) {
       this.updateHold(time)
       return
@@ -781,11 +786,11 @@ export default class LevelScene extends Phaser.Scene {
         this.stunEnemy(this.target, time)
         return
       }
-      // tier 1 stays the instant tap — and stays a PRESS event: a held
-      // button never repeat-fires taps (handoff 2026-08-03-d item 2)
+      // tier 1 stays a PRESS event: a held button never repeat-fires
+      // taps (handoff 2026-08-03-d item 2)
       if ((this.target.getData('tier') ?? 1) < 2) {
         this.holdArmed = false // arm consumed by the tap
-        this.completeTag(this.target)
+        this.beginTap(this.target, time)
         return
       }
     }
@@ -901,6 +906,38 @@ export default class LevelScene extends Phaser.Scene {
     this.player.sprite.setTint(0xff6666)
     this.time.delayedCall(150, () => this.player.sprite.clearTint())
     this.onHoldInterrupted()
+  }
+
+  // Tap windup (ruled 2026-08-04 after playtest): the tap lands on the
+  // tap anim's 2nd frame and Chexy is rooted for the full 2 frames —
+  // fast, but not instant. Timing reads from the anim so the .ase stays
+  // the authority. Scope: item taps only — rescue stuns stay instant
+  // (DESIGN §2 item 4b lock) and hold completions already paid the
+  // meter. Without tap art the tap stays instant (graceful degradation).
+  beginTap(item, time) {
+    const anim = this.anims.get('tap')
+    if (!anim) {
+      this.completeTag(item)
+      return
+    }
+    const firstFrameMs = anim.frames[0].duration || anim.duration / anim.frames.length
+    this.tapAction = { item, fired: false, effectAt: time + firstFrameMs, endAt: time + anim.duration }
+    this.player.frozen = true // rooted for the windup, like a hold
+    this.player.triggerAnim('tap')
+  }
+
+  updateTapAction(time) {
+    const act = this.tapAction
+    if (!act.fired && time >= act.effectAt) {
+      act.fired = true
+      // re-validate at the moment of effect: stolen mid-windup = whiff
+      // (the thief was faster — no tag, no penalty)
+      if (this.isTaggable(act.item)) this.completeTag(act.item)
+    }
+    if (time >= act.endAt) {
+      this.tapAction = null
+      if (!this.hold) this.player.frozen = false
+    }
   }
 
   completeTag(item) {

@@ -1105,3 +1105,17 @@ replacing the code-track placeholder; BRIEF-04 announced
 and tracked (execute on human go); dash-end skid deferred
 to punch list. BOSS-SPEC dangling-reference catch noted as
 the referenced-artifact check's first live save.
+
+## 2026-08-04 — Tap windup adopted (human ruling, in-session playtest)
+
+The instant tap is now a fast tap: effect lands on the tap anim's
+2nd frame, Chexy rooted for the full 2-frame animation. Artist
+retimed frames during the playtest loop to 80ms/frame (effect at
+80ms, root 160ms) — frame durations in the .ase ARE the mechanic;
+code reads timing from the anim. Whiff rule: the effect re-validates
+at landing, so an item stolen mid-windup is a clean no-penalty miss.
+Scope rulings: rescue stuns stay truly instant (§2 item 4b lock);
+hold completions unaffected. Without tap art the tap degrades to
+instant. DESIGN.md §2.3 amended. Verified: frame-2 effect timing,
+forced stop and clean control return, whiff-on-steal, no console
+errors.

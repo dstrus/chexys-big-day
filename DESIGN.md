@@ -65,9 +65,17 @@ violence against people — the only thing you ever destroy is paper.
 
 ### 2.3 Tagging model (RESOLVED — hybrid)
 
-- **Standard items:** instant tap. Juice it hard: 2–3 frames of
-  hitstop, particle burst, punchy SFX. Item spread in level design
-  must make positioning matter (no stand-and-mash spots).
+- **Standard items:** fast tap — no longer literally instant
+  (amended 2026-08-04 after playtest): the check-in lands on the
+  tap animation's 2nd frame (~80ms) and Chexy is rooted for the
+  full 2-frame animation (~160ms). Timing is authored in the
+  .ase (frame durations ARE the mechanic). The effect
+  re-validates when it lands: an item stolen mid-windup is a
+  clean whiff — no tag, no penalty. Rescue stuns remain truly
+  instant (item 4b); hold completions are unaffected (the meter
+  is their commitment). Juice it hard: 2–3 frames of hitstop,
+  particle burst, punchy SFX. Item spread in level design must
+  make positioning matter (no stand-and-mash spots).
 - **Heavy items** (weight tier 3, introduced Level 2): charged hold,
   250–350ms (tunable), radial meter on Chexy. While holding, Chexy
   is stationary and vulnerable — paper enemies can interrupt the
