@@ -851,3 +851,21 @@ lock is held throughout the loiter (intent stays plannable — the
 circling itself is a readable telegraph). Verified live: orbit holds
 27-29px through the full 6s cooldown, instant grab on expiry, clean
 console.
+
+## 2026-08-03 — Handoff 2026-08-03-b applied
+
+- Sequence check: 2026-08-03-a applied (entry above) ✓.
+- Item 1: design-ruling entry appended verbatim below.
+
+2026-08-03 — Grab-wedge report resolved as PERCEPTUAL
+(commit 614e0d7): no state-machine defect; cooldown-blocked
+enemies camping on targets read as wedged once V1 art
+landed. Design ruling (human, in-session): MENACE LOITER —
+not-cleared enemies orbit their locked target (loiterRadius
+28, loiterOrbitMs 3800) and dive on clearance. Steal gates
+unified into clearedToSteal(). Target lock, gloat, and all
+fairness values unchanged. gloatMs×3 watchdog dropped as
+inert (timer-driven exit proven); the state-exit principle
+carries to the boss implementation brief instead. Open
+evaluation: urgency-arrow weighting for loitering vs.
+diving enemies, pending human loiter play-check.
