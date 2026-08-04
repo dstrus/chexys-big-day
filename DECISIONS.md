@@ -824,3 +824,30 @@ check added to CLAUDE.md protocol.
 - NOTE: BRIEF-03 (Bell Desk code brief) is now surfaced and unread
   debt — it has never been reviewed or started; flagging for
   scheduling in the design chat.
+
+## 2026-08-03 — Grab-state wedge investigation: no wedge; menace loiter added
+
+Bug report: enemies intermittently "stuck in grab/gloat", correlated
+with two items spawned at one location. Investigation (mechanism
+audit + attach-failure enumeration + instrumented repro + 90s
+adversarial soak with wedge detector and exception capture) found NO
+state-machine wedge: the gloat exit is a pure timer (94fc031), all
+four two-item attach-failure paths are closed by atomic guards, and
+every observed grab transitioned to carry on schedule. Root cause is
+perceptual: a cooldown-blocked enemy flew to its locked target and
+parked dead-center on it for up to stealCooldownMs (6s) — with
+enemy V1 art this reads as a wedged grab/gloat, and stacked items
+guarantee a camper right where a real gloat just played.
+
+Human ruling: MENACE LOITER (chosen over lock-deferral and over the
+now-inert gloatMs×3 watchdog). While not cleared to steal (global
+cooldown or post-stun grace), a locked enemy circles its target at
+loiterRadius instead of camping; it dives in the moment it clears.
+New tunables loiterRadius (28) / loiterOrbitMs (3800), on the panel.
+Steal gates unified into clearedToSteal() used by both the grab and
+the approach, so they cannot drift. Target-lock semantics
+(2026-07-30-f), steal fairness values, and gloat timing unchanged;
+lock is held throughout the loiter (intent stays plannable — the
+circling itself is a readable telegraph). Verified live: orbit holds
+27-29px through the full 6s cooldown, instant grab on expiry, clean
+console.

@@ -43,6 +43,11 @@ export const TUNING = {
   stealFairnessMarginMs: 500, // slack the (c) escape-time assertion must hold by
   enemyStunMs: 1500,
   enemyStealGraceMs: 1000, // no re-steal window after a stun wears off
+  // menace loiter (grab-state wedge investigation 2026-08-03): an enemy
+  // not yet cleared to steal circles its locked target instead of
+  // camping dead-center on it — camping read as a stuck grab/gloat
+  loiterRadius: 28,
+  loiterOrbitMs: 3800, // full circle period while loitering
 
   // adaptive intensity / multiplier (DESIGN.md §2.5 skeleton)
   adaptiveBand: 0.3,
@@ -96,6 +101,8 @@ export const TUNING_SCHEMA = [
   { key: 'gloatMs', label: 'Gloat beat (ms)', min: 0, max: 2500, step: 50 },
   { key: 'stealCooldownMs', label: 'Steal cooldown (ms)', min: 0, max: 10000, step: 250 },
   { key: 'stealFairnessMarginMs', label: 'Steal margin (ms)', min: 0, max: 2000, step: 50 },
+  { key: 'loiterRadius', label: 'Loiter radius', min: 8, max: 80, step: 2 },
+  { key: 'loiterOrbitMs', label: 'Loiter orbit (ms)', min: 1000, max: 8000, step: 200 },
   { key: 'adaptiveBand', label: 'Adaptive band', min: 0, max: 0.6, step: 0.05 },
   { key: 'multiplierFloor', label: 'Multiplier floor', min: 0.4, max: 1, step: 0.05 },
   { key: 'masterVolume', label: 'Master volume', min: 0, max: 1, step: 0.05 },

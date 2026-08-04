@@ -448,7 +448,18 @@ export default class LevelScene extends Phaser.Scene {
       }
 
       const goal = locked || this.player // no loot left: loiter near Chexy (body center)
-      const angle = Phaser.Math.Angle.Between(enemy.x, enemy.y, goal.x, goal.y)
+      let goalX = goal.x
+      let goalY = goal.y
+      if (locked && !this.clearedToSteal(enemy)) {
+        // menace loiter (2026-08-03 investigation): not cleared to steal
+        // yet, so circle the target instead of camping dead-center on it
+        // — a parked enemy read as a wedged grab/gloat. Seed offsets the
+        // phase so stacked enemies fan out around the same item.
+        const orbit = (time / TUNING.loiterOrbitMs) * Math.PI * 2 + enemy.getData('seed')
+        goalX += Math.cos(orbit) * TUNING.loiterRadius
+        goalY += Math.sin(orbit) * TUNING.loiterRadius
+      }
+      const angle = Phaser.Math.Angle.Between(enemy.x, enemy.y, goalX, goalY)
       const bob = Math.sin(time / 300 + enemy.getData('seed')) * 18
       enemy.body.setVelocity(
         Math.cos(angle) * TUNING.enemySpeed,
@@ -469,14 +480,21 @@ export default class LevelScene extends Phaser.Scene {
     return this.levelProps.stealCooldownMs ?? TUNING.stealCooldownMs
   }
 
+  // the steal-initiation gates (global cooldown + post-stun grace) shared
+  // by the grab itself and the approach behavior: an enemy that couldn't
+  // complete a grab right now menace-loiters instead of diving in
+  clearedToSteal(enemy) {
+    const grace = enemy.getData('stealGraceUntil')
+    if (grace && this.time.now < grace) return false
+    return this.time.now - this.lastStealAt >= this.stealCooldown()
+  }
+
   onEnemyTouchItem(enemy, item) {
     if (enemy.getData('carrying') || !this.isTaggable(item) || this.isFreshItem(item)) return
     if (enemy.getData('stunnedUntil')) return
-    const grace = enemy.getData('stealGraceUntil')
-    if (grace && this.time.now < grace) return
     // global cooldown gates steal INITIATIONS only — enemies still exist
     // and menace freely; only the chase-starting event is spaced
-    if (this.time.now - this.lastStealAt < this.stealCooldown()) return
+    if (!this.clearedToSteal(enemy)) return
 
     this.lastStealAt = this.time.now
     item.setData('stolen', true)
