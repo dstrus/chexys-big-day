@@ -85,6 +85,11 @@ violence against people — the only thing you ever destroy is paper.
   intent waits for readiness. Implement as the default; keep
   a tunable flag (holdDeferredStart, default true) for
   playtest comparison.
+  Each hold requires a fresh press of the tag button — a
+  button held through a completed (or abandoned) hold does
+  not arm the next one. Buffering forgives arrival timing;
+  it never chains commitments. (Ruled 2026-08-03 after
+  play-check.)
 - **Targeting:** generous auto-target radius (tunable, start ~1.5×
   Chexy's width) hitting the nearest valid item; the current target
   gets a subtle highlight/outline so the player always knows what a

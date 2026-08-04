@@ -47,6 +47,7 @@ export default class LevelScene extends Phaser.Scene {
     this.physics.add.collider(this.items, this.mainLayer)
     this.target = null
     this.hold = null
+    this.holdArmed = false // fresh-press arm for deferred hold start (-e)
     this.targetGfx = this.add.graphics().setDepth(10)
     this.holdGfx = this.add.graphics().setDepth(11)
     // screen-space edge arrows pointing at off-screen untagged items
@@ -765,6 +766,13 @@ export default class LevelScene extends Phaser.Scene {
       return
     }
     const p = this.player
+    // fresh press per hold (handoff 2026-08-03-e): a press ARMS the
+    // deferred start; the hold it starts consumes the arm, however that
+    // hold ends (completion, abandonment, enemy interrupt). A button
+    // held through a hold never re-arms — buffering forgives arrival
+    // timing, it never chains commitments.
+    if (p.tagPressed) this.holdArmed = true
+    else if (!p.tagHeld) this.holdArmed = false
     if (p.tagPressed && this.target) {
       // rescue is ALWAYS instant tap (DESIGN.md §2 item 4b)
       if (this.isStunnable(this.target)) {
@@ -787,11 +795,12 @@ export default class LevelScene extends Phaser.Scene {
     // playtest comparison.
     const t = this.target
     if (!t || this.isStunnable(t) || (t.getData('tier') ?? 1) < 2) return
-    const wantsHold = TUNING.holdDeferredStart ? p.tagHeld : p.tagPressed
+    const wantsHold = TUNING.holdDeferredStart ? p.tagHeld && this.holdArmed : p.tagPressed
     if (!wantsHold) return
     const moveInput =
       p.cursors.left.isDown || p.cursors.right.isDown || p.cursors.up.isDown || p.keys.SPACE.isDown
     if (TUNING.holdDeferredStart && moveInput) return // buffered: wait for release
+    this.holdArmed = false // arm consumed by this hold, however it ends
     this.startHold(time)
   }
 

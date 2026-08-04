@@ -962,3 +962,26 @@ at hold start waits rather than interrupting; struggle
 penalties price abandonment only, never arrival overlap.
 Framed as the hold-verb sibling of jump buffering.
 itemDragX slide bug separately fixed at 1929d0d.
+
+## 2026-08-03 — Handoff 2026-08-03-e applied
+
+- Sequence check: 2026-08-03-d applied (entry above) ✓.
+- Item 1: fresh-press sentence appended to the DESIGN.md §2.3
+  hold-start-buffering block verbatim.
+- Item 2: implemented as a per-press arm consumed by the hold it
+  starts (holdArmed). Confirmed at runtime, both edges: (a) hold
+  completed with Z still down and a second trunk in range — no new
+  hold, zero struggles, until release + repress (fresh 300ms hold on
+  the second trunk); (b) enemy-interrupted hold (steal-proof
+  interrupter) — one struggle penalty for the interrupt itself, no
+  auto-restart while Z stayed down, release + repress started a
+  fresh hold with no extra penalty. Note: per the literal spec (arm
+  consumed by holds only), a press that fires an instant tap or a
+  rescue stun still arms a later hold if the button stays down —
+  flagging in case design wants taps to consume the arm too.
+- Item 3: ruling entry appended verbatim below.
+
+2026-08-03 — Fresh press per hold ruled (handoff
+2026-08-03-e): held tag button never chains holds;
+buffering forgives timing, not commitment. Applies after
+completion, abandonment, and enemy interrupts alike.
