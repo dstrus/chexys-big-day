@@ -766,22 +766,25 @@ export default class LevelScene extends Phaser.Scene {
       return
     }
     const p = this.player
-    // fresh press per hold (handoff 2026-08-03-e): a press ARMS the
-    // deferred start; the hold it starts consumes the arm, however that
-    // hold ends (completion, abandonment, enemy interrupt). A button
-    // held through a hold never re-arms — buffering forgives arrival
-    // timing, it never chains commitments.
+    // one press, one action (handoff 2026-08-03-f, generalizing -e): a
+    // press ARMS exactly one action; the FIRST action it produces —
+    // instant tap, rescue stun, or hold start — consumes the arm. An
+    // unconsumed arm (pressed in transit) waits per hold start
+    // buffering (-d). Buffering forgives timing, never multiplies
+    // actions.
     if (p.tagPressed) this.holdArmed = true
     else if (!p.tagHeld) this.holdArmed = false
     if (p.tagPressed && this.target) {
       // rescue is ALWAYS instant tap (DESIGN.md §2 item 4b)
       if (this.isStunnable(this.target)) {
+        this.holdArmed = false // arm consumed by the stun
         this.stunEnemy(this.target, time)
         return
       }
       // tier 1 stays the instant tap — and stays a PRESS event: a held
       // button never repeat-fires taps (handoff 2026-08-03-d item 2)
       if ((this.target.getData('tier') ?? 1) < 2) {
+        this.holdArmed = false // arm consumed by the tap
         this.completeTag(this.target)
         return
       }

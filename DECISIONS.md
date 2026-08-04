@@ -985,3 +985,23 @@ itemDragX slide bug separately fixed at 1929d0d.
 2026-08-03-e): held tag button never chains holds;
 buffering forgives timing, not commitment. Applies after
 completion, abandonment, and enemy interrupts alike.
+
+## 2026-08-03 — Handoff 2026-08-03-f applied
+
+- Sequence check: 2026-08-03-e applied (entry above) ✓.
+- Item 1: §2.3 fresh-press block amended to the "one press, one
+  action" general form verbatim.
+- Item 2: arm now consumed by the first action produced — instant
+  tap, rescue stun, or hold start. Verified all three ordered cases
+  at runtime: (a) tap with Z held → no hold at a trunk until
+  release + repress; (b) rescue stun with Z held → dropped heavy
+  targeted but no auto-hold; repress holds it; (c) press in empty
+  space, run to a trunk, stop → waiting arm honored, hold starts
+  (-d behavior unchanged).
+- Item 3: ruling entry appended verbatim below.
+
+2026-08-03 — One press, one action (handoff 2026-08-03-f):
+the tag-button arm is consumed by the first action it
+produces (tap, stun, or hold start); unconsumed arms wait
+per -d. Closes the tap/stun boundary the code track flagged
+on -e.

@@ -85,11 +85,14 @@ violence against people — the only thing you ever destroy is paper.
   intent waits for readiness. Implement as the default; keep
   a tunable flag (holdDeferredStart, default true) for
   playtest comparison.
-  Each hold requires a fresh press of the tag button — a
-  button held through a completed (or abandoned) hold does
-  not arm the next one. Buffering forgives arrival timing;
-  it never chains commitments. (Ruled 2026-08-03 after
-  play-check.)
+  One press, one action: a tag-button press arms exactly one
+  action and is consumed by the FIRST action it produces —
+  an instant tap, a rescue stun, or a hold start. A consumed
+  arm never carries forward; an unconsumed arm (pressed in
+  transit, nothing in range yet) waits per hold start
+  buffering. Buffering forgives timing, never multiplies
+  actions. (Generalized 2026-08-03 from the chained-holds
+  ruling after the code chat flagged the tap/stun boundary.)
 - **Targeting:** generous auto-target radius (tunable, start ~1.5×
   Chexy's width) hitting the nearest valid item; the current target
   gets a subtle highlight/outline so the player always knows what a
