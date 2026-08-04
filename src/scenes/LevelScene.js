@@ -916,7 +916,10 @@ export default class LevelScene extends Phaser.Scene {
 
     this.tagParticles.emitParticleAt(item.x, item.y)
     audio.play(heavy ? 'heavyTag' : 'tag')
-    this.player.triggerAnim('tag')
+    // one-shot check-in pose — the artist's tag name is 'tap' (renamed
+    // from the reserved-but-never-drawn 'tag' key, 2026-08-04); plays on
+    // hold completions too, as the shared check-in beat
+    this.player.triggerAnim('tap')
     this.game.events.emit('guest-happy', { guest: item.getData('guest') })
 
     // diegetic tagged-state (handoff 2026-08-01-b): apply the category
