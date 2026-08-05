@@ -325,10 +325,9 @@ export default class LevelScene extends Phaser.Scene {
     const escapeMs =
       ((this.worldHeight + 24) / (TUNING.enemySpeed * TUNING.carrierSpeedFactor)) * 1000 +
       TUNING.gloatMs
-    const dashBonus =
-      TUNING.dashEnabled || isDashUnlocked()
-        ? (TUNING.dashSpeed - TUNING.maxSpeed) * (TUNING.dashDurationMs / 1000)
-        : 0
+    const dashBonus = this.isDashAvailable()
+      ? (TUNING.dashSpeed - TUNING.maxSpeed) * (TUNING.dashDurationMs / 1000)
+      : 0
     const traverseMs = (this.worldWidth / (TUNING.maxSpeed + dashBonus)) * 1000
     const ok = escapeMs >= traverseMs + TUNING.stealFairnessMarginMs
     return { ok, escapeMs, traverseMs }
@@ -497,6 +496,16 @@ export default class LevelScene extends Phaser.Scene {
   // per-level steal-initiation spacing; map property overrides the default
   stealCooldown() {
     return this.levelProps.stealCooldownMs ?? TUNING.stealCooldownMs
+  }
+
+  // dash is available where the LEVEL permits it (dashAllowed map
+  // property) and progression has unlocked it — "persists for all
+  // SUBSEQUENT levels" (DESIGN.md §3.2): the Coatroom precedes the Bell
+  // Desk and never allows it. The panel flag stays a debug override.
+  // Shared by player input AND the (c) fairness traversal model so the
+  // readout never counts a dash the player can't perform.
+  isDashAvailable() {
+    return TUNING.dashEnabled || (isDashUnlocked() && this.levelProps.dashAllowed === true)
   }
 
   // the steal-initiation gates (global cooldown + post-stun grace) shared

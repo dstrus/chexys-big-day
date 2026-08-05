@@ -1139,3 +1139,18 @@ no retarget (press-time target only); hitstop on effect
 frame; boss telegraph budgets carry the windup tax.
 Supersedes 'instant tap' language for standard items;
 rescue-stun instancy and hold mechanics unchanged.
+
+## 2026-08-04 — Dash level-gating fixed (human report: dash in L1)
+
+The unlock was implemented as a global flag, so a persisted unlock
+also enabled dash on Coatroom replays — over-granting §3.2's
+"persists for all SUBSEQUENT levels." Fix: new dashAllowed map
+property (set on belldesk; every later level should declare it; the
+Coatroom omits it), one shared isDashAvailable() gate used by BOTH
+player input and the (c) fairness traversal model, so the readout
+never counts a dash the player can't perform. Panel dashEnabled
+stays a pure debug override. Verified with unlock persisted:
+Coatroom X press inert + fairness excludes dash (traverse 10667ms,
+green); Bell Desk dashes (vx 400) + fairness counts it (9600ms,
+green). Earlier -g note "coatroom stays green post-unlock" is moot
+under the gate but remains true either way.

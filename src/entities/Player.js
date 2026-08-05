@@ -1,6 +1,5 @@
 import Phaser from 'phaser'
 import { TUNING } from '../config/tuning.js'
-import { isDashUnlocked } from '../systems/progress.js'
 
 // Chexy (grey-box: a 44x44 rect). Platformer feel baseline per BRIEF-01:
 // acceleration/deceleration movement, variable jump height, coyote time,
@@ -164,7 +163,7 @@ export default class Player {
     }
     if (
       dashDir !== 0 &&
-      (TUNING.dashEnabled || isDashUnlocked()) &&
+      this.scene.isDashAvailable() && // level-gated + progression (§3.2)
       (!this.frozen || TUNING.dashCancelsHold) &&
       !dashing &&
       time - this.lastDashAt >= TUNING.dashCooldownMs &&

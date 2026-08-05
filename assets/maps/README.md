@@ -33,6 +33,14 @@ them and hot-reloads on edit).
 | `rushSeconds` | int | Rush timer length for this level |
 | `waveFile` | string | Wave schedule in `assets/waves/` |
 
+Optional properties:
+
+| Property | Type | Meaning |
+|----------|------|---------|
+| `stealCooldownMs` | int | Per-level steal-initiation cooldown override |
+| `dashUnlockBeat` | bool | Run the 10s dash-unlock beat at level start (Bell Desk only) |
+| `dashAllowed` | bool | Dash usable in this level once unlocked — set on Bell Desk and every level after it; omit on the Coatroom (DESIGN.md §3.2: the unlock persists for SUBSEQUENT levels) |
+
 ## Tileset
 
 Maps use the embedded tileset named `placeholder` (16×16, 8 columns
