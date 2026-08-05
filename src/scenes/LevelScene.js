@@ -639,6 +639,25 @@ export default class LevelScene extends Phaser.Scene {
     })
   }
 
+  // ONE teardown for every way a run ends short of the results flow —
+  // retry and exit share it so reset paths can never diverge (handoff
+  // 2026-08-04-e). An abandoned rush records NOTHING: recordRun lives
+  // only in endRun on a cleared run; all per-run state (score, streaks,
+  // adaptive band, timers) dies with the scene and is rebuilt in
+  // create(). Level unlocks are progression storage and are untouched.
+  teardownRun(destination) {
+    audio.play('uiSelect')
+    this.game.events.emit('run-reset')
+    if (destination === 'retry') {
+      this.scene.restart({ mapKey: this.mapKey })
+    } else {
+      // exit: back to the shift board, music to menu state
+      audio.stopMusic()
+      this.scene.stop('UIOverlay')
+      this.scene.start('LevelSelect')
+    }
+  }
+
   // stereo position of a world x relative to the player: -1 left .. 1 right
   panFor(x) {
     return Phaser.Math.Clamp((x - this.player.x) / 360, -1, 1)
@@ -1060,18 +1079,8 @@ export default class LevelScene extends Phaser.Scene {
 
   update(time, delta) {
     if (this.runOver) {
-      if (Phaser.Input.Keyboard.JustDown(this.keyR)) {
-        audio.play('uiSelect')
-        this.game.events.emit('run-reset')
-        this.scene.restart({ mapKey: this.mapKey })
-      } else if (Phaser.Input.Keyboard.JustDown(this.keyC)) {
-        // continue: back to the shift board
-        audio.play('uiSelect')
-        audio.stopMusic()
-        this.game.events.emit('run-reset')
-        this.scene.stop('UIOverlay')
-        this.scene.start('LevelSelect')
-      }
+      if (Phaser.Input.Keyboard.JustDown(this.keyR)) this.teardownRun('retry')
+      else if (Phaser.Input.Keyboard.JustDown(this.keyC)) this.teardownRun('exit')
       return
     }
 

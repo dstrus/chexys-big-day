@@ -154,28 +154,84 @@ export default class UIOverlayScene extends Phaser.Scene {
     for (const b of [...this.bubbles]) this.dismissBubble(b, true)
   }
 
+  // pause menu (handoff 2026-08-04-e): Resume / Exit to Shift Select,
+  // with a one-step confirm on Exit — it discards a live run and sits
+  // one slot from Resume, so the confirm cursor defaults to CANCEL
   buildPausePanel() {
+    const optStyle = { ...TEXT_STYLE, fontSize: '11px' }
+    this.pauseTitle = this.add
+      .text(GAME_WIDTH / 2, 100, 'PAUSED', { ...TEXT_STYLE, fontSize: '16px', fontStyle: 'bold' })
+      .setOrigin(0.5)
+    this.pauseOptions = [
+      this.add.text(GAME_WIDTH / 2, 136, 'RESUME', optStyle).setOrigin(0.5),
+      this.add.text(GAME_WIDTH / 2, 154, 'EXIT TO SHIFT SELECT', optStyle).setOrigin(0.5),
+    ]
+    this.pauseHint = this.add
+      .text(GAME_WIDTH / 2, 190, 'ESC OR P TO RESUME', { ...TEXT_STYLE, color: '#98a2b3' })
+      .setOrigin(0.5)
+    this.confirmPrompt = this.add
+      .text(GAME_WIDTH / 2, 118, "Abandon this rush? Progress won't be saved.", {
+        ...TEXT_STYLE,
+        align: 'center',
+        wordWrap: { width: 300 },
+      })
+      .setOrigin(0.5)
+    this.confirmOptions = [
+      this.add.text(GAME_WIDTH / 2, 150, 'CONFIRM', optStyle).setOrigin(0.5),
+      this.add.text(GAME_WIDTH / 2, 168, 'CANCEL', optStyle).setOrigin(0.5),
+    ]
+    this.pauseMarker = this.add
+      .text(0, 0, '▶', { fontFamily: 'monospace', fontSize: '11px', color: '#fe701e' })
+      .setOrigin(1, 0.5)
+
     this.pausePanel = this.add.container(0, 0, [
       this.add
         .rectangle(GAME_WIDTH / 2, GAME_HEIGHT / 2, GAME_WIDTH, GAME_HEIGHT, 0x101018, 0.7)
         .setOrigin(0.5),
-      this.add
-        .text(GAME_WIDTH / 2, 118, 'PAUSED', { ...TEXT_STYLE, fontSize: '16px', fontStyle: 'bold' })
-        .setOrigin(0.5),
-      this.add
-        .text(GAME_WIDTH / 2, 145, 'ESC OR P TO RESUME', { ...TEXT_STYLE, color: '#98a2b3' })
-        .setOrigin(0.5),
+      this.pauseTitle,
+      ...this.pauseOptions,
+      this.pauseHint,
+      this.confirmPrompt,
+      ...this.confirmOptions,
+      this.pauseMarker,
     ])
     this.pausePanel.setVisible(false)
     this.pausePanel.setDepth(30) // above guest bubbles
 
-    this.pauseKeys = this.input.keyboard.addKeys('ESC,P')
+    this.pauseKeys = this.input.keyboard.addKeys('ESC,P,UP,DOWN,W,S,ENTER,Z,SPACE')
     this.pausedAt = 0
+    this.setPauseMode('menu')
+  }
+
+  setPauseMode(mode) {
+    this.pauseMode = mode
+    const menu = mode === 'menu'
+    this.pauseTitle.setVisible(menu)
+    this.pauseOptions.forEach((o) => o.setVisible(menu))
+    this.pauseHint.setVisible(menu)
+    this.confirmPrompt.setVisible(!menu)
+    this.confirmOptions.forEach((o) => o.setVisible(!menu))
+    // menu opens on RESUME; confirm opens on CANCEL (accident safety)
+    this.pauseIdx = menu ? 0 : 1
+    this.movePauseMarker()
+  }
+
+  movePauseMarker() {
+    const opts = this.pauseMode === 'menu' ? this.pauseOptions : this.confirmOptions
+    const sel = opts[this.pauseIdx]
+    this.pauseMarker.setPosition(sel.x - sel.width / 2 - 6, sel.y)
+    opts.forEach((o, i) => o.setColor(i === this.pauseIdx ? '#f2ecd8' : '#98a2b3'))
   }
 
   onPaused() {
     this.pausedAt = this.time.now
+    this.setPauseMode('menu')
     this.pausePanel.setVisible(true)
+  }
+
+  resumeLevel() {
+    this.pausePanel.setVisible(false)
+    this.scene.resume('Level')
   }
 
   update(time) {
@@ -183,12 +239,45 @@ export default class UIOverlayScene extends Phaser.Scene {
     if (!this.pausePanel.visible) return
     // small delay so the keypress that paused can't also resume
     if (time - this.pausedAt < 250) return
-    if (
-      Phaser.Input.Keyboard.JustDown(this.pauseKeys.ESC) ||
-      Phaser.Input.Keyboard.JustDown(this.pauseKeys.P)
-    ) {
-      this.pausePanel.setVisible(false)
-      this.scene.resume('Level') // was 'Playground' — stale since Chunk 1
+    const JD = Phaser.Input.Keyboard.JustDown
+    const k = this.pauseKeys
+    const nav = (count) => {
+      if (JD(k.UP) || JD(k.W) || JD(k.DOWN) || JD(k.S)) {
+        this.pauseIdx = (this.pauseIdx + 1) % count // two options: toggle
+        audio.play('uiSelect')
+        this.movePauseMarker()
+      }
+    }
+    if (this.pauseMode === 'menu') {
+      if (JD(k.ESC) || JD(k.P)) {
+        this.resumeLevel()
+        return
+      }
+      nav(this.pauseOptions.length)
+      if (JD(k.ENTER) || JD(k.Z) || JD(k.SPACE)) {
+        if (this.pauseIdx === 0) this.resumeLevel()
+        else {
+          audio.play('uiSelect')
+          this.setPauseMode('confirm')
+        }
+      }
+    } else {
+      // confirm view: ESC/P backs out, same as CANCEL
+      if (JD(k.ESC) || JD(k.P)) {
+        this.setPauseMode('menu')
+        return
+      }
+      nav(this.confirmOptions.length)
+      if (JD(k.ENTER) || JD(k.Z) || JD(k.SPACE)) {
+        if (this.pauseIdx === 1) {
+          this.setPauseMode('menu') // CANCEL
+        } else {
+          // CONFIRM: abandon the rush — the shared teardown records
+          // nothing and returns to the shift board (handoff -e)
+          this.pausePanel.setVisible(false)
+          this.scene.get('Level').teardownRun('exit')
+        }
+      }
     }
   }
 
@@ -375,6 +464,7 @@ export default class UIOverlayScene extends Phaser.Scene {
 
   onRunReset() {
     this.resultsPanel.setVisible(false)
+    this.pausePanel.setVisible(false) // exit-from-pause path (-e)
     this.hangerTimers.forEach((t) => t.remove())
     this.hangerTimers = []
     this.resultHangers.forEach((h) => h.setVisible(false))

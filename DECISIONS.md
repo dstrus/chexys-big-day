@@ -1218,3 +1218,33 @@ de-embed. Two standing rules extracted: single shared
 endangerment ranking (tap/card/arrows must agree), and a
 universal placement-validity gate (bug family closed at
 two members).
+
+## 2026-08-05 — Handoff 2026-08-04-e applied
+
+- Sequence check: -d applied (entry above) ✓.
+- Item 1: pause menu built — RESUME / EXIT TO SHIFT SELECT with
+  marker navigation (arrows + Enter/Z; ESC/P still resumes
+  directly). Exit opens the one-step confirm ("Abandon this rush?
+  Progress won't be saved." / CONFIRM / CANCEL) with the cursor
+  defaulting to CANCEL since Exit sits one slot from Resume; ESC in
+  the confirm backs out. No Retry exists in the pause menu (none
+  was present to sit above).
+- Item 2: abandonment verified — abandoned belldesk run recorded
+  nothing (no store key, seeded coatroom best untouched, no results
+  screen); unlocks untouched; per-run state (score/losses/adaptive/
+  multiplier/timer) fresh on the next run. AUDIO FINDING: stopMusic
+  never reset the duck flag, so a results-screen duck leaked into
+  any cross-level music start (started at 30% volume) — latent
+  since ducking shipped; fixed in stopMusic and verified end-to-end
+  (ducked at results → false after exit → next level starts
+  un-ducked).
+- Item 3: single shared teardown implemented — teardownRun(dest)
+  serves results-Retry, results-Continue, and pause-Exit; verified
+  retry resets cleanly through the same path.
+- Item 4: ruling entry appended verbatim below.
+
+2026-08-04 — Pause exit ruled (handoff 2026-08-04-e):
+Exit to Shift Select with one-step confirm; abandoned
+rushes record nothing (no partial stats, no results);
+unlocks untouched; single shared teardown path for
+exit/retry.

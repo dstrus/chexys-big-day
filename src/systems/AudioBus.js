@@ -111,6 +111,10 @@ class AudioBus {
     this.stub?.stop()
     this.stub = null
     this.currentLevelId = null
+    // stop returns the bus to menu state: a results-screen duck must
+    // never leak into the next level's music (found during the -e
+    // mid-rush-teardown verification — cross-level starts began ducked)
+    this.ducked = false
   }
 
   // cheap; polled from UIOverlay.update so volume sliders apply live
