@@ -247,7 +247,10 @@ export default class Player {
     // dash pose wins while dashing (grounded or flat-air — the -g
     // trajectory makes them the same picture)
     if (this.wasDashing && this.scene.anims.exists('dash')) next = 'dash'
-    else if (this.frozen) next = 'hold'
+    // frozen covers both hold-charging and the tap windup root — the
+    // windup is costumed by the tap one-shot, so 'hold' only plays for
+    // actual holds (avoids a 1-frame hold flash at tap end)
+    else if (this.frozen && !this.scene.tapAction) next = 'hold'
     else if (!grounded) next = this.body.velocity.y < 0 ? 'jump' : 'fall'
     else next = Math.abs(this.body.velocity.x) > 10 ? 'run' : 'idle'
     this.playState(next)
