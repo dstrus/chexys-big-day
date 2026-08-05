@@ -65,6 +65,17 @@ Platform strips are laid as `6 [2 ...] 7` (caps on both ends,
 middles between). Runs shorter than 2 tiles stay all-middle —
 avoid them in layouts.
 
+## Placement-validity gate (handoff 2026-08-04-d)
+
+Any system that places or displaces an item — spawns,
+drops, scatters (Ticket Tornado), boss effects, bounce
+physics — must route through the shared place-item path,
+which resolves tile overlap (walk-up de-embed) before the
+item goes live. Two members of this bug family have
+shipped (spawn-height 2026-08-03, drop-embed 2026-08-04);
+no third. (Code: `LevelScene.placeItemClear` — spawns and
+stun-drops already route through it.)
+
 ## Item spawn heights
 
 Item spawn points must clear the LARGEST item silhouette (the tier-3

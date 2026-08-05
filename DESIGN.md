@@ -179,6 +179,17 @@ lock makes enemies more predictable by design — if
 difficulty drops, compensate with spawn frequency/count in
 wave files, never by re-enabling retargeting.
 
+One endangerment ranking: all systems that reason about
+item danger — tap auto-target, the Contact Card's save
+priority (BRIEF-04 §2), urgency-arrow weighting, and any
+future consumer — share a single ranking implementation
+(carried > enemy-locked > at-rest, refined by exit
+proximity / dive imminence / expiry as the consumer
+requires). Consumers may scope (radius) and tie-break
+differently, but the danger ORDER is defined once. The
+game must never disagree with itself about what is most
+at risk.
+
 ## 2.5 Difficulty & Run Length (RESOLVED)
 
 - **Adaptive difficulty with a score trade-off.** Each level has a

@@ -1192,3 +1192,29 @@ prey, idle untouched); a locked item outranks a nearer idle item.
 comparable; Coatroom certified dashless, readout corrected.
 Hold anim ratified at 3f/60ms; tap-flash guard ratified.
 Reference-art disposition rule added to CLAUDE.md.
+
+## 2026-08-05 — Handoff 2026-08-04-d applied
+
+- Sequence check: -c applied (entry above; -d was held until -c
+  arrived) ✓.
+- Item 1: ratified as shipped (90efffa) — drop de-embed walk-up and
+  risk-priority auto-target with the §2.3 amendment as applied.
+- Item 2: one-endangerment-ranking rule added to DESIGN.md §2.4
+  after the target-lock block verbatim. Code: ranking extracted to a
+  single itemDangerRank() (carried 0 / enemy-locked 1 / at-rest 2);
+  auto-target now consumes it; BRIEF-04's Contact Card and the
+  urgency-arrow weighting consume the same helper when they land.
+- Item 3: placement-validity gate added to assets/maps/README.md
+  verbatim. Refactor: spawnItem now routes through placeItemClear
+  (stun-drops already did) — a deliberately embedded spawn (trunk at
+  y=250, inside the ground) now walks up to rest exactly on the
+  floor; normal spawns unchanged; ranking classes verified 0/1/2.
+- Item 4: ruling entry appended verbatim below.
+
+2026-08-04 — Play-session pair ratified (handoff
+2026-08-04-d): risk-priority targeting (windup made target
+choice a commitment; the radius now triages) + drop
+de-embed. Two standing rules extracted: single shared
+endangerment ranking (tap/card/arrows must agree), and a
+universal placement-validity gate (bug family closed at
+two members).

@@ -667,6 +667,10 @@ export default class LevelScene extends Phaser.Scene {
     } else {
       item.setTint(categoryColor(category)) // ChexApp tag colors
     }
+    // placement-validity gate (handoff 2026-08-04-d): EVERY item
+    // placement routes through the shared de-embed path — an embedded
+    // spawn defeats arcade separation and falls through the floor
+    this.placeItemClear(item, x, y)
     item.setBounce(0.1)
     item.setCollideWorldBounds(true)
     // horizontal skid decay: without drag a rescue-dropped item keeps its
@@ -742,11 +746,25 @@ export default class LevelScene extends Phaser.Scene {
     return enemy.active && enemy.getData('carrying') && !enemy.getData('stunnedUntil')
   }
 
+  // THE one endangerment ranking (DESIGN.md §2.4, handoff 2026-08-04-d):
+  // carried (0) > enemy-locked (1) > at-rest (2). Every system that
+  // reasons about item danger — tap auto-target, the Contact Card save
+  // priority (BRIEF-04), urgency-arrow weighting — consumes this and
+  // refines within a class; the game never disagrees with itself about
+  // what is most at risk.
+  itemDangerRank(item) {
+    if (item.getData('stolen')) return 0
+    for (const enemy of this.enemies.getChildren()) {
+      if (enemy.getData('lockedTarget') === item) return 1
+    }
+    return 2
+  }
+
   // auto-target: the most AT-RISK valid target within TUNING.targetRadius
-  // (human ruling 2026-08-04, DESIGN.md §2.3 amended) — an active steal
-  // (carrying ticket) outranks any tap, an item an enemy has locked
-  // outranks idle items, and nearest wins within a class. Visible
-  // outline so the player always knows what a press will do.
+  // (human ruling 2026-08-04, DESIGN.md §2.3 amended) — ranked by the
+  // shared endangerment order, nearest within a class. A carrying ticket
+  // stands in for its carried item (rank 0) as the interaction point.
+  // Visible outline so the player always knows what a press will do.
   updateTargeting() {
     let best = null
     let bestClass = Infinity
@@ -760,16 +778,11 @@ export default class LevelScene extends Phaser.Scene {
         best = obj
       }
     }
-    const lockedItems = new Set()
     for (const enemy of this.enemies.getChildren()) {
-      const locked = enemy.getData('lockedTarget')
-      if (locked) lockedItems.add(locked)
-    }
-    for (const enemy of this.enemies.getChildren()) {
-      if (this.isStunnable(enemy)) consider(enemy, 0) // rescue first
+      if (this.isStunnable(enemy)) consider(enemy, 0) // carried: rescue first
     }
     for (const item of this.items.getChildren()) {
-      if (this.isTaggable(item)) consider(item, lockedItems.has(item) ? 1 : 2)
+      if (this.isTaggable(item)) consider(item, this.itemDangerRank(item))
     }
     this.target = best
     this.targetGfx.clear()
