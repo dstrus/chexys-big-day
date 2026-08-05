@@ -230,8 +230,14 @@ Boutique hotel lobby. Luggage in three weight tiers; heavy bags need
 a charged (held) tag per §2.3. **New mechanic:** weight tiers +
 dash unlock. (Guest-matching sub-mechanic deferred to v2 — see §8.)
 Dash is locked out during an active hold (tunable dashCancelsHold,
-default false). Dash unlocks via a 10s scripted beat at Bell Desk
-start; it persists for all subsequent levels.
+default false). Dash unlocks via the Bell Desk scripted beat and is
+available in levels that declare it (dashAllowed map
+property — Bell Desk onward; every post-Bell-Desk map must
+declare it). Earlier levels remain dashless even on replay:
+each level's ability set is fixed so its scores, hangers,
+and fairness certification stay comparable across all runs.
+(Ruled 2026-08-04, superseding the ambiguous 'persists for
+all subsequent levels.')
 **Dash trajectory (ruled 2026-08-03):** dash is purely
 horizontal — gravity is suspended for the dash duration,
 and vertical velocity is ZEROED at dash start (a dash

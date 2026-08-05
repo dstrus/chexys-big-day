@@ -1172,3 +1172,23 @@ items; nearest wins within a class. Press near an active steal
 always goes to the rescue. DESIGN.md §2.3 targeting bullet amended.
 Verified: carrier outranks a nearer idle item (Z stuns, frees the
 prey, idle untouched); a locked item outranks a nearer idle item.
+
+## 2026-08-05 — Handoff 2026-08-04-c applied (arrived after -d; order restored)
+
+- Sequence check: -b applied above; -d arrived first and was HELD
+  per protocol until this handoff closed the gap. Applied in order:
+  -c now, -d next.
+- Item 1: §3.2 dash persistence sentence amended verbatim — matches
+  the dashAllowed implementation already shipped (0ee2cdb).
+- Item 2: ratified as shipped — hold anim 3f/60ms looping charge
+  (artist's call over the 4-frame spec); tap-flash frozen-flag guard.
+- Item 3: reference-art disposition rule added to CLAUDE.md workflow
+  rules verbatim; the three chexy-tap*.png files remain untouched —
+  the human applies the rule to them.
+- Item 4: ruling entry appended verbatim below.
+
+2026-08-04 — Dash is level-gated via dashAllowed (handoff
+2026-08-04-c): ability sets are per-level so records stay
+comparable; Coatroom certified dashless, readout corrected.
+Hold anim ratified at 3f/60ms; tap-flash guard ratified.
+Reference-art disposition rule added to CLAUDE.md.

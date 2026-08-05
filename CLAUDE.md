@@ -66,6 +66,11 @@ and confirm they want to amend it first.
 - Log gate decisions and spec changes in DECISIONS.md (append-only).
 - Placeholder art is always acceptable to keep the code track
   unblocked; never block a gameplay task waiting on final sprites.
+- Reference-art disposition (handoff 2026-08-04-c): OpenArt
+  keepers that informed shipped frames get committed to
+  art/reference/ (provenance convention, same as the King
+  concepts); scratch/rejected generations are deleted, never
+  left untracked in root.
 
 ## Handoff protocol (chat → repo)
 
