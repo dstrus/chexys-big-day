@@ -105,9 +105,12 @@ violence against people — the only thing you ever destroy is paper.
   actions. (Generalized 2026-08-03 from the chained-holds
   ruling after the code chat flagged the tap/stun boundary.)
 - **Targeting:** generous auto-target radius (tunable, start ~1.5×
-  Chexy's width) hitting the nearest valid item; the current target
-  gets a subtle highlight/outline so the player always knows what a
-  press will do. No precise-overlap requirement.
+  Chexy's width) hitting the most AT-RISK valid target in range
+  (amended 2026-08-04): an active steal — a carrying ticket —
+  outranks any tap; an item an enemy has locked outranks idle
+  items; nearest wins within a class. The current target gets a
+  subtle highlight/outline so the player always knows what a press
+  will do. No precise-overlap requirement.
 - All three values (hold duration, interrupt behavior, radius) live
   in `src/config/tuning.js` and get sliders on the debug panel.
 

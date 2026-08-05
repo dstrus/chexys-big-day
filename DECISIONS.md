@@ -1154,3 +1154,21 @@ Coatroom X press inert + fairness excludes dash (traverse 10667ms,
 green); Bell Desk dashes (vx 400) + fairness counts it (9600ms,
 green). Earlier -g note "coatroom stays green post-unlock" is moot
 under the gate but remains true either way.
+
+## 2026-08-04 — Rescue-drop embed fix + risk-priority targeting (human)
+
+Bug: a floor-hugging (or platform-overlapping — enemies fly through
+tiles) carrier dropped its item at enemy.y+10, embedding large items
+in solid tiles where arcade separation can't recover them; the item
+sat in the floor until an enemy lifted it out. Fix: placeItemClear()
+walks the drop position upward out of any colliding tile before the
+pop. Verified: floor-level carrier drop now rests with the trunk
+bottom exactly at floor top.
+
+Ruling (human, in-session): auto-target picks the most AT-RISK
+valid target in radius, not the nearest — an active steal (carrying
+ticket) outranks any tap; an item an enemy has locked outranks idle
+items; nearest wins within a class. Press near an active steal
+always goes to the rescue. DESIGN.md §2.3 targeting bullet amended.
+Verified: carrier outranks a nearer idle item (Z stuns, frees the
+prey, idle untouched); a locked item outranks a nearer idle item.

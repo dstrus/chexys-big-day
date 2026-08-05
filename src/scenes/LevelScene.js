@@ -742,24 +742,34 @@ export default class LevelScene extends Phaser.Scene {
     return enemy.active && enemy.getData('carrying') && !enemy.getData('stunnedUntil')
   }
 
-  // auto-target: nearest valid target within TUNING.targetRadius — untagged
-  // items and carrying tickets both count — with a visible outline so the
-  // player always knows what a press will do
+  // auto-target: the most AT-RISK valid target within TUNING.targetRadius
+  // (human ruling 2026-08-04, DESIGN.md §2.3 amended) — an active steal
+  // (carrying ticket) outranks any tap, an item an enemy has locked
+  // outranks idle items, and nearest wins within a class. Visible
+  // outline so the player always knows what a press will do.
   updateTargeting() {
     let best = null
-    let bestD = TUNING.targetRadius
-    const consider = (obj) => {
+    let bestClass = Infinity
+    let bestD = Infinity
+    const consider = (obj, cls) => {
       const d = Phaser.Math.Distance.Between(this.player.x, this.player.y, obj.x, obj.y)
-      if (d <= bestD) {
+      if (d > TUNING.targetRadius) return
+      if (cls < bestClass || (cls === bestClass && d < bestD)) {
+        bestClass = cls
         bestD = d
         best = obj
       }
     }
-    for (const item of this.items.getChildren()) {
-      if (this.isTaggable(item)) consider(item)
+    const lockedItems = new Set()
+    for (const enemy of this.enemies.getChildren()) {
+      const locked = enemy.getData('lockedTarget')
+      if (locked) lockedItems.add(locked)
     }
     for (const enemy of this.enemies.getChildren()) {
-      if (this.isStunnable(enemy)) consider(enemy)
+      if (this.isStunnable(enemy)) consider(enemy, 0) // rescue first
+    }
+    for (const item of this.items.getChildren()) {
+      if (this.isTaggable(item)) consider(item, lockedItems.has(item) ? 1 : 2)
     }
     this.target = best
     this.targetGfx.clear()
@@ -835,7 +845,7 @@ export default class LevelScene extends Phaser.Scene {
 
     item.setData('stolen', false)
     item.body.enable = true
-    item.setPosition(enemy.x, enemy.y + 10)
+    this.placeItemClear(item, enemy.x, enemy.y + 10)
     item.body.setVelocity(Phaser.Math.Between(-30, 30), -60) // pop free
 
     this.physics.pause()
@@ -844,6 +854,22 @@ export default class LevelScene extends Phaser.Scene {
     })
     ;(this.stubPoof ?? this.tagParticles).emitParticleAt(enemy.x, enemy.y)
     audio.play('stun', this.panFor(enemy.x))
+  }
+
+  // place a dropped item so its body never overlaps solid tiles — an
+  // embedded body defeats arcade separation and the item sits inside
+  // the floor until an enemy lifts it out (human bug report 2026-08-04:
+  // low carriers, and carriers flying through platforms, dropped
+  // embedded trunks). Walks upward out of any colliding tile.
+  placeItemClear(item, x, y) {
+    const half = (item.body?.height ?? item.height) / 2
+    for (let guard = 0; guard < 8; guard++) {
+      const tile = this.mainLayer.getTileAtWorldXY(x, y + half - 1)
+      if (!tile || !tile.collides) break
+      y = tile.pixelY - half - 1 // sit just above the colliding tile
+    }
+    item.setPosition(x, y)
+    item.body.reset(x, y)
   }
 
   startHold(time) {
