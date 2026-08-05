@@ -1248,3 +1248,12 @@ Exit to Shift Select with one-step confirm; abandoned
 rushes record nothing (no partial stats, no results);
 unlocks untouched; single shared teardown path for
 exit/retry.
+
+## 2026-08-05 — Restart Level added to the pause menu (human, in-session)
+
+RESUME / RESTART LEVEL / EXIT TO SHIFT SELECT. Restart abandons the
+live run exactly like Exit, so it shares the -e one-step confirm
+(cursor defaults to CANCEL) and the single teardownRun path — just
+the retry destination. Verified: restarting a PAUSED scene comes
+back fresh and running (score 0, full clock, unpaused, panel
+hidden); 3-option nav wraps; exit path unchanged.

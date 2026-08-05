@@ -163,11 +163,16 @@ export default class UIOverlayScene extends Phaser.Scene {
       .text(GAME_WIDTH / 2, 100, 'PAUSED', { ...TEXT_STYLE, fontSize: '16px', fontStyle: 'bold' })
       .setOrigin(0.5)
     this.pauseOptions = [
-      this.add.text(GAME_WIDTH / 2, 136, 'RESUME', optStyle).setOrigin(0.5),
-      this.add.text(GAME_WIDTH / 2, 154, 'EXIT TO SHIFT SELECT', optStyle).setOrigin(0.5),
+      this.add.text(GAME_WIDTH / 2, 132, 'RESUME', optStyle).setOrigin(0.5),
+      this.add.text(GAME_WIDTH / 2, 150, 'RESTART LEVEL', optStyle).setOrigin(0.5),
+      this.add.text(GAME_WIDTH / 2, 168, 'EXIT TO SHIFT SELECT', optStyle).setOrigin(0.5),
     ]
+    // both destructive options share the -e confirm; this maps menu
+    // index -> teardown destination once confirmed
+    this.pauseDestinations = [null, 'retry', 'exit']
+    this.pendingDestination = null
     this.pauseHint = this.add
-      .text(GAME_WIDTH / 2, 190, 'ESC OR P TO RESUME', { ...TEXT_STYLE, color: '#98a2b3' })
+      .text(GAME_WIDTH / 2, 200, 'ESC OR P TO RESUME', { ...TEXT_STYLE, color: '#98a2b3' })
       .setOrigin(0.5)
     this.confirmPrompt = this.add
       .text(GAME_WIDTH / 2, 118, "Abandon this rush? Progress won't be saved.", {
@@ -242,8 +247,9 @@ export default class UIOverlayScene extends Phaser.Scene {
     const JD = Phaser.Input.Keyboard.JustDown
     const k = this.pauseKeys
     const nav = (count) => {
-      if (JD(k.UP) || JD(k.W) || JD(k.DOWN) || JD(k.S)) {
-        this.pauseIdx = (this.pauseIdx + 1) % count // two options: toggle
+      const dir = JD(k.UP) || JD(k.W) ? -1 : JD(k.DOWN) || JD(k.S) ? 1 : 0
+      if (dir !== 0) {
+        this.pauseIdx = (this.pauseIdx + dir + count) % count
         audio.play('uiSelect')
         this.movePauseMarker()
       }
@@ -257,6 +263,8 @@ export default class UIOverlayScene extends Phaser.Scene {
       if (JD(k.ENTER) || JD(k.Z) || JD(k.SPACE)) {
         if (this.pauseIdx === 0) this.resumeLevel()
         else {
+          // restart and exit both abandon the live run -> same confirm
+          this.pendingDestination = this.pauseDestinations[this.pauseIdx]
           audio.play('uiSelect')
           this.setPauseMode('confirm')
         }
@@ -273,9 +281,9 @@ export default class UIOverlayScene extends Phaser.Scene {
           this.setPauseMode('menu') // CANCEL
         } else {
           // CONFIRM: abandon the rush — the shared teardown records
-          // nothing and returns to the shift board (handoff -e)
+          // nothing; destination is whichever option opened the confirm
           this.pausePanel.setVisible(false)
-          this.scene.get('Level').teardownRun('exit')
+          this.scene.get('Level').teardownRun(this.pendingDestination)
         }
       }
     }
