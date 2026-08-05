@@ -286,6 +286,33 @@
     "spriteSourceSize": { "x": 0, "y": 0, "w": 48, "h": 48 },
     "sourceSize": { "w": 48, "h": 48 },
     "duration": 60
+   },
+   {
+    "filename": "32",
+    "frame": { "x": 101, "y": 201, "w": 48, "h": 48 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 48, "h": 48 },
+    "sourceSize": { "w": 48, "h": 48 },
+    "duration": 70
+   },
+   {
+    "filename": "33",
+    "frame": { "x": 151, "y": 201, "w": 48, "h": 48 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 48, "h": 48 },
+    "sourceSize": { "w": 48, "h": 48 },
+    "duration": 120
+   },
+   {
+    "filename": "34",
+    "frame": { "x": 151, "y": 151, "w": 48, "h": 48 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 48, "h": 48 },
+    "sourceSize": { "w": 48, "h": 48 },
+    "duration": 120
    }
  ],
  "meta": {
@@ -303,7 +330,8 @@
    { "name": "land", "from": 23, "to": 24, "direction": "forward", "color": "#000000ff" },
    { "name": "dash", "from": 25, "to": 26, "direction": "forward", "color": "#000000ff" },
    { "name": "tap", "from": 27, "to": 28, "direction": "forward", "color": "#000000ff" },
-   { "name": "hold", "from": 29, "to": 31, "direction": "forward", "color": "#000000ff" }
+   { "name": "hold", "from": 29, "to": 31, "direction": "forward", "color": "#000000ff" },
+   { "name": "hit", "from": 32, "to": 34, "direction": "forward", "color": "#000000ff" }
   ]
  }
 }
