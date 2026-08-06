@@ -175,7 +175,7 @@ export default class UIOverlayScene extends Phaser.Scene {
       .text(GAME_WIDTH / 2, 200, 'ESC OR P TO RESUME', { ...TEXT_STYLE, color: '#98a2b3' })
       .setOrigin(0.5)
     this.confirmPrompt = this.add
-      .text(GAME_WIDTH / 2, 118, "Abandon this rush? Progress won't be saved.", {
+      .text(GAME_WIDTH / 2, 118, "Abandon your shift? Progress won't be saved.", {
         ...TEXT_STYLE,
         align: 'center',
         wordWrap: { width: 300 },
