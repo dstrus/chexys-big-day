@@ -1286,3 +1286,31 @@ v1 — steals are the sole loss channel, matching five weeks
 of code reality and the fairness stack's 'every loss is a
 declined chase' contract; endangerment third class =
 longest at rest; guest-patience expiry filed to v2.
+
+## 2026-08-05 — Handoff 2026-08-05-b applied
+
+- Sequence check: -a applied (entry above; -b was HELD until -a
+  arrived) ✓.
+- Item 1: teeter implemented — supported-fraction trigger
+  (teeterSupportFraction 0.5, on the panel), per-half support
+  comparison picks the drop side, sprite faces the drop with the
+  facing variable untouched (input restores it instantly), pure
+  visual, replaces only idle. 4 frames from the .ase (90/120/150/
+  120ms), loops. Verified: centered = idle; right/left overhang =
+  teeter facing the correct drop; movement overrides with input
+  facing; a hold started on the edge shows hold, not teeter.
+- Item 2: 'teeter' added to the sprites README tag list with its
+  trigger note.
+- Item 3 answer (fell out, reporting for ratification): the
+  deferred-hold wait state IS idle-equivalent — Z held with no
+  heavy target in range on an edge shows teeter (arm stays live);
+  the moment an actual hold starts, hold wins. Rationale from the
+  code shape: the wait state doesn't freeze Chexy, so it inherits
+  idle's costume — teetering while waiting reads as "ready but
+  wobbling," which fits the buffered-intent fiction.
+- Item 4: ruling entry appended verbatim below.
+
+2026-08-05 — 'teeter' edge-idle animation added (handoff
+2026-08-05-b), artist-initiated: idle-only replacement,
+faces the drop, supported-fraction trigger (default 0.5),
+zero mechanical effect. First art-track-led feature.

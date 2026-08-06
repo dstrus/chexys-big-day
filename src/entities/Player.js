@@ -251,8 +251,47 @@ export default class Player {
     // actual holds (avoids a 1-frame hold flash at tap end)
     else if (this.frozen && !this.scene.tapAction) next = 'hold'
     else if (!grounded) next = this.body.velocity.y < 0 ? 'jump' : 'fall'
-    else next = Math.abs(this.body.velocity.x) > 10 ? 'run' : 'idle'
+    else if (Math.abs(this.body.velocity.x) > 10) next = 'run'
+    else {
+      // teeter (handoff 2026-08-05-b): replaces ONLY idle — grounded,
+      // stationary, overhanging an edge. Pure visual, zero mechanics.
+      const drop = this.teeterSide()
+      if (drop !== 0 && this.scene.anims.exists('teeter')) {
+        next = 'teeter'
+        // face the DROP; this.facing stays untouched, so the main
+        // update's facing sync restores it the moment the player moves
+        this.sprite.setFlipX(drop === 1)
+      } else {
+        next = 'idle'
+      }
+    }
     this.playState(next)
+  }
+
+  // which side of the body overhangs a ledge enough to teeter:
+  // 0 = adequately supported, -1 = drop on the left, 1 = drop on the
+  // right (the side with LESS support). Support = fraction of the
+  // body's bottom edge with a colliding tile directly beneath.
+  teeterSide() {
+    const b = this.body
+    const layer = this.scene.mainLayer
+    if (!layer) return 0
+    const y = b.bottom + 1
+    let leftSupport = 0
+    let rightSupport = 0
+    for (let tx = Math.floor(b.left / 16); tx * 16 < b.right; tx++) {
+      const tile = layer.getTileAtWorldXY(tx * 16 + 8, y)
+      if (!tile || !tile.collides) continue
+      const lo = Math.max(b.left, tile.pixelX)
+      const hi = Math.min(b.right, tile.pixelX + 16)
+      if (hi <= lo) continue
+      const mid = b.center.x
+      leftSupport += Math.max(0, Math.min(hi, mid) - lo)
+      rightSupport += Math.max(0, hi - Math.max(lo, mid))
+    }
+    const frac = (leftSupport + rightSupport) / b.width
+    if (frac === 0 || frac >= TUNING.teeterSupportFraction) return 0
+    return rightSupport < leftSupport ? 1 : -1
   }
 
   // looping state anim; missing tags fall back to idle so incremental

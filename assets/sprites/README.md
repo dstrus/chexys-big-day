@@ -31,13 +31,18 @@ way — timing is never redefined in code.
 Tag names in the Aseprite file become animation keys. The game's
 state machine uses:
 
-`idle` `run` `jump` `fall` `land` `dash` `tap` `hold` `hit` `win` `lose`
+`idle` `run` `jump` `fall` `land` `dash` `tap` `hold` `hit` `teeter`
+`win` `lose`
 
 - `idle` / `run` / `jump` / `fall` / `hold` loop; `land` / `tap` /
   `hit` play once; `win` / `lose` loop on the results screen.
 - `tap` is the check-in one-shot (fires on instant taps AND hold
   completions) — renamed 2026-08-04 from the reserved `tag` key,
   which was never drawn.
+- `teeter` loops in place of `idle` when Chexy is grounded,
+  stationary, and overhanging a platform edge (supported fraction
+  below teeterSupportFraction); Chexy faces the drop. Replaces
+  ONLY idle — pure visual, zero mechanics (handoff 2026-08-05-b).
 - `dash` plays once and HOLDS its final frame for the rest of the
   dash (2 frames: launch pose, then the held flight pose).
 - Tags may land incrementally — any missing tag falls back to `idle`,

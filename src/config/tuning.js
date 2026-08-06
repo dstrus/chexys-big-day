@@ -26,6 +26,10 @@ export const TUNING = {
   dashCancelsHold: false, // locked out during a hold by default (DESIGN.md §3.2);
   // true lets a dash break the hold (playtest trial, BRIEF-03)
 
+  // teeter (handoff 2026-08-05-b): idle on a platform edge swaps to the
+  // teeter anim when the supported fraction of the body drops below this
+  teeterSupportFraction: 0.5,
+
   // tagging
   holdTagMs: 300,
   holdTier2Factor: 0.6, // tier-2 hold duration = holdTagMs * this (BRIEF-03)
@@ -107,6 +111,7 @@ export const TUNING_SCHEMA = [
   { key: 'dashDurationMs', label: 'Dash duration (ms)', min: 60, max: 400, step: 10 },
   { key: 'dashCooldownMs', label: 'Dash cooldown (ms)', min: 0, max: 3000, step: 50 },
   { key: 'dashCancelsHold', label: 'Dash cancels hold', type: 'flag' },
+  { key: 'teeterSupportFraction', label: 'Teeter support frac', min: 0.1, max: 0.9, step: 0.05 },
   { key: 'holdTagMs', label: 'Hold-tag (ms)', min: 100, max: 800, step: 10 },
   { key: 'holdTier2Factor', label: 'Tier-2 hold factor', min: 0.3, max: 1, step: 0.05 },
   { key: 'holdDeferredStart', label: 'Hold start buffering', type: 'flag' },
