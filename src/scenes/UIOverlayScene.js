@@ -402,13 +402,12 @@ export default class UIOverlayScene extends Phaser.Scene {
       this.resultsBody.setOrigin(0.5, 0.5)
       this.resultsBody.setY(130)
       this.resultsPrompt.setY(185)
-      this.resultsBody.setText(
-        [
-          `ITEMS RETURNED  ${itemsReturned}`,
-          `TAGS COLLECTED  ${tagsCollected}`,
-          `SCORE  ${score}`,
-        ].join('\n')
-      )
+      // "tags" = collectible pickups (2026-08-05-a); minor line only
+      // when nonzero, per the BRIEF-04 results convention
+      const failLines = [`ITEMS RETURNED  ${itemsReturned}`]
+      if (tagsCollected > 0) failLines.push(`TAGS COLLECTED  ${tagsCollected}`)
+      failLines.push(`SCORE  ${score}`)
+      this.resultsBody.setText(failLines.join('\n'))
       this.resultsPanel.setVisible(true)
       return
     }
@@ -421,11 +420,13 @@ export default class UIOverlayScene extends Phaser.Scene {
     const lines = [
       `ITEMS RETURNED  ${itemsReturned}`,
       `GUESTS SERVED  ${guestsServed}`,
-      `TAGS COLLECTED  ${tagsCollected}`,
       `ITEM RETURN RATE  ${returnRate}%`,
       `BEST MULTIPLIER  x${bestMultiplier.toFixed(2)}`,
       `SCORE  ${score}`,
     ]
+    // "tags" = collectible pickups (2026-08-05-a); minor line only
+    // when nonzero, per the BRIEF-04 results convention
+    if (tagsCollected > 0) lines.splice(2, 0, `TAGS COLLECTED  ${tagsCollected}`)
     if (bonus > 0) lines.push(`BIG DAY! BONUS  +${bonus}`)
     this.resultsBody.setOrigin(0.5, 0)
     this.resultsBody.setText(lines.join('\n'))

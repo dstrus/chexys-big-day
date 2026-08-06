@@ -35,7 +35,7 @@ deliverable.
   item** (human ruling 2026-08-03), resolved by priority
   chain: (1) an item currently carried toward an exit,
   (2) an item locked by a loitering/approaching enemy —
-  nearest-to-dive first, (3) the item nearest its expiry.
+  nearest-to-dive first, (3) the item longest at rest.
   Ties break toward the item farthest from the player (the
   card saves what Chexy can't reach). Thematically: "we
   texted the guest just in time."

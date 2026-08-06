@@ -770,7 +770,9 @@ export default class LevelScene extends Phaser.Scene {
   // reasons about item danger — tap auto-target, the Contact Card save
   // priority (BRIEF-04), urgency-arrow weighting — consumes this and
   // refines within a class; the game never disagrees with itself about
-  // what is most at risk.
+  // what is most at risk. Class-2 danger refinement is at-rest age,
+  // OLDEST first (2026-08-05-a: expiry is out of v1 — steals are the
+  // only loss channel; age via getData('spawnedAt')).
   itemDangerRank(item) {
     if (item.getData('stolen')) return 0
     for (const enemy of this.enemies.getChildren()) {
@@ -1062,7 +1064,9 @@ export default class LevelScene extends Phaser.Scene {
   }
 
   onItemTagged(tier) {
-    this.tagsCollected += 1
+    // tagsCollected is NOT bumped here (2026-08-05-a): "Tags" counts
+    // COLLECTIBLE pickups (BRIEF-04 §1); check-in volume is
+    // itemsReturned — the counters never double-count one event
     this.itemsReturned += 1
     // score by commitment (handoff 2026-08-04-a): 1× / 1.5× / 2× by
     // weight tier, adaptive multiplier on top

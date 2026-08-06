@@ -1257,3 +1257,32 @@ live run exactly like Exit, so it shares the -e one-step confirm
 the retry destination. Verified: restarting a PAUSED scene comes
 back fresh and running (score 0, full clock, unpaused, panel
 hidden); 3-option nav wraps; exit path unchanged.
+
+## 2026-08-05 — Handoff 2026-08-05-a applied
+
+- Sequence check: first handoff of 2026-08-05 (the -b that arrived
+  first was HELD until this closed the gap) ✓.
+- Item 1: tagsCollected no longer bumps on check-ins — "Tags" is the
+  BRIEF-04 collectible counter; itemsReturned confirmed as the single
+  check-in source (verified: 3 check-ins → itemsReturned 3,
+  tagsCollected 0). Results show TAGS COLLECTED only when nonzero,
+  per the BRIEF-04 minor-line convention, on both layouts.
+- Item 2: expiry struck per order — §2.1 loss line, §2.4 arrow
+  language (steal-threat ladder), §2.4 ranking refinement (at-rest
+  age, oldest first — also noted on the itemDangerRank helper),
+  BRIEF-04 §2 chain ("longest at rest"); §8 v2 line added verbatim;
+  cardLingerMs untouched. FLAGGED, not silently edited (outside the
+  ordered list): §2.3's whiff enumeration still says "(stolen,
+  expired, despawned)" — expired is now dead-letter there; and §3.1
+  Coatroom flavor "before timers expire" reads like per-item timers
+  that never existed. Strike both in a future amendment or leave as
+  color — design chat's call.
+- Item 3: ruling entry appended verbatim below.
+
+2026-08-05 — BRIEF-04 pre-flight rulings (handoff
+2026-08-05-a): 'Tags' counter = collectible pickups
+(returns already cover check-ins); expiry ratified OUT of
+v1 — steals are the sole loss channel, matching five weeks
+of code reality and the fairness stack's 'every loss is a
+declined chase' contract; endangerment third class =
+longest at rest; guest-patience expiry filed to v2.

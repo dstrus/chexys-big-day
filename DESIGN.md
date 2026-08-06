@@ -50,7 +50,7 @@ violence against people — the only thing you ever destroy is paper.
 
 ### 2.1 Fail state
 
-- A stolen or expired item = **1 lost item** (angry guest text bubble).
+- A stolen item (carried out by a thief) = **1 lost item** (angry guest text bubble).
 - 3 lost items ends the run. Friendly retry, no lives system.
 
 ### 2.2 Controls (v1)
@@ -120,8 +120,8 @@ The game tests prioritization, not information-gathering.
 Off-screen untagged items are always signaled, in all levels:
 - **Edge arrows:** pulsing screen-edge indicators, color-coded
   standard vs. heavy. Arrows encode urgency: pulse rate
-  increases and color shifts toward Alert Red (#EA5151) as an
-  item nears expiry or a thief approaches it.
+  increases and color shifts toward Alert Red (#EA5151) as the
+  steal threat rises (locked / loitering / diving / carried).
 - **Stereo audio cues:** item spawns, steals, and losses are
   stereo-panned relative to the player position.
 Both systems get on/off toggles when a settings menu exists
@@ -184,8 +184,8 @@ item danger — tap auto-target, the Contact Card's save
 priority (BRIEF-04 §2), urgency-arrow weighting, and any
 future consumer — share a single ranking implementation
 (carried > enemy-locked > at-rest, refined by exit
-proximity / dive imminence / expiry as the consumer
-requires). Consumers may scope (radius) and tie-break
+proximity / dive imminence / at-rest age (oldest first)
+as the consumer requires). Consumers may scope (radius) and tie-break
 differently, but the danger ORDER is defined once. The
 game must never disagree with itself about what is most
 at risk.
@@ -370,6 +370,8 @@ it. Victory screen shows "99% Item Return Rate."
 - Sequel title reserved: Chexy's BIGGEST DAY
 - Golden Hanger cosmetic spending (title-screen Chexy poses,
   leaderboard flair)
+- Guest patience / item expiry as a second loss channel (would
+  require its own fairness rules)
 
 ## 9. Milestone Gates
 
