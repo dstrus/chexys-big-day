@@ -1314,3 +1314,12 @@ longest at rest; guest-patience expiry filed to v2.
 2026-08-05-b), artist-initiated: idle-only replacement,
 faces the drop, supported-fraction trigger (default 0.5),
 zero mechanical effect. First art-track-led feature.
+
+## 2026-08-07 — First real music track: coatroom.mp3 (WIP, usable)
+
+Human added assets/audio/music/coatroom.mp3 (28.8s stereo loop). Zero
+code changes — it matches the documented drop-in convention
+(music/<levelId>.<ext>). Verified: file wins over the chiptune stub on
+Coatroom, loops, ducks to 30% under results and restores on retry;
+Bell Desk (no file yet) still falls back to the stub un-ducked.
+Partially retires the "final audio passes" polish-debt item for L1.
