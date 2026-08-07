@@ -71,8 +71,8 @@ violence against people — the only thing you ever destroy is paper.
   full 2-frame animation (~160ms). Timing is authored in the
   .ase (frame durations ARE the mechanic). The effect
   re-validates when it lands, against the PRESS-TIME target
-  only: if that target is invalid at effect-landing (stolen,
-  expired, despawned), the tap whiffs — a clean miss with NO
+  only: if that target is invalid at effect-landing (stolen or
+  otherwise removed), the tap whiffs — a clean miss with NO
   retargeting to other items in radius, no penalty, and the
   arm consumed per the one-press-one-action rule. Rescue stuns remain truly
   instant (item 4b); hold completions are unaffected (the meter
@@ -233,7 +233,8 @@ Each level adds exactly ONE new mechanic. No exceptions.
 
 ### 3.1 Level 1 — The Coatroom (tutorial)
 Concert venue coat check, pre-show rush. Coats fly in; tag and rack
-them before timers expire. Teaches: move, jump, tag, scoring.
+them before the rush timer runs out. Teaches: move, jump, tag,
+scoring.
 **New mechanic:** none (tutorial).
 
 ### 3.2 Level 2 — The Bell Desk

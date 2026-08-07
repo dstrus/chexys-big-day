@@ -26,6 +26,12 @@ checked so `frameTags` land in the JSON, and export PNG + JSON to
 the names above. Frame durations come from the .ase file either
 way — timing is never redefined in code.
 
+A sync showing "JSON changed, PNG identical" is EITHER a benign
+frame reorder (same unique images, new slot mapping) OR a stale
+mismatched pair — indistinguishable by file dates. Confirm by
+re-exporting from the .aseprite; a reorder reproduces the
+identical PNG.
+
 ## Frame-tag conventions (BRIEF-02 Chunk 4)
 
 Tag names in the Aseprite file become animation keys. The game's

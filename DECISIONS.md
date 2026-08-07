@@ -1323,3 +1323,32 @@ code changes — it matches the documented drop-in convention
 Coatroom, loops, ducks to 30% under results and restores on retry;
 Bell Desk (no file yet) still falls back to the stub un-ducked.
 Partially retires the "final audio passes" polish-debt item for L1.
+
+## 2026-08-07 — Handoff 2026-08-07-a applied
+
+- Sequence check: first handoff of 2026-08-07; prior day closed at
+  2026-08-05-b (no 2026-08-06 handoffs existed; IDs are per-day) ✓.
+- Item 1: both stragglers de-drifted verbatim — §2.3 whiff
+  enumeration now "(stolen or otherwise removed)"; §3.1 flavor now
+  "before the rush timer runs out". Repo-wide grep confirms no
+  expiry-as-item-loss language survives in DESIGN.md or BRIEF-04
+  (only the §8 v2 entry and the legitimate rush-timer reference).
+- Item 2: ratified as shipped — teeter wait-state (buffered arm
+  stays live during teeter, closing -b item 3), pause confirm copy
+  "Abandon your shift?", 16f run cycle, Coatroom music loop via the
+  drop-in convention (L1 final-audio debt partially retired; L2 on
+  stub).
+- Item 3: export-pipeline note appended verbatim. Placement: the
+  "Exporting from Aseprite" section of assets/sprites/README.md —
+  the handoff said "the sprite-sync section of the anim/maps
+  README"; no section by that name exists, and the content is
+  sprite-export knowledge, so it went where the next person
+  re-exporting will read it. Flagging the interpretation rather
+  than guessing silently.
+- Item 4: ruling entry appended verbatim below.
+
+2026-08-07 — Housekeeping ratifications (handoff
+2026-08-07-a): whiff enumeration and §3.1 flavor de-
+drifted; teeter wait-state, shift-framed pause copy, 16f
+run, and the first drop-in music loop all ratified.
+Sequence check credited with catches three and four.
