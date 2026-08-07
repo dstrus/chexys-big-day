@@ -63,6 +63,13 @@ export const TUNING = {
   loiterRadius: 28,
   loiterOrbitMs: 3800, // full circle period while loitering
 
+  // collectibles (BRIEF-04)
+  tagMagnetRadius: 20, // NFC tags drift to Chexy inside this (body center)
+  tagScoreValue: 50, // per tag, × adaptive multiplier
+  cardLingerMs: 8000, // Contact Card despawn; blink warning final 2000
+  insightDurationMs: 10000,
+  insightFactor: 2.0, // Insights Report: score gains ×, MULTIPLICATIVE with adaptive
+
   // adaptive intensity / multiplier (DESIGN.md §2.5 skeleton)
   adaptiveBand: 0.3,
   adaptiveStep: 0.1,
@@ -126,6 +133,11 @@ export const TUNING_SCHEMA = [
   { key: 'stealFairnessMarginMs', label: 'Steal margin (ms)', min: 0, max: 2000, step: 50 },
   { key: 'loiterRadius', label: 'Loiter radius', min: 8, max: 80, step: 2 },
   { key: 'loiterOrbitMs', label: 'Loiter orbit (ms)', min: 1000, max: 8000, step: 200 },
+  { key: 'tagMagnetRadius', label: 'Tag magnet radius', min: 0, max: 80, step: 2 },
+  { key: 'tagScoreValue', label: 'Tag score', min: 0, max: 200, step: 10 },
+  { key: 'cardLingerMs', label: 'Card linger (ms)', min: 2000, max: 20000, step: 500 },
+  { key: 'insightDurationMs', label: 'Insight duration (ms)', min: 3000, max: 30000, step: 500 },
+  { key: 'insightFactor', label: 'Insight factor', min: 1, max: 4, step: 0.25 },
   { key: 'adaptiveBand', label: 'Adaptive band', min: 0, max: 0.6, step: 0.05 },
   { key: 'multiplierFloor', label: 'Multiplier floor', min: 0.4, max: 1, step: 0.05 },
   { key: 'masterVolume', label: 'Master volume', min: 0, max: 1, step: 0.05 },

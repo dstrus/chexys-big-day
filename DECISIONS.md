@@ -1370,3 +1370,49 @@ all six queued feel-checks pass as-is (windup texture,
 skid kept, arrows unchanged, pause flow, teeter, 60fps).
 BRIEF-04 cleared and ordered. The -b watch item is
 formally retired.
+
+## 2026-08-07 — BRIEF-04 executed: Collectibles System (Phase 3, code track)
+
+Ordered by 2026-08-07-b item 3; consumes the -d shared endangerment
+ranking and the -05-a pre-flight rulings (Tags counter = pickups;
+expiry out of v1 — priority chain third class is longest-at-rest).
+
+Shipped: one collectible registry (src/config/collectibles.js — a
+future pickup is a data entry + effect hook; spawning, magnetism,
+linger, pickup plumbing, and the debug overlay are shared). NFC
+Tags: Tiled `collectibles` layer (5 placed in coatroom on the upper
+routes) + one dropped per rescue stun (pop arc, rides the -d
+placement-validity gate), magnet drift inside tagMagnetRadius,
+tagScoreValue × adaptive, HUD icon+counter under the hangers.
+Contact Card: wave-spawned only (2 in coatroom's back half),
+cardLingerMs despawn with 2s blink warning, save picks the
+MOST-ENDANGERED item via the shared ranking (carried > locked
+nearest-to-dive > longest at rest; ties toward farthest-from-
+player), pulls carried items out of the thief's grip, scores
+normally with NO streak progress, chip + Success Green flight to
+the return zone, two "got the text" guest lines added. Insights
+Report: one wave-spawned high in coatroom, ×insightFactor on ALL
+score gains for insightDurationMs via the new central addScore()
+(multiplicative with adaptive, band untouched), own HUD chip beside
+the adaptive readout with countdown ring in the final 3s, screen-
+edge shimmer while active, insightEnd cue on expiry. Five new
+tunables with panel sliders; five AudioBus events with placeholder
+synths; results add CARDS USED / INSIGHTS CAUGHT minor lines when
+nonzero. Amendments applied: DESIGN §4 renames + notes verbatim;
+maps README documents the collectibles layer + wave entry shape.
+Art hooks: 12×12 drop-in strips (nfc-tag/contact-card/
+insight-report) with generated placeholders (orange diamond / white
+card / yellow diamond).
+
+ACCEPTANCE VERIFIED headless: all three live in a coatroom rush;
+staged three-item scenario exact (ranks 0/1/2, the CARRIED item
+saved from the thief's grip, others untouched, streak unchanged,
+card bubble fired); insight gain measured 200 = 100 × 1.0 adaptive
+× 2.0 insight, chip clear of the multiplier readout (right edge
+424 < 441) with the readout visible; magnet pickup +50 and counter;
+stun drop coexists with the -b poof; card blink at 0.25 alpha then
+despawn; zero console errors. First staging attempt invalidated
+itself (steal cooldown from a prior test kept the thief loitering
+— the pick was correct for the field that existed); re-staged with
+the cooldown cleared. 60fps at ×2 remains the human's check, per
+precedent.

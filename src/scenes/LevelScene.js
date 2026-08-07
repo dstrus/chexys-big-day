@@ -1,6 +1,7 @@
 import Phaser from 'phaser'
 import { TUNING } from '../config/tuning.js'
 import { categoryColor } from '../config/itemCategories.js'
+import { COLLECTIBLES } from '../config/collectibles.js'
 import { getWaveSchedule } from '../config/waveRegistry.js'
 import Player from '../entities/Player.js'
 import WaveRunner from '../systems/WaveRunner.js'
@@ -25,7 +26,10 @@ export default class LevelScene extends Phaser.Scene {
     this.score = 0
     this.lostItems = 0
     this.guestCounter = 0 // guests are lightweight data: one per item
-    this.tagsCollected = 0
+    this.tagsCollected = 0 // COLLECTIBLE pickups (2026-08-05-a), not check-ins
+    this.cardsUsed = 0
+    this.insightsCaught = 0
+    this.insightUntil = 0
     this.itemsReturned = 0
     this.cleanStreak = 0
     this.intensity = 1.0
@@ -78,6 +82,18 @@ export default class LevelScene extends Phaser.Scene {
           .setDepth(9)
       : null
 
+    // collectibles (BRIEF-04): one group, registry-driven behavior
+    this.collectibles = this.physics.add.group({ allowGravity: false })
+    this.physics.add.collider(this.collectibles, this.mainLayer)
+    this.physics.add.overlap(this.player.sprite, this.collectibles, (p, c) =>
+      this.onCollectiblePickup(c)
+    )
+    // map-placed collectibles: `collectibles` object layer, point objects
+    // typed by collectible key (assets/maps/README.md)
+    for (const obj of this.map.getObjectLayer('collectibles')?.objects ?? []) {
+      this.spawnCollectible(obj.type || 'nfcTag', null, { x: obj.x, y: obj.y, quiet: true })
+    }
+
     // ticket enemies (paper — the villain)
     this.enemies = this.physics.add.group({ allowGravity: false })
     this.physics.add.overlap(this.enemies, this.items, (enemy, item) =>
@@ -116,6 +132,7 @@ export default class LevelScene extends Phaser.Scene {
       spawnItem: (spawnPoint, category, tier, fallbacks) =>
         this.spawnScheduledItem(spawnPoint, category, tier, fallbacks),
       spawnEnemy: () => this.spawnEnemy(),
+      spawnCollectible: (type, spawnPoint) => this.spawnCollectible(type, spawnPoint),
     })
     this.fairnessGfx = this.add.graphics().setDepth(19)
 
@@ -282,6 +299,12 @@ export default class LevelScene extends Phaser.Scene {
   updateFairnessDebug() {
     this.fairnessGfx.clear()
     if (!isTuningPanelOpen()) return
+    // collectible spawns visible while the panel is open (BRIEF-04 §4)
+    for (const c of this.collectibles.getChildren()) {
+      if (!c.active) continue
+      this.fairnessGfx.lineStyle(1, 0xffe123, 0.8)
+      this.fairnessGfx.strokeCircle(c.x, c.y, 8)
+    }
     if (TUNING.targetLockDebug) {
       for (const enemy of this.enemies.getChildren()) {
         if (!enemy.active) continue
@@ -603,6 +626,8 @@ export default class LevelScene extends Phaser.Scene {
       lost: this.lostItems,
       multiplier: this.multiplier,
       timeLeft: this.timeLeft,
+      tags: this.tagsCollected,
+      insightMs: Math.max(0, this.insightUntil - this.time.now),
     })
   }
 
@@ -633,10 +658,189 @@ export default class LevelScene extends Phaser.Scene {
       itemsReturned: this.itemsReturned,
       guestsServed: this.itemsReturned, // one guest per item (Chunk 3 model)
       tagsCollected: this.tagsCollected,
+      cardsUsed: this.cardsUsed,
+      insightsCaught: this.insightsCaught,
       lost: this.lostItems,
       bestMultiplier: this.bestMultiplier,
       returnRate,
     })
+  }
+
+  // ---- collectibles (BRIEF-04): registry-driven, shared plumbing ----
+
+  spawnCollectible(type, spawnPointName, opts = {}) {
+    if (this.runOver) return null
+    const def = COLLECTIBLES[type]
+    if (!def) {
+      console.warn(`Unknown collectible type "${type}" — register it in src/config/collectibles.js`)
+      return null
+    }
+    let { x, y } = opts
+    if (x == null) {
+      const pt = this.itemSpawnPoint(spawnPointName)
+      x = pt.x
+      y = pt.y
+    }
+    const useArt = this.textures.exists(def.texture)
+    const c = this.collectibles.create(x, y, useArt ? def.texture : def.placeholder, useArt ? 0 : undefined)
+    c.setData('type', type)
+    c.setDepth(1)
+    if (def.lingerMs) c.setData('expiresAt', this.time.now + def.lingerMs())
+    if (!opts.quiet) audio.play('spawn', this.panFor(x))
+    return c
+  }
+
+  onCollectiblePickup(c) {
+    if (!c.active) return
+    const def = COLLECTIBLES[c.getData('type')]
+    audio.play(def.sfx, this.panFor(c.x))
+    c.destroy()
+    def.onPickup(this)
+  }
+
+  updateCollectibles(time) {
+    for (const c of this.collectibles.getChildren()) {
+      if (!c.active) continue
+      const def = COLLECTIBLES[c.getData('type')]
+      // magnet drift (NFC tags): pull toward Chexy inside the radius
+      if (def.magnet) {
+        const d = Phaser.Math.Distance.Between(this.player.x, this.player.y, c.x, c.y)
+        if (d <= TUNING.tagMagnetRadius && d > 1) {
+          c.body.setAllowGravity(false)
+          const ang = Phaser.Math.Angle.Between(c.x, c.y, this.player.x, this.player.y)
+          c.body.setVelocity(Math.cos(ang) * 90, Math.sin(ang) * 90)
+        } else if (!c.body.allowGravity) {
+          c.body.setVelocity(0, 0)
+        }
+      }
+      // linger + blink warning in the final 2000ms (Contact Card)
+      const expiresAt = c.getData('expiresAt')
+      if (expiresAt) {
+        const left = expiresAt - time
+        if (left <= 0) {
+          c.destroy()
+          continue
+        }
+        c.setAlpha(left <= 2000 ? (Math.sin(time / 60) > 0 ? 1 : 0.25) : 1)
+      }
+    }
+    // Insights Report expiry
+    if (this.insightUntil && time >= this.insightUntil) {
+      this.insightUntil = 0
+      audio.play('insightEnd')
+      this.emitHud()
+    }
+  }
+
+  // central score gain: adaptive multiplier always applies; the
+  // Insights Report doubles ALL gains while active — MULTIPLICATIVE
+  // with adaptive, never touching the band itself (BRIEF-04 §3)
+  addScore(base) {
+    const insight = this.time.now < this.insightUntil ? TUNING.insightFactor : 1
+    this.score += Math.round(base * this.multiplier * insight)
+    this.emitHud()
+  }
+
+  startInsight() {
+    this.insightsCaught += 1
+    this.insightUntil = this.time.now + TUNING.insightDurationMs
+    this.emitHud()
+  }
+
+  // Contact Card (BRIEF-04 §2): instantly auto-return the
+  // MOST-ENDANGERED item — consumes THE shared endangerment ranking
+  // (§2.4): carried > enemy-locked (nearest-to-dive first) > at-rest
+  // (longest at rest); ties break toward the item FARTHEST from the
+  // player — the card saves what Chexy can't reach.
+  mostEndangeredItem() {
+    let best = null
+    let bestKey = null
+    for (const item of this.items.getChildren()) {
+      if (!item.active || item.getData('tagged')) continue
+      const rank = this.itemDangerRank(item)
+      let refine = 0
+      if (rank === 1) {
+        let dive = Infinity
+        for (const e of this.enemies.getChildren()) {
+          if (e.getData('lockedTarget') === item) {
+            dive = Math.min(dive, Phaser.Math.Distance.Between(e.x, e.y, item.x, item.y))
+          }
+        }
+        refine = dive // closer enemy = sooner dive = more endangered
+      } else if (rank === 2) {
+        refine = item.getData('spawnedAt') ?? 0 // older = more endangered
+      }
+      // negative distance: lexicographically smaller = farther away
+      const tieBreak = -Phaser.Math.Distance.Between(this.player.x, this.player.y, item.x, item.y)
+      const key = [rank, refine, tieBreak]
+      if (
+        !bestKey ||
+        key[0] < bestKey[0] ||
+        (key[0] === bestKey[0] &&
+          (key[1] < bestKey[1] || (key[1] === bestKey[1] && key[2] < bestKey[2])))
+      ) {
+        best = item
+        bestKey = key
+      }
+    }
+    return best
+  }
+
+  contactCardSave() {
+    const item = this.mostEndangeredItem()
+    if (!item) return // nothing on field to save: the card fizzles
+    this.cardsUsed += 1
+
+    // a carried item is pulled straight out of the thief's grip — the
+    // carrier resumes normal behavior (re-acquisition per target lock)
+    const carrier = this.enemies.getChildren().find((e) => e.getData('carrying') === item)
+    if (carrier) {
+      carrier.setData('carrying', null)
+      carrier.setData('gloatUntil', null)
+    }
+    item.setData('stolen', false)
+    item.setData('tagged', true)
+    item.body.enable = false
+
+    // scores normally, awards NO streak progress (parallel to rescue
+    // neutrality, DESIGN.md §2 item 4b — saves aren't clean play)
+    this.itemsReturned += 1
+    const tier = item.getData('tier') ?? 1
+    const factor =
+      tier >= 3 ? TUNING.tier3ScoreFactor : tier === 2 ? TUNING.tier2ScoreFactor : 1
+    this.addScore(TUNING.standardItemScore * factor)
+
+    // checked in: chip + Success Green, then fly to the return zone
+    const chip = this.add.image(0, 0, 'tag-chip').setDepth(1)
+    chip.setTint(categoryColor(item.getData('category')))
+    item.setData('chip', chip)
+    item.once(Phaser.GameObjects.Events.DESTROY, () => chip.destroy())
+    this.syncChip(item)
+    item.setTint(0x12b76a) // Success Green — "got the text"
+
+    const zone = this.zones.find((z) => z.name === 'return')
+    const tx = zone ? zone.x + zone.width / 2 : item.x
+    const ty = zone ? zone.y + zone.height / 2 : item.y - 24
+    const trail = this.time.addEvent({
+      delay: 60,
+      repeat: 8,
+      callback: () => this.tagParticles.emitParticleAt(item.x, item.y),
+    })
+    this.tweens.add({
+      targets: item,
+      x: tx,
+      y: ty,
+      alpha: 0,
+      duration: 550,
+      ease: 'Quad.easeIn',
+      onComplete: () => {
+        trail.remove()
+        item.destroy()
+      },
+    })
+    audio.play('cardReturn', this.panFor(item.x))
+    this.game.events.emit('guest-card', { guest: item.getData('guest') })
+    this.emitHud()
   }
 
   // ONE teardown for every way a run ends short of the results flow —
@@ -708,6 +912,12 @@ export default class LevelScene extends Phaser.Scene {
   // color-coded by weight, vertically tracking the item
   updateIndicators(time) {
     this.indicatorGfx.clear()
+    // subtle screen-edge shimmer while an Insights Report is active
+    // (BRIEF-04 §3) — a thin Warning Yellow border pulse, screen-space
+    if (this.time.now < this.insightUntil) {
+      this.indicatorGfx.lineStyle(2, 0xffe123, 0.18 + 0.1 * Math.sin(time / 120))
+      this.indicatorGfx.strokeRect(1, 1, this.scale.width - 2, this.scale.height - 2)
+    }
     const view = this.cameras.main.worldView
     const pulse = 0.55 + 0.35 * Math.sin(time / 150)
     for (const item of this.items.getChildren()) {
@@ -888,6 +1098,17 @@ export default class LevelScene extends Phaser.Scene {
     })
     ;(this.stubPoof ?? this.tagParticles).emitParticleAt(enemy.x, enemy.y)
     audio.play('stun', this.panFor(enemy.x))
+
+    // NFC tag drop (BRIEF-04 §1): one per rescue stun, small pop arc —
+    // rides the same placement-validity gate as items so a low stun
+    // can't embed the tag in the floor
+    const tag = this.spawnCollectible('nfcTag', null, { x: enemy.x, y: enemy.y - 4, quiet: true })
+    if (tag) {
+      this.placeItemClear(tag, enemy.x, enemy.y - 4)
+      tag.body.setAllowGravity(true)
+      tag.setBounce(0.3)
+      tag.body.setVelocity(Phaser.Math.Between(-40, 40), -90)
+    }
   }
 
   // place a dropped item so its body never overlaps solid tiles — an
@@ -1069,10 +1290,11 @@ export default class LevelScene extends Phaser.Scene {
     // itemsReturned — the counters never double-count one event
     this.itemsReturned += 1
     // score by commitment (handoff 2026-08-04-a): 1× / 1.5× / 2× by
-    // weight tier, adaptive multiplier on top
+    // weight tier; addScore applies the adaptive multiplier and any
+    // active Insights Report factor
     const factor =
       tier >= 3 ? TUNING.tier3ScoreFactor : tier === 2 ? TUNING.tier2ScoreFactor : 1
-    this.score += Math.round(TUNING.standardItemScore * factor * this.multiplier)
+    this.addScore(TUNING.standardItemScore * factor)
     this.onCleanProgress()
     this.emitHud()
   }
@@ -1118,6 +1340,7 @@ export default class LevelScene extends Phaser.Scene {
     this.updateTargeting()
     this.updateTagging(time)
     this.updateEnemies(time)
+    this.updateCollectibles(time)
     this.updateIndicators(time)
     this.updateFairnessDebug()
     this.updateJitterProbe(delta)

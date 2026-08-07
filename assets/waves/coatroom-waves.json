@@ -272,6 +272,24 @@
       "weightTier": 1,
       "count": 3,
       "interval": 0.35
+    },
+    {
+      "time": 60,
+      "type": "collectible",
+      "collectibleType": "insightReport",
+      "spawnPoint": "item-18"
+    },
+    {
+      "time": 85,
+      "type": "collectible",
+      "collectibleType": "contactCard",
+      "spawnPoint": "item-03"
+    },
+    {
+      "time": 120,
+      "type": "collectible",
+      "collectibleType": "contactCard",
+      "spawnPoint": "item-14"
     }
   ]
 }

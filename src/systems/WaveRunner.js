@@ -4,11 +4,12 @@
 // intervals inside the clamped band. Field caps (maxItemsOnField) are
 // enforced by the scene's spawn callback, not here.
 export default class WaveRunner {
-  constructor(scene, schedule, { spawnItem, spawnEnemy }) {
+  constructor(scene, schedule, { spawnItem, spawnEnemy, spawnCollectible }) {
     this.scene = scene
     this.entries = [...schedule.entries].sort((a, b) => a.time - b.time)
     this.spawnItem = spawnItem
     this.spawnEnemy = spawnEnemy
+    this.spawnCollectible = spawnCollectible
     this.elapsed = 0
     this.cursor = 0
   }
@@ -28,13 +29,16 @@ export default class WaveRunner {
       const spawn =
         entry.type === 'enemy'
           ? () => this.spawnEnemy()
-          : () =>
-              this.spawnItem(
-                entry.spawnPoint ?? 'any',
-                entry.itemCategory ?? 'coat',
-                entry.weightTier ?? 1,
-                entry.fallbackSpawnPoints ?? []
-              )
+          : entry.type === 'collectible'
+            ? // BRIEF-04: { type: 'collectible', collectibleType, spawnPoint }
+              () => this.spawnCollectible?.(entry.collectibleType, entry.spawnPoint ?? 'any')
+            : () =>
+                this.spawnItem(
+                  entry.spawnPoint ?? 'any',
+                  entry.itemCategory ?? 'coat',
+                  entry.weightTier ?? 1,
+                  entry.fallbackSpawnPoints ?? []
+                )
       if (i === 0) spawn()
       else this.scene.time.delayedCall(i * intervalMs, spawn)
     }

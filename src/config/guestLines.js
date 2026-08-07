@@ -25,6 +25,12 @@ export const HAPPY_LINES = [
   'Chexy is such a squirrelboss!',
 ]
 
+// Contact Card saves — "got the text just in time" (BRIEF-04 §2)
+export const CARD_LINES = [
+  'Got your text — lifesaver!',
+  'Saved by the text! You rock, Chexy!',
+]
+
 export const UNHAPPY_LINES = [
   'Hey!! That ticket took my coat!',
   "losing my stuff is nobody's vibe",

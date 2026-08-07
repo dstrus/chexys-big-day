@@ -292,8 +292,16 @@ it. Victory screen shows "99% Item Return Rate."
 ## 4. Collectibles & Power-ups
 
 - **NFC tags** — coin equivalent, scattered and dropped by enemies.
-- **Phone number pickup** — auto-returns one item instantly.
-- **Analytics star** — score multiplier for 10 seconds.
+- **Contact Card (vCard)** — a guest's contact info; auto-returns
+  the most-endangered item (priority chain per BRIEF-04 §2, human
+  ruling 2026-08-03). The returned item scores normally but awards
+  NO streak progress — parallel to rescue neutrality (§2 item 4b),
+  saves aren't clean play. (Renamed from "phone number pickup".)
+- **Insights Report** (digital screen icon — never paper; boosts
+  score ×2 for 10s). Multiplicative with the adaptive multiplier
+  and displayed as its own HUD chip beside it — the report must
+  never mask the §2.5 adaptive readout, and it neither pauses nor
+  extends adaptive band movement. (Renamed from "Analytics star".)
 - Local high-score table only (no online leaderboard — see §8).
 
 ## 5. Graphics Specification (32-bit / SotN-style)

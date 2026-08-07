@@ -79,6 +79,14 @@ const HANGER_PNG = import.meta.glob('../../assets/sprites/hanger.png', {
   query: '?url',
   import: 'default',
 })
+// collectible icons (BRIEF-04, art per BRIEF-ART-03 §3): 12×12 strips —
+// nfc-tag (2-frame glint), contact-card (vCard), insight-report
+// (digital screen, never paper). Same drop-in contract; placeholders
+// generate below until they land.
+const COLLECTIBLE_PNGS = import.meta.glob(
+  ['../../assets/sprites/nfc-tag.png', '../../assets/sprites/contact-card.png', '../../assets/sprites/insight-report.png'],
+  { eager: true, query: '?url', import: 'default' }
+)
 // stub particle (BRIEF-ART-03 §2, "highest-reuse asset"): rescue poof
 // now, boss confetti later. The export is untagged, so the anim is
 // built from the atlas under a namespaced fx key with the .ase
@@ -106,6 +114,10 @@ export default class BootScene extends Phaser.Scene {
     if (coatsUrl) this.load.spritesheet('coats', coatsUrl, { frameWidth: 24, frameHeight: 24 })
     const hangerUrl = Object.values(HANGER_PNG)[0]
     if (hangerUrl) this.load.spritesheet('hanger', hangerUrl, { frameWidth: 12, frameHeight: 12 })
+    for (const [path, url] of Object.entries(COLLECTIBLE_PNGS)) {
+      const key = path.split('/').pop().replace('.png', '')
+      this.load.spritesheet(key, url, { frameWidth: 12, frameHeight: 12 })
+    }
     const particlePng = Object.values(PARTICLE_PNG)[0]
     const particleJson = Object.values(PARTICLE_JSON)[0]
     if (particlePng && particleJson) {
@@ -189,6 +201,22 @@ export default class BootScene extends Phaser.Scene {
     g.fillStyle(0xffffff, 1)
     g.fillRect(1, 1, 6, 6)
     g.generateTexture('tag-chip', 8, 8)
+
+    // collectible placeholders (BRIEF-04): orange diamond / white card /
+    // yellow diamond, 12×12, until the real icons drop in
+    const diamond = (key, color) => {
+      g.clear()
+      g.fillStyle(color, 1)
+      g.fillTriangle(6, 0, 12, 6, 0, 6)
+      g.fillTriangle(0, 6, 12, 6, 6, 12)
+      g.generateTexture(key, 12, 12)
+    }
+    diamond('collectible-nfcTag', 0xfe701e) // Chexology Orange
+    diamond('collectible-insightReport', 0xffe123) // Warning Yellow
+    g.clear()
+    g.fillStyle(0xffffff, 1)
+    g.fillRect(1, 2, 10, 8) // white card
+    g.generateTexture('collectible-contactCard', 12, 12)
 
     // placeholder tileset strip — only generated when no real tileset
     // art was dropped in (name 'placeholder', 16x16, roles per

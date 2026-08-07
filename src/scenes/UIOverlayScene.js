@@ -1,7 +1,7 @@
 import Phaser from 'phaser'
 import { GAME_WIDTH, GAME_HEIGHT } from '../main.js'
 import { TUNING } from '../config/tuning.js'
-import { HAPPY_LINES, UNHAPPY_LINES } from '../config/guestLines.js'
+import { HAPPY_LINES, UNHAPPY_LINES, CARD_LINES } from '../config/guestLines.js'
 import { audio } from '../systems/AudioBus.js'
 import { createHanger } from '../ui/hanger.js'
 
@@ -25,6 +25,20 @@ export default class UIOverlayScene extends Phaser.Scene {
     this.timerText = this.add.text(GAME_WIDTH / 2, 6, '', TEXT_STYLE).setOrigin(0.5, 0)
     this.scoreText = this.add.text(GAME_WIDTH - 8, 6, '', TEXT_STYLE).setOrigin(1, 0)
     this.multText = this.add.text(GAME_WIDTH - 8, 19, '', TEXT_STYLE).setOrigin(1, 0)
+    // NFC tag counter (BRIEF-04 §1): small icon + count under the hangers
+    this.tagIcon = this.add.image(14, 24, 'collectible-nfcTag').setOrigin(0.5).setScale(0.75)
+    this.tagCountText = this.add
+      .text(22, 19, '0', { ...TEXT_STYLE, fontSize: '9px' })
+      .setOrigin(0, 0)
+    // Insights Report chip (BRIEF-04 §3): sits LEFT of the adaptive
+    // multiplier so the §2.5 readout is never masked; ring counts down
+    // the final 3s
+    this.insightChip = this.add
+      .text(GAME_WIDTH - 56, 19, '', { ...TEXT_STYLE, color: '#ffe123', fontStyle: 'bold' })
+      .setOrigin(1, 0)
+      .setVisible(false)
+    this.insightRing = this.add.graphics()
+    this.insightUntilLocal = 0
 
     this.heatToast = this.add
       .text(GAME_WIDTH / 2, 40, 'HEATING UP!', {
@@ -40,7 +54,7 @@ export default class UIOverlayScene extends Phaser.Scene {
 
     // guest bubbles (BRIEF-02 Chunk 3)
     this.bubbles = []
-    this.lastLine = { happy: -1, angry: -1 }
+    this.lastLine = { happy: -1, angry: -1, card: -1 }
 
     const bus = this.game.events
     bus.on('hud', this.onHud, this)
@@ -50,6 +64,7 @@ export default class UIOverlayScene extends Phaser.Scene {
     bus.on('paused', this.onPaused, this)
     bus.on('guest-happy', this.onGuestHappy, this)
     bus.on('guest-angry', this.onGuestAngry, this)
+    bus.on('guest-card', this.onGuestCard, this)
     bus.on('system-bubble', this.onSystemBubble, this)
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
       bus.off('hud', this.onHud, this)
@@ -59,6 +74,7 @@ export default class UIOverlayScene extends Phaser.Scene {
       bus.off('paused', this.onPaused, this)
       bus.off('guest-happy', this.onGuestHappy, this)
       bus.off('guest-angry', this.onGuestAngry, this)
+      bus.off('guest-card', this.onGuestCard, this)
       bus.off('system-bubble', this.onSystemBubble, this)
     })
   }
@@ -74,6 +90,11 @@ export default class UIOverlayScene extends Phaser.Scene {
     this.showBubble('angry')
   }
 
+  // Contact Card save — "got the text" variant pool (BRIEF-04 §2)
+  onGuestCard() {
+    this.showBubble('card')
+  }
+
   // scripted (non-guest) bubbles — e.g. the Bell Desk dash beat
   // (BRIEF-03): custom text, accent color, and hold time
   onSystemBubble(opts) {
@@ -81,7 +102,7 @@ export default class UIOverlayScene extends Phaser.Scene {
   }
 
   pickLine(kind) {
-    const pool = kind === 'happy' ? HAPPY_LINES : UNHAPPY_LINES
+    const pool = kind === 'happy' ? HAPPY_LINES : kind === 'card' ? CARD_LINES : UNHAPPY_LINES
     let i
     do {
       i = Phaser.Math.Between(0, pool.length - 1)
@@ -102,8 +123,9 @@ export default class UIOverlayScene extends Phaser.Scene {
     const g = this.add.graphics()
     g.fillStyle(0xf8f5f3, 0.88) // Background Tan panel, translucent
     g.fillRoundedRect(0, 0, w, h, 4)
-    // Success Green / Alert Red accent bar (system bubbles override)
-    g.fillStyle(opts.accent ?? (kind === 'happy' ? 0x12b76a : 0xea5151), 1)
+    // Success Green / Alert Red accent bar (system bubbles override;
+    // card saves read as happy — Success Green)
+    g.fillStyle(opts.accent ?? (kind === 'angry' ? 0xea5151 : 0x12b76a), 1)
     g.fillRoundedRect(0, 0, 3, h, { tl: 4, bl: 4, tr: 0, br: 0 })
     text.setPosition(9, 5)
 
@@ -241,6 +263,7 @@ export default class UIOverlayScene extends Phaser.Scene {
 
   update(time) {
     audio.refreshVolumes() // volume sliders apply live
+    this.updateInsightChip()
     if (!this.pausePanel.visible) return
     // small delay so the keypress that paused can't also resume
     if (time - this.pausedAt < 250) return
@@ -341,7 +364,7 @@ export default class UIOverlayScene extends Phaser.Scene {
     this.hudHangers.forEach((h, i) => h.setState(i < 3 - lost ? 'golden' : 'broken'))
   }
 
-  onHud({ score, lost, multiplier, timeLeft }) {
+  onHud({ score, lost, multiplier, timeLeft, tags = 0, insightMs = 0 }) {
     const m = Math.floor(Math.max(0, timeLeft) / 60)
     const s = String(Math.max(0, timeLeft) % 60).padStart(2, '0')
     this.timerText.setText(`${m}:${s}`)
@@ -351,6 +374,29 @@ export default class UIOverlayScene extends Phaser.Scene {
     this.multText.setColor(
       multiplier < 1 ? '#ff9966' : multiplier > 1 ? '#7ee87e' : '#f2ecd8'
     )
+    this.tagCountText.setText(String(tags))
+    // local countdown estimate so the chip ring animates between hud events
+    this.insightUntilLocal = insightMs > 0 ? this.time.now + insightMs : 0
+  }
+
+  // insight chip render (BRIEF-04 §3): its own chip beside the adaptive
+  // multiplier — the adaptive state is never masked. Ring = final 3s.
+  updateInsightChip() {
+    const remaining = this.insightUntilLocal - this.time.now
+    this.insightRing.clear()
+    if (remaining <= 0) {
+      this.insightChip.setVisible(false)
+      return
+    }
+    this.insightChip.setText(`x${TUNING.insightFactor}`).setVisible(true)
+    if (remaining <= 3000) {
+      const frac = remaining / 3000
+      const cx = this.insightChip.x - this.insightChip.width - 8
+      this.insightRing.lineStyle(2, 0xffe123, 1)
+      this.insightRing.beginPath()
+      this.insightRing.arc(cx, 24, 5, -Math.PI / 2, -Math.PI / 2 + frac * Math.PI * 2)
+      this.insightRing.strokePath()
+    }
   }
 
   onHeatUp() {
@@ -384,6 +430,8 @@ export default class UIOverlayScene extends Phaser.Scene {
     itemsReturned,
     guestsServed,
     tagsCollected,
+    cardsUsed = 0,
+    insightsCaught = 0,
     lost,
     bestMultiplier,
     returnRate,
@@ -424,8 +472,9 @@ export default class UIOverlayScene extends Phaser.Scene {
       `BEST MULTIPLIER  x${bestMultiplier.toFixed(2)}`,
       `SCORE  ${score}`,
     ]
-    // "tags" = collectible pickups (2026-08-05-a); minor line only
-    // when nonzero, per the BRIEF-04 results convention
+    // collectible minor lines only when nonzero (BRIEF-04 §4)
+    if (insightsCaught > 0) lines.splice(2, 0, `INSIGHTS CAUGHT  ${insightsCaught}`)
+    if (cardsUsed > 0) lines.splice(2, 0, `CARDS USED  ${cardsUsed}`)
     if (tagsCollected > 0) lines.splice(2, 0, `TAGS COLLECTED  ${tagsCollected}`)
     if (bonus > 0) lines.push(`BIG DAY! BONUS  +${bonus}`)
     this.resultsBody.setOrigin(0.5, 0)

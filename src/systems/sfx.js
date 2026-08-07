@@ -118,6 +118,24 @@ const SFX = {
     tone({ from: 784, dur: 0.16, delay: 0.21, vol: 0.11, pan })
   },
   uiSelect: (pan) => tone({ type: 'triangle', from: 880, to: 1100, dur: 0.05, vol: 0.09, pan }),
+  // collectibles (BRIEF-04 §4; placeholder synths)
+  tagPickup: (pan) => tone({ type: 'triangle', from: 1200, to: 1800, dur: 0.05, vol: 0.08, pan }),
+  cardPickup: (pan) => {
+    tone({ type: 'triangle', from: 700, to: 1050, dur: 0.07, vol: 0.09, pan })
+    tone({ type: 'triangle', from: 1050, to: 1400, dur: 0.07, delay: 0.06, vol: 0.08, pan })
+  },
+  cardReturn: (pan) => {
+    tone({ from: 784, dur: 0.06, vol: 0.08, pan })
+    tone({ from: 1047, dur: 0.1, delay: 0.06, vol: 0.08, pan })
+  },
+  // pickup fanfare for the Insights Report
+  insightPickup: (pan) => {
+    tone({ from: 523, dur: 0.06, vol: 0.09, pan })
+    tone({ from: 659, dur: 0.06, delay: 0.05, vol: 0.09, pan })
+    tone({ from: 784, dur: 0.06, delay: 0.1, vol: 0.09, pan })
+    tone({ from: 1047, dur: 0.14, delay: 0.15, vol: 0.1, pan })
+  },
+  insightEnd: (pan) => tone({ from: 784, to: 523, dur: 0.12, vol: 0.07, pan }),
 }
 
 export function playSfx(name, pan = 0) {

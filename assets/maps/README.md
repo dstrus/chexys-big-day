@@ -22,8 +22,16 @@ them and hot-reloads on edit).
     `category` (e.g. `coat`); wave files reference these by name or
     use `"any"` for a random point.
 - **`zones`** (rectangle objects)
-  - `return` — rack/return zones (reserved for later chunks).
+  - `return` — rack/return zones (Contact Card saves fly here).
   - `kill` — kill zones (none in Coatroom).
+- **`collectibles`** (point objects, optional — BRIEF-04)
+  - Each point's `type` names a registry key from
+    `src/config/collectibles.js` (currently `nfcTag` — Contact
+    Cards and Insights Reports are wave-spawned only, never
+    Tiled-placed). Wave-file entry shape:
+    `{ "time": s, "type": "collectible", "collectibleType":
+    "contactCard" | "insightReport" | "nfcTag", "spawnPoint":
+    "<item point name>" | "any" }`.
 
 ## Map properties (required)
 
