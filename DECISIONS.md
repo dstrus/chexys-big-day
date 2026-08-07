@@ -1416,3 +1416,31 @@ itself (steal cooldown from a prior test kept the thief loitering
 — the pick was correct for the field that existed); re-staged with
 the cooldown cleared. 60fps at ×2 remains the human's check, per
 precedent.
+
+## 2026-08-07 — Handoff 2026-08-07-c applied
+
+- Sequence check: 2026-08-07-b applied (entry above) ✓.
+- Item 1: BRIEF-04 ratified as shipped (178c857); export-note
+  placement ratified where it landed, no maps-README mirror.
+- Item 2: unknown audio events now console.warn once per name per
+  session (seated in the synth fallback — the last stop after file
+  lookup, so both resolution layers are covered). Verified: three
+  plays of a bogus event produced exactly one warning.
+- Item 3: Bell Desk populated data-only, zero code — 6 NFC tags on
+  the mezzanine routes including the (890,130)/(960,130) pair in
+  the gap off strip-2's edge (x=848) so one flat air-dash line off
+  the ledge sweeps both; insight at t=70 on the upper accent
+  (1240,78 — high/awkward); cards at t=100/135 in the trunk-heavy
+  back half. Verified live: all 6 layer tags load, the three wave
+  entries fire (1 insight at the accent, 2 lingering cards), clean
+  console. Values untouched pending the human's play-check —
+  placement, not tuning.
+- Item 4: ruling entry appended verbatim below.
+
+2026-08-07 — BRIEF-04 ratified as shipped (handoff
+2026-08-07-c): registry + shared ranking + central
+addScore all verified; the ranking's 'disagreement' during
+acceptance was correct per true field state — the -d rule
+holding. AudioBus unknown-event warning added. Bell Desk
+populated with collectibles via data only, zero code,
+per the inheritance design.

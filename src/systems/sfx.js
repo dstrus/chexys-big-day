@@ -138,9 +138,24 @@ const SFX = {
   insightEnd: (pan) => tone({ from: 784, to: 523, dur: 0.12, vol: 0.07, pan }),
 }
 
+// unknown events must be LOUD in dev (handoff 2026-08-07-c) — a silent
+// no-op here hides absence bugs; same tripwire philosophy as the
+// jitter probe and the de-embed gate. Once per name per session.
+const warnedEvents = new Set()
+
 export function playSfx(name, pan = 0) {
   const fx = SFX[name]
-  if (fx) fx(pan)
+  if (fx) {
+    fx(pan)
+    return
+  }
+  if (!warnedEvents.has(name)) {
+    warnedEvents.add(name)
+    console.warn(
+      `No audio for event "${name}" — no file in assets/audio/ and no ` +
+        'synth placeholder in systems/sfx.js.'
+    )
+  }
 }
 
 // Generated 4-bar chiptune stub — the music placeholder until a real

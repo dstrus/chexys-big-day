@@ -1,39 +1,330 @@
 {
   "entries": [
-    { "time": 11, "type": "items", "spawnPoint": "any", "itemCategory": "luggage", "weightTier": 1, "count": 3, "interval": 0.6 },
-    { "time": 16, "type": "items", "spawnPoint": "item-R1", "fallbackSpawnPoints": ["item-R2", "item-C3"], "itemCategory": "luggage", "weightTier": 1, "count": 2, "interval": 0.6 },
-    { "time": 20, "type": "enemy", "count": 1, "interval": 0.6 },
-    { "time": 25, "type": "items", "spawnPoint": "item-L1", "fallbackSpawnPoints": ["item-L2", "item-C1"], "itemCategory": "luggage", "weightTier": 1, "count": 2, "interval": 0.6 },
-
-    { "time": 33, "type": "items", "spawnPoint": "item-R1", "fallbackSpawnPoints": ["item-R2", "item-C3"], "itemCategory": "luggage", "weightTier": 2, "count": 2, "interval": 0.8 },
-    { "time": 40, "type": "enemy", "count": 1, "interval": 0.6 },
-    { "time": 47, "type": "items", "spawnPoint": "item-L1", "fallbackSpawnPoints": ["item-L2", "item-C1"], "itemCategory": "luggage", "weightTier": 2, "count": 2, "interval": 0.8 },
-    { "time": 52, "type": "items", "spawnPoint": "item-Z2", "fallbackSpawnPoints": ["item-Z3", "item-Z1"], "itemCategory": "luggage", "weightTier": 1, "count": 3, "interval": 0.5 },
-    { "time": 58, "type": "enemy", "count": 1, "interval": 0.6 },
-    { "time": 64, "type": "items", "spawnPoint": "item-R2", "fallbackSpawnPoints": ["item-R1", "item-C2"], "itemCategory": "luggage", "weightTier": 2, "count": 2, "interval": 0.8 },
-    { "time": 70, "type": "enemy", "count": 1, "interval": 0.6 },
-    { "time": 76, "type": "items", "spawnPoint": "any", "itemCategory": "luggage", "weightTier": 1, "count": 3, "interval": 0.5 },
-    { "time": 82, "type": "items", "spawnPoint": "item-L2", "fallbackSpawnPoints": ["item-L1", "item-C1"], "itemCategory": "luggage", "weightTier": 2, "count": 2, "interval": 0.8 },
-
-    { "time": 90, "type": "enemy", "count": 2, "interval": 0.8 },
-    { "time": 93, "type": "items", "spawnPoint": "item-L1", "fallbackSpawnPoints": ["item-L2"], "itemCategory": "luggage", "weightTier": 3, "count": 1, "interval": 0 },
-    { "time": 99, "type": "items", "spawnPoint": "any", "itemCategory": "luggage", "weightTier": 1, "count": 3, "interval": 0.5 },
-    { "time": 105, "type": "enemy", "count": 1, "interval": 0.6 },
-    { "time": 109, "type": "items", "spawnPoint": "item-R1", "fallbackSpawnPoints": ["item-R2"], "itemCategory": "luggage", "weightTier": 3, "count": 1, "interval": 0 },
-    { "time": 115, "type": "items", "spawnPoint": "item-C2", "fallbackSpawnPoints": ["item-C1", "item-C3"], "itemCategory": "luggage", "weightTier": 2, "count": 2, "interval": 0.8 },
-    { "time": 121, "type": "enemy", "count": 2, "interval": 0.8 },
-    { "time": 126, "type": "items", "spawnPoint": "item-L2", "fallbackSpawnPoints": ["item-L1"], "itemCategory": "luggage", "weightTier": 3, "count": 1, "interval": 0 },
-    { "time": 132, "type": "items", "spawnPoint": "any", "itemCategory": "luggage", "weightTier": 1, "count": 3, "interval": 0.5 },
-    { "time": 138, "type": "enemy", "count": 1, "interval": 0.6 },
-    { "time": 141, "type": "items", "spawnPoint": "item-R2", "fallbackSpawnPoints": ["item-R1"], "itemCategory": "luggage", "weightTier": 3, "count": 1, "interval": 0 },
-
-    { "time": 150, "type": "enemy", "count": 2, "interval": 0.8 },
-    { "time": 151, "type": "items", "spawnPoint": "any", "itemCategory": "luggage", "weightTier": 1, "count": 4, "interval": 0.3 },
-    { "time": 155, "type": "items", "spawnPoint": "any", "itemCategory": "luggage", "weightTier": 2, "count": 2, "interval": 0.6 },
-    { "time": 160, "type": "items", "spawnPoint": "item-L1", "fallbackSpawnPoints": ["item-L2"], "itemCategory": "luggage", "weightTier": 3, "count": 1, "interval": 0 },
-    { "time": 161, "type": "items", "spawnPoint": "item-R1", "fallbackSpawnPoints": ["item-R2"], "itemCategory": "luggage", "weightTier": 3, "count": 1, "interval": 0 },
-    { "time": 166, "type": "enemy", "count": 1, "interval": 0.6 },
-    { "time": 170, "type": "items", "spawnPoint": "any", "itemCategory": "luggage", "weightTier": 1, "count": 3, "interval": 0.5 },
-    { "time": 174, "type": "items", "spawnPoint": "any", "itemCategory": "luggage", "weightTier": 2, "count": 2, "interval": 0.6 }
+    {
+      "time": 11,
+      "type": "items",
+      "spawnPoint": "any",
+      "itemCategory": "luggage",
+      "weightTier": 1,
+      "count": 3,
+      "interval": 0.6
+    },
+    {
+      "time": 16,
+      "type": "items",
+      "spawnPoint": "item-R1",
+      "fallbackSpawnPoints": [
+        "item-R2",
+        "item-C3"
+      ],
+      "itemCategory": "luggage",
+      "weightTier": 1,
+      "count": 2,
+      "interval": 0.6
+    },
+    {
+      "time": 20,
+      "type": "enemy",
+      "count": 1,
+      "interval": 0.6
+    },
+    {
+      "time": 25,
+      "type": "items",
+      "spawnPoint": "item-L1",
+      "fallbackSpawnPoints": [
+        "item-L2",
+        "item-C1"
+      ],
+      "itemCategory": "luggage",
+      "weightTier": 1,
+      "count": 2,
+      "interval": 0.6
+    },
+    {
+      "time": 33,
+      "type": "items",
+      "spawnPoint": "item-R1",
+      "fallbackSpawnPoints": [
+        "item-R2",
+        "item-C3"
+      ],
+      "itemCategory": "luggage",
+      "weightTier": 2,
+      "count": 2,
+      "interval": 0.8
+    },
+    {
+      "time": 40,
+      "type": "enemy",
+      "count": 1,
+      "interval": 0.6
+    },
+    {
+      "time": 47,
+      "type": "items",
+      "spawnPoint": "item-L1",
+      "fallbackSpawnPoints": [
+        "item-L2",
+        "item-C1"
+      ],
+      "itemCategory": "luggage",
+      "weightTier": 2,
+      "count": 2,
+      "interval": 0.8
+    },
+    {
+      "time": 52,
+      "type": "items",
+      "spawnPoint": "item-Z2",
+      "fallbackSpawnPoints": [
+        "item-Z3",
+        "item-Z1"
+      ],
+      "itemCategory": "luggage",
+      "weightTier": 1,
+      "count": 3,
+      "interval": 0.5
+    },
+    {
+      "time": 58,
+      "type": "enemy",
+      "count": 1,
+      "interval": 0.6
+    },
+    {
+      "time": 64,
+      "type": "items",
+      "spawnPoint": "item-R2",
+      "fallbackSpawnPoints": [
+        "item-R1",
+        "item-C2"
+      ],
+      "itemCategory": "luggage",
+      "weightTier": 2,
+      "count": 2,
+      "interval": 0.8
+    },
+    {
+      "time": 70,
+      "type": "enemy",
+      "count": 1,
+      "interval": 0.6
+    },
+    {
+      "time": 76,
+      "type": "items",
+      "spawnPoint": "any",
+      "itemCategory": "luggage",
+      "weightTier": 1,
+      "count": 3,
+      "interval": 0.5
+    },
+    {
+      "time": 82,
+      "type": "items",
+      "spawnPoint": "item-L2",
+      "fallbackSpawnPoints": [
+        "item-L1",
+        "item-C1"
+      ],
+      "itemCategory": "luggage",
+      "weightTier": 2,
+      "count": 2,
+      "interval": 0.8
+    },
+    {
+      "time": 90,
+      "type": "enemy",
+      "count": 2,
+      "interval": 0.8
+    },
+    {
+      "time": 93,
+      "type": "items",
+      "spawnPoint": "item-L1",
+      "fallbackSpawnPoints": [
+        "item-L2"
+      ],
+      "itemCategory": "luggage",
+      "weightTier": 3,
+      "count": 1,
+      "interval": 0
+    },
+    {
+      "time": 99,
+      "type": "items",
+      "spawnPoint": "any",
+      "itemCategory": "luggage",
+      "weightTier": 1,
+      "count": 3,
+      "interval": 0.5
+    },
+    {
+      "time": 105,
+      "type": "enemy",
+      "count": 1,
+      "interval": 0.6
+    },
+    {
+      "time": 109,
+      "type": "items",
+      "spawnPoint": "item-R1",
+      "fallbackSpawnPoints": [
+        "item-R2"
+      ],
+      "itemCategory": "luggage",
+      "weightTier": 3,
+      "count": 1,
+      "interval": 0
+    },
+    {
+      "time": 115,
+      "type": "items",
+      "spawnPoint": "item-C2",
+      "fallbackSpawnPoints": [
+        "item-C1",
+        "item-C3"
+      ],
+      "itemCategory": "luggage",
+      "weightTier": 2,
+      "count": 2,
+      "interval": 0.8
+    },
+    {
+      "time": 121,
+      "type": "enemy",
+      "count": 2,
+      "interval": 0.8
+    },
+    {
+      "time": 126,
+      "type": "items",
+      "spawnPoint": "item-L2",
+      "fallbackSpawnPoints": [
+        "item-L1"
+      ],
+      "itemCategory": "luggage",
+      "weightTier": 3,
+      "count": 1,
+      "interval": 0
+    },
+    {
+      "time": 132,
+      "type": "items",
+      "spawnPoint": "any",
+      "itemCategory": "luggage",
+      "weightTier": 1,
+      "count": 3,
+      "interval": 0.5
+    },
+    {
+      "time": 138,
+      "type": "enemy",
+      "count": 1,
+      "interval": 0.6
+    },
+    {
+      "time": 141,
+      "type": "items",
+      "spawnPoint": "item-R2",
+      "fallbackSpawnPoints": [
+        "item-R1"
+      ],
+      "itemCategory": "luggage",
+      "weightTier": 3,
+      "count": 1,
+      "interval": 0
+    },
+    {
+      "time": 150,
+      "type": "enemy",
+      "count": 2,
+      "interval": 0.8
+    },
+    {
+      "time": 151,
+      "type": "items",
+      "spawnPoint": "any",
+      "itemCategory": "luggage",
+      "weightTier": 1,
+      "count": 4,
+      "interval": 0.3
+    },
+    {
+      "time": 155,
+      "type": "items",
+      "spawnPoint": "any",
+      "itemCategory": "luggage",
+      "weightTier": 2,
+      "count": 2,
+      "interval": 0.6
+    },
+    {
+      "time": 160,
+      "type": "items",
+      "spawnPoint": "item-L1",
+      "fallbackSpawnPoints": [
+        "item-L2"
+      ],
+      "itemCategory": "luggage",
+      "weightTier": 3,
+      "count": 1,
+      "interval": 0
+    },
+    {
+      "time": 161,
+      "type": "items",
+      "spawnPoint": "item-R1",
+      "fallbackSpawnPoints": [
+        "item-R2"
+      ],
+      "itemCategory": "luggage",
+      "weightTier": 3,
+      "count": 1,
+      "interval": 0
+    },
+    {
+      "time": 166,
+      "type": "enemy",
+      "count": 1,
+      "interval": 0.6
+    },
+    {
+      "time": 170,
+      "type": "items",
+      "spawnPoint": "any",
+      "itemCategory": "luggage",
+      "weightTier": 1,
+      "count": 3,
+      "interval": 0.5
+    },
+    {
+      "time": 174,
+      "type": "items",
+      "spawnPoint": "any",
+      "itemCategory": "luggage",
+      "weightTier": 2,
+      "count": 2,
+      "interval": 0.6
+    },
+    {
+      "time": 70,
+      "type": "collectible",
+      "collectibleType": "insightReport",
+      "spawnPoint": "item-T2"
+    },
+    {
+      "time": 100,
+      "type": "collectible",
+      "collectibleType": "contactCard",
+      "spawnPoint": "item-C2"
+    },
+    {
+      "time": 135,
+      "type": "collectible",
+      "collectibleType": "contactCard",
+      "spawnPoint": "item-C1"
+    }
   ]
 }
