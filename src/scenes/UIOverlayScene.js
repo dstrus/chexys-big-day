@@ -39,6 +39,14 @@ export default class UIOverlayScene extends Phaser.Scene {
       .setVisible(false)
     this.insightRing = this.add.graphics()
     this.insightUntilLocal = 0
+    // persistent muted-speaker indicator (handoff 2026-08-07-d):
+    // bottom-right, quiet gray, above panels
+    this.muteIcon = this.add
+      .image(GAME_WIDTH - 10, GAME_HEIGHT - 9, 'mute-icon')
+      .setTint(0x667085)
+      .setAlpha(0.7)
+      .setDepth(40)
+      .setVisible(audio.muted)
 
     this.heatToast = this.add
       .text(GAME_WIDTH / 2, 40, 'HEATING UP!', {
@@ -258,12 +266,14 @@ export default class UIOverlayScene extends Phaser.Scene {
 
   resumeLevel() {
     this.pausePanel.setVisible(false)
+    audio.resumeMusic() // track continues from where the pause held it
     this.scene.resume('Level')
   }
 
   update(time) {
     audio.refreshVolumes() // volume sliders apply live
     this.updateInsightChip()
+    this.muteIcon.setVisible(audio.muted)
     if (!this.pausePanel.visible) return
     // small delay so the keypress that paused can't also resume
     if (time - this.pausedAt < 250) return

@@ -42,10 +42,26 @@ export default class TitleScene extends Phaser.Scene {
       repeat: -1,
     })
 
+    // menu-space track (handoff 2026-08-07-d): starts here (deferred to
+    // the first gesture by the autoplay lock) and continues through
+    // Shift Select without restarting
+    audio.startMusic('title')
+
+    this.muteIcon = this.add
+      .image(GAME_WIDTH - 10, GAME_HEIGHT - 9, 'mute-icon')
+      .setTint(0x667085)
+      .setAlpha(0.7)
+      .setDepth(40)
+      .setVisible(audio.muted)
+
     this.input.keyboard.once('keydown', () => {
       unlockAudio() // first user gesture — safe to create the AudioContext
       audio.play('uiSelect')
       this.scene.start('LevelSelect')
     })
+  }
+
+  update() {
+    this.muteIcon.setVisible(audio.muted)
   }
 }

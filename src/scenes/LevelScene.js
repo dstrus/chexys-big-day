@@ -1316,6 +1316,7 @@ export default class LevelScene extends Phaser.Scene {
       Phaser.Input.Keyboard.JustDown(this.pauseKeys.ESC) ||
       Phaser.Input.Keyboard.JustDown(this.pauseKeys.P)
     ) {
+      audio.pauseMusic() // position held; menu SFX stay audible (-07-d)
       this.game.events.emit('paused')
       this.scene.pause()
       return

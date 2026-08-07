@@ -1,5 +1,5 @@
 import Phaser from 'phaser'
-import { GAME_WIDTH } from '../main.js'
+import { GAME_WIDTH, GAME_HEIGHT } from '../main.js'
 import { LEVELS, isLevelUnlocked } from '../config/levels.js'
 import { levelBest } from '../systems/progress.js'
 import { createHanger } from '../ui/hanger.js'
@@ -18,7 +18,18 @@ export default class LevelSelectScene extends Phaser.Scene {
   }
 
   create() {
-    audio.stopMusic()
+    // one continuous menu space (handoff 2026-08-07-d): the title track
+    // keeps playing across Title -> Shift Select; a fresh menu visit
+    // after a rush starts it from the top (stopMusic in the teardown
+    // cleared the level track first)
+    audio.startMusic('title')
+
+    this.muteIcon = this.add
+      .image(GAME_WIDTH - 10, GAME_HEIGHT - 9, 'mute-icon')
+      .setTint(0x667085)
+      .setAlpha(0.7)
+      .setDepth(40)
+      .setVisible(audio.muted)
 
     this.add
       .text(GAME_WIDTH / 2, 36, 'SELECT YOUR SHIFT', {
@@ -89,6 +100,7 @@ export default class LevelSelectScene extends Phaser.Scene {
   }
 
   update() {
+    this.muteIcon.setVisible(audio.muted)
     const JustDown = Phaser.Input.Keyboard.JustDown
     if (JustDown(this.keys.UP) || JustDown(this.keys.W)) {
       this.idx = (this.idx + LEVELS.length - 1) % LEVELS.length

@@ -1,5 +1,6 @@
-import { playSfx, startMusicStub } from './sfx.js'
+import { playSfx, startMusicStub, setSfxMuted } from './sfx.js'
 import { TUNING } from '../config/tuning.js'
+import { isMuted, setMuted } from './progress.js'
 
 // Central audio layer (BRIEF-02 Chunk 5). A named event resolves to:
 //   1. a file dropped in assets/audio/<event>.(wav|mp3|ogg) — wins
@@ -52,6 +53,11 @@ class AudioBus {
     this.stub = null // generated chiptune loop
     this.currentLevelId = null
     this.ducked = false
+    this.musicPaused = false
+    this.pendingMusic = null // deferred start while the browser gates audio
+    // master mute (handoff 2026-08-07-d): a persisted preference,
+    // independent of the volume sliders — unmute restores prior levels
+    this.muted = isMuted()
   }
 
   // Boot.preload: queue every discovered audio file
@@ -62,25 +68,54 @@ class AudioBus {
 
   init(game) {
     this.game = game
+    setSfxMuted(this.muted)
+    // 'm' toggles master mute from ANY scene — DOM-level so it works on
+    // menus, during gameplay, and while the Level scene is paused
+    window.addEventListener('keydown', (e) => {
+      if (e.repeat) return
+      if (e.key === 'm' || e.key === 'M') this.toggleMute()
+    })
+  }
+
+  toggleMute() {
+    this.muted = !this.muted
+    setMuted(this.muted) // persists across sessions (preference, not a run stat)
+    setSfxMuted(this.muted)
+    this.refreshVolumes()
+    return this.muted
   }
 
   play(name, pan = 0) {
     const fileKey = this.files[name] ? name : this.files[CANONICAL[name]] ? CANONICAL[name] : null
     if (fileKey && this.game?.cache.audio.exists(`audio-${fileKey}`)) {
+      if (this.muted) return // master mute covers file SFX too
       const snd = this.game.sound.add(`audio-${fileKey}`)
       if (typeof snd.setPan === 'function') snd.setPan(Math.max(-1, Math.min(1, pan)))
       snd.once('complete', () => snd.destroy())
       snd.play({ volume: clamp01(TUNING.masterVolume * TUNING.sfxVolume) })
       return
     }
-    playSfx(name, pan) // generated placeholder
+    playSfx(name, pan) // generated placeholder (handles mute + unknown-event warn)
   }
 
   // ---- music: one looping track hook per level ----
 
   startMusic(levelId) {
-    if (this.currentLevelId === levelId && (this.musicSound?.isPlaying || this.stub)) {
-      this.restoreMusic() // retry of the same level: just un-duck
+    // browser autoplay policy: before the first user gesture the sound
+    // manager is locked — defer, last request wins (Title cold load)
+    if (this.game?.sound.locked) {
+      this.pendingMusic = levelId
+      this.game.sound.once('unlocked', () => {
+        if (this.pendingMusic) this.startMusic(this.pendingMusic)
+      })
+      return
+    }
+    this.pendingMusic = null
+    if (this.currentLevelId === levelId && (this.musicSound || this.stub)) {
+      // same track already loaded (retry, or Title -> Shift Select as one
+      // continuous menu space): un-duck and un-pause, never restart
+      this.restoreMusic()
+      this.resumeMusic()
       return
     }
     this.stopMusic()
@@ -92,6 +127,22 @@ class AudioBus {
       this.stub = startMusicStub()
     }
     this.refreshVolumes()
+  }
+
+  // pause holds the track's position; resume continues it — never a
+  // restart (handoff 2026-08-07-d; the stub holds at bar granularity)
+  pauseMusic() {
+    if (this.musicPaused) return
+    this.musicPaused = true
+    this.musicSound?.pause()
+    this.stub?.pause?.()
+  }
+
+  resumeMusic() {
+    if (!this.musicPaused) return
+    this.musicPaused = false
+    this.musicSound?.resume()
+    this.stub?.resume?.()
   }
 
   duckMusic() {
@@ -115,11 +166,16 @@ class AudioBus {
     // never leak into the next level's music (found during the -e
     // mid-rush-teardown verification — cross-level starts began ducked)
     this.ducked = false
+    this.musicPaused = false
+    this.pendingMusic = null
   }
 
   // cheap; polled from UIOverlay.update so volume sliders apply live
   refreshVolumes() {
-    const v = clamp01(TUNING.masterVolume * TUNING.musicVolume) * (this.ducked ? 0.3 : 1)
+    const v =
+      clamp01(TUNING.masterVolume * TUNING.musicVolume) *
+      (this.ducked ? 0.3 : 1) *
+      (this.muted ? 0 : 1) // mute never touches the stored volumes
     if (this.musicSound) this.musicSound.setVolume(v)
     if (this.stub) this.stub.setVolume(v)
   }

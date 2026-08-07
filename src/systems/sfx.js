@@ -143,19 +143,27 @@ const SFX = {
 // jitter probe and the de-embed gate. Once per name per session.
 const warnedEvents = new Set()
 
+// master mute (handoff 2026-08-07-d) — set by AudioBus.toggleMute; the
+// unknown-event tripwire still fires while muted (it's a dev signal)
+let sfxMuted = false
+export function setSfxMuted(muted) {
+  sfxMuted = muted
+}
+
 export function playSfx(name, pan = 0) {
   const fx = SFX[name]
-  if (fx) {
-    fx(pan)
+  if (!fx) {
+    if (!warnedEvents.has(name)) {
+      warnedEvents.add(name)
+      console.warn(
+        `No audio for event "${name}" — no file in assets/audio/ and no ` +
+          'synth placeholder in systems/sfx.js.'
+      )
+    }
     return
   }
-  if (!warnedEvents.has(name)) {
-    warnedEvents.add(name)
-    console.warn(
-      `No audio for event "${name}" — no file in assets/audio/ and no ` +
-        'synth placeholder in systems/sfx.js.'
-    )
-  }
+  if (sfxMuted) return
+  fx(pan)
 }
 
 // Generated 4-bar chiptune stub — the music placeholder until a real
@@ -193,11 +201,12 @@ export function startMusicStub() {
   }
 
   let running = true
+  let paused = false
   let timer = null
   let barIndex = 0
   let nextBarTime = ctx.currentTime + 0.1
   const scheduleBar = () => {
-    if (!running) return
+    if (!running || paused) return
     const t0 = nextBarTime
     const b = barIndex % 4
     for (let i = 0; i < 8; i++) {
@@ -214,6 +223,18 @@ export function startMusicStub() {
   return {
     setVolume(v) {
       bus.gain.setTargetAtTime(Math.max(0.0001, v * 0.9), ctx.currentTime, 0.1)
+    },
+    // pause/resume (handoff 2026-08-07-d): a generated loop holds its
+    // position at bar granularity — barIndex persists across the pause
+    pause() {
+      paused = true
+      clearTimeout(timer)
+    },
+    resume() {
+      if (!running || !paused) return
+      paused = false
+      nextBarTime = ctx.currentTime + 0.05
+      scheduleBar()
     },
     stop() {
       running = false

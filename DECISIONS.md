@@ -1444,3 +1444,44 @@ acceptance was correct per true field state — the -d rule
 holding. AudioBus unknown-event warning added. Bell Desk
 populated with collectibles via data only, zero code,
 per the inheritance design.
+
+## 2026-08-07 — Handoff 2026-08-07-d applied
+
+- Sequence check: 2026-08-07-c applied (entry above) ✓.
+- Item 1: 'm' master mute — DOM-level listener (works on menus,
+  gameplay, and while the Level scene is paused), persisted in the
+  progress store as a preference (godMode rule inapplicable),
+  independent of the sliders (verified: mute drives setVolume(0)
+  with sliders untouched at [1, 0.5]; unmute restores 0.5).
+  Persistent muted-speaker indicator (generated 10×10 icon, Gray
+  500 at 0.7 alpha, bottom-right) on UIOverlay, Title, and Shift
+  Select.
+- Item 2: pause now PAUSES the track — position held (seek frozen
+  through a 700ms pause window), resumed on unpause; menu SFX stay
+  audible. Teardown interactions verified: exit-from-pause never
+  resumes the level track (menu gets a fresh title start);
+  retry-under-pause resumes cleanly through startMusic's same-track
+  branch. Pause-under-results is UNREACHABLE (runOver early-returns
+  before the pause keys) — reported rather than guarded.
+- Item 3: title.mp3 wired as the menu-space track — starts on Title
+  (deferred past the browser autoplay lock to the first keypress),
+  continues through Shift Select without restarting (same sound,
+  seek continuous), level tracks take over on rush start, and every
+  return to the menu starts the title track from the top. Mute
+  indicator confirmed on menu scenes.
+- Bug found & fixed during verification: the new LevelSelect mute
+  icon used GAME_HEIGHT without importing it — crashed the
+  Title→Shift Select transition (masqueraded as input flakiness for
+  two test runs before the exception was captured).
+- Headless-verification note for the record: Phaser's volume setter
+  schedules on the WebAudio gain node; in headless Chrome the gain
+  read-back lags the scheduled value indefinitely, so volume
+  assertions must intercept setVolume calls, not read gain back.
+- Item 4: ruling entry appended verbatim below.
+
+2026-08-07 — Audio QoL trio (handoff 2026-08-07-d):
+'m' master mute with persistent corner indicator and
+session persistence; music pauses (position-held) under
+pause; title.mp3 wired as the menu-space track (Title +
+Shift Select continuous, fresh start per menu visit).
+Second human-composed track in the game.

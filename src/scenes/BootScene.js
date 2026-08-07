@@ -202,6 +202,17 @@ export default class BootScene extends Phaser.Scene {
     g.fillRect(1, 1, 6, 6)
     g.generateTexture('tag-chip', 8, 8)
 
+    // muted-speaker indicator (handoff 2026-08-07-d): tinted Gray 500 at
+    // partial alpha by whichever scene shows it
+    g.clear()
+    g.fillStyle(0xffffff, 1)
+    g.fillRect(0, 3, 3, 4) // speaker body
+    g.fillTriangle(3, 5, 7, 1, 7, 9) // cone
+    g.lineStyle(1, 0xffffff, 1)
+    g.lineBetween(0, 9, 9, 0) // the slash
+    g.strokePath()
+    g.generateTexture('mute-icon', 10, 10)
+
     // collectible placeholders (BRIEF-04): orange diamond / white card /
     // yellow diamond, 12×12, until the real icons drop in
     const diamond = (key, color) => {

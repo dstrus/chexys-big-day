@@ -33,6 +33,18 @@ export function levelCleared(levelId) {
   return levelBest(levelId).bestHangers > 0
 }
 
+// master mute (handoff 2026-08-07-d): a preference, not a run stat —
+// the godMode no-record rule does not apply
+export function isMuted() {
+  return load().muted === true
+}
+
+export function setMuted(muted) {
+  const all = load()
+  all.muted = muted
+  save(all)
+}
+
 // dash unlock (BRIEF-03 / DESIGN.md §3.2): granted by the Bell Desk
 // scripted beat, persists for all subsequent levels. A control unlock,
 // not a best — the godMode guard doesn't apply.
