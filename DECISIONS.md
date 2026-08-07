@@ -1352,3 +1352,21 @@ Partially retires the "final audio passes" polish-debt item for L1.
 drifted; teeter wait-state, shift-framed pause copy, 16f
 run, and the first drop-in music loop all ratified.
 Sequence check credited with catches three and four.
+
+## 2026-08-07 — Handoff 2026-08-07-b applied
+
+- Sequence check: 2026-08-07-a applied (entry above) ✓.
+- Items 1–2: BRIEF-03 acceptance complete — human sign-off, no
+  punch list; all six queued feel-checks closed as PASS with
+  behavior kept as-is (tap windup texture, dash-end skid kept —
+  suppression one-liner declined, loiter arrows unchanged,
+  pause/restart/exit flow, teeter at 0.5, 60fps ×2 confirmed).
+- Item 3: BRIEF-04 GO — executed this session (entry follows).
+- Item 4: ruling entry appended verbatim below.
+
+2026-08-07 — BRIEF-03 CLOSED with human sign-off, no
+punch list (handoff 2026-08-07-b): Bell Desk accepted;
+all six queued feel-checks pass as-is (windup texture,
+skid kept, arrows unchanged, pause flow, teeter, 60fps).
+BRIEF-04 cleared and ordered. The -b watch item is
+formally retired.
