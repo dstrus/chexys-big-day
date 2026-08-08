@@ -53,7 +53,7 @@ export default class LevelScene extends Phaser.Scene {
     this.hold = null
     this.holdArmed = false // fresh-press arm for deferred hold start (-e)
     this.tapAction = null // in-flight tap windup (EXPERIMENT 2026-08-04)
-    this.targetGfx = this.add.graphics().setDepth(10)
+    this.targetPulse = null // pulsing-tint highlight on the current target
     this.holdGfx = this.add.graphics().setDepth(11)
     // screen-space edge arrows pointing at off-screen untagged items
     this.indicatorGfx = this.add.graphics().setScrollFactor(0).setDepth(20)
@@ -637,7 +637,7 @@ export default class LevelScene extends Phaser.Scene {
     this.physics.pause()
     this.clockTimer?.remove()
     this.clearHold()
-    this.targetGfx.clear()
+    this.releaseTargetPulse()
     this.indicatorGfx.clear()
     this.player.playEndPose(cleared)
     audio.duckMusic() // music dips under the results screen
@@ -1016,12 +1016,46 @@ export default class LevelScene extends Phaser.Scene {
       if (this.isTaggable(item)) consider(item, this.itemDangerRank(item))
     }
     this.target = best
-    this.targetGfx.clear()
-    if (best) {
-      const b = best.getBounds()
-      this.targetGfx.lineStyle(1, 0xffffff, 0.9)
-      this.targetGfx.strokeRect(b.x - 2, b.y - 2, b.width + 4, b.height + 4)
+    this.updateTargetPulse(this.time.now)
+  }
+
+  // target highlight (human ruling 2026-08-08): the target's own sprite
+  // pulses toward the action-yellow instead of a drawn outline. Tint
+  // ownership matters — items and enemies use tints elsewhere (category
+  // colors, stun gray, check-in green), so the pulse captures the base
+  // at acquire time and restores it ONLY if nothing else wrote a tint
+  // in between (a foreign write wins and sticks).
+  updateTargetPulse(now) {
+    if (this.targetPulse && this.targetPulse.sprite !== this.target) this.releaseTargetPulse()
+    if (this.target && !this.targetPulse) {
+      this.targetPulse = {
+        sprite: this.target,
+        baseTinted: this.target.isTinted,
+        baseTint: this.target.tintTopLeft,
+        written: null,
+      }
     }
+    const p = this.targetPulse
+    if (!p || !p.sprite.active) return
+    // blend the base color toward the hold-meter yellow and back
+    const k = 0.2 + 0.4 * (0.5 + 0.5 * Math.sin(now / 110))
+    const base = Phaser.Display.Color.ValueToColor(p.baseTinted ? p.baseTint : 0xffffff)
+    const hi = Phaser.Display.Color.ValueToColor(0xffe066)
+    const mix = Phaser.Display.Color.Interpolate.ColorWithColor(base, hi, 100, Math.round(k * 100))
+    const tint = Phaser.Display.Color.GetColor(mix.r, mix.g, mix.b)
+    p.sprite.setTint(tint)
+    p.written = tint
+  }
+
+  releaseTargetPulse() {
+    const p = this.targetPulse
+    this.targetPulse = null
+    if (!p || !p.sprite.active) return
+    // someone else tinted since our last write (stun gray, check-in
+    // green): their color stands
+    if (p.written !== null && p.sprite.tintTopLeft !== p.written) return
+    if (p.baseTinted) p.sprite.setTint(p.baseTint)
+    else p.sprite.clearTint()
   }
 
   updateTagging(time) {
