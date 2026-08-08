@@ -1037,14 +1037,20 @@ export default class LevelScene extends Phaser.Scene {
     }
     const p = this.targetPulse
     if (!p || !p.sprite.active) return
-    // blend the base color toward the hold-meter yellow and back
-    const k = 0.2 + 0.4 * (0.5 + 0.5 * Math.sin(now / 110))
-    const base = Phaser.Display.Color.ValueToColor(p.baseTinted ? p.baseTint : 0xffffff)
-    const hi = Phaser.Display.Color.ValueToColor(0xffe066)
-    const mix = Phaser.Display.Color.Interpolate.ColorWithColor(base, hi, 100, Math.round(k * 100))
-    const tint = Phaser.Display.Color.GetColor(mix.r, mix.g, mix.b)
-    p.sprite.setTint(tint)
-    p.written = tint
+    // blend the base color toward WHITE (human ruling 2026-08-08), with
+    // a solid-white fill flash at each crest — multiply tints can't
+    // brighten untinted art (white→white is invisible on coats and
+    // tickets), so the crest flash is what makes the pulse read there
+    const phase = 0.5 + 0.5 * Math.sin(now / 110)
+    if (phase > 0.75) {
+      p.sprite.setTintFill(0xffffff)
+    } else {
+      const base = Phaser.Display.Color.ValueToColor(p.baseTinted ? p.baseTint : 0xffffff)
+      const hi = Phaser.Display.Color.ValueToColor(0xffffff)
+      const mix = Phaser.Display.Color.Interpolate.ColorWithColor(base, hi, 100, Math.round(phase * 80))
+      p.sprite.setTint(Phaser.Display.Color.GetColor(mix.r, mix.g, mix.b))
+    }
+    p.written = p.sprite.tintTopLeft
   }
 
   releaseTargetPulse() {
