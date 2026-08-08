@@ -53,7 +53,7 @@ export default class LevelScene extends Phaser.Scene {
     this.hold = null
     this.holdArmed = false // fresh-press arm for deferred hold start (-e)
     this.tapAction = null // in-flight tap windup (EXPERIMENT 2026-08-04)
-    this.targetPulse = null // pulsing-tint highlight on the current target
+    this.targetGlow = null // additive-overlay glow on the current target
     this.holdGfx = this.add.graphics().setDepth(11)
     // screen-space edge arrows pointing at off-screen untagged items
     this.indicatorGfx = this.add.graphics().setScrollFactor(0).setDepth(20)
@@ -637,7 +637,7 @@ export default class LevelScene extends Phaser.Scene {
     this.physics.pause()
     this.clockTimer?.remove()
     this.clearHold()
-    this.releaseTargetPulse()
+    this.targetGlow?.setVisible(false)
     this.indicatorGfx.clear()
     this.player.playEndPose(cleared)
     audio.duckMusic() // music dips under the results screen
@@ -1016,52 +1016,42 @@ export default class LevelScene extends Phaser.Scene {
       if (this.isTaggable(item)) consider(item, this.itemDangerRank(item))
     }
     this.target = best
-    this.updateTargetPulse(this.time.now)
+    this.updateTargetGlow(this.time.now)
   }
 
-  // target highlight (human ruling 2026-08-08): the target's own sprite
-  // pulses toward the action-yellow instead of a drawn outline. Tint
-  // ownership matters — items and enemies use tints elsewhere (category
-  // colors, stun gray, check-in green), so the pulse captures the base
-  // at acquire time and restores it ONLY if nothing else wrote a tint
-  // in between (a foreign write wins and sticks).
-  updateTargetPulse(now) {
-    if (this.targetPulse && this.targetPulse.sprite !== this.target) this.releaseTargetPulse()
-    if (this.target && !this.targetPulse) {
-      this.targetPulse = {
-        sprite: this.target,
-        baseTinted: this.target.isTinted,
-        baseTint: this.target.tintTopLeft,
-        written: null,
-      }
+  // target highlight (human ruling 2026-08-08): an additive-blend copy
+  // of the target rides on top of it with a breathing alpha — additive
+  // genuinely brightens toward white-hot on ANY art (multiply tints
+  // can't brighten, which made tint pulses invisible on this warm
+  // palette). The target's own tint is never touched, so stun gray /
+  // check-in green / category colors need no ownership handling.
+  updateTargetGlow(now) {
+    const t = this.target
+    if (!t || !t.active) {
+      this.targetGlow?.setVisible(false)
+      return
     }
-    const p = this.targetPulse
-    if (!p || !p.sprite.active) return
-    // blend the base color toward WHITE (human ruling 2026-08-08), with
-    // a solid-white fill flash at each crest — multiply tints can't
-    // brighten untinted art (white→white is invisible on coats and
-    // tickets), so the crest flash is what makes the pulse read there
-    const phase = 0.5 + 0.5 * Math.sin(now / 110)
-    if (phase > 0.75) {
-      p.sprite.setTintFill(0xffffff)
-    } else {
-      const base = Phaser.Display.Color.ValueToColor(p.baseTinted ? p.baseTint : 0xffffff)
-      const hi = Phaser.Display.Color.ValueToColor(0xffffff)
-      const mix = Phaser.Display.Color.Interpolate.ColorWithColor(base, hi, 100, Math.round(phase * 80))
-      p.sprite.setTint(Phaser.Display.Color.GetColor(mix.r, mix.g, mix.b))
+    if (!this.targetGlow) {
+      this.targetGlow = this.add
+        .image(0, 0, t.texture.key, t.frame.name)
+        .setBlendMode(Phaser.BlendModes.ADD)
     }
-    p.written = p.sprite.tintTopLeft
-  }
-
-  releaseTargetPulse() {
-    const p = this.targetPulse
-    this.targetPulse = null
-    if (!p || !p.sprite.active) return
-    // someone else tinted since our last write (stun gray, check-in
-    // green): their color stands
-    if (p.written !== null && p.sprite.tintTopLeft !== p.written) return
-    if (p.baseTinted) p.sprite.setTint(p.baseTint)
-    else p.sprite.clearTint()
+    const g = this.targetGlow
+    if (g.texture.key !== t.texture.key || g.frame.name !== t.frame.name) {
+      g.setTexture(t.texture.key, t.frame.name)
+    }
+    // mirror the target: rounded position (same convention as the render
+    // snap and chips, so the halo never sits a subpixel off), frame,
+    // flip, size, and tint — glowing an orange item toward orange-white
+    // reads better than washing it to pure white
+    g.setPosition(Math.round(t.x), Math.round(t.y))
+    g.setFlipX(t.flipX)
+    g.setDisplaySize(t.displayWidth, t.displayHeight)
+    g.setDepth(t.depth + 0.5) // above the sprite, below its chip
+    if (t.isTinted) g.setTint(t.tintTopLeft)
+    else g.clearTint()
+    g.setAlpha(0.6 * (0.5 + 0.5 * Math.sin(now / 110)))
+    g.setVisible(true)
   }
 
   updateTagging(time) {
