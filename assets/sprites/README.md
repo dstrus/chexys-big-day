@@ -41,7 +41,8 @@ state machine uses:
 `win` `lose`
 
 - `idle` / `run` / `jump` / `fall` / `hold` loop; `land` / `tap` /
-  `hit` play once; `win` / `lose` loop on the results screen.
+  `hit` play once; on the results screen `win` plays once and FREEZES
+  on its final frame, while `lose` loops.
 - `tap` is the check-in one-shot (fires on instant taps AND hold
   completions) — renamed 2026-08-04 from the reserved `tag` key,
   which was never drawn.

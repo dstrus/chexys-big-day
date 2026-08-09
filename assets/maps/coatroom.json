@@ -1,60 +1,9 @@
 {
   "compressionlevel": -1,
-  "type": "map",
-  "version": "1.10",
-  "tiledversion": "1.10.2",
-  "orientation": "orthogonal",
-  "renderorder": "right-down",
-  "infinite": false,
-  "width": 100,
   "height": 17,
-  "tilewidth": 16,
-  "tileheight": 16,
-  "nextlayerid": 8,
-  "nextobjectid": 27,
-  "properties": [
-    {
-      "name": "levelId",
-      "type": "string",
-      "value": "coatroom"
-    },
-    {
-      "name": "rushSeconds",
-      "type": "int",
-      "value": 150
-    },
-    {
-      "name": "waveFile",
-      "type": "string",
-      "value": "coatroom-waves.json"
-    }
-  ],
-  "tilesets": [
-    {
-      "firstgid": 1,
-      "name": "placeholder",
-      "image": "../tiles/coatroom.png",
-      "imagewidth": 128,
-      "imageheight": 48,
-      "columns": 8,
-      "tilecount": 24,
-      "tilewidth": 16,
-      "tileheight": 16,
-      "margin": 0,
-      "spacing": 0
-    }
-  ],
+  "infinite": false,
   "layers": [
     {
-      "id": 1,
-      "name": "bg2",
-      "type": "tilelayer",
-      "width": 100,
-      "height": 17,
-      "x": 0,
-      "y": 0,
-      "opacity": 1,
-      "visible": true,
       "data": [
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -73,18 +22,18 @@
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-      ]
+      ],
+      "height": 17,
+      "id": 1,
+      "name": "bg2",
+      "opacity": 1,
+      "type": "tilelayer",
+      "visible": true,
+      "width": 100,
+      "x": 0,
+      "y": 0
     },
     {
-      "id": 2,
-      "name": "bg1",
-      "type": "tilelayer",
-      "width": 100,
-      "height": 17,
-      "x": 0,
-      "y": 0,
-      "opacity": 1,
-      "visible": true,
       "data": [
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -103,18 +52,18 @@
         0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-      ]
+      ],
+      "height": 17,
+      "id": 2,
+      "name": "bg1",
+      "opacity": 1,
+      "type": "tilelayer",
+      "visible": true,
+      "width": 100,
+      "x": 0,
+      "y": 0
     },
     {
-      "id": 3,
-      "name": "main",
-      "type": "tilelayer",
-      "width": 100,
-      "height": 17,
-      "x": 0,
-      "y": 0,
-      "opacity": 1,
-      "visible": true,
       "data": [
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -123,7 +72,7 @@
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 2, 2, 2, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 2, 2, 2, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 2, 2, 2, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 2, 2, 2, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 2, 2, 2, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 2, 2, 2, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 2, 2, 2, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 2, 2, 2, 2, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 2, 2, 2, 2, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 2, 2, 2, 2, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 2, 2, 2, 7, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -133,18 +82,18 @@
         0, 0, 3, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 3, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
-      ]
+      ],
+      "height": 17,
+      "id": 3,
+      "name": "main",
+      "opacity": 1,
+      "type": "tilelayer",
+      "visible": true,
+      "width": 100,
+      "x": 0,
+      "y": 0
     },
     {
-      "id": 4,
-      "name": "fg",
-      "type": "tilelayer",
-      "width": 100,
-      "height": 17,
-      "x": 0,
-      "y": 0,
-      "opacity": 1,
-      "visible": true,
       "data": [
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -163,484 +112,564 @@
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-      ]
+      ],
+      "height": 17,
+      "id": 4,
+      "name": "fg",
+      "opacity": 1,
+      "type": "tilelayer",
+      "visible": true,
+      "width": 100,
+      "x": 0,
+      "y": 0
     },
     {
+      "draworder": "topdown",
       "id": 5,
       "name": "spawns",
-      "type": "objectgroup",
-      "opacity": 1,
-      "visible": true,
-      "x": 0,
-      "y": 0,
       "objects": [
         {
+          "height": 0,
           "id": 1,
           "name": "player",
+          "opacity": 1,
           "point": true,
           "rotation": 0,
           "type": "",
           "visible": true,
-          "x": 48,
-          "y": 196,
           "width": 0,
-          "height": 0
+          "x": 48,
+          "y": 196
         },
         {
+          "height": 0,
           "id": 2,
           "name": "item-01",
+          "opacity": 1,
           "point": true,
-          "rotation": 0,
-          "type": "",
-          "visible": true,
-          "x": 130,
-          "y": 230,
-          "width": 0,
-          "height": 0,
           "properties": [
             {
               "name": "category",
               "type": "string",
               "value": "coat"
             }
-          ]
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 0,
+          "x": 130,
+          "y": 230
         },
         {
+          "height": 0,
           "id": 3,
           "name": "item-02",
+          "opacity": 1,
           "point": true,
-          "rotation": 0,
-          "type": "",
-          "visible": true,
-          "x": 420,
-          "y": 230,
-          "width": 0,
-          "height": 0,
           "properties": [
             {
               "name": "category",
               "type": "string",
               "value": "coat"
             }
-          ]
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 0,
+          "x": 420,
+          "y": 230
         },
         {
+          "height": 0,
           "id": 4,
           "name": "item-03",
+          "opacity": 1,
           "point": true,
-          "rotation": 0,
-          "type": "",
-          "visible": true,
-          "x": 700,
-          "y": 230,
-          "width": 0,
-          "height": 0,
           "properties": [
             {
               "name": "category",
               "type": "string",
               "value": "coat"
             }
-          ]
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 0,
+          "x": 700,
+          "y": 230
         },
         {
+          "height": 0,
           "id": 5,
           "name": "item-04",
+          "opacity": 1,
           "point": true,
-          "rotation": 0,
-          "type": "",
-          "visible": true,
-          "x": 980,
-          "y": 230,
-          "width": 0,
-          "height": 0,
           "properties": [
             {
               "name": "category",
               "type": "string",
               "value": "coat"
             }
-          ]
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 0,
+          "x": 980,
+          "y": 230
         },
         {
+          "height": 0,
           "id": 6,
           "name": "item-05",
+          "opacity": 1,
           "point": true,
-          "rotation": 0,
-          "type": "",
-          "visible": true,
-          "x": 1300,
-          "y": 230,
-          "width": 0,
-          "height": 0,
           "properties": [
             {
               "name": "category",
               "type": "string",
               "value": "coat"
             }
-          ]
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 0,
+          "x": 1300,
+          "y": 230
         },
         {
+          "height": 0,
           "id": 7,
           "name": "item-06",
+          "opacity": 1,
           "point": true,
-          "rotation": 0,
-          "type": "",
-          "visible": true,
-          "x": 232,
-          "y": 184,
-          "width": 0,
-          "height": 0,
           "properties": [
             {
               "name": "category",
               "type": "string",
               "value": "coat"
             }
-          ]
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 0,
+          "x": 232,
+          "y": 184
         },
         {
+          "height": 0,
           "id": 8,
           "name": "item-07",
+          "opacity": 1,
           "point": true,
-          "rotation": 0,
-          "type": "",
-          "visible": true,
-          "x": 456,
-          "y": 184,
-          "width": 0,
-          "height": 0,
           "properties": [
             {
               "name": "category",
               "type": "string",
               "value": "coat"
             }
-          ]
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 0,
+          "x": 456,
+          "y": 184
         },
         {
+          "height": 0,
           "id": 9,
           "name": "item-08",
+          "opacity": 1,
           "point": true,
-          "rotation": 0,
-          "type": "",
-          "visible": true,
-          "x": 744,
-          "y": 184,
-          "width": 0,
-          "height": 0,
           "properties": [
             {
               "name": "category",
               "type": "string",
               "value": "coat"
             }
-          ]
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 0,
+          "x": 744,
+          "y": 184
         },
         {
+          "height": 0,
           "id": 10,
           "name": "item-09",
+          "opacity": 1,
           "point": true,
-          "rotation": 0,
-          "type": "",
-          "visible": true,
-          "x": 1032,
-          "y": 184,
-          "width": 0,
-          "height": 0,
           "properties": [
             {
               "name": "category",
               "type": "string",
               "value": "coat"
             }
-          ]
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 0,
+          "x": 1032,
+          "y": 184
         },
         {
+          "height": 0,
           "id": 11,
           "name": "item-10",
+          "opacity": 1,
           "point": true,
-          "rotation": 0,
-          "type": "",
-          "visible": true,
-          "x": 1320,
-          "y": 184,
-          "width": 0,
-          "height": 0,
           "properties": [
             {
               "name": "category",
               "type": "string",
               "value": "coat"
             }
-          ]
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 0,
+          "x": 1320,
+          "y": 184
         },
         {
+          "height": 0,
           "id": 12,
           "name": "item-11",
+          "opacity": 1,
           "point": true,
-          "rotation": 0,
-          "type": "",
-          "visible": true,
-          "x": 1528,
-          "y": 184,
-          "width": 0,
-          "height": 0,
           "properties": [
             {
               "name": "category",
               "type": "string",
               "value": "coat"
             }
-          ]
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 0,
+          "x": 1528,
+          "y": 184
         },
         {
+          "height": 0,
           "id": 13,
           "name": "item-12",
+          "opacity": 1,
           "point": true,
-          "rotation": 0,
-          "type": "",
-          "visible": true,
-          "x": 336,
-          "y": 136,
-          "width": 0,
-          "height": 0,
           "properties": [
             {
               "name": "category",
               "type": "string",
               "value": "coat"
             }
-          ]
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 0,
+          "x": 336,
+          "y": 136
         },
         {
+          "height": 0,
           "id": 14,
           "name": "item-13",
+          "opacity": 1,
           "point": true,
-          "rotation": 0,
-          "type": "",
-          "visible": true,
-          "x": 600,
-          "y": 136,
-          "width": 0,
-          "height": 0,
           "properties": [
             {
               "name": "category",
               "type": "string",
               "value": "coat"
             }
-          ]
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 0,
+          "x": 600,
+          "y": 136
         },
         {
+          "height": 0,
           "id": 15,
           "name": "item-14",
+          "opacity": 1,
           "point": true,
-          "rotation": 0,
-          "type": "",
-          "visible": true,
-          "x": 888,
-          "y": 136,
-          "width": 0,
-          "height": 0,
           "properties": [
             {
               "name": "category",
               "type": "string",
               "value": "coat"
             }
-          ]
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 0,
+          "x": 888,
+          "y": 136
         },
         {
+          "height": 0,
           "id": 16,
           "name": "item-15",
+          "opacity": 1,
           "point": true,
-          "rotation": 0,
-          "type": "",
-          "visible": true,
-          "x": 1176,
-          "y": 136,
-          "width": 0,
-          "height": 0,
           "properties": [
             {
               "name": "category",
               "type": "string",
               "value": "coat"
             }
-          ]
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 0,
+          "x": 1176,
+          "y": 136
         },
         {
+          "height": 0,
           "id": 17,
           "name": "item-16",
+          "opacity": 1,
           "point": true,
-          "rotation": 0,
-          "type": "",
-          "visible": true,
-          "x": 1424,
-          "y": 136,
-          "width": 0,
-          "height": 0,
           "properties": [
             {
               "name": "category",
               "type": "string",
               "value": "coat"
             }
-          ]
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 0,
+          "x": 1424,
+          "y": 136
         },
         {
+          "height": 0,
           "id": 18,
           "name": "item-17",
+          "opacity": 1,
           "point": true,
-          "rotation": 0,
-          "type": "",
-          "visible": true,
-          "x": 480,
-          "y": 88,
-          "width": 0,
-          "height": 0,
           "properties": [
             {
               "name": "category",
               "type": "string",
               "value": "coat"
             }
-          ]
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 0,
+          "x": 480,
+          "y": 88
         },
         {
+          "height": 0,
           "id": 19,
           "name": "item-18",
+          "opacity": 1,
           "point": true,
-          "rotation": 0,
-          "type": "",
-          "visible": true,
-          "x": 784,
-          "y": 88,
-          "width": 0,
-          "height": 0,
           "properties": [
             {
               "name": "category",
               "type": "string",
               "value": "coat"
             }
-          ]
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 0,
+          "x": 784,
+          "y": 88
         },
         {
+          "height": 0,
           "id": 20,
           "name": "item-19",
+          "opacity": 1,
           "point": true,
-          "rotation": 0,
-          "type": "",
-          "visible": true,
-          "x": 1072,
-          "y": 88,
-          "width": 0,
-          "height": 0,
           "properties": [
             {
               "name": "category",
               "type": "string",
               "value": "coat"
             }
-          ]
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 0,
+          "x": 1072,
+          "y": 88
         }
-      ]
+      ],
+      "opacity": 1,
+      "type": "objectgroup",
+      "visible": true,
+      "x": 0,
+      "y": 0
     },
     {
+      "draworder": "topdown",
       "id": 6,
       "name": "zones",
-      "type": "objectgroup",
-      "opacity": 1,
-      "visible": true,
-      "x": 0,
-      "y": 0,
       "objects": [
         {
+          "height": 64,
           "id": 21,
           "name": "return",
-          "type": "return",
+          "opacity": 1,
           "rotation": 0,
+          "type": "return",
           "visible": true,
-          "x": 16,
-          "y": 192,
           "width": 96,
-          "height": 64
+          "x": 16,
+          "y": 192
         }
-      ]
-    },
-    {
-      "id": 7,
-      "name": "collectibles",
-      "type": "objectgroup",
+      ],
       "opacity": 1,
+      "type": "objectgroup",
       "visible": true,
       "x": 0,
-      "y": 0,
+      "y": 0
+    },
+    {
+      "draworder": "topdown",
+      "id": 7,
+      "name": "collectibles",
       "objects": [
         {
+          "height": 0,
           "id": 22,
           "name": "tag-1",
+          "opacity": 1,
           "point": true,
           "rotation": 0,
           "type": "nfcTag",
           "visible": true,
-          "x": 480,
-          "y": 72,
           "width": 0,
-          "height": 0
+          "x": 480,
+          "y": 72
         },
         {
+          "height": 0,
           "id": 23,
           "name": "tag-2",
+          "opacity": 1,
           "point": true,
           "rotation": 0,
           "type": "nfcTag",
           "visible": true,
-          "x": 784,
-          "y": 72,
           "width": 0,
-          "height": 0
+          "x": 784,
+          "y": 72
         },
         {
+          "height": 0,
           "id": 24,
           "name": "tag-3",
+          "opacity": 1,
           "point": true,
           "rotation": 0,
           "type": "nfcTag",
           "visible": true,
-          "x": 1072,
-          "y": 72,
           "width": 0,
-          "height": 0
+          "x": 1072,
+          "y": 72
         },
         {
+          "height": 0,
           "id": 25,
           "name": "tag-4",
+          "opacity": 1,
           "point": true,
           "rotation": 0,
           "type": "nfcTag",
           "visible": true,
-          "x": 336,
-          "y": 120,
           "width": 0,
-          "height": 0
+          "x": 336,
+          "y": 120
         },
         {
+          "height": 0,
           "id": 26,
           "name": "tag-5",
+          "opacity": 1,
           "point": true,
           "rotation": 0,
           "type": "nfcTag",
           "visible": true,
-          "x": 1424,
-          "y": 120,
           "width": 0,
-          "height": 0
+          "x": 1424,
+          "y": 120
         }
-      ]
+      ],
+      "opacity": 1,
+      "type": "objectgroup",
+      "visible": true,
+      "x": 0,
+      "y": 0
     }
-  ]
+  ],
+  "nextlayerid": 8,
+  "nextobjectid": 27,
+  "orientation": "orthogonal",
+  "properties": [
+    {
+      "name": "levelId",
+      "type": "string",
+      "value": "coatroom"
+    },
+    {
+      "name": "rushSeconds",
+      "type": "int",
+      "value": 150
+    },
+    {
+      "name": "waveFile",
+      "type": "string",
+      "value": "coatroom-waves.json"
+    }
+  ],
+  "renderorder": "right-down",
+  "tiledversion": "1.12.2",
+  "tileheight": 16,
+  "tilesets": [
+    {
+      "columns": 8,
+      "firstgid": 1,
+      "image": "../tiles/coatroom.png",
+      "imageheight": 48,
+      "imagewidth": 128,
+      "margin": 0,
+      "name": "placeholder",
+      "spacing": 0,
+      "tilecount": 24,
+      "tileheight": 16,
+      "tilewidth": 16
+    }
+  ],
+  "tilewidth": 16,
+  "type": "map",
+  "version": "1.10",
+  "width": 100
 }

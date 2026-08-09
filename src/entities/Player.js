@@ -317,13 +317,16 @@ export default class Player {
     })
   }
 
-  // results pose — loops until the scene restarts
+  // results pose. 'win' plays ONCE and parks on its final frame (the
+  // celebration lands and holds — 2026-08-09); 'lose' loops. The anim
+  // lock is never released here, so the pose holds until the scene
+  // restarts either way.
   playEndPose(cleared) {
     const name = cleared ? 'win' : 'lose'
     if (this.mode !== 'atlas' || !this.scene.anims.exists(name)) return
     this.endPosed = true
     this.animLock = true
     this.stateAnim = null
-    this.sprite.play({ key: name, repeat: -1 }, true)
+    this.sprite.play({ key: name, repeat: name === 'win' ? 0 : -1 }, true)
   }
 }
