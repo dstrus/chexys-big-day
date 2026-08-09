@@ -5,6 +5,28 @@ Levels are Tiled JSON exports (`*.json`), loaded natively by Phaser.
 `src/scenes/BootScene.js` (ESM import → tilemap cache, so Vite bundles
 them and hot-reloads on edit).
 
+## Editing
+
+**Tile layout: use Tiled** (`brew install --cask tiled`) — open the
+`.json` directly. The embedded tileset points at `../tiles/coatroom.png`
+so it resolves from this directory; the game ignores that path and
+matches the tileset by NAME (`placeholder`), so it only matters to
+Tiled.
+
+**Object layers and properties** (spawn points, `collectibles`, map
+properties) are small and named — comfortable to edit by hand here.
+
+After generating or hand-editing a map, run:
+
+```
+node scripts/format-maps.mjs
+```
+
+It re-indents the structure and emits each tile layer's `data` as ONE
+MAP ROW PER LINE, so the array has the same shape as the level and a
+one-tile change is a one-line diff. Idempotent; safe to run after Tiled
+saves too.
+
 ## Tile layers (in draw order, back to front)
 
 | Layer | Purpose |
