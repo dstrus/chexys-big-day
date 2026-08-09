@@ -25,8 +25,13 @@ export default class UIOverlayScene extends Phaser.Scene {
     this.timerText = this.add.text(GAME_WIDTH / 2, 6, '', TEXT_STYLE).setOrigin(0.5, 0)
     this.scoreText = this.add.text(GAME_WIDTH - 8, 6, '', TEXT_STYLE).setOrigin(1, 0)
     this.multText = this.add.text(GAME_WIDTH - 8, 19, '', TEXT_STYLE).setOrigin(1, 0)
-    // NFC tag counter (BRIEF-04 §1): small icon + count under the hangers
-    this.tagIcon = this.add.image(14, 24, 'collectible-nfcTag').setOrigin(0.5).setScale(0.75)
+    // NFC tag counter (BRIEF-04 §1): small icon + count under the
+    // hangers. Real art wins over the generated placeholder, same
+    // drop-in contract as the in-world collectibles.
+    this.tagIcon = this.add
+      .image(14, 24, this.textures.exists('nfc-tag') ? 'nfc-tag' : 'collectible-nfcTag')
+      .setOrigin(0.5)
+      .setScale(0.75)
     this.tagCountText = this.add
       .text(22, 19, '0', { ...TEXT_STYLE, fontSize: '9px' })
       .setOrigin(0, 0)

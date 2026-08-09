@@ -11,6 +11,13 @@ cd "$(dirname "$0")/.."
 
 CHARACTERS=(chexy enemy-stub particle)
 
+# 12x12 icon strips (BRIEF-04 collectibles). These are NOT atlases:
+# BootScene loads them with load.spritesheet({frameWidth: 12}), which
+# assumes a tight grid — so they export as plain horizontal sheets with
+# no JSON and NO --extrude (padding would break the fixed-grid slicing).
+# "source:output" where the .aseprite name differs from the texture key.
+ICONS=(nfc-chip:nfc-tag contact-card insight-report)
+
 resolve_source() {
   local name="$1"
   local aseprite="art/aseprite/${name}.aseprite"
@@ -65,4 +72,17 @@ for NAME in "${CHARACTERS[@]}"; do
     --filename-format '{frame}'
 
   echo "Exported $SHEET + $DATA from $SRC — the game picks them up automatically."
+done
+
+for ENTRY in "${ICONS[@]}"; do
+  NAME="${ENTRY%%:*}"
+  OUT="${ENTRY##*:}"
+  SRC="$(resolve_source "$NAME")"
+  SHEET="assets/sprites/${OUT}.png"
+
+  "$ASE_BIN" -b "$SRC" \
+    --sheet "$SHEET" \
+    --sheet-type horizontal
+
+  echo "Exported $SHEET from $SRC — the game picks it up automatically."
 done
