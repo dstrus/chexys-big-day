@@ -52,6 +52,8 @@ export default class LevelScene extends Phaser.Scene {
     this.target = null
     this.hold = null
     this.holdArmed = false // fresh-press arm for deferred hold start (-e)
+    this.graceUntil = 0 // post-interrupt immunity window (2026-08-07-e)
+    this.graceFlickering = false
     this.tapAction = null // in-flight tap windup (EXPERIMENT 2026-08-04)
     this.targetGlow = null // additive-overlay glow on the current target
     this.holdGfx = this.add.graphics().setDepth(11)
@@ -561,9 +563,15 @@ export default class LevelScene extends Phaser.Scene {
   onEnemyTouchPlayer(playerSprite, enemy) {
     // dash passes THROUGH ticket enemies — no contact (BRIEF-03)
     if (this.time.now < this.player.dashUntil) return
+    // post-interrupt grace (handoff 2026-08-07-e): enemy contact cannot
+    // interrupt or fire the hit/struggle path during the window. This
+    // protects Chexy's BODY only — the item stays stealable, so the
+    // steal race and its gloat-window rescue counter are untouched.
+    // Nothing here stuns, displaces, or phases the enemy.
+    if (this.time.now < this.graceUntil) return
     // paper can't hurt Chexy, but a hit breaks a hold — unless the
     // ticket is stunned; dazed paper is harmless
-    if (this.hold && !enemy.getData('stunnedUntil')) this.interruptHold()
+    if (this.hold && !enemy.getData('stunnedUntil')) this.interruptHold(true)
   }
 
   onItemLost(enemy, item) {
@@ -638,6 +646,7 @@ export default class LevelScene extends Phaser.Scene {
     this.clockTimer?.remove()
     this.clearHold()
     this.targetGlow?.setVisible(false)
+    this.player.sprite.setAlpha(1) // never freeze mid-grace-flicker on results
     this.indicatorGfx.clear()
     this.player.playEndPose(cleared)
     audio.duckMusic() // music dips under the results screen
@@ -1218,14 +1227,27 @@ export default class LevelScene extends Phaser.Scene {
     this.holdGfx.clear()
   }
 
-  // a hit or deliberate movement breaks the hold — the meter resets
-  interruptHold() {
+  // a hit or deliberate movement breaks the hold — the meter resets.
+  // Only ENEMY interrupts grant grace (2026-08-07-e): grace shields
+  // against enemies, never against the player's own movement exit.
+  interruptHold(fromEnemy = false) {
     this.clearHold()
     audio.play('interrupt')
     this.player.triggerAnim('hit')
     this.player.sprite.setTint(0xff6666)
     this.time.delayedCall(150, () => this.player.sprite.clearTint())
+    if (fromEnemy) this.graceUntil = this.time.now + TUNING.iframesMs
     this.onHoldInterrupted()
+  }
+
+  // grace flicker (2026-08-07-e): alpha oscillation so the immunity
+  // state is legible; persists through the hold pose since it rides the
+  // sprite, not the animation
+  updateGraceFlicker(time) {
+    const active = time < this.graceUntil
+    if (active) this.player.sprite.setAlpha(Math.sin(time / 40) > 0 ? 1 : 0.45)
+    else if (this.graceFlickering) this.player.sprite.setAlpha(1)
+    this.graceFlickering = active
   }
 
   // Tap windup (ruled 2026-08-04 after playtest): the tap lands on the
@@ -1371,6 +1393,7 @@ export default class LevelScene extends Phaser.Scene {
     this.updateTargeting()
     this.updateTagging(time)
     this.updateEnemies(time)
+    this.updateGraceFlicker(time)
     this.updateCollectibles(time)
     this.updateIndicators(time)
     this.updateFairnessDebug()

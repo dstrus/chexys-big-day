@@ -124,6 +124,11 @@ telegraphMsByPhase values must budget for the tap windup
 press, and the fight is tuned against the windup verb, not
 the legacy instant tap. (Forward note, handoff 2026-08-04-b.)
 
+The phase-3 Grab Chexy respects post-interrupt grace (it is
+an interrupt-class attack); grabMashMs tuning should assume
+a graced player can complete one committed hold after
+escaping. (Forward note, handoff 2026-08-07-e.)
+
 ## Explicitly out of scope
 
 No Chexy attack verb, no boss health bar UI beyond the ticket

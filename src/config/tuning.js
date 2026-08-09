@@ -35,6 +35,8 @@ export const TUNING = {
   holdTier2Factor: 0.6, // tier-2 hold duration = holdTagMs * this (BRIEF-03)
   holdDeferredStart: true, // hold start buffering (handoff 2026-08-03-d):
   // held tag intent waits for movement release; false = legacy press-start
+  iframesMs: 1100, // post-interrupt grace (handoff 2026-08-07-e): budgeted
+  // for re-press + a full tier-3 hold + margin
   targetRadius: 66,
   hitstopMs: 45,
 
@@ -122,6 +124,7 @@ export const TUNING_SCHEMA = [
   { key: 'holdTagMs', label: 'Hold-tag (ms)', min: 100, max: 800, step: 10 },
   { key: 'holdTier2Factor', label: 'Tier-2 hold factor', min: 0.3, max: 1, step: 0.05 },
   { key: 'holdDeferredStart', label: 'Hold start buffering', type: 'flag' },
+  { key: 'iframesMs', label: 'Interrupt grace (ms)', min: 0, max: 3000, step: 50 },
   { key: 'targetRadius', label: 'Target radius', min: 20, max: 160, step: 2 },
   { key: 'enemyStunMs', label: 'Enemy stun (ms)', min: 300, max: 4000, step: 100 },
   { key: 'spawnFairnessGraceMs', label: 'Spawn fairness grace (ms)', min: 0, max: 2000, step: 50 },

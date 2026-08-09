@@ -104,6 +104,14 @@ violence against people — the only thing you ever destroy is paper.
   buffering. Buffering forgives timing, never multiplies
   actions. (Generalized 2026-08-03 from the chained-holds
   ruling after the code chat flagged the tap/stun boundary.)
+  **Post-interrupt grace (ruled 2026-08-07):** after an
+  enemy interrupts a hold, Chexy gains interrupt immunity
+  for iframesMs (tunable, default 1100 — budgeted for
+  re-press + a full tier-3 hold + margin). During grace,
+  enemy contact cannot interrupt a hold or fire the hit/
+  struggle path. Visual: standard sprite flicker (alpha
+  oscillation) so the state is legible; flicker persists
+  through the hold pose.
 - **Targeting:** generous auto-target radius (tunable, start ~1.5×
   Chexy's width) hitting the most AT-RISK valid target in range
   (amended 2026-08-04): an active steal — a carrying ticket —

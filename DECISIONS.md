@@ -1485,3 +1485,45 @@ session persistence; music pauses (position-held) under
 pause; title.mp3 wired as the menu-space track (Title +
 Shift Select continuous, fresh start per menu visit).
 Second human-composed track in the game.
+
+## 2026-08-07 — Handoff 2026-08-07-e applied
+
+- Sequence check: 2026-08-07-d applied (entry above) ✓.
+- Item 1: §2.3 post-interrupt-grace block appended verbatim;
+  iframesMs (1100) added to tuning.js with a panel slider. Flicker
+  is alpha oscillation on the player sprite, driven per-frame from
+  update() so it rides through the hold pose (it's on the sprite,
+  not the animation); alpha is force-restored in endRun so results
+  can never freeze mid-flicker.
+- Item 2 boundaries, each verified by direct invocation of the
+  contact handler (physics drift made overlap-based staging
+  unreliable):
+  · No grace → contact interrupts, one struggle, grace granted
+    (~1042ms remaining at sample time).
+  · Under grace → FIVE consecutive contacts left the hold intact
+    with the struggle count unchanged at 1, and the tier-3 hold ran
+    to completion (trunk tagged) inside the window — the "re-press
+    + full hold + margin" budget holds in practice.
+  · Enemy unaffected: not stunned, not displaced by us, still
+    active (it moved only under its own seek).
+  · Theft during a graced hold → quiet reset, NO struggle, thief
+    carrying and gloating: the steal race and gloat-window rescue
+    counter are untouched. Grace protects the body, never the item.
+  · Movement exit under grace still abandons and still pays its
+    penalty; a movement interrupt grants NO grace.
+- Item 3: BOSS-SPEC tuning-surface forward note appended verbatim.
+- Item 4 (watch item, logged not solved): deliberate hit-tanking —
+  eating one struggle to buy a guaranteed hold — is now a
+  purchasable trade priced at the multiplier drop + streak reset.
+  Verified purchasable in exactly the intended shape (case B above
+  IS the trade executing). If play shows it dominating, the lever
+  is grace duration (iframesMs, on the panel), not the struggle
+  price.
+- Item 5: ruling entry appended verbatim below.
+
+2026-08-07 — Post-interrupt grace ruled (handoff
+2026-08-07-e): 1100ms interrupt immunity after a hold
+interrupt, flicker-signaled; protects the body, never the
+item; single struggle penalty per window; boss grab
+respects grace. Closes the loiter-orbit interrupt loop —
+the first hit is the price, the rest was the clock.
