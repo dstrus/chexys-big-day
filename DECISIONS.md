@@ -1847,3 +1847,28 @@ cars are SAFE once any part reaches the trailing edge
 (banked, locked, cued). No consequential elite action
 offscreen — the ambush channel is closed and the
 trailing edge becomes the garage's return-zone moment.
+
+## 2026-08-10 — Handoff 2026-08-09-f applied
+
+- Sequence check: 2026-08-09-e applied and committed first ✓.
+- Item 1: carried-chip semantics ratified as implemented — rip-time
+  revert; the chase prize is the auto-reapply (labor + position,
+  near the edge potentially the bank), never the car as hostage.
+  Noted on the elite AI comment in GarageScene, including the ruled
+  round-3 lever if near-edge rips read as ambush: elite target
+  preference (bias away from near-safe cars), not the revert model.
+- Item 2: no README existed anywhere in the repo or its git history
+  (root README.md/TESTING.md never added; no historical .md carries
+  a testing-notes section) — held per the referenced-artifact check
+  and asked; human ruled: create the root README.md. Created with a
+  minimal skeleton (title, run commands) and a Testing notes section
+  carrying the rule verbatim: "seed progression explicitly;
+  fresh-profile defaults are a test hazard, not a baseline."
+- Item 3: ruling entry appended verbatim below.
+
+2026-08-09 — Carried-chip economy ratified (handoff
+2026-08-09-f): rip-time revert, chase wins labor not
+hostages; near-edge rips are the intended clutch beat.
+Test profiles must seed progression state (dashUnlocked
+lesson). Garage cleared for round 3 with levers held:
+request count, band floor, overlap, gap width.

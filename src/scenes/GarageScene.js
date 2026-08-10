@@ -353,7 +353,13 @@ export default class GarageScene extends LevelScene {
   }
 
   // untag events are this level's steal initiations (design ruling 2):
-  // stealCooldownMs, target lock, loiter, and post-stun grace all apply
+  // stealCooldownMs, target lock, loiter, and post-stun grace all apply.
+  // Carried-chip economy ratified (2026-08-09-f): revert at rip time;
+  // the chase prize is the auto-reapply (labor + position, near the
+  // edge potentially the bank), never the car as hostage. Near-edge
+  // rips are the intended clutch moment — if playtests read them as
+  // ambush, the lever is elite target preference (bias away from
+  // near-safe cars), NOT the revert model.
   onEnemyTouchItem(enemy, item) {
     if (!enemy.getData('elite')) return // swarms obstruct only, take nothing
     if (!item.getData('tagged') || item.getData('drivingOff') || !item.active) return
