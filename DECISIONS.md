@@ -1644,3 +1644,43 @@ score carBonusScore with no streak and no bubble; chip teal
 0x006483; elite accent 0xd94848 pending V3 art. Map and waves are
 SESSION-1 SKELETONS — session 2 replaces them with the real 8–10
 screen blockout, roof routes, dash gap, and the four-phase arc.
+
+## 2026-08-09 — BRIEF-05 session 2 executed: garage blockout + wave arc
+
+The real level replaces the session-1 skeleton. Map: 288×17
+(4608px ≈ 9.6 screens; rush = 206s ≈ 3:26 at scrollSpeed 20).
+Three tiers (ground / row-12 decks / row-9 decks, every step ≤48px,
+mid decks overlapping a lower deck for clean routes), 22 cars (3
+luxury; 4 parked on decks for the cross-tier phase; exact parking
+heights — no float, since cars are gravity-free and never settle),
+concrete-pillar dressing, 6 roof-route NFC tags including the
+showcase pair strung across the dash gap. Wave arc per §5: (1)
+0:00–0:45 three sparse standard requests, swarms only; (2)
+0:45–1:45 density up, luxury #1, elites introduced one at a time;
+(3) 1:45–2:45 overlapping requests across tiers (two deck cars),
+luxury #2, elite pressure; (4) final stretch — request cluster +
+luxury #3 as the multiplier bait with exactly-sufficient lead
+(readout margin 1.1s, deliberately the tightest in the level).
+
+BUG found & fixed during verification: LevelScene's WaveRunner
+handler swallowed the entry argument (spawnEnemy: () =>
+this.spawnEnemy()), so the garage's elite flag never arrived and
+every wave spawn became a swarm. One-line passthrough fix; elites
+now spawn one per entry as designed.
+
+Showcase gap tuned during verification: 128px → 112px. Perfect-play
+math clears 128px by ~66px, but harness runs with realistic timing
+jitter landed 1–2px short at ground level — a showcase should be a
+trick, not a frame trap. At 112px the gap remains dash-MANDATORY
+(jump-only same-height reach ≈107px) and a frame-exact run verified
+in-engine lands on deck G sweeping a line tag; real 60fps input has
+3× the timing granularity of the harness. Human feel-check per
+acceptance.
+
+Verified: readout 15/15 green; all 22 cars parked bottom-exact on
+240/192; forward phase warp shows the arc populating correctly
+(1 live request in phase 1 → 4 overlapping in phase 3 → cluster)
+with elites present from phase 2; scroll completion → RUSH
+SURVIVED results; zero console errors. Remaining before the brief
+closes: the human punch-list play session (edge-push feel, dash-gap
+feel, 60fps ×2, full-rush pacing).

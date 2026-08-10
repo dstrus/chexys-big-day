@@ -136,7 +136,7 @@ export default class LevelScene extends Phaser.Scene {
     this.waveRunner = new WaveRunner(this, getWaveSchedule(this.levelProps.waveFile), {
       spawnItem: (spawnPoint, category, tier, fallbacks) =>
         this.spawnScheduledItem(spawnPoint, category, tier, fallbacks),
-      spawnEnemy: () => this.spawnEnemy(),
+      spawnEnemy: (entry) => this.spawnEnemy(entry), // entry carries garage elite flags
       spawnCollectible: (type, spawnPoint) => this.spawnCollectible(type, spawnPoint),
     })
     this.fairnessGfx = this.add.graphics().setDepth(19)
