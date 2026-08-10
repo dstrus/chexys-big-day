@@ -1527,3 +1527,34 @@ interrupt, flicker-signaled; protects the body, never the
 item; single struggle penalty per window; boss grab
 respects grace. Closes the loiter-orbit interrupt loop —
 the first hit is the price, the rest was the clock.
+
+## 2026-08-09 — Handoff 2026-08-09-a applied
+
+- Sequence check: prior chain closed at 2026-08-07-e; no 2026-08-08
+  handoffs existed and IDs are per-day, so -a is correct ✓.
+- Item 1: BRIEF-04 closed with sign-off after extended play; all five
+  collectible tunables (tagMagnetRadius 20, tagScoreValue 50,
+  cardLingerMs 8000, insightDurationMs 10000, insightFactor 2.0)
+  locked at defaults. No code change.
+- Item 2: tier-2 edge-arrow color ruled as-is. Flag retired — the
+  LevelScene comment now cites the ruling and its rationale (arrow
+  says "needs a hold"; tier identity rides silhouette + dots + meter
+  speed) instead of reading as an open BRIEF-03 judgment call.
+- Item 3: hit-tanking retired as a watch item, kept as a documented
+  lever — the iframesMs tuning comment now records that play showed
+  no dominance at 1100 and that later-level enemy density is what
+  would change the math.
+- Item 4: NFC glint deferred with NO debt entry, per order. Standing
+  instruction for whoever exports next: if the icons file gains a
+  second frame, wire the 2-frame loop (the collectible already
+  renders frame 0 from a spritesheet, so it is a small anim
+  registration + play on spawn).
+- Item 5: ruling entry appended verbatim below.
+
+2026-08-09 — BRIEF-04 CLOSED, human sign-off, values
+locked at defaults (handoff 2026-08-09-a). Tier-2 arrow
+color ruled as-is; hit-tanking retired as watch item (no
+dominance in play), kept as documented lever. Every
+shipped system is now played and certified. Remaining
+build surface: lose anim, audio content, polish ledger,
+and Phase 3's back half — Levels 3–5 and the boss.

@@ -943,7 +943,9 @@ export default class LevelScene extends Phaser.Scene {
         continue
       }
       const y = Phaser.Math.Clamp(item.y - view.y, 20, this.scale.height - 24)
-      // hold-tag tiers (2+) get the heavy-variant arrow color (BRIEF-03)
+      // hold-tag tiers (2+) share the heavy-variant purple (ruled as-is
+      // 2026-08-09-a): the arrow only says "this one needs a hold" —
+      // tier identity rides on silhouette, dots, and meter speed
       this.indicatorGfx.fillStyle((item.getData('tier') ?? 1) >= 2 ? 0x9b6ee8 : 0x59c2e8, pulse)
       this.indicatorGfx.fillTriangle(edgeX + dir * 5, y, edgeX - dir * 3, y - 5, edgeX - dir * 3, y + 5)
     }

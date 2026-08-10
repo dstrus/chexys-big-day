@@ -36,7 +36,10 @@ export const TUNING = {
   holdDeferredStart: true, // hold start buffering (handoff 2026-08-03-d):
   // held tag intent waits for movement release; false = legacy press-start
   iframesMs: 1100, // post-interrupt grace (handoff 2026-08-07-e): budgeted
-  // for re-press + a full tier-3 hold + margin
+  // for re-press + a full tier-3 hold + margin. This is THE lever on the
+  // hit-tanking trade (eat one struggle to buy a guaranteed hold) — play
+  // showed no dominance at 1100, but enemy density in later levels can
+  // change that math (2026-08-09-a).
   targetRadius: 66,
   hitstopMs: 45,
 
