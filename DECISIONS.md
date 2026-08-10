@@ -1684,3 +1684,38 @@ with elites present from phase 2; scroll completion → RUSH
 SURVIVED results; zero console errors. Remaining before the brief
 closes: the human punch-list play session (edge-push feel, dash-gap
 feel, 60fps ×2, full-rush pacing).
+
+## 2026-08-09 — Garage punch list round 1: FAILED ("slow, no challenge") — data-side retune executed
+
+Human verdict after the first play session: not fun — very slow, no
+challenge. Diagnosis: the systems held; the NUMBERS starved them.
+(1) scrollSpeed 20 = 13% of player speed — the edge never threatened;
+(2) 15 requests/206s with 1–4 live — long idle gaps; (3) request
+leads scheduled at 5–10× the fairness floor — the readout ensures
+FAIR, nothing ensured INTERESTING; (4) elites structurally starved
+(2.5s drive-off window + spawn-behind + 6s cooldown ≈ no strikes);
+(5) swarms decorative (they only threaten holds; 3 holds/rush).
+
+Retune (data + knobs, no design changes): scrollSpeed 20→45 with the
+map stretched to 9024px (rush 3:10 preserved; 2.25× urgency); 44
+cars (8 on decks, 6 luxury), two dash-showcase gaps; 28 requests
+SOLVED against a tension band (target available/required per phase:
+2.4 → 1.9 → 1.5 → 1.35, lux bait hottest) instead of hand-guessed —
+measured ratios 1.04–2.06, zero slack; driveOffDelayMs 2500→5000
+(the tagged backlog persists, so elites have something to hunt);
+garage stealCooldownMs map override 3500; elites 5→8 (3–5 concurrent
+through the back half in verification); swarm waves 12, counts 3–5.
+NEW SYSTEM from the lesson: the request readout gains a tension-band
+signal — green-but-SLACK (yellow ring, panel count) when available
+lead exceeds 3× required, so over-generous scheduling gets flagged
+the way unfairness does. Verified: 28/28 green / 0 slack, parking
+exact, full rush → RUSH SURVIVED, zero console errors.
+
+Honest notes for round 2: tightest solved ratios sit at 1.04 (green
+but <1s slack — deliberately hot; raise the floor to ~1.2 if it
+reads as ambush); steady-state live requests estimate ~2 rising to
+3+ in the rush phases — if it still feels sparse the lever is
+request count, not lead times. Needs design-chat rulings: swarm
+teeth (contact-slow would be a new rule — "slow nothing permanently"
+stands until amended), elite spawn side (currently behind), and
+whether the tension band's 3× slack threshold should be canon.

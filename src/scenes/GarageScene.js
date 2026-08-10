@@ -118,7 +118,20 @@ export default class GarageScene extends LevelScene {
       const travelS = distAtFire / effSpeed
       const baseLead = travelS + TUNING.requestGraceMs / 1000 + (luxury ? TUNING.holdTagMs / 1000 : 0)
       const requiredLead = luxury ? baseLead * TUNING.luxuryLeadFactor : baseLead
-      return { car: e.car, time: e.time, exitT, travelS, requiredLead, luxury, ok: exitT - e.time >= requiredLead }
+      const available = exitT - e.time
+      return {
+        car: e.car,
+        time: e.time,
+        exitT,
+        travelS,
+        requiredLead,
+        luxury,
+        ok: available >= requiredLead,
+        // tension band (first-punch-list lesson): the readout ensures
+        // FAIR; this ensures INTERESTING. Green-but-SLACK means the
+        // lead is so generous the request carries no pressure.
+        slack: available >= requiredLead && available > requiredLead * 3,
+      }
     })
   }
 
@@ -557,11 +570,12 @@ export default class GarageScene extends LevelScene {
     if (!isTuningPanelOpen()) return
     const checks = this.requestChecks ?? []
     const red = checks.filter((c) => !c.ok).length
+    const slack = checks.filter((c) => c.slack).length
     const worst = checks.length
       ? Math.min(...checks.map((c) => (c.exitT === Infinity ? 999 : c.exitT - c.time - c.requiredLead)))
       : 0
     setPanelReadout(
-      `request fairness: ${checks.length - red}/${checks.length} green` +
+      `requests: ${checks.length - red}/${checks.length} green, ${slack} slack` +
         (checks.length ? ` (worst margin ${worst === 999 ? '∞' : worst.toFixed(1)}s)` : ''),
       red === 0
     )
@@ -570,11 +584,13 @@ export default class GarageScene extends LevelScene {
   updateFairnessDebug() {
     this.fairnessGfx.clear()
     if (!isTuningPanelOpen()) return
-    // ring each request's car green/red by its precomputed check
+    // ring each request's car: green = fair, red = unfair, yellow =
+    // green-but-slack (no pressure — the tension-band signal)
     for (const check of this.requestChecks ?? []) {
       const car = this.items.getChildren().find((c) => c.name === check.car && c.active)
       if (!car) continue
-      this.fairnessGfx.lineStyle(1, check.ok ? 0x12b76a : 0xea5151, 0.9)
+      const color = !check.ok ? 0xea5151 : check.slack ? 0xffe123 : 0x12b76a
+      this.fairnessGfx.lineStyle(1, color, 0.9)
       this.fairnessGfx.strokeCircle(car.x, car.y, Math.max(10, car.displayWidth / 2 + 3))
     }
     // collectible spawns stay visible, as everywhere

@@ -79,7 +79,9 @@ export const TUNING = {
   requestGraceMs: 1500, // lead-time slack the request readout must hold
   luxuryLeadFactor: 1.5, // luxury requests need this × the standard lead
   carBonusScore: 25, // tagging an unrequested dressing car (score only)
-  driveOffDelayMs: 2500, // tagged car sits (elite-vulnerable) before pulling out
+  driveOffDelayMs: 5000, // tagged car sits (elite-vulnerable) before pulling
+  // out — retuned 2500→5000 after the first punch list: the tagged
+  // backlog must persist long enough for elite pressure to exist
   edgePushMargin: 10, // trailing-edge nudge zone (px past the view edge)
 
   // adaptive intensity / multiplier (DESIGN.md §2.5 skeleton)
