@@ -134,3 +134,12 @@ point) while the panel is open.
 Max jump height with default tuning is ~61px. Keep platform hops at
 **≤48px** (3 tile rows) so everything stays reachable — see the row
 comments in the coatroom generator history / DECISIONS.md.
+
+## Blockout rule — edge-push pockets (auto-scroll levels)
+
+No fully-enclosed pockets between STRUCTURE tiles reachable by the
+trailing-edge push. Vehicles may form pockets — they yield to the
+push (anti-crush guarantee, handoff 2026-08-09-g: Chexy slides
+through a pinching vehicle at push speed); structure tiles never
+yield, so tiles must not enclose a pocket the edge push can press
+Chexy into.

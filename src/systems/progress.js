@@ -59,6 +59,20 @@ export function unlockDash() {
   save(all)
 }
 
+// garage dash-through tip (handoff 2026-08-09-g): a one-time tutorial
+// bubble on the first garage rush, gated like the Bell Desk beat — a
+// control tip, not a best, so the godMode guard doesn't apply
+export function isGarageDashTipShown() {
+  return load().garageDashTipShown === true
+}
+
+export function markGarageDashTipShown() {
+  const all = load()
+  if (all.garageDashTipShown) return
+  all.garageDashTipShown = true
+  save(all)
+}
+
 export function recordRun(levelId, { finalScore, hangers }) {
   // god-mode runs never write persisted bests (standing rule,
   // handoffs 2026-07-29-g / 2026-07-30-h)

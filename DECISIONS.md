@@ -1872,3 +1872,57 @@ hostages; near-edge rips are the intended clutch beat.
 Test profiles must seed progression state (dashUnlocked
 lesson). Garage cleared for round 3 with levers held:
 request count, band floor, overlap, gap width.
+
+## 2026-08-10 — Handoff 2026-08-09-g applied
+
+- Sequence check: 2026-08-09-f applied and committed first ✓.
+- Item 1: dash-through-vehicles implemented as a collider process
+  callback — vehicle separation suspends while dashing (grounded or
+  air alike); the tile collider is untouched, so structure stays
+  solid. Extend-until-clear: GarageScene.update pushes dashUntil
+  forward while the dash would expire overlapping a vehicle, so the
+  dash ends on its own terms (fresh fall, -g air rules) once clear —
+  never embedded, never a vertical pop (vy is pinned 0 for the whole
+  dash). Dash-through ignores car state (safe/tagged/inert identical)
+  and never tags. One-time tutorial bubble on the first garage rush,
+  persisted like the Bell Desk beat (garageDashTipShown in progress):
+  "Dash goes THROUGH cars! Let's gooooo!"
+- Item 2: anti-crush guarantee — the pinch (edge push pressing +
+  vehicle ahead-blocking + structure overhead within the rise needed
+  to clear the car) makes the VEHICLE yield, latched until Chexy is
+  clear; structure tiles never yield. In open sky the car stays solid
+  (jump or the standable roof is the escape). Blockout rule appended
+  to assets/maps/README.md: tiles may never enclose an edge-reachable
+  pocket; vehicles may (they yield).
+- Item 3 verified (staged headless, progression seeded):
+  (a) dash entered 42px before a 56px lux car, natural expiry
+  mid-overlap → extended and exited 35px past the far side, vy 0
+  throughout, y pixel-identical, dash then ended clean; identical
+  through a REQUESTED car — no tag, request stayed live.
+  (b) pinch staged under a row-12 deck (32px clearance, jump
+  physically cannot clear a car): yield latched, Chexy slid through
+  to the far side at push speed, latch released on clear, no
+  interrupt, run alive. Open-sky control with real contact: never
+  yielded. The 60fps acceptance point needs the human's machine —
+  headless runs uncapped (~113fps) and can't attest it.
+  (c) air-dash through a car hovering over the second row-9 deck gap:
+  real pass-through (extension included), fresh fall from vy 0 on
+  exit, second mid-air dash denied, air dash refreshed on landing —
+  and the extended exit caught the far deck's lip, which is exactly
+  the showcase reading well.
+- Test-harness lessons for the record (they cost four runs):
+  headless=new Chrome freezes BOTH RAF and DOM timers mid-run (game
+  clock dead, ~13s in) — anti-throttling flags and screencast pumps
+  do NOT prevent it; the reliable pattern is kicking game.loop.step()
+  from CDP whenever loop.now goes stale. And CDP awaitPromise on
+  long-lived page promises dies to GC ("Promise was collected") —
+  store stage results on window and poll instead.
+- Item 4: ruling entry appended verbatim below.
+
+2026-08-09 — Dash-through-vehicles ruled, plain dash
+(handoff 2026-08-09-g): vehicle collision suspended
+during dash, extend-until-clear, structure stays solid;
+charged variant rejected as scope. Anti-crush guarantee:
+the edge push slides Chexy through yielding vehicles —
+the pinch pocket cannot exist. Blockout rule: tiles may
+never enclose an edge-reachable pocket.

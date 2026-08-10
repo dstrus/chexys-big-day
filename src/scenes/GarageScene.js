@@ -2,6 +2,7 @@ import Phaser from 'phaser'
 import LevelScene from './LevelScene.js'
 import { TUNING } from '../config/tuning.js'
 import { audio } from '../systems/AudioBus.js'
+import { isGarageDashTipShown, markGarageDashTipShown } from '../systems/progress.js'
 import { isTuningPanelOpen, setPanelReadout } from '../debug/tuningPanel.js'
 
 // Level 3: The Valet Garage (BRIEF-05, session 1 — scroll/request core).
@@ -42,8 +43,25 @@ export default class GarageScene extends LevelScene {
     for (const obj of this.map.getObjectLayer('cars')?.objects ?? []) {
       this.spawnCar(obj, CAR_COLORS[colorIdx++ % CAR_COLORS.length])
     }
-    // roofs are standable: cars are immovable, the player collides
-    this.physics.add.collider(this.player.sprite, this.items)
+    // roofs are standable: cars are immovable, the player collides —
+    // except while dashing (dash-through, 2026-08-09-g) or while a
+    // pinching vehicle yields to the edge push (anti-crush guarantee).
+    // Structure tiles keep their own collider: dash never passes walls.
+    this.crushYieldCar = null
+    this.physics.add.collider(this.player.sprite, this.items, null, (_p, car) =>
+      this.carCollideFilter(car)
+    )
+
+    // one-time tutorial bubble on the first garage rush (2026-08-09-g),
+    // gated like the Bell Desk beat: a persisted control tip, shown once
+    if (!isGarageDashTipShown()) {
+      markGarageDashTipShown()
+      this.game.events.emit('system-bubble', {
+        text: "Dash goes THROUGH cars! Let's gooooo!", // canon phrase (2026-08-04-a)
+        accent: 0xfe701e, // Chexology Orange — tutorial voice, as the beat
+        holdMs: 10000,
+      })
+    }
 
     // ---- request plumbing
     this.waveRunner.fireRequest = (carName) => this.fireRequest(carName)
@@ -151,6 +169,37 @@ export default class GarageScene extends LevelScene {
 
   timeToExit(car) {
     return (car.x + car.displayWidth / 2 - this.scrollX) / this.scrollSpeed
+  }
+
+  // DASH-THROUGH-VEHICLES + ANTI-CRUSH (handoff 2026-08-09-g). The
+  // collider's process callback: returning false suspends this pair's
+  // separation for the frame. Dash-through ignores car state entirely —
+  // safe/tagged/inert pass identically, and passing through never tags
+  // (tagging stays on the tap/hold verbs and the request gate).
+  carCollideFilter(car) {
+    if (this.time.now < this.player.dashUntil) return false // dash-through
+    // anti-crush: a pinching vehicle yields to the edge push, latched
+    // until Chexy is clear of it (structure tiles NEVER yield)
+    if (car === this.crushYieldCar) return false
+    if (this.isPinch(car)) {
+      this.crushYieldCar = car
+      return false
+    }
+    return true
+  }
+
+  // the pinch (2026-08-09-g): edge push pressing + vehicle blocking
+  // ahead + no vertical escape (structure too low overhead to jump the
+  // car). In open sky the car stays solid — jumping out (or popping to
+  // the standable roof) is the escape; the yield exists for the case
+  // where geometry forbids both.
+  isPinch(car) {
+    const b = this.player.body
+    if (b.left > this.scrollX + TUNING.edgePushMargin + 2) return false // push not pressing
+    if (car.body.left < b.right - 4) return false // car isn't ahead-blocking
+    const needed = car.body.height + 8 // rise required to clear the car
+    const tiles = this.mainLayer.getTilesWithinWorldXY(b.left, b.top - needed, b.width + 8, needed)
+    return tiles.some((t) => t.collides)
   }
 
   // REQUEST GATE (handoff 2026-08-09-d, structural): a car is taggable
@@ -540,6 +589,18 @@ export default class GarageScene extends LevelScene {
     if (!this.runOver && !this.scene.isPaused()) {
       this.scrollX = Math.min(this.scrollX + (this.scrollSpeed * delta) / 1000, this.maxScroll)
     }
+    // dash extend-until-clear (2026-08-09-g): a dash expiring while
+    // overlapping a vehicle keeps going at dash speed until clear —
+    // never ends embedded, never pops vertically. Checked BEFORE
+    // Player.update so the expiry can't land this frame; once clear,
+    // the dash ends on its own terms (fresh fall, -g air rules intact).
+    if (
+      this.player &&
+      time < this.player.dashUntil &&
+      this.physics.overlap(this.player.sprite, this.items)
+    ) {
+      this.player.dashUntil = Math.max(this.player.dashUntil, time + delta + 10)
+    }
     super.update(time, delta)
     if (this.runOver) return
     this.updateGarage(time)
@@ -558,6 +619,15 @@ export default class GarageScene extends LevelScene {
         if (Math.abs(vx) > cap) this.player.body.setVelocityX(Math.sign(vx) * cap)
         this.player.body.setMaxVelocity(cap, TUNING.fallMaxSpeed)
       }
+    }
+
+    // anti-crush latch release: the yielded vehicle re-solidifies the
+    // moment Chexy is clear of it
+    if (
+      this.crushYieldCar &&
+      (!this.crushYieldCar.active || !this.physics.overlap(this.player.sprite, this.crushYieldCar))
+    ) {
+      this.crushYieldCar = null
     }
 
     // trailing edge: pushes, never harms (design ruling 4)
