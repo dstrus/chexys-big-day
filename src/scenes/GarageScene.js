@@ -17,6 +17,7 @@ import { isTuningPanelOpen, setPanelReadout } from '../debug/tuningPanel.js'
 const CAR_COLORS = [0x8a4b2a, 0x3e5f8a, 0x6d7f43, 0x7a5f9e, 0x555f66, 0x9e6b4a]
 const ELITE_ACCENT = 0xd94848 // raffle-red accent until V3 art exists
 const CHIP_TEAL = 0x006483 // the applied claim chip, as everywhere
+const SAFE_GREEN = 0x12b76a // Success Green — the banked-at-edge cue
 
 export default class GarageScene extends LevelScene {
   constructor() {
@@ -324,11 +325,40 @@ export default class GarageScene extends LevelScene {
     }
   }
 
+  // visibility rules (handoff 2026-08-09-e): no consequential elite
+  // action offscreen — untags may INITIATE only while any part of the
+  // target car is on-screen
+  carVisible(car) {
+    return (
+      car.x + car.displayWidth / 2 > this.scrollX &&
+      car.x - car.displayWidth / 2 < this.scrollX + this.scale.width
+    )
+  }
+
+  // SAFE-AT-EDGE (handoff 2026-08-09-e): the moment any part of a
+  // tagged car reaches the trailing edge, its check-in is BANKED —
+  // locked against elites, chip unrippable. Safe cars stay tagged, so
+  // the ranking, arrows, and Contact Card (which all skip tagged cars)
+  // drop them for free. The trailing edge is the garage's return-zone
+  // moment: a last-instant tag at the edge banks on the very next frame.
+  bankCar(car) {
+    car.setData('safe', true)
+    const chip = car.getData('chip')
+    if (chip) {
+      chip.setTint(SAFE_GREEN) // brief Success Green flash — the cue
+      this.time.delayedCall(500, () => {
+        if (chip.active) chip.setTint(CHIP_TEAL)
+      })
+    }
+  }
+
   // untag events are this level's steal initiations (design ruling 2):
   // stealCooldownMs, target lock, loiter, and post-stun grace all apply
   onEnemyTouchItem(enemy, item) {
     if (!enemy.getData('elite')) return // swarms obstruct only, take nothing
     if (!item.getData('tagged') || item.getData('drivingOff') || !item.active) return
+    if (item.getData('safe')) return // banked at the edge — unrippable
+    if (!this.carVisible(item)) return // untags initiate on-screen only
     if (enemy.getData('chipCar') || enemy.getData('stunnedUntil')) return
     if (!this.clearedToSteal(enemy)) return
 
@@ -444,9 +474,16 @@ export default class GarageScene extends LevelScene {
         continue
       }
 
-      // acquire: nearest TAGGED, not-driving-off car (target lock)
+      // acquire: nearest TAGGED, not-driving-off, not-SAFE car (target
+      // lock; a car going safe mid-flight releases the lock — 2026-08-09-e)
       let locked = enemy.getData('lockedTagged')
-      if (locked && (!locked.active || !locked.getData('tagged') || locked.getData('drivingOff'))) {
+      if (
+        locked &&
+        (!locked.active ||
+          !locked.getData('tagged') ||
+          locked.getData('drivingOff') ||
+          locked.getData('safe'))
+      ) {
         enemy.setData('lockedTagged', null)
         locked = null
       }
@@ -454,6 +491,7 @@ export default class GarageScene extends LevelScene {
         let nearestD = Infinity
         for (const car of this.items.getChildren()) {
           if (!car.active || !car.getData('tagged') || car.getData('drivingOff')) continue
+          if (car.getData('safe')) continue // banked — never a target
           const d = Phaser.Math.Distance.Between(enemy.x, enemy.y, car.x, car.y)
           if (d < nearestD) {
             nearestD = d
@@ -466,8 +504,10 @@ export default class GarageScene extends LevelScene {
       const goal = locked || this.player
       let goalX = goal.x
       let goalY = goal.y
-      if (locked && !this.clearedToSteal(enemy)) {
-        // menace loiter, as ruled — circle until cleared to strike
+      if (locked && (!this.clearedToSteal(enemy) || !this.carVisible(locked))) {
+        // menace loiter, as ruled — circle until cleared to strike.
+        // An offscreen target extends the same grammar (2026-08-09-e):
+        // orbit, readable, dive only once the car is visible.
         const orbit = (time / TUNING.loiterOrbitMs) * Math.PI * 2 + enemy.getData('seed')
         goalX += Math.cos(orbit) * TUNING.loiterRadius
         goalY += Math.sin(orbit) * TUNING.loiterRadius
@@ -523,9 +563,16 @@ export default class GarageScene extends LevelScene {
       if (p.body.velocity.x < 60) p.body.setVelocityX(60 + this.scrollSpeed) // ...with a bouncy nudge
     }
 
-    // car exit checks
+    // safe-at-edge bank pass (2026-08-09-e), then exit checks
     for (const car of this.items.getChildren()) {
       if (!car.active || car.getData('drivingOff')) continue
+      if (
+        car.getData('tagged') &&
+        !car.getData('safe') &&
+        car.x - car.displayWidth / 2 <= this.scrollX
+      ) {
+        this.bankCar(car)
+      }
       const right = car.x + car.displayWidth / 2
       if (right >= this.scrollX - 4) continue
       if (car.getData('requested') && !car.getData('tagged')) this.onCarMissed(car)

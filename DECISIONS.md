@@ -1794,3 +1794,56 @@ live; unrequested bonus removed; auto-target blind to
 inert cars. Tag-banking dead, position-banking is the
 skill. One structural change per round — other levers
 held for round-3 calibration.
+
+## 2026-08-10 — Handoff 2026-08-09-e applied
+
+- Sequence check: 2026-08-09-d applied and committed first ✓.
+- Item 1a: elite untags INITIATE only while any part of the target
+  car is on-screen (carVisible guard in onEnemyTouchItem). An elite
+  whose target is offscreen falls into the standard loiter grammar
+  (the loiter branch now also covers not-visible) and dives once
+  the car is visible. Locking an offscreen car remains legal —
+  initiation is what gates. Verified: elite pinned overlapping an
+  offscreen tagged car, cooldown cleared, 1.2s — no rip, lock held,
+  loitering; same elite the moment the car warped on-screen —
+  rip landed.
+- Item 1b: SAFE-AT-EDGE — a tagged car whose left edge reaches the
+  trailing edge banks (safe flag): elites can neither lock nor rip
+  it (acquire skips safe; a lock releases if its car goes safe
+  mid-flight and re-acquires per normal rules); cue is a brief
+  Success Green chip flash (0x12b76a, 500ms). Safe cars stay
+  tagged, so the shared ranking, arrows, and Contact Card drop
+  them with no new plumbing (all three skip tagged cars). The
+  stun-rescue chip flight composes: a chip re-applying to a car
+  that meanwhile reached the edge re-tags it and it banks on the
+  next frame. Verified: bank fires with the car half-exposed; a
+  cooldown-cleared elite pinned on the safe car for 1s locked
+  nothing and ripped nothing; card pick null / rank 2 / taggable
+  false / arrow predicate false.
+- Item 2 report (carried-chip escape — behavior that falls out):
+  NEITHER named shape exactly. The revert happens at RIP time (the
+  car goes requested-unmet the moment the chip is torn), so when a
+  carrier exits nothing remains to auto-revert — escape only
+  forfeits the stun-rescue shortcut (chip auto-reapply). The chase
+  is contestable for its entire flight: flee speed is
+  enemySpeed×carrierSpeedFactor + scroll (27.5px/s + scroll) vs
+  player 150, and the only escape hatch is the LEADING edge (+48px)
+  — never the trailing edge. Verified end-to-end: carrier fled
+  forward at 28px/s (scroll frozen), exited ahead, chip destroyed,
+  car left requested-unmet and immediately re-taggable. Read as
+  consistent with BRIEF-05 §2's interception guarantee; flagged for
+  a ruling only if the design chat sees a conflict.
+- Item 2, generator guard: static sweep of all 28 garage requests —
+  worst case fires with the car 98px (2.2s) ahead of the trailing
+  edge; all margins positive. Structurally, a car cannot enter
+  already-safe: safe requires tagged, tagged requires a live
+  request (the -d gate), and fully-exited unrequested cars are
+  destroyed before fireRequest could resolve them.
+- Item 3: ruling entry appended verbatim below.
+
+2026-08-09 — Visibility rules for elites (handoff
+2026-08-09-e): untags initiate on-screen only; tagged
+cars are SAFE once any part reaches the trailing edge
+(banked, locked, cued). No consequential elite action
+offscreen — the ambush channel is closed and the
+trailing edge becomes the garage's return-zone moment.
