@@ -439,6 +439,15 @@
     "spriteSourceSize": { "x": 0, "y": 0, "w": 48, "h": 48 },
     "sourceSize": { "w": 48, "h": 48 },
     "duration": 120
+   },
+   {
+    "filename": "49",
+    "frame": { "x": 51, "y": 251, "w": 48, "h": 48 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 48, "h": 48 },
+    "sourceSize": { "w": 48, "h": 48 },
+    "duration": 120
    }
  ],
  "meta": {
@@ -459,7 +468,8 @@
    { "name": "hold", "from": 37, "to": 39, "direction": "forward", "color": "#000000ff" },
    { "name": "hit", "from": 40, "to": 42, "direction": "forward", "color": "#000000ff" },
    { "name": "teeter", "from": 43, "to": 46, "direction": "forward", "color": "#000000ff" },
-   { "name": "win", "from": 47, "to": 48, "direction": "forward", "color": "#000000ff" }
+   { "name": "win", "from": 47, "to": 48, "direction": "forward", "color": "#000000ff" },
+   { "name": "lose", "from": 49, "to": 49, "direction": "forward", "color": "#000000ff" }
   ]
  }
 }
