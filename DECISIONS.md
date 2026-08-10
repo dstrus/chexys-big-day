@@ -1757,3 +1757,40 @@ ceiling lesson logged; tension-band instrument permanent.
 Swarms gain contact-slow (position is the garage's
 currency); elites spawn ahead (legible intent); band
 floor held hot for round-2 calibration.
+
+## 2026-08-10 — Handoff 2026-08-09-d applied
+
+- Sequence check: 2026-08-09-c applied and committed first, per this
+  handoff's own item 0 ✓.
+- Item 2: REQUEST GATE implemented as a single GarageScene
+  isTaggable override (requested-unmet only). The base scene routes
+  auto-target, glow, whiff-lock, tap completion, hold gating, and
+  the danger ranking through isTaggable, so inert cars vanish from
+  all of them at once. The garage arrow pass and Contact Card
+  already filtered to live requests. Unrequested-tag bonus removed
+  (completeTag else-branch, carBonusScore tunable, panel slider).
+  Elite untags untouched: tagged=false with requested kept =
+  requested-unmet, so the gate re-opens. BRIEF-05 §1/§3 and DESIGN
+  §3.3 amended.
+- Item 3 verified (staged headless, dashUnlocked seeded per the -c
+  finding): pinned at the leading edge with tap spammed EVERY frame
+  while cars scrolled through the target radius — 654 frames with
+  an inert car in range produced 0 targets, 0 tags, 0 score
+  (tag-everything demonstrably dead, not just untested). Firing a
+  request made the same spam tag that car at once (+100 standard,
+  no bonus path). Elite-untag transition re-opened the gate and the
+  re-tag paid nothing (score-once held). Ranking/card verified, not
+  assumed: with no live requests mostEndangeredItem() returns null
+  even amid dressing and tagged cars; with one live far request it
+  picks exactly that car; inert cars rank class 2. No console
+  errors.
+- Item 4: all other levers held (request count, band floor 1.04,
+  overlap, gap width) — one structural change per round.
+- Item 5: ruling entry appended verbatim below.
+
+2026-08-09 — Round 2: request gate ruled (handoff
+2026-08-09-d). Cars taggable only while their request is
+live; unrequested bonus removed; auto-target blind to
+inert cars. Tag-banking dead, position-banking is the
+skill. One structural change per round — other levers
+held for round-3 calibration.

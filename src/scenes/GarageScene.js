@@ -152,6 +152,16 @@ export default class GarageScene extends LevelScene {
     return (car.x + car.displayWidth / 2 - this.scrollX) / this.scrollSpeed
   }
 
+  // REQUEST GATE (handoff 2026-08-09-d, structural): a car is taggable
+  // ONLY while its request is live. Before its request — and always,
+  // for dressing — it is inert scenery: auto-target skips it (no
+  // whiff), the glow never lands on it, tap and hold cannot reach it.
+  // Elite untags return a car to requested-unmet, so it re-gates open.
+  // Tag-banking is dead; POSITION-banking is the intended skill.
+  isTaggable(car) {
+    return car.active && car.getData('requested') === true && !car.getData('tagged')
+  }
+
   onCarMissed(car) {
     // the garage's loss channel (design session ruling 1): a REQUESTED,
     // untagged car crossing the trailing edge = 1 lost item
@@ -194,18 +204,16 @@ export default class GarageScene extends LevelScene {
       this.syncChip(item)
     }
 
+    // the request gate means only live requests ever reach here; the
+    // unrequested-tag bonus was REMOVED with the gate (2026-08-09-d —
+    // it rewarded the dominant tag-on-sight strategy)
     if (!item.getData('scored')) {
       item.setData('scored', true)
-      if (item.getData('requested')) {
-        this.itemsReturned += 1
-        const factor = (item.getData('tier') ?? 1) >= 3 ? TUNING.tier3ScoreFactor : 1
-        this.addScore(TUNING.standardItemScore * factor)
-        if (!viaCard) this.onCleanProgress() // card saves stay streak-neutral
-        this.game.events.emit(viaCard ? 'guest-card' : 'guest-happy', { guest: item.name })
-      } else {
-        // dressing with upside: small bonus, no streak, no bubble
-        this.addScore(TUNING.carBonusScore)
-      }
+      this.itemsReturned += 1
+      const factor = (item.getData('tier') ?? 1) >= 3 ? TUNING.tier3ScoreFactor : 1
+      this.addScore(TUNING.standardItemScore * factor)
+      if (!viaCard) this.onCleanProgress() // card saves stay streak-neutral
+      this.game.events.emit(viaCard ? 'guest-card' : 'guest-happy', { guest: item.name })
     }
 
     this.scheduleDriveOff(item)

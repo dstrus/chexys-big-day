@@ -78,7 +78,6 @@ export const TUNING = {
   // valet garage (BRIEF-05): request-queue auto-scroll
   requestGraceMs: 1500, // lead-time slack the request readout must hold
   luxuryLeadFactor: 1.5, // luxury requests need this × the standard lead
-  carBonusScore: 25, // tagging an unrequested dressing car (score only)
   driveOffDelayMs: 5000, // tagged car sits (elite-vulnerable) before pulling
   // out — retuned 2500→5000 after the first punch list: the tagged
   // backlog must persist long enough for elite pressure to exist
@@ -152,7 +151,6 @@ export const TUNING_SCHEMA = [
   { key: 'loiterOrbitMs', label: 'Loiter orbit (ms)', min: 1000, max: 8000, step: 200 },
   { key: 'requestGraceMs', label: 'Request grace (ms)', min: 0, max: 5000, step: 100 },
   { key: 'luxuryLeadFactor', label: 'Luxury lead factor', min: 1, max: 3, step: 0.1 },
-  { key: 'carBonusScore', label: 'Dressing-car bonus', min: 0, max: 100, step: 5 },
   { key: 'driveOffDelayMs', label: 'Drive-off delay (ms)', min: 0, max: 6000, step: 250 },
   { key: 'swarmSlowFactor', label: 'Swarm slow factor', min: 0.1, max: 1, step: 0.05 },
   { key: 'swarmSlowMs', label: 'Swarm slow (ms)', min: 0, max: 2000, step: 50 },

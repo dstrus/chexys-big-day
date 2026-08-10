@@ -33,8 +33,19 @@ out and drives off (paperless — no carrying, no backtracking).
 - **Miss = loss:** a REQUESTED, untagged car crossing the
   trailing edge is 1 lost item (angry bubble; hangers/Game
   Over unchanged). DESIGN §2.1 amendment below. Unrequested
-  cars scroll out freely; tagging one is worth small bonus
-  score (dressing with upside).
+  cars scroll out freely.
+- **Request gate (handoff 2026-08-09-d, round-2 structural
+  ruling):** a car is taggable ONLY while its request is
+  live (requested-unmet). Before its request — and always,
+  for unrequested dressing — the car is inert scenery: the
+  auto-target radius skips it entirely (no whiff), arrows
+  ignore it, tap does nothing near it. The unrequested-tag
+  bonus is REMOVED (it rewarded tag-on-sight, the dominant
+  strategy that drained request pressure before it existed).
+  Elite untags return a car to requested-unmet — re-taggable,
+  unchanged. Position-banking is fully legal and is the
+  intended skill: pre-route toward upcoming work, never
+  pre-complete it.
 - Arrows (§2.4) point at requested cars; urgency rises as a
   car nears the trailing edge, consistent with the shared
   endangerment ranking (a nearly-lost car ranks as carried-
@@ -65,7 +76,8 @@ out and drives off (paperless — no carrying, no backtracking).
 - Cars are the level's platform vocabulary: roofs are
   standable (2–3 structure tiers + car-roof routes). Parked
   cars use the placement-validity gate like any item.
-- **Standard cars:** instant tap (windup applies as ever).
+- **Standard cars:** instant tap (windup applies as ever) —
+  once their request is live (§1 request gate); inert before.
 - **Luxury cars (hold-tier, SPARINGLY — 2–3 requests per
   rush):** tier-3 full hold. Placed with EXTRA lead time
   (luxuryLeadFactor, default 1.5×) because holding while the

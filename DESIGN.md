@@ -291,7 +291,12 @@ the request queue — the level scrolls right at constant speed
 (per-section knob built, shipped flat); guests text for their
 cars, which appear as HUD chips in the car's body color. Requested
 cars are parked ahead among unrequested dressing cars; tag them
-and they drive off themselves (paperless, no carrying). Requests
+and they drive off themselves (paperless, no carrying). **Request
+gate (2026-08-09-d):** a car is taggable only while its request is
+live — before it, and always for dressing cars, it is inert
+scenery (auto-target, arrows, and tap all skip it; no bonus for
+unrequested tags). Position-banking is the level's skill;
+pre-completion is impossible. Requests
 carry a fairness lead time validated in scroll coordinates with a
 per-request readout (the (c) inequality's sibling); a requested
 car scrolling out untagged is the level's loss channel (§2.1).
