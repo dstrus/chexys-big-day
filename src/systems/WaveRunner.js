@@ -4,12 +4,13 @@
 // intervals inside the clamped band. Field caps (maxItemsOnField) are
 // enforced by the scene's spawn callback, not here.
 export default class WaveRunner {
-  constructor(scene, schedule, { spawnItem, spawnEnemy, spawnCollectible }) {
+  constructor(scene, schedule, { spawnItem, spawnEnemy, spawnCollectible, fireRequest }) {
     this.scene = scene
     this.entries = [...schedule.entries].sort((a, b) => a.time - b.time)
     this.spawnItem = spawnItem
     this.spawnEnemy = spawnEnemy
     this.spawnCollectible = spawnCollectible
+    this.fireRequest = fireRequest // garage request-queue entries (BRIEF-05)
     this.elapsed = 0
     this.cursor = 0
   }
@@ -28,17 +29,21 @@ export default class WaveRunner {
     for (let i = 0; i < count; i++) {
       const spawn =
         entry.type === 'enemy'
-          ? () => this.spawnEnemy()
+          ? // the entry passes through so garage waves can mark elites
+            () => this.spawnEnemy(entry)
           : entry.type === 'collectible'
             ? // BRIEF-04: { type: 'collectible', collectibleType, spawnPoint }
               () => this.spawnCollectible?.(entry.collectibleType, entry.spawnPoint ?? 'any')
-            : () =>
-                this.spawnItem(
-                  entry.spawnPoint ?? 'any',
-                  entry.itemCategory ?? 'coat',
-                  entry.weightTier ?? 1,
-                  entry.fallbackSpawnPoints ?? []
-                )
+            : entry.type === 'request'
+              ? // BRIEF-05: { type: 'request', car: '<car object name>' }
+                () => this.fireRequest?.(entry.car)
+              : () =>
+                  this.spawnItem(
+                    entry.spawnPoint ?? 'any',
+                    entry.itemCategory ?? 'coat',
+                    entry.weightTier ?? 1,
+                    entry.fallbackSpawnPoints ?? []
+                  )
       if (i === 0) spawn()
       else this.scene.time.delayedCall(i * intervalMs, spawn)
     }

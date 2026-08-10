@@ -1592,3 +1592,55 @@ speed constant for v1, per-section knob built but flat.
 Endangerment ranking gains a garage-scoped scroll-distance
 input. dashAllowed: true — first map under the -c
 convention.
+
+## 2026-08-09 — BRIEF-05 session 1 executed: garage scroll/request core
+
+Ordered by the human ("Start") after -b logged the design session.
+Everything through the §5 seam; blockout + wave arc are session 2.
+
+Shipped: GarageScene extends LevelScene (scene key 'Garage', routed
+via a new sceneKey field on the level roster; UIOverlay now resolves
+the active gameplay scene from the registry instead of a hardcoded
+'Level'). Scroll clock with float accumulator + rounded camera (the
+jitter-saga discipline); rush duration = scroll length. Cars are the
+item vocabulary AND platform vocabulary: immovable bodies the player
+stands on, tinted silhouette rects (sedan/SUV/luxury) in garment
+hues, placement-gated. Request lifecycle: wave 'request' entries →
+HUD chips (car body color, gold dot = hold-tier) → tag = score once
++ chip + drive-off after driveOffDelayMs (the elite-vulnerability
+window — an implementation-necessary tunable the brief implies;
+flagging) → resolve green at pull-out; a requested car crossing the
+trailing edge = the garage loss channel (bubble/struggle/hangers).
+Request fairness precomputed at load in scroll coordinates
+(max-effort traversal from the trailing edge at fire time + grace,
+luxury ×luxuryLeadFactor with the hold added), RED entries
+console-warned with the fix direction, panel readout replaces the
+(c) inequality on this level (which cannot apply — no vertical
+escape), per-request green/red rings in the fairness overlay.
+Enemies: swarms (flock drift, obstruct only — hold interrupts +
+grace inherited); elites (V1 art + raffle-red accent) lock the
+nearest TAGGED car with loiter/cooldown semantics, untag on strike,
+carry the chip overhead fleeing WITH the scroll (encumbered +
+scrollSpeed — always slower than the player), rescue-stun returns
+the chip in flight and auto-reapplies streak/score-neutrally, NFC
+drop per stun as everywhere. Scroll-aware endangerment (level-
+scoped): requested cars rank by time-to-exit, <4s = carried-class;
+Contact Card saves the most-endangered REQUEST and never wastes on
+dressing. Trailing edge pushes (clamp + nudge), never harms; a hold
+caught by the edge quiet-resets with zero struggle. DESIGN §2.1 /
+§3.3 / §2.4 amendments applied per BRIEF-05 §6.
+
+Verified headless: scroll advances with an integer camera; all 10
+skeleton requests green; tag → +100/chip/drive-off/green resolve;
+forced miss → exactly one loss + angry bubble + red resolve; luxury
+300ms hold; edge-caught hold quiet-reset (struggles 0, player
+clamped to the edge); elite loop end-to-end with no double score
+(the "score drift" in the test was the player instantly collecting
+the stun's NFC drop — correct); near-edge request ranks 0 and the
+card picks it; pause/exit teardown works from the Garage scene via
+the registry; coatroom and belldesk regression-clean. Judgment
+calls flagged: driveOffDelayMs 2500 default; dressing-car tags
+score carBonusScore with no streak and no bubble; chip teal
+0x006483; elite accent 0xd94848 pending V3 art. Map and waves are
+SESSION-1 SKELETONS — session 2 replaces them with the real 8–10
+screen blockout, roof routes, dash gap, and the four-phase arc.

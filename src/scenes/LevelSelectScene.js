@@ -117,7 +117,7 @@ export default class LevelSelectScene extends Phaser.Scene {
       if (this.unlockedNow[this.idx]) {
         audio.play('uiSelect')
         this.scene.launch('UIOverlay')
-        this.scene.start('Level', { mapKey: lvl.mapKey })
+        this.scene.start(lvl.sceneKey ?? 'Level', { mapKey: lvl.mapKey })
       } else {
         audio.play('interrupt') // locked
       }

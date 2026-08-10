@@ -1,0 +1,102 @@
+{
+  "entries": [
+    {
+      "time": 6,
+      "type": "request",
+      "car": "car-02"
+    },
+    {
+      "time": 18,
+      "type": "request",
+      "car": "car-03"
+    },
+    {
+      "time": 15,
+      "type": "enemy",
+      "count": 2,
+      "interval": 0.8
+    },
+    {
+      "time": 34,
+      "type": "request",
+      "car": "car-05"
+    },
+    {
+      "time": 45,
+      "type": "enemy",
+      "count": 2,
+      "interval": 0.8
+    },
+    {
+      "time": 52,
+      "type": "request",
+      "car": "car-06"
+    },
+    {
+      "time": 60,
+      "type": "enemy",
+      "elite": true,
+      "count": 1
+    },
+    {
+      "time": 70,
+      "type": "collectible",
+      "collectibleType": "insightReport",
+      "spawnPoint": "item-03"
+    },
+    {
+      "time": 76,
+      "type": "request",
+      "car": "car-08"
+    },
+    {
+      "time": 85,
+      "type": "enemy",
+      "count": 3,
+      "interval": 0.7
+    },
+    {
+      "time": 92,
+      "type": "collectible",
+      "collectibleType": "contactCard",
+      "spawnPoint": "item-04"
+    },
+    {
+      "time": 96,
+      "type": "request",
+      "car": "car-09"
+    },
+    {
+      "time": 105,
+      "type": "enemy",
+      "elite": true,
+      "count": 1
+    },
+    {
+      "time": 108,
+      "type": "request",
+      "car": "car-10"
+    },
+    {
+      "time": 128,
+      "type": "request",
+      "car": "car-11"
+    },
+    {
+      "time": 132,
+      "type": "enemy",
+      "count": 3,
+      "interval": 0.7
+    },
+    {
+      "time": 146,
+      "type": "request",
+      "car": "car-13"
+    },
+    {
+      "time": 158,
+      "type": "request",
+      "car": "car-14"
+    }
+  ]
+}

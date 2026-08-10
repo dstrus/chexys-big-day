@@ -1,6 +1,7 @@
 import Phaser from 'phaser'
 import coatroomMap from '../../assets/maps/coatroom.json'
 import belldeskMap from '../../assets/maps/belldesk.json'
+import garageMap from '../../assets/maps/garage.json'
 import { audio } from '../systems/AudioBus.js'
 
 // Placeholder art only: every "sprite" is a generated texture. Maps are
@@ -242,6 +243,10 @@ export default class BootScene extends Phaser.Scene {
     this.cache.tilemap.add('belldesk', {
       format: Phaser.Tilemaps.Formats.TILED_JSON,
       data: belldeskMap,
+    })
+    this.cache.tilemap.add('garage', {
+      format: Phaser.Tilemaps.Formats.TILED_JSON,
+      data: garageMap,
     })
 
     this.scene.start('Title')

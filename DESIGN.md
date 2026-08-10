@@ -50,7 +50,8 @@ violence against people — the only thing you ever destroy is paper.
 
 ### 2.1 Fail state
 
-- A stolen item (carried out by a thief) = **1 lost item** (angry guest text bubble).
+- A stolen item, or (auto-scroll levels) a requested car that
+  scrolls out untagged = **1 lost item** (angry guest text bubble).
 - 3 lost items ends the run. Friendly retry, no lives system.
 
 ### 2.2 Controls (v1)
@@ -196,7 +197,9 @@ proximity / dive imminence / at-rest age (oldest first)
 as the consumer requires). Consumers may scope (radius) and tie-break
 differently, but the danger ORDER is defined once. The
 game must never disagree with itself about what is most
-at risk.
+at risk. Auto-scroll levels add a level-scoped input:
+distance to the trailing edge — a nearly-scrolled-out
+requested car ranks carried-class (BRIEF-05 §4).
 
 ## 2.5 Difficulty & Run Length (RESOLVED)
 
@@ -280,9 +283,24 @@ tunable). The adaptive multiplier and BIG DAY bonus apply
 on top as ever.
 
 ### 3.3 Level 3 — The Valet Garage
-Auto-scrolling parking structure. Sprint to retrieve the right car
-while ticket swarms fill the air. **New mechanic:** auto-scroll +
-vehicle riding.
+Auto-scrolling parking structure, night shift. **New mechanic:**
+the request queue — the level scrolls right at constant speed
+(per-section knob built, shipped flat); guests text for their
+cars, which appear as HUD chips in the car's body color. Requested
+cars are parked ahead among unrequested dressing cars; tag them
+and they drive off themselves (paperless, no carrying). Requests
+carry a fairness lead time validated in scroll coordinates with a
+per-request readout (the (c) inequality's sibling); a requested
+car scrolling out untagged is the level's loss channel (§2.1).
+Enemies are hybrid: swarms obstruct only; elite stubs untag tagged
+cars and flee WITH the scroll carrying the chip — rescue-stun
+returns it (untags consume steal-initiation semantics). Car roofs
+are standable platforms; luxury cars are sparse tier-3 holds with
+extra lead (holding while the world scrolls is the level's
+signature tension). The trailing edge pushes, never harms; a hold
+caught by the edge quiet-resets. Vehicle riding beyond
+cars-as-platforms is v2. (Condensed from BRIEF-05 §1–§3; rulings
+in handoff 2026-08-09-b.)
 
 ### 3.4 Level 4 — The Stroller Valet
 Museum, chaos mode. Strollers, kid backpacks, sippy cups at high

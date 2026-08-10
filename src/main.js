@@ -4,6 +4,7 @@ import BootScene from './scenes/BootScene.js'
 import TitleScene from './scenes/TitleScene.js'
 import LevelSelectScene from './scenes/LevelSelectScene.js'
 import LevelScene from './scenes/LevelScene.js'
+import GarageScene from './scenes/GarageScene.js'
 import UIOverlayScene from './scenes/UIOverlayScene.js'
 import { initTuningPanel } from './debug/tuningPanel.js'
 
@@ -51,7 +52,7 @@ const game = new Phaser.Game({
     mode: Phaser.Scale.NONE,
     zoom: integerZoom(),
   },
-  scene: [BootScene, TitleScene, LevelSelectScene, LevelScene, UIOverlayScene],
+  scene: [BootScene, TitleScene, LevelSelectScene, LevelScene, GarageScene, UIOverlayScene],
 })
 
 window.addEventListener('resize', () => game.scale.setZoom(integerZoom()))

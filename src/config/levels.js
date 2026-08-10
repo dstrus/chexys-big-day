@@ -7,7 +7,8 @@ import { levelCleared } from '../systems/progress.js'
 export const LEVELS = [
   { id: 'coatroom', name: 'THE COATROOM', mapKey: 'coatroom', unlocked: true },
   { id: 'belldesk', name: 'THE BELL DESK', mapKey: 'belldesk', requiresClear: 'coatroom' },
-  { id: 'valet', name: '???', unlocked: false },
+  // the garage runs its own scene (auto-scroll core, BRIEF-05)
+  { id: 'garage', name: 'THE VALET GARAGE', mapKey: 'garage', sceneKey: 'Garage', requiresClear: 'belldesk' },
   { id: 'stroller', name: '???', unlocked: false },
   { id: 'exodus', name: '???', unlocked: false },
 ]

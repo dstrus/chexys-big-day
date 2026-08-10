@@ -75,6 +75,13 @@ export const TUNING = {
   insightDurationMs: 10000,
   insightFactor: 2.0, // Insights Report: score gains ×, MULTIPLICATIVE with adaptive
 
+  // valet garage (BRIEF-05): request-queue auto-scroll
+  requestGraceMs: 1500, // lead-time slack the request readout must hold
+  luxuryLeadFactor: 1.5, // luxury requests need this × the standard lead
+  carBonusScore: 25, // tagging an unrequested dressing car (score only)
+  driveOffDelayMs: 2500, // tagged car sits (elite-vulnerable) before pulling out
+  edgePushMargin: 10, // trailing-edge nudge zone (px past the view edge)
+
   // adaptive intensity / multiplier (DESIGN.md §2.5 skeleton)
   adaptiveBand: 0.3,
   adaptiveStep: 0.1,
@@ -139,6 +146,10 @@ export const TUNING_SCHEMA = [
   { key: 'stealFairnessMarginMs', label: 'Steal margin (ms)', min: 0, max: 2000, step: 50 },
   { key: 'loiterRadius', label: 'Loiter radius', min: 8, max: 80, step: 2 },
   { key: 'loiterOrbitMs', label: 'Loiter orbit (ms)', min: 1000, max: 8000, step: 200 },
+  { key: 'requestGraceMs', label: 'Request grace (ms)', min: 0, max: 5000, step: 100 },
+  { key: 'luxuryLeadFactor', label: 'Luxury lead factor', min: 1, max: 3, step: 0.1 },
+  { key: 'carBonusScore', label: 'Dressing-car bonus', min: 0, max: 100, step: 5 },
+  { key: 'driveOffDelayMs', label: 'Drive-off delay (ms)', min: 0, max: 6000, step: 250 },
   { key: 'tagMagnetRadius', label: 'Tag magnet radius', min: 0, max: 80, step: 2 },
   { key: 'tagScoreValue', label: 'Tag score', min: 0, max: 200, step: 10 },
   { key: 'cardLingerMs', label: 'Card linger (ms)', min: 2000, max: 20000, step: 500 },

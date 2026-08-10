@@ -13,12 +13,15 @@ import { isTuningPanelOpen, setPanelReadout } from '../debug/tuningPanel.js'
 // documents the conventions). The map supplies geometry, spawn points,
 // zones, and rush parameters; gameplay systems are shared across levels.
 export default class LevelScene extends Phaser.Scene {
-  constructor() {
-    super('Level')
+  constructor(key = 'Level') {
+    super(key) // subclasses (GarageScene) pass their own scene key
   }
 
   init(data) {
     this.mapKey = data.mapKey || 'coatroom'
+    // UIOverlay resumes/tears down the ACTIVE gameplay scene by key —
+    // subclasses (GarageScene) register their own key here
+    this.game.registry.set('activeLevelKey', this.scene.key)
   }
 
   create() {

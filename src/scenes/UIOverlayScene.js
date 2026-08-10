@@ -79,6 +79,8 @@ export default class UIOverlayScene extends Phaser.Scene {
     bus.on('guest-angry', this.onGuestAngry, this)
     bus.on('guest-card', this.onGuestCard, this)
     bus.on('system-bubble', this.onSystemBubble, this)
+    bus.on('request-added', this.onRequestAdded, this)
+    bus.on('request-done', this.onRequestDone, this)
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
       bus.off('hud', this.onHud, this)
       bus.off('run-over', this.onRunOver, this)
@@ -89,6 +91,8 @@ export default class UIOverlayScene extends Phaser.Scene {
       bus.off('guest-angry', this.onGuestAngry, this)
       bus.off('guest-card', this.onGuestCard, this)
       bus.off('system-bubble', this.onSystemBubble, this)
+      bus.off('request-added', this.onRequestAdded, this)
+      bus.off('request-done', this.onRequestDone, this)
     })
   }
 
@@ -112,6 +116,55 @@ export default class UIOverlayScene extends Phaser.Scene {
   // (BRIEF-03): custom text, accent color, and hold time
   onSystemBubble(opts) {
     this.showBubble('happy', opts)
+  }
+
+  // ---- garage request queue (BRIEF-05 §1): car-silhouette chips in the
+  // car's body color, stacked left-to-right under the timer; a resolved
+  // chip flashes its outcome (green tag / red miss) and leaves the row
+
+  onRequestAdded({ key, color, luxury }) {
+    if (!this.requestChips) this.requestChips = new Map()
+    const chip = this.add.container(0, 0, [
+      this.add.rectangle(0, 0, 16, 9, color).setStrokeStyle(1, 0xf2ecd8, 0.9),
+      ...(luxury
+        ? [this.add.rectangle(5, -2, 3, 3, 0xffe066)] // gold dot = hold-tier
+        : []),
+    ])
+    chip.setDepth(21)
+    this.requestChips.set(key, chip)
+    this.layoutRequestChips()
+  }
+
+  onRequestDone({ key, ok }) {
+    const chip = this.requestChips?.get(key)
+    if (!chip) return
+    this.requestChips.delete(key)
+    const flash = this.add
+      .rectangle(chip.x, chip.y, 16, 9, ok ? 0x12b76a : 0xea5151)
+      .setDepth(22)
+    chip.destroy()
+    this.tweens.add({
+      targets: flash,
+      alpha: 0,
+      y: flash.y - 6,
+      duration: 450,
+      onComplete: () => flash.destroy(),
+    })
+    this.layoutRequestChips()
+  }
+
+  layoutRequestChips() {
+    let x = 64
+    for (const chip of this.requestChips.values()) {
+      chip.setPosition(x, 9)
+      x += 20
+    }
+  }
+
+  clearRequestChips() {
+    if (!this.requestChips) return
+    for (const chip of this.requestChips.values()) chip.destroy()
+    this.requestChips.clear()
   }
 
   pickLine(kind) {
@@ -269,10 +322,16 @@ export default class UIOverlayScene extends Phaser.Scene {
     this.pausePanel.setVisible(true)
   }
 
+  // the active gameplay scene key ('Level', 'Garage', ...) — set by
+  // LevelScene.init and inherited by subclasses
+  levelKey() {
+    return this.game.registry.get('activeLevelKey') ?? 'Level'
+  }
+
   resumeLevel() {
     this.pausePanel.setVisible(false)
     audio.resumeMusic() // track continues from where the pause held it
-    this.scene.resume('Level')
+    this.scene.resume(this.levelKey())
   }
 
   update(time) {
@@ -321,7 +380,7 @@ export default class UIOverlayScene extends Phaser.Scene {
           // CONFIRM: abandon the rush — the shared teardown records
           // nothing; destination is whichever option opened the confirm
           this.pausePanel.setVisible(false)
-          this.scene.get('Level').teardownRun(this.pendingDestination)
+          this.scene.get(this.levelKey()).teardownRun(this.pendingDestination)
         }
       }
     }
@@ -543,5 +602,6 @@ export default class UIOverlayScene extends Phaser.Scene {
     this.resultHangers.forEach((h) => h.setVisible(false))
     this.stampText.setVisible(false)
     this.clearBubbles()
+    this.clearRequestChips()
   }
 }

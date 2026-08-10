@@ -1,11 +1,13 @@
 import coatroomWaves from '../../assets/waves/coatroom-waves.json'
 import belldeskWaves from '../../assets/waves/belldesk-waves.json'
+import garageWaves from '../../assets/waves/garage-waves.json'
 
 // waveFile map property → schedule data. ESM imports so Vite bundles
 // the JSON (and hot-reloads the level when a wave file is edited).
 const REGISTRY = {
   'coatroom-waves.json': coatroomWaves,
   'belldesk-waves.json': belldeskWaves,
+  'garage-waves.json': garageWaves,
 }
 
 export function getWaveSchedule(file) {
