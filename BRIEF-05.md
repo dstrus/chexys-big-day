@@ -4,7 +4,7 @@
 then blockout + waves; split at the marked seam)
 **Prerequisite:** none open — BRIEF-03/-04 closed with sign-off.
 **Read first:** CLAUDE.md, DESIGN.md §2.3–§2.5, §3.3;
-DECISIONS.md (garage design session 2026-08-09); the fairness
+DECISIONS.md (garage design session, 2026-08-09-b); the fairness
 stack lineage (-c/-d/-e/-f, loiter, grace).
 
 **Theme:** multi-tier parking structure, night shift. Mood:
@@ -121,9 +121,9 @@ here)
 2. DESIGN §3.3: replace the one-line spec with the request-
    queue loop summary (this brief §1–§3 condensed).
 3. §2.4: note the scroll-aware ranking input as level-scoped.
-4. Log the full garage design session rulings in DECISIONS.md
-   citing 2026-08-09 (loss model, hybrid enemies, platforms-
-   only riding, edge push, sparse hold cars, constant scroll).
+4. Cite handoff 2026-08-09-b in the apply entry — the garage
+   design session rulings are already logged there (the log
+   precedes the build, per protocol).
 
 ## Acceptance
 

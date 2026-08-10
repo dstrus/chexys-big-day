@@ -1558,3 +1558,37 @@ dominance in play), kept as documented lever. Every
 shipped system is now played and certified. Remaining
 build surface: lose anim, audio content, polish ledger,
 and Phase 3's back half — Levels 3–5 and the boss.
+
+## 2026-08-09 — Handoff 2026-08-09-b applied
+
+- Sequence check: 2026-08-09-a applied (entry above) ✓.
+- Item 1: garage design session logged verbatim below —
+  pre-execution, resolving the "Read first" citation BRIEF-05
+  arrived with (flagged on arrival as pointing at a not-yet-written
+  entry).
+- Item 2: BRIEF-05 touch-ups applied — "Read first" now cites this
+  entry; §6.4 now cites this handoff instead of ordering a
+  post-build log.
+- Item 3: this entry.
+
+2026-08-09 — VALET GARAGE DESIGN SESSION (design chat;
+compiled into BRIEF-05). Core loop: request-queue
+auto-scroll — guests text for cars, requests carry a
+fairness lead time (spawn validation translated to scroll
+coordinates, per-request green/red readout), tagged cars
+drive off themselves. Rulings: (1) missed requested car =
+1 lost item — the second loss channel, garage-scoped,
+amending the -a steals-only ruling for auto-scroll levels;
+(2) enemies hybrid — swarms obstruct only, elite stubs
+untag tagged cars and carry the chip (rescue-stun returns
+it; untags consume steal-initiation semantics, elites flee
+WITH the scroll so interception holds); (3) vehicle riding
+scoped to cars-as-platforms only, riding setpieces to v2;
+(4) trailing edge pushes, never harms; hold caught by the
+edge = quiet reset, no struggle; (5) hold-tier luxury cars
+exist SPARINGLY (2–3/rush, 1.5× lead) — holding-while-
+scrolling is the level's signature tension; (6) scroll
+speed constant for v1, per-section knob built but flat.
+Endangerment ranking gains a garage-scoped scroll-distance
+input. dashAllowed: true — first map under the -c
+convention.
