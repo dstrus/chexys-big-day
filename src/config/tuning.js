@@ -83,6 +83,8 @@ export const TUNING = {
   // out — retuned 2500→5000 after the first punch list: the tagged
   // backlog must persist long enough for elite pressure to exist
   edgePushMargin: 10, // trailing-edge nudge zone (px past the view edge)
+  swarmSlowFactor: 0.4, // swarm contact-slow (2026-08-09-c): speed cap factor
+  swarmSlowMs: 600, // refresh-not-stack; dash immune and dash cancels it
 
   // adaptive intensity / multiplier (DESIGN.md §2.5 skeleton)
   adaptiveBand: 0.3,
@@ -152,6 +154,8 @@ export const TUNING_SCHEMA = [
   { key: 'luxuryLeadFactor', label: 'Luxury lead factor', min: 1, max: 3, step: 0.1 },
   { key: 'carBonusScore', label: 'Dressing-car bonus', min: 0, max: 100, step: 5 },
   { key: 'driveOffDelayMs', label: 'Drive-off delay (ms)', min: 0, max: 6000, step: 250 },
+  { key: 'swarmSlowFactor', label: 'Swarm slow factor', min: 0.1, max: 1, step: 0.05 },
+  { key: 'swarmSlowMs', label: 'Swarm slow (ms)', min: 0, max: 2000, step: 50 },
   { key: 'tagMagnetRadius', label: 'Tag magnet radius', min: 0, max: 80, step: 2 },
   { key: 'tagScoreValue', label: 'Tag score', min: 0, max: 200, step: 10 },
   { key: 'cardLingerMs', label: 'Card linger (ms)', min: 2000, max: 20000, step: 500 },

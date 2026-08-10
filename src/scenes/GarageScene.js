@@ -275,9 +275,10 @@ export default class GarageScene extends LevelScene {
     if (this.enemies.countActive() >= 8) return
     const elite = !!entry.elite
     const useArt = this.textures.exists('enemy-atlas')
-    // spawn relative to the VIEW: swarms enter ahead and drift across
-    // the path; elites enter behind and hunt the tagged backlog forward
-    const x = elite ? this.scrollX - 16 : this.scrollX + this.scale.width + 20
+    // spawn relative to the VIEW, always AHEAD (2026-08-09-c): elites
+    // enter from the leading edge and fly back toward tagged targets,
+    // visibly crossing the play space — never behind the player
+    const x = this.scrollX + this.scale.width + 20
     const y = Phaser.Math.Between(40, this.worldHeight - 80)
     const enemy = this.enemies.create(
       x,
@@ -300,6 +301,19 @@ export default class GarageScene extends LevelScene {
       enemy.setData('driftVx', -Phaser.Math.Between(8, 22))
     }
     return enemy
+  }
+
+  // swarm teeth (handoff 2026-08-09-c): contact briefly slows Chexy —
+  // position is the garage's currency. Refresh-not-stack; NOT
+  // interrupt-class (no hit anim, no struggle, no grace interaction —
+  // a graced player is still draggable); dash is immune and starting a
+  // dash cancels an active drag. The inherited hold-interrupt + grace
+  // path still runs via super.
+  onEnemyTouchPlayer(playerSprite, enemy) {
+    super.onEnemyTouchPlayer(playerSprite, enemy)
+    if (!enemy.getData('elite') && this.time.now >= this.player.dashUntil) {
+      this.swarmSlowUntil = this.time.now + TUNING.swarmSlowMs
+    }
   }
 
   // untag events are this level's steal initiations (design ruling 2):
@@ -478,6 +492,20 @@ export default class GarageScene extends LevelScene {
   }
 
   updateGarage(time) {
+    // swarm contact-slow: cap ground speed while the drag is live;
+    // Player.update re-asserts full maxVelocity every frame, so expiry
+    // restores itself with no cleanup
+    if (time < (this.swarmSlowUntil ?? 0)) {
+      if (time < this.player.dashUntil) {
+        this.swarmSlowUntil = 0 // dash cancels the drag
+      } else {
+        const cap = TUNING.maxSpeed * TUNING.swarmSlowFactor
+        const vx = this.player.body.velocity.x
+        if (Math.abs(vx) > cap) this.player.body.setVelocityX(Math.sign(vx) * cap)
+        this.player.body.setMaxVelocity(cap, TUNING.fallMaxSpeed)
+      }
+    }
+
     // trailing edge: pushes, never harms (design ruling 4)
     const edge = this.scrollX + TUNING.edgePushMargin
     const p = this.player

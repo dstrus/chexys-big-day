@@ -199,7 +199,10 @@ differently, but the danger ORDER is defined once. The
 game must never disagree with itself about what is most
 at risk. Auto-scroll levels add a level-scoped input:
 distance to the trailing edge — a nearly-scrolled-out
-requested car ranks carried-class (BRIEF-05 §4).
+requested car ranks carried-class (BRIEF-05 §4). Garage
+swarms briefly slow on contact, never permanently
+(swarmSlowFactor / swarmSlowMs, ruled 2026-08-09-c —
+position is the garage's currency).
 
 ## 2.5 Difficulty & Run Length (RESOLVED)
 

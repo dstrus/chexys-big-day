@@ -1719,3 +1719,41 @@ request count, not lead times. Needs design-chat rulings: swarm
 teeth (contact-slow would be a new rule — "slow nothing permanently"
 stands until amended), elite spawn side (currently behind), and
 whether the tension band's 3× slack threshold should be canon.
+
+## 2026-08-10 — Handoff 2026-08-09-c applied
+
+- Sequence check: 2026-08-09-b applied; -d arrived mid-application
+  and correctly ordered -c first (its item 0) ✓.
+- Item 1: round-1 retune ratified; tension-band instrument permanent
+  (threshold tunable). Lesson on the record: fairness readouts are
+  floors; tension bands are targets; levels need both.
+- Item 2: swarm contact-slow implemented per spec — swarmSlowFactor
+  0.4 / swarmSlowMs 600 on the panel; refresh-not-stack (the timer
+  resets, the cap never compounds); NOT interrupt-class (no hit
+  anim, no struggle, no grace grant or shield — verified struggles 0
+  and grace untouched through contact); dash immune and starting a
+  dash cancels an active drag; expiry self-restores (Player.update
+  re-asserts full maxVelocity every frame). §2.4 garage note
+  amended. Verified: 150 → 60 px/s on contact, full speed back at
+  expiry, dash-cancel confirmed.
+- Item 3: elites now spawn AHEAD (leading edge + margin), flying
+  back toward the tagged backlog — never behind the player.
+  Verified spawn x past the view's right edge.
+- Item 4: band floor held at 1.04 for round 2, per order.
+- VERIFICATION-ENVIRONMENT FINDING, logged so it never bites again:
+  fresh headless profiles never ran the Bell Desk beat, so
+  dashUnlocked was unset and THE DASH WAS SILENTLY LOCKED in every
+  prior garage test — the session-2 "dash-mandatory gap: MADE IT"
+  was actually a dashless frame-perfect edge-clip. Re-verified with
+  the unlock seeded: with-dash crossing lands 90px past the far
+  deck (comfortable); dashless remains a razor-thin edge-clip only.
+  The showcase stands as effectively dash-gated. Garage test
+  batteries must seed dashUnlocked.
+- Item 5: ruling entry appended verbatim below.
+
+2026-08-09 — Garage round 1 FAILED punch list; retune
+ratified (handoff 2026-08-09-c). Fairness-floor-as-
+ceiling lesson logged; tension-band instrument permanent.
+Swarms gain contact-slow (position is the garage's
+currency); elites spawn ahead (legible intent); band
+floor held hot for round-2 calibration.
