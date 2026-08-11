@@ -2054,3 +2054,24 @@ tags nothing and the dash exits clean at speed; a post-dash press
 tags normally; dash-into-hold remains impossible in the other
 direction (dash can't start while frozen), so no reverse wedge
 exists.
+
+## 2026-08-10 — The -f lever pulled: near-safe elite sanctuary (ratified)
+
+Round-4 report (human): elites still ripped tags off nearly-offscreen
+cars — no rescue window under the new tension; "starts to feel
+unfair." That is verbatim the trigger 2026-08-09-f pre-armed: "if
+round 3 reads it as ambush, the lever is elite target preference
+(bias away from near-safe cars), not the revert model." Lever
+pulled as EXCLUSION rather than soft bias (a preference would still
+rip the near-edge car whenever it was the only tagged target — the
+reported case): tagged cars within eliteSanctuaryS (4s, panel
+slider) of banking are invalid elite targets — acquire skips them,
+a lock releases when its car enters the sanctuary, initiation is
+refused. Same grammar as safe (-e), one notch earlier: the trailing
+edge is now a two-stage return zone — protected approach, then the
+bank. Guarantee: any rip leaves at least the sanctuary window to
+stun the carrier or re-tag. Verified staged: rip blocked at 2s-to-
+bank with a cooldown-cleared elite pinned on the car (and the car
+NOT yet safe — sanctuary is distinct); control rip lands at 8s;
+locks release on sanctuary entry with the tag intact. Human played
+it: "Much better. Still quite challenging. Keep it." Ratified.

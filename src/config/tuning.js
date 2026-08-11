@@ -91,6 +91,10 @@ export const TUNING = {
   eliteMaxActive: 2, // concurrent elite cap (in-session ruling 2026-08-10):
   // the auto-scroll bounds the usable space — more elites just stack the
   // trailing edge and feed the camp-and-spam loop
+  eliteSanctuaryS: 4, // near-safe sanctuary (the -f lever, pulled
+  // 2026-08-10): tagged cars within this many seconds of banking at the
+  // trailing edge are not valid elite targets — a rip that leaves no
+  // time to rescue is an ambush, not a clutch beat
   tagReachY: 28, // feet-level reach gate (in-session ruling 2026-08-10):
   // a car is taggable only when Chexy's feet are within this of the
   // car's wheels — deck cars can't be tagged through the deck floor,
@@ -167,6 +171,7 @@ export const TUNING_SCHEMA = [
   { key: 'swarmSlowFactor', label: 'Swarm slow factor', min: 0.1, max: 1, step: 0.05 },
   { key: 'swarmSlowMs', label: 'Swarm slow (ms)', min: 0, max: 2000, step: 50 },
   { key: 'eliteMaxActive', label: 'Elite cap', min: 0, max: 8, step: 1 },
+  { key: 'eliteSanctuaryS', label: 'Elite sanctuary (s)', min: 0, max: 8, step: 0.5 },
   { key: 'tagReachY', label: 'Tag reach (y px)', min: 8, max: 96, step: 2 },
   { key: 'tagMagnetRadius', label: 'Tag magnet radius', min: 0, max: 80, step: 2 },
   { key: 'tagScoreValue', label: 'Tag score', min: 0, max: 200, step: 10 },

@@ -425,6 +425,20 @@ export default class GarageScene extends LevelScene {
     }
   }
 
+  // elite target validity — the -f lever, pulled 2026-08-10 after the
+  // round-4 report (near-edge rips left no rescue window under the new
+  // tension): a tagged car inside the near-safe SANCTUARY (within
+  // eliteSanctuaryS of banking) is not a valid elite target. Same
+  // treatment as safe, one notch earlier: acquire skips it, a lock
+  // releases when its car enters sanctuary, initiation is refused.
+  // Any rip therefore leaves at least the sanctuary window to rescue.
+  eliteCanTarget(car) {
+    if (!car.active || !car.getData('tagged') || car.getData('drivingOff')) return false
+    if (car.getData('safe')) return false
+    const toBank = (car.x - car.displayWidth / 2 - this.scrollX) / this.scrollSpeed
+    return toBank > TUNING.eliteSanctuaryS
+  }
+
   // untag events are this level's steal initiations (design ruling 2):
   // stealCooldownMs, target lock, loiter, and post-stun grace all apply.
   // Carried-chip economy ratified (2026-08-09-f): revert at rip time;
@@ -435,8 +449,7 @@ export default class GarageScene extends LevelScene {
   // near-safe cars), NOT the revert model.
   onEnemyTouchItem(enemy, item) {
     if (!enemy.getData('elite')) return // swarms obstruct only, take nothing
-    if (!item.getData('tagged') || item.getData('drivingOff') || !item.active) return
-    if (item.getData('safe')) return // banked at the edge — unrippable
+    if (!this.eliteCanTarget(item)) return // safe, sanctuary, or not tagged
     if (!this.carVisible(item)) return // untags initiate on-screen only
     if (enemy.getData('chipCar') || enemy.getData('stunnedUntil')) return
     if (!this.clearedToSteal(enemy)) return
@@ -553,24 +566,18 @@ export default class GarageScene extends LevelScene {
         continue
       }
 
-      // acquire: nearest TAGGED, not-driving-off, not-SAFE car (target
-      // lock; a car going safe mid-flight releases the lock — 2026-08-09-e)
+      // acquire: nearest VALID tagged car (target lock; a car going
+      // safe — or entering the near-safe sanctuary — mid-flight
+      // releases the lock: 2026-08-09-e / the -f lever 2026-08-10)
       let locked = enemy.getData('lockedTagged')
-      if (
-        locked &&
-        (!locked.active ||
-          !locked.getData('tagged') ||
-          locked.getData('drivingOff') ||
-          locked.getData('safe'))
-      ) {
+      if (locked && !this.eliteCanTarget(locked)) {
         enemy.setData('lockedTagged', null)
         locked = null
       }
       if (!locked) {
         let nearestD = Infinity
         for (const car of this.items.getChildren()) {
-          if (!car.active || !car.getData('tagged') || car.getData('drivingOff')) continue
-          if (car.getData('safe')) continue // banked — never a target
+          if (!this.eliteCanTarget(car)) continue
           const d = Phaser.Math.Distance.Between(enemy.x, enemy.y, car.x, car.y)
           if (d < nearestD) {
             nearestD = d
