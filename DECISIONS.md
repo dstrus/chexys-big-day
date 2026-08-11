@@ -2015,3 +2015,23 @@ ruled out permanently (whiffs are clean by -b). Round-4
 calibration released to the agent: request count free,
 band floor held, cross-tier overlap deliberate, showcase
 gap sized for the air-dash line. Human verdict closes.
+
+## 2026-08-10 — In-session ruling: request fire-position deadline
+
+Human ruling: a request must arrive no later than when its car first
+reaches 75% of the distance to the left screen edge. Late requests
+read as ambushes even when the lead-time math says they're catchable
+— the fairness floor bounds CATCHABILITY, the deadline bounds FEEL.
+Implemented as requestFireDeadlineFrac (0.75, panel slider) inside
+validateRequests, so the permanent readout now enforces both rules
+(a late fire is RED with its own message). Schedule regenerated
+under the deadline: it becomes the binding hot constraint for
+standard cars — the effective band floor moves from 1.04 to ~1.54
+(lux at the 1.04 fairness floor already fired earlier than the
+deadline). Hot finale entries now sit AT the deadline (with 0.2s
+margin so fire-time rounding can never tip past it — two knife-edge
+entries read RED at runtime before the margin). Re-verified: 58/58
+green under both rules, zero slack, tightest fire 27% of screen
+remaining, concurrency curve unchanged (steady 3.10, peaks 4-5 only
+in phases 3-4, cross-tier overlap 28s), gap and collectible
+regressions hold.

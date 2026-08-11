@@ -1,12 +1,12 @@
 {
   "entries": [
     {
-      "time": 3.0,
+      "time": 3.3,
       "type": "request",
       "car": "car-01"
     },
     {
-      "time": 7.2,
+      "time": 7.5,
       "type": "request",
       "car": "car-03"
     },
@@ -17,22 +17,22 @@
       "interval": 0.6
     },
     {
-      "time": 14.6,
+      "time": 12.9,
       "type": "request",
       "car": "car-05"
     },
     {
-      "time": 14.8,
+      "time": 14.5,
       "type": "request",
       "car": "car-06"
     },
     {
-      "time": 21.8,
+      "time": 21.9,
       "type": "request",
       "car": "car-07"
     },
     {
-      "time": 22.4,
+      "time": 22.5,
       "type": "request",
       "car": "car-08"
     },
@@ -53,22 +53,22 @@
       "car": "car-09"
     },
     {
-      "time": 32.7,
-      "type": "request",
-      "car": "car-14"
-    },
-    {
       "time": 33.2,
       "type": "request",
       "car": "car-11"
     },
     {
-      "time": 36.2,
+      "time": 33.7,
+      "type": "request",
+      "car": "car-14"
+    },
+    {
+      "time": 36.0,
       "type": "request",
       "car": "car-12"
     },
     {
-      "time": 37.0,
+      "time": 37.1,
       "type": "request",
       "car": "car-13"
     },
@@ -79,7 +79,7 @@
       "interval": 0.6
     },
     {
-      "time": 40.1,
+      "time": 40.2,
       "type": "request",
       "car": "car-15"
     },
@@ -87,11 +87,6 @@
       "time": 41.6,
       "type": "request",
       "car": "car-16"
-    },
-    {
-      "time": 49.7,
-      "type": "request",
-      "car": "car-18"
     },
     {
       "time": 50,
@@ -102,17 +97,22 @@
     {
       "time": 50.7,
       "type": "request",
-      "car": "car-19"
+      "car": "car-18"
     },
     {
-      "time": 51.7,
+      "time": 51.2,
       "type": "request",
-      "car": "car-21"
+      "car": "car-19"
     },
     {
       "time": 53.7,
       "type": "request",
       "car": "car-20"
+    },
+    {
+      "time": 54.2,
+      "type": "request",
+      "car": "car-21"
     },
     {
       "time": 55,
@@ -121,7 +121,7 @@
       "interval": 0.6
     },
     {
-      "time": 57.6,
+      "time": 57.7,
       "type": "request",
       "car": "car-22"
     },
@@ -132,14 +132,14 @@
       "spawnPoint": "item-03"
     },
     {
+      "time": 61.0,
+      "type": "request",
+      "car": "car-23"
+    },
+    {
       "time": 61.2,
       "type": "request",
       "car": "car-28"
-    },
-    {
-      "time": 61.4,
-      "type": "request",
-      "car": "car-23"
     },
     {
       "time": 64.4,
@@ -153,7 +153,7 @@
       "count": 1
     },
     {
-      "time": 69.1,
+      "time": 69.4,
       "type": "request",
       "car": "car-25"
     },
@@ -174,7 +174,7 @@
       "car": "car-31"
     },
     {
-      "time": 74.0,
+      "time": 74.3,
       "type": "request",
       "car": "car-27"
     },
@@ -254,12 +254,12 @@
       "car": "car-40"
     },
     {
-      "time": 111.9,
+      "time": 111.3,
       "type": "request",
       "car": "car-41"
     },
     {
-      "time": 112.8,
+      "time": 112.0,
       "type": "request",
       "car": "car-42"
     },
@@ -313,7 +313,7 @@
       "car": "car-54"
     },
     {
-      "time": 132.8,
+      "time": 132.9,
       "type": "request",
       "car": "car-47"
     },
@@ -323,9 +323,14 @@
       "car": "car-48"
     },
     {
-      "time": 135.2,
+      "time": 135.1,
       "type": "request",
       "car": "car-49"
+    },
+    {
+      "time": 139.2,
+      "type": "request",
+      "car": "car-50"
     },
     {
       "time": 140,
@@ -334,12 +339,7 @@
       "spawnPoint": "item-05"
     },
     {
-      "time": 140.6,
-      "type": "request",
-      "car": "car-50"
-    },
-    {
-      "time": 143.9,
+      "time": 142.6,
       "type": "request",
       "car": "car-51"
     },
@@ -350,7 +350,7 @@
       "interval": 0.6
     },
     {
-      "time": 147.5,
+      "time": 148.1,
       "type": "request",
       "car": "car-55"
     },
@@ -361,22 +361,22 @@
       "count": 1
     },
     {
-      "time": 151.6,
-      "type": "request",
-      "car": "car-56"
-    },
-    {
-      "time": 151.9,
+      "time": 150.6,
       "type": "request",
       "car": "car-53"
     },
     {
-      "time": 153.0,
+      "time": 151.7,
+      "type": "request",
+      "car": "car-56"
+    },
+    {
+      "time": 153.1,
       "type": "request",
       "car": "car-57"
     },
     {
-      "time": 155.6,
+      "time": 155.8,
       "type": "request",
       "car": "car-58"
     },
@@ -392,12 +392,12 @@
       "car": "car-60"
     },
     {
-      "time": 164.4,
+      "time": 164.0,
       "type": "request",
       "car": "car-61"
     },
     {
-      "time": 166.2,
+      "time": 166.4,
       "type": "request",
       "car": "car-62"
     },
@@ -408,7 +408,7 @@
       "count": 1
     },
     {
-      "time": 170.6,
+      "time": 170.7,
       "type": "request",
       "car": "car-63"
     },
@@ -419,12 +419,12 @@
       "interval": 0.6
     },
     {
-      "time": 177.4,
+      "time": 177.5,
       "type": "request",
       "car": "car-65"
     },
     {
-      "time": 177.5,
+      "time": 177.7,
       "type": "request",
       "car": "car-66"
     }

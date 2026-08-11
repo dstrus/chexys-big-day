@@ -69,10 +69,14 @@ export default class GarageScene extends LevelScene {
     const red = this.requestChecks.filter((c) => !c.ok)
     for (const c of red) {
       console.warn(
-        `Request readout RED: ${c.car} requested at t=${c.time}s exits at ` +
-          `${c.exitT.toFixed(1)}s — lead ${(c.exitT - c.time).toFixed(1)}s < required ` +
-          `${c.requiredLead.toFixed(1)}s (travel ${c.travelS.toFixed(1)}s + grace` +
-          `${c.luxury ? ', ×luxuryLeadFactor' : ''}). Move the request earlier or the car later.`
+        c.lateFire
+          ? `Request readout RED: ${c.car} requested at t=${c.time}s fires past ` +
+            `the ${Math.round(TUNING.requestFireDeadlineFrac * 100)}%-crossing ` +
+            `deadline (ruling 2026-08-10). Move the request earlier.`
+          : `Request readout RED: ${c.car} requested at t=${c.time}s exits at ` +
+            `${c.exitT.toFixed(1)}s — lead ${(c.exitT - c.time).toFixed(1)}s < required ` +
+            `${c.requiredLead.toFixed(1)}s (travel ${c.travelS.toFixed(1)}s + grace` +
+            `${c.luxury ? ', ×luxuryLeadFactor' : ''}). Move the request earlier or the car later.`
       )
     }
 
@@ -138,6 +142,10 @@ export default class GarageScene extends LevelScene {
       const baseLead = travelS + TUNING.requestGraceMs / 1000 + (luxury ? TUNING.holdTagMs / 1000 : 0)
       const requiredLead = luxury ? baseLead * TUNING.luxuryLeadFactor : baseLead
       const available = exitT - e.time
+      // fire-position deadline (in-session ruling 2026-08-10): the
+      // request must arrive while the car still has at least
+      // (1 - requestFireDeadlineFrac) of the screen left to cross
+      const lateFire = distAtFire < this.scale.width * (1 - TUNING.requestFireDeadlineFrac)
       return {
         car: e.car,
         time: e.time,
@@ -145,7 +153,8 @@ export default class GarageScene extends LevelScene {
         travelS,
         requiredLead,
         luxury,
-        ok: available >= requiredLead,
+        lateFire,
+        ok: available >= requiredLead && !lateFire,
         // tension band (first-punch-list lesson): the readout ensures
         // FAIR; this ensures INTERESTING. Green-but-SLACK means the
         // lead is so generous the request carries no pressure.
