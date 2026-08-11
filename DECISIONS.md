@@ -2311,3 +2311,24 @@ autopilot run-jump from the ground lands standing on the mezzanine
 (and M4 re-verified: lock-follow on a rolling target, grab, carry).
 Under-mezz clearance is now 32px (the garage stack) — Chexy walks
 under; strollers roll under and off the ends as before.
+
+## 2026-08-11 — Museum difficulty pass 1 (human platforms + slower steal clock)
+
+Human round report: the Museum is very difficult — items spawn on
+opposite ends of the 1920px stage and cross-map saves are near-
+impossible even with optimal dash. Diagnosis: 'any' spawn selection
+shuffles all ten points uniformly (opposite-end demands are the
+DEFAULT), and the fairness instruments validate each spawn against
+enemy distance individually — nothing budgets the player's serial
+travel between far-apart events. Two changes this pass:
+1. HUMAN-DRAWN traversal platforms committed (rows 9 and 6 hop
+   routes bridging the mezzanines across the mid). The museum map is
+   hand-maintained from here — the generator's map half is retired
+   (waves edits go through the wave file directly).
+2. Human chose the steal-clock lever (offered: zoned wave fronts,
+   steal clock, both): museum stealCooldownMs 4000 → 5500 (map
+   property) — steal initiations space out so consecutive saves have
+   cross-map travel budgeted. Zoned fronts remain on the table if
+   round 2 still reads as scattered.
+Verified live: cooldown override 5500 at runtime, boot clean, no
+console noise.
