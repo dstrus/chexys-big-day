@@ -2122,3 +2122,34 @@ Verified through the full lifecycle: request (no check) → tag
 (check) → elite rip (check removed) → re-tag (check restored); no
 console errors. Queue now reads "handled" vs "still needs me" at a
 glance.
+
+## 2026-08-10 — BRIEF-05 CLOSED: The Garage signed off
+
+Close-out criteria (handoff 2026-08-09-i item 2) met and declared by
+the human: at least three consecutive clean start-to-results rushes
+with no new structural findings; verdict filed: "Clean close-out
+session played; hangers and score where they should be; feel
+ratified as played. Signed off, including 60fps ×2 on hardware."
+
+LEVERS FROZEN at played values (the -i freeze):
+- Field: 69 cars (10 lux incl. 2 deck-lux, 14 deck, 11 dressing),
+  58 requests; map 564×17 (9024px), showcase gaps 112px ×2.
+- Scroll/rush: scrollSpeed 45, rushSeconds 190,
+  stealCooldownMs 3500 (map properties).
+- Requests: requestGraceMs 1500, luxuryLeadFactor 1.5,
+  requestFireDeadlineFrac 0.75 (effective band 1.54–2.90, zero
+  slack, steady-live 3.1, peaks 5 in phases 3–4 only).
+- Cars/verbs: tagReachY 28, driveOffDelayMs 5000, edgePushMargin 10.
+- Enemies: eliteMaxActive 2, eliteSanctuaryS 4, swarmSlowFactor 0.4,
+  swarmSlowMs 600.
+Per the -i standing rule, any future garage need returns to the
+design chat — the lever cupboard is empty by design.
+
+Shipped under this brief, for the record: the request-queue
+auto-scroll core; cars as items and platforms; swarm/elite hybrid
+enemies with contact-slow, wander, visibility rules, safe-at-edge,
+and the near-safe sanctuary; the request gate and feet-level reach;
+dash-through with extend-until-clear and the anti-crush guarantee;
+the fire-position deadline instrument; the tension-band instrument
+(permanent); fulfilled-request checkmarks; two shared-scene fixes
+found by garage probes (collectible grounded-state, dash-wedge).
