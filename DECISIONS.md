@@ -2206,3 +2206,26 @@ produced (handoff 2026-08-10-a). With BRIEF-05 closed,
 the project's remaining build surface: Level 4 design +
 brief, Level 5 + boss, garage/Bell Desk art and audio
 content, polish ledger.
+
+## 2026-08-11 — Handoff 2026-08-10-b applied
+
+- Sequence check: 2026-08-10-a (revised) applied ✓. Item 0: BRIEF-06
+  was absent at handoff arrival — held per the file check (tree +
+  history searched); the human dropped it in and ordered: EXECUTE
+  IMMEDIATELY. BRIEF-06 read in full; nothing in it invalidates
+  existing code; the -b clean-miss rule's drift clarification is a
+  scoped refinement, not a contradiction.
+- Item 1: design-session entry appended verbatim below.
+
+2026-08-10 — STROLLER VALET DESIGN SESSION (compiled
+into BRIEF-06). Human chose the NOVEL option: rolling
+items as Level 4's mechanic. Bounded design: strollers
+roll perpetually (speed hard-capped ≤0.3× player — the
+mover fairness rail), backpacks bounce-and-settle, cups
+are comedy; tag BRAKES a stroller (checked = parked).
+Rulings: mover tap grace (press-time acquisition lands
+despite windup drift — drift is not invalidity); locks
+and loiters follow movers; no feet-reach outside the
+garage; density is the level identity and the perf
+ceiling test; field count is the perf lever. Garage
+round system + close-out criteria apply.
