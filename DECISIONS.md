@@ -2293,3 +2293,21 @@ Human rulings on the fresh BRIEF-06 build, pre-first-playtest:
 Full acceptance battery re-run after the changes: ALL PASS, no
 console noise (brake mid-roll, windup-drift grace, mover steal with
 lock-follow, mezzanine roll-off, instruments green).
+
+## 2026-08-11 — Museum mezzanines lowered to a legal hop (human-reported)
+
+Human report: mezzanines unreachable — items there taggable only
+through the floor, and mezzanine steals effectively unrescuable (a
+carrier at mezz height sits outside the 66px tap radius from the
+ground). Root cause: the generated map put the mezzanines at row 10
+(80px rise) against the maps-README layout rule (max jump ~61px,
+hops ≤48px / 3 rows) — a generator bug, same rule the coatroom was
+built under. Fixed: mezzanines moved to row 12 (top y=192, a 48px
+hop), mezz item spawns and collectible tag heights re-based to the
+new geometry (mezz-route tags reachable from ON the mezz, ground
+tags from the ground), far-dressing pillars trimmed to fit. Full
+battery re-run: ALL PASS including a new M6 reachability proof —
+autopilot run-jump from the ground lands standing on the mezzanine
+(and M4 re-verified: lock-follow on a rolling target, grab, carry).
+Under-mezz clearance is now 32px (the garage stack) — Chexy walks
+under; strollers roll under and off the ends as before.
