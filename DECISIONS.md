@@ -2035,3 +2035,22 @@ green under both rules, zero slack, tightest fire 27% of screen
 remaining, concurrency curve unchanged (steady 3.10, peaks 4-5 only
 in phases 3-4, cross-tier overlap 28s), gap and collectible
 regressions hold.
+
+## 2026-08-10 — Dash-wedge fixed (stuck inside a car while dashing)
+
+Human report: stuck inside vehicles when dashing, freed only by the
+screen-edge squeeze. Reproduced exactly: tapping DURING a
+dash-through of a requested tier-1 car fired beginTap, whose windup
+movement-freeze zeroed the dash velocity while inside the vehicle —
+and -g's extend-until-clear then extended the dash forever (gravity
+off, vx 0, suspended in the car) because a motionless dash can never
+clear. The edge push was the only thing that ever restored velocity.
+The tap also TAGGED through the car, violating -g's "dash-through
+does not tag" (tier 2+ holds were immune — holds can't start
+mid-dash — which is why the wedge was intermittent). Fix in the
+shared scene: no tag verb may INITIATE mid-dash; a mid-dash press is
+dropped, not buffered (updateTagging gate). Verified: mid-dash tap
+tags nothing and the dash exits clean at speed; a post-dash press
+tags normally; dash-into-hold remains impossible in the other
+direction (dash can't start while frozen), so no reverse wedge
+exists.

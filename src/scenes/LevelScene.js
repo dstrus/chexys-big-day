@@ -1093,6 +1093,16 @@ export default class LevelScene extends Phaser.Scene {
       return
     }
     const p = this.player
+    // dash-through does not tag (handoff 2026-08-09-g): no tag verb may
+    // INITIATE mid-dash. The tap windup's movement freeze would zero
+    // the dash velocity inside a vehicle, and extend-until-clear could
+    // then never clear — Chexy hung wedged inside the car until the
+    // edge push arrived (the dash-wedge, reported and reproduced
+    // 2026-08-10). A mid-dash press is dropped, not buffered.
+    if (time < p.dashUntil) {
+      this.holdArmed = false
+      return
+    }
     // one press, one action (handoff 2026-08-03-f, generalizing -e): a
     // press ARMS exactly one action; the FIRST action it produces —
     // instant tap, rescue stun, or hold start — consumes the arm. An
