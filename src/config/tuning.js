@@ -60,6 +60,14 @@ export const TUNING = {
   // commitments are spaced); per-level override via map property, trending
   // down as player mobility grows (Coatroom 6000 ... finale ~4000)
   stealFairnessMarginMs: 500, // slack the (c) escape-time assertion must hold by
+  // travel budget — instrument three (handoff 2026-08-10-c): fairness
+  // floor = catchability per event, tension band = heat per request,
+  // travel budget = serial ROUTING feasibility. No schedule may demand
+  // an impossible itinerary.
+  travelBudgetFactor: 0.8, // required serial travel may use at most this
+  // fraction of wall-clock across the window — the player must never
+  // need >80% of real time just in transit
+  travelBudgetWindowS: 12, // sliding window the itinerary is judged over
   enemyStunMs: 1500,
   enemyStealGraceMs: 1000, // no re-steal window after a stun wears off
   // menace loiter (grab-state wedge investigation 2026-08-03): an enemy
@@ -169,6 +177,8 @@ export const TUNING_SCHEMA = [
   { key: 'gloatMs', label: 'Gloat beat (ms)', min: 0, max: 2500, step: 50 },
   { key: 'stealCooldownMs', label: 'Steal cooldown (ms)', min: 0, max: 10000, step: 250 },
   { key: 'stealFairnessMarginMs', label: 'Steal margin (ms)', min: 0, max: 2000, step: 50 },
+  { key: 'travelBudgetFactor', label: 'Travel budget factor', min: 0.3, max: 1, step: 0.05 },
+  { key: 'travelBudgetWindowS', label: 'Travel window (s)', min: 4, max: 30, step: 1 },
   { key: 'loiterRadius', label: 'Loiter radius', min: 8, max: 80, step: 2 },
   { key: 'loiterOrbitMs', label: 'Loiter orbit (ms)', min: 1000, max: 8000, step: 200 },
   { key: 'requestGraceMs', label: 'Request grace (ms)', min: 0, max: 5000, step: 100 },

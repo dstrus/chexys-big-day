@@ -15,6 +15,7 @@ export function isTuningPanelOpen() {
 
 // live readout lines at the panel's foot; slot 0 = steal fairness,
 // slot 1 = frame/physics rates (jitter probe)
+// slot 2 = travel budget (instrument three, handoff 2026-08-10-c)
 export function setPanelReadout(text, ok, slot = 0) {
   const el = statusEls[slot]
   if (!el) return
@@ -52,7 +53,7 @@ export function initTuningPanel() {
     panel.appendChild(entry.type === 'flag' ? flagRow(entry) : sliderRow(entry))
   }
 
-  for (const slot of [0, 1]) {
+  for (const slot of [0, 1, 2]) {
     statusEls[slot] = document.createElement('div')
     statusEls[slot].style.cssText = 'margin-top:8px;font-size:10px;line-height:1.4'
     panel.appendChild(statusEls[slot])

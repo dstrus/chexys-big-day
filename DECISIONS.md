@@ -2332,3 +2332,46 @@ travel between far-apart events. Two changes this pass:
    round 2 still reads as scattered.
 Verified live: cooldown override 5500 at runtime, boot clean, no
 console noise.
+
+## 2026-08-11 — Handoff 2026-08-10-c applied
+
+- Sequence check: 2026-08-10-b applied ✓ (and the pass-1 work this
+  handoff ratifies was committed: BRIEF-06 execution, cups cut, THE
+  MUSEUM, mezzanine fix, hand-drawn platforms, steal-clock 5500).
+- Item 1 ratified in full, including the workflow shift on the
+  record: GENERATORS PROPOSE, HUMANS OWN MAPS ONCE HAND-EDITED (the
+  museum map's generator half is retired). Tail-chase intercept
+  texture ratified as intended — watch, no lever.
+- Item 2: TRAVEL BUDGET built — instrument three. The lineage:
+  fairness floor = catchability per event, tension band = heat per
+  request, travel budget = serial ROUTING feasibility. Formalized
+  event set (agent, per the handoff): (1) an untagged item ENTERING
+  danger — first enemy lock landing on it, 4s re-arm so lock churn
+  doesn't spam the itinerary; (2) a steal INITIATING — the
+  grab/gloat start. Over a sliding travelBudgetWindowS (12s), the
+  max-effort serial travel between consecutive events (dash-aware
+  effective speed, same formula as the (c) instrument) may use at
+  most travelBudgetFactor (0.8) of the wall-clock the window spans —
+  no schedule may demand an impossible itinerary. Implemented
+  level-agnostic in LevelScene (museum-first; the static levels
+  retro-fit for free; the garage's elite path can wire
+  recordTravelEvent when relevant), panel slot 2 readout + a RED
+  console.warn on the green→red transition. Verified: feasible
+  itinerary green; three cross-map events in 1.5s → RED with the
+  warn; the window slides and recovers; an organic enemy lock stamps
+  danger-onset and records the event.
+- Item 3: ZONED WAVE FRONTS pre-armed for a scattered round-2
+  verdict — bursts cluster at adjacent points, the front MIGRATES
+  across the rush (the crowd moves through the museum), and finale
+  opposite-end simultaneity is reserved as the deliberate BIG DAY
+  bait, PRICED by the travel-budget readout rather than banned.
+  Applied only on the human's verdict.
+- Item 4: ruling entry appended verbatim below.
+
+2026-08-10 — Museum pass 1 ratified (handoff
+2026-08-10-c): cups cut, map hand-owned, steal-clock
+lever spent. TRAVEL BUDGET canonized as instrument three
+(serial routing feasibility — the museum exposed what the
+scroll had been hiding). Zoned fronts pre-armed for a
+scattered round-2 verdict; finale opposite-end
+simultaneity reserved as priced bait.

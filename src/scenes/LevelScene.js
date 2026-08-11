@@ -147,10 +147,15 @@ export default class LevelScene extends Phaser.Scene {
     // steal fairness (DESIGN.md §2.4)
     this.lastStealAt = -Infinity
     this.stealFairnessWasOk = true
+    this.travelEvents = []
+    this.travelBudgetOk = true
     this.time.addEvent({
       delay: 500,
       loop: true,
-      callback: () => this.updateStealFairnessReadout(),
+      callback: () => {
+        this.updateStealFairnessReadout()
+        this.updateTravelBudget()
+      },
     })
     this.clockTimer = this.time.addEvent({
       delay: 1000,
@@ -364,6 +369,60 @@ export default class LevelScene extends Phaser.Scene {
     return { ok, escapeMs, traverseMs }
   }
 
+  // TRAVEL BUDGET — instrument three (handoff 2026-08-10-c). The
+  // lineage: fairness floor = catchability per event, tension band =
+  // heat per request, travel budget = serial ROUTING feasibility. The
+  // formalized event set (agent, per the handoff): (1) an untagged item
+  // ENTERING danger — the first enemy lock landing on it, re-armed
+  // after 4s so lock churn doesn't spam; (2) a steal INITIATING — the
+  // grab/gloat start. Over a sliding window, the max-effort travel
+  // between consecutive events may use at most travelBudgetFactor of
+  // the wall-clock the window spans: no schedule may demand an
+  // impossible itinerary. Level-agnostic; the museum exposed what the
+  // scroll had been hiding.
+  recordTravelEvent(x) {
+    this.travelEvents?.push({ t: this.time.now / 1000, x })
+  }
+
+  updateTravelBudget() {
+    const evs = this.travelEvents
+    if (!evs) return
+    const now = this.time.now / 1000
+    while (evs.length && evs[0].t < now - TUNING.travelBudgetWindowS) evs.shift()
+    if (evs.length < 2) {
+      this.travelBudgetOk = true
+      if (isTuningPanelOpen()) {
+        setPanelReadout(`travel budget: ${evs.length} event(s) in window — idle`, true, 2)
+      }
+      return
+    }
+    const dashBonus = this.isDashAvailable()
+      ? (TUNING.dashSpeed - TUNING.maxSpeed) * (TUNING.dashDurationMs / 1000)
+      : 0
+    const effSpeed = TUNING.maxSpeed + dashBonus
+    let dist = 0
+    for (let i = 1; i < evs.length; i++) dist += Math.abs(evs[i].x - evs[i - 1].x)
+    const requiredS = dist / effSpeed
+    const availableS = evs[evs.length - 1].t - evs[0].t
+    const ok = availableS <= 0 || requiredS <= availableS * TUNING.travelBudgetFactor
+    if (isTuningPanelOpen()) {
+      setPanelReadout(
+        `travel budget: ${requiredS.toFixed(1)}s transit / ${availableS.toFixed(1)}s window ` +
+          `(${evs.length} events, factor ${TUNING.travelBudgetFactor})`,
+        ok,
+        2
+      )
+    }
+    if (!ok && this.travelBudgetOk) {
+      console.warn(
+        `Travel budget RED: ${requiredS.toFixed(1)}s of serial max-effort travel demanded ` +
+          `across a ${availableS.toFixed(1)}s window (${evs.length} events, factor ` +
+          `${TUNING.travelBudgetFactor}) — the schedule is demanding an impossible itinerary.`
+      )
+    }
+    this.travelBudgetOk = ok
+  }
+
   updateStealFairnessReadout() {
     const { ok, escapeMs, traverseMs } = this.checkStealFairness()
     if (isTuningPanelOpen()) {
@@ -496,7 +555,16 @@ export default class LevelScene extends Phaser.Scene {
             locked = item
           }
         }
-        if (locked) enemy.setData('lockedTarget', locked)
+        if (locked) {
+          enemy.setData('lockedTarget', locked)
+          // travel budget: an item ENTERING danger (first lock; 4s
+          // re-arm so lock churn doesn't spam the itinerary)
+          const dangerAt = locked.getData('dangerAt') ?? -Infinity
+          if (this.time.now - dangerAt > 4000) {
+            locked.setData('dangerAt', this.time.now)
+            this.recordTravelEvent(locked.x)
+          }
+        }
       }
 
       const goal = locked || this.player // no loot left: loiter near Chexy (body center)
@@ -559,6 +627,7 @@ export default class LevelScene extends Phaser.Scene {
     if (!this.clearedToSteal(enemy)) return
 
     this.lastStealAt = this.time.now
+    this.recordTravelEvent(item.x) // travel budget: a steal INITIATES
     item.setData('stolen', true)
     item.body.enable = false
     enemy.setData('carrying', item)
