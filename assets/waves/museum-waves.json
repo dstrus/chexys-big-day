@@ -13,7 +13,7 @@
       "time": 4.0,
       "type": "items",
       "spawnPoint": "any",
-      "itemCategory": "cup",
+      "itemCategory": "coat",
       "weightTier": 1,
       "count": 2,
       "interval": 0.4
@@ -31,7 +31,7 @@
       "time": 16.0,
       "type": "items",
       "spawnPoint": "any",
-      "itemCategory": "cup",
+      "itemCategory": "coat",
       "weightTier": 1,
       "count": 2,
       "interval": 0.4
@@ -55,7 +55,7 @@
       "time": 31.0,
       "type": "items",
       "spawnPoint": "any",
-      "itemCategory": "cup",
+      "itemCategory": "coat",
       "weightTier": 1,
       "count": 1,
       "interval": 0.4
@@ -109,7 +109,7 @@
       "time": 64.0,
       "type": "items",
       "spawnPoint": "any",
-      "itemCategory": "cup",
+      "itemCategory": "coat",
       "weightTier": 1,
       "count": 2,
       "interval": 0.4
@@ -172,7 +172,7 @@
       "time": 104.0,
       "type": "items",
       "spawnPoint": "any",
-      "itemCategory": "cup",
+      "itemCategory": "coat",
       "weightTier": 1,
       "count": 3,
       "interval": 0.4
@@ -226,7 +226,7 @@
       "time": 134.0,
       "type": "items",
       "spawnPoint": "any",
-      "itemCategory": "cup",
+      "itemCategory": "coat",
       "weightTier": 1,
       "count": 3,
       "interval": 0.4
@@ -280,7 +280,7 @@
       "time": 167.0,
       "type": "items",
       "spawnPoint": "any",
-      "itemCategory": "cup",
+      "itemCategory": "coat",
       "weightTier": 1,
       "count": 3,
       "interval": 0.4
@@ -334,7 +334,7 @@
       "time": 198.0,
       "type": "items",
       "spawnPoint": "any",
-      "itemCategory": "cup",
+      "itemCategory": "coat",
       "weightTier": 1,
       "count": 3,
       "interval": 0.4

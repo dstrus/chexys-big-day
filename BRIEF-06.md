@@ -27,9 +27,10 @@ design:
 - **Kid backpacks (~35%):** spawn with an energetic bounce,
   settle within ~1s (restitution material). Static thereafter.
   Standard tap.
-- **Sippy cups (~25%):** tiny, high-restitution comedy
-  bouncers, settle ~1.5s. Standard tap, small score. The
-  museum's confetti.
+- **Coats (~25%):** re-used from the Coatroom — standard
+  items, standard tap, real art already shipped. (AMENDED
+  2026-08-11, human ruling: sippy cups cut — funny, but not
+  a checkable item.)
 
 ## 2. Rulings baked in (veto before pasting the handoff)
 
@@ -58,7 +59,7 @@ design:
   mezzanines, wide open mid (movers need runway to be movers),
   return alcove center. Deliberate wall geometry so stroller
   rebounds create readable back-and-forth lanes, not pinball.
-- Wave arc: (1) backpacks + cups only — the bounce-and-settle
+- Wave arc: (1) backpacks + coats only — the bounce-and-settle
   comedy teaches itself; (2) first strollers, sparse, wide
   lanes; (3) chaos mode — density up, movers crossing static
   piles, thieves targeting the strollers you keep NOT getting
@@ -78,8 +79,9 @@ design:
 - 60fps ×2 AT PEAK DENSITY on human hardware — this level is
   the perf ceiling test. If it drops, the lever is field
   count, not physics.
-- Interim art: tinted rects (stroller = wide, backpack = mid,
-  cup = tiny). BRIEF-ART-05 follows post-round-stability.
+- Interim art: tinted rects (stroller = wide, backpack = mid);
+  coats use their shipped art. BRIEF-ART-05 follows
+  post-round-stability.
 - Human punch-list rounds per garage precedent; close-out
   criteria: three clean consecutive rushes, per -i's pattern.
 

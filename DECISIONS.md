@@ -2275,3 +2275,21 @@ in case round play contradicts.
 Awaiting the human: full rush start-to-results, punch-list rounds
 per garage precedent, and the perf ceiling test — 60fps ×2 at peak
 density on hardware (the lever is field count, not physics).
+
+## 2026-08-11 — In-session rulings: cups cut (coats re-used); "THE MUSEUM"
+
+Human rulings on the fresh BRIEF-06 build, pre-first-playtest:
+1. Sippy cups cut — funny, but not a checkable item. The museum's
+   third class re-uses COATS: standard items, standard tap, and the
+   real coat art ships with them (the museum's only non-rect class).
+   Removed: the cup item class, cupBounce/cupScoreFactor tunables
+   and sliders, the cup category color. Waves regenerated with coats
+   in the cup slots — mix unchanged (strollers 38%, backpacks 35%,
+   coats 28% vs the brief's ~40/35/25). BRIEF-06 §1/§3/§4 amended in
+   place; DESIGN §3.4 rewritten to match the built level.
+2. Level 4 display name: "THE STROLLER VALET" → "THE MUSEUM"
+   (levels.js; DESIGN §3.4 heading synced; BRIEF-06's title left as
+   the historical artifact, per the GARAGE rename precedent).
+Full acceptance battery re-run after the changes: ALL PASS, no
+console noise (brake mid-roll, windup-drift grace, mover steal with
+lock-follow, mezzanine roll-off, instruments green).

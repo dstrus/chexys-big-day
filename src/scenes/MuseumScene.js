@@ -10,7 +10,9 @@ import { audio } from '../systems/AudioBus.js'
 // Desk (NO feet-reach rule — that's garage-scoped). The one bounded
 // novelty is ROLLING ITEMS: strollers roll perpetually until tagged
 // (tag = BRAKE — checked in, parked, static), backpacks bounce and
-// settle, sippy cups are high-restitution comedy. Rulings baked in
+// settle, coats round out the field (cups cut by human ruling
+// 2026-08-11 — not a checkable item; coats carry the real art).
+// Rulings baked in
 // by the design session (handoff 2026-08-10-b): mover tap grace
 // (press-time acquisition lands despite windup drift — the windup
 // already re-validates taggability only, never radius); enemy locks
@@ -37,7 +39,6 @@ export default class MuseumScene extends LevelScene {
     }
     make('item-stroller', 26, 18) // wide
     make('item-backpack', 14, 14) // mid
-    make('item-cup', 8, 8) // tiny
     g.destroy()
   }
 
@@ -57,12 +58,9 @@ export default class MuseumScene extends LevelScene {
       item.body.setSize(14, 14)
       item.setBounce(TUNING.backpackBounce, TUNING.backpackBounce)
       item.body.setVelocity(Phaser.Math.Between(-40, 40), -130) // energetic entrance
-    } else if (category === 'cup') {
-      item.setTexture('item-cup')
-      item.body.setSize(8, 8)
-      item.setBounce(TUNING.cupBounce, TUNING.cupBounce)
-      item.body.setVelocity(Phaser.Math.Between(-70, 70), -160) // confetti
     } else {
+      // coats (human ruling 2026-08-11: cups cut — not a checkable
+      // item; coats re-used, and they already carry the real art)
       return item
     }
     this.placeItemClear(item, x, y) // re-run the gate after the resize
@@ -73,15 +71,7 @@ export default class MuseumScene extends LevelScene {
   // score, chip, pose, guest — but the item PARKS in place instead of
   // whisking away. Taming the chaos is literally the verb.
   completeTag(item) {
-    const category = item.getData('category')
-    if (category === 'cup') {
-      // standard tap, small score (§1) — reroute just the scoring
-      this.__cupTag = true
-      super.completeTag(item)
-      this.__cupTag = false
-      return
-    }
-    if (category !== 'stroller') return super.completeTag(item)
+    if (item.getData('category') !== 'stroller') return super.completeTag(item)
 
     item.setData('tagged', true)
     this.physics.pause()
@@ -107,17 +97,6 @@ export default class MuseumScene extends LevelScene {
       if (item.active) item.setTint(categoryColor('stroller')) // ...then parked pink
     })
     this.onItemTagged(item.getData('tier') ?? 1)
-  }
-
-  onItemTagged(tier) {
-    if (this.__cupTag) {
-      this.itemsReturned += 1
-      this.addScore(TUNING.standardItemScore * TUNING.cupScoreFactor)
-      this.onCleanProgress()
-      this.emitHud()
-      return
-    }
-    super.onItemTagged(tier)
   }
 
   // perpetual until tagged: movers re-assert their roll speed whenever

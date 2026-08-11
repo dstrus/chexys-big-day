@@ -310,9 +310,14 @@ caught by the edge quiet-resets. Vehicle riding beyond
 cars-as-platforms is v2. (Condensed from BRIEF-05 §1–§3; rulings
 in handoff 2026-08-09-b.)
 
-### 3.4 Level 4 — The Stroller Valet
-Museum, chaos mode. Strollers, kid backpacks, sippy cups at high
-density. **New mechanic:** item bounce physics (strollers roll).
+### 3.4 Level 4 — The Museum
+Museum lobby, family day, chaos mode. Strollers, kid backpacks, and
+coats at high density (cups cut 2026-08-11 — not a checkable item;
+coats re-used). **New mechanic:** rolling items — strollers roll
+perpetually at ≤0.3× player speed (the mover fairness rail) and a
+tag BRAKES one: checked in, parked, static. Backpacks bounce and
+settle. Built per BRIEF-06; density is the level identity and the
+perf ceiling test (field count is the lever).
 
 ### 3.5 Level 5 — The Mass Exodus (finale)
 Sold-out show lets out; everyone wants their coat NOW. Escalating
