@@ -2153,3 +2153,25 @@ dash-through with extend-until-clear and the anti-crush guarantee;
 the fire-position deadline instrument; the tension-band instrument
 (permanent); fulfilled-request checkmarks; two shared-scene fixes
 found by garage probes (collectible grounded-state, dash-wedge).
+
+## 2026-08-10 — Handoff 2026-08-10-a applied
+
+- Sequence check: first handoff of 2026-08-10; the 2026-08-09 chain
+  closed at -i ✓.
+- Item 1: log corrected — the 'lose' frames shipped earlier and have
+  been live in-game (wired on export, human-confirmed). With them
+  the Chexy animation set is COMPLETE: all twelve tags (idle, run,
+  jump, fall, land, tap, hold, dash, hit, win, lose, teeter) final,
+  all hooks lit, BRIEF-ART-01 §4 delivered as evolved (16f run, 3f
+  hold, artist-initiated teeter). No character placeholder remains.
+- Item 2 verified in passing: all twelve tags registered in the
+  animation manager; results screen plays the outcome poses per the
+  -09 report — win plays once and parks on its final frame (frame
+  2/2, not playing), lose loops (repeat -1, playing); zero console
+  noise across boot, both outcomes, and a mid-battery restart.
+- Item 3: ruling entry appended verbatim below.
+
+2026-08-10 — Chexy animation set COMPLETE (handoff
+2026-08-10-a): twelve tags final, BRIEF-ART-01 delivered
+in full. The character has no remaining placeholder
+anywhere.
