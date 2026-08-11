@@ -3,12 +3,12 @@
     {
       "time": 3.0,
       "type": "request",
-      "car": "car-06"
+      "car": "car-01"
     },
     {
-      "time": 6.6,
+      "time": 7.2,
       "type": "request",
-      "car": "car-02"
+      "car": "car-03"
     },
     {
       "time": 10,
@@ -17,14 +17,29 @@
       "interval": 0.6
     },
     {
-      "time": 16.8,
-      "type": "request",
-      "car": "car-03"
-    },
-    {
-      "time": 18.8,
+      "time": 14.6,
       "type": "request",
       "car": "car-05"
+    },
+    {
+      "time": 14.8,
+      "type": "request",
+      "car": "car-06"
+    },
+    {
+      "time": 21.8,
+      "type": "request",
+      "car": "car-07"
+    },
+    {
+      "time": 22.4,
+      "type": "request",
+      "car": "car-08"
+    },
+    {
+      "time": 24.1,
+      "type": "request",
+      "car": "car-10"
     },
     {
       "time": 25,
@@ -33,19 +48,29 @@
       "interval": 0.6
     },
     {
-      "time": 27.4,
-      "type": "request",
-      "car": "car-07"
-    },
-    {
-      "time": 33.1,
-      "type": "request",
-      "car": "car-08"
-    },
-    {
-      "time": 36.1,
+      "time": 25.7,
       "type": "request",
       "car": "car-09"
+    },
+    {
+      "time": 32.7,
+      "type": "request",
+      "car": "car-14"
+    },
+    {
+      "time": 33.2,
+      "type": "request",
+      "car": "car-11"
+    },
+    {
+      "time": 36.2,
+      "type": "request",
+      "car": "car-12"
+    },
+    {
+      "time": 37.0,
+      "type": "request",
+      "car": "car-13"
     },
     {
       "time": 40,
@@ -54,14 +79,19 @@
       "interval": 0.6
     },
     {
-      "time": 46.3,
+      "time": 40.1,
       "type": "request",
-      "car": "car-13"
+      "car": "car-15"
     },
     {
-      "time": 47.3,
+      "time": 41.6,
       "type": "request",
-      "car": "car-11"
+      "car": "car-16"
+    },
+    {
+      "time": 49.7,
+      "type": "request",
+      "car": "car-18"
     },
     {
       "time": 50,
@@ -70,9 +100,19 @@
       "count": 1
     },
     {
-      "time": 52.2,
+      "time": 50.7,
       "type": "request",
-      "car": "car-12"
+      "car": "car-19"
+    },
+    {
+      "time": 51.7,
+      "type": "request",
+      "car": "car-21"
+    },
+    {
+      "time": 53.7,
+      "type": "request",
+      "car": "car-20"
     },
     {
       "time": 55,
@@ -81,15 +121,30 @@
       "interval": 0.6
     },
     {
+      "time": 57.6,
+      "type": "request",
+      "car": "car-22"
+    },
+    {
       "time": 60,
       "type": "collectible",
       "collectibleType": "insightReport",
       "spawnPoint": "item-03"
     },
     {
-      "time": 63.2,
+      "time": 61.2,
       "type": "request",
-      "car": "car-15"
+      "car": "car-28"
+    },
+    {
+      "time": 61.4,
+      "type": "request",
+      "car": "car-23"
+    },
+    {
+      "time": 64.4,
+      "type": "request",
+      "car": "car-24"
     },
     {
       "time": 68,
@@ -98,9 +153,9 @@
       "count": 1
     },
     {
-      "time": 68.4,
+      "time": 69.1,
       "type": "request",
-      "car": "car-16"
+      "car": "car-25"
     },
     {
       "time": 70,
@@ -109,14 +164,29 @@
       "interval": 0.6
     },
     {
-      "time": 71.4,
+      "time": 71.5,
       "type": "request",
-      "car": "car-17"
+      "car": "car-26"
     },
     {
-      "time": 72.2,
+      "time": 72.0,
       "type": "request",
-      "car": "car-19"
+      "car": "car-31"
+    },
+    {
+      "time": 74.0,
+      "type": "request",
+      "car": "car-27"
+    },
+    {
+      "time": 81.5,
+      "type": "request",
+      "car": "car-32"
+    },
+    {
+      "time": 82.1,
+      "type": "request",
+      "car": "car-29"
     },
     {
       "time": 84,
@@ -125,20 +195,35 @@
       "count": 1
     },
     {
-      "time": 84.2,
-      "type": "request",
-      "car": "car-20"
-    },
-    {
       "time": 85,
       "type": "enemy",
       "count": 4,
       "interval": 0.6
     },
     {
-      "time": 87.8,
+      "time": 88.7,
       "type": "request",
-      "car": "car-22"
+      "car": "car-39"
+    },
+    {
+      "time": 89.5,
+      "type": "request",
+      "car": "car-33"
+    },
+    {
+      "time": 90.2,
+      "type": "request",
+      "car": "car-34"
+    },
+    {
+      "time": 92.2,
+      "type": "request",
+      "car": "car-35"
+    },
+    {
+      "time": 94.8,
+      "type": "request",
+      "car": "car-36"
     },
     {
       "time": 95,
@@ -159,19 +244,29 @@
       "count": 1
     },
     {
-      "time": 103.0,
+      "time": 102.8,
       "type": "request",
-      "car": "car-24"
+      "car": "car-44"
     },
     {
-      "time": 105.5,
+      "time": 106.5,
       "type": "request",
-      "car": "car-26"
+      "car": "car-40"
     },
     {
-      "time": 111.0,
+      "time": 111.9,
       "type": "request",
-      "car": "car-27"
+      "car": "car-41"
+    },
+    {
+      "time": 112.8,
+      "type": "request",
+      "car": "car-42"
+    },
+    {
+      "time": 114.3,
+      "type": "request",
+      "car": "car-43"
     },
     {
       "time": 115,
@@ -186,14 +281,19 @@
       "count": 1
     },
     {
-      "time": 119.0,
+      "time": 125.5,
       "type": "request",
-      "car": "car-28"
+      "car": "car-45"
     },
     {
-      "time": 127.7,
+      "time": 125.7,
       "type": "request",
-      "car": "car-30"
+      "car": "car-52"
+    },
+    {
+      "time": 128.5,
+      "type": "request",
+      "car": "car-46"
     },
     {
       "time": 130,
@@ -208,9 +308,24 @@
       "count": 1
     },
     {
-      "time": 135.5,
+      "time": 132.6,
       "type": "request",
-      "car": "car-31"
+      "car": "car-54"
+    },
+    {
+      "time": 132.8,
+      "type": "request",
+      "car": "car-47"
+    },
+    {
+      "time": 133.1,
+      "type": "request",
+      "car": "car-48"
+    },
+    {
+      "time": 135.2,
+      "type": "request",
+      "car": "car-49"
     },
     {
       "time": 140,
@@ -219,9 +334,14 @@
       "spawnPoint": "item-05"
     },
     {
-      "time": 140.8,
+      "time": 140.6,
       "type": "request",
-      "car": "car-34"
+      "car": "car-50"
+    },
+    {
+      "time": 143.9,
+      "type": "request",
+      "car": "car-51"
     },
     {
       "time": 145,
@@ -230,20 +350,35 @@
       "interval": 0.6
     },
     {
+      "time": 147.5,
+      "type": "request",
+      "car": "car-55"
+    },
+    {
       "time": 150,
       "type": "enemy",
       "elite": true,
       "count": 1
     },
     {
-      "time": 152.7,
+      "time": 151.6,
       "type": "request",
-      "car": "car-36"
+      "car": "car-56"
     },
     {
-      "time": 155.1,
+      "time": 151.9,
       "type": "request",
-      "car": "car-38"
+      "car": "car-53"
+    },
+    {
+      "time": 153.0,
+      "type": "request",
+      "car": "car-57"
+    },
+    {
+      "time": 155.6,
+      "type": "request",
+      "car": "car-58"
     },
     {
       "time": 160,
@@ -252,15 +387,30 @@
       "interval": 0.6
     },
     {
+      "time": 160.6,
+      "type": "request",
+      "car": "car-60"
+    },
+    {
+      "time": 164.4,
+      "type": "request",
+      "car": "car-61"
+    },
+    {
+      "time": 166.2,
+      "type": "request",
+      "car": "car-62"
+    },
+    {
       "time": 168,
       "type": "enemy",
       "elite": true,
       "count": 1
     },
     {
-      "time": 170.0,
+      "time": 170.6,
       "type": "request",
-      "car": "car-40"
+      "car": "car-63"
     },
     {
       "time": 175,
@@ -269,14 +419,14 @@
       "interval": 0.6
     },
     {
-      "time": 176.9,
+      "time": 177.4,
       "type": "request",
-      "car": "car-42"
+      "car": "car-65"
     },
     {
-      "time": 182.3,
+      "time": 177.5,
       "type": "request",
-      "car": "car-43"
+      "car": "car-66"
     }
   ]
 }

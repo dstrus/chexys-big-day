@@ -1961,3 +1961,57 @@ Also this session (human-supplied): level 3 display name renamed
 synced). First real SFX landed: assets/audio/tag.mp3 replaces the
 tap-tag synth via the BRIEF-02 drop-in contract — zero code changes,
 verified loading as audio-tag with a clean boot.
+
+## 2026-08-10 — Handoff 2026-08-09-h applied (round-4 calibration)
+
+- Sequence check: 2026-08-09-g applied and committed first ✓; the
+  round-3 tweaks it ratifies were committed in ec55993.
+- Items 1-2 logged: round-3 tweaks, root README, "THE GARAGE", and
+  tag.mp3 all ratified; whiff/spam cost RULED OUT permanently
+  (whiffs stay clean per -b; the anti-camping lever is -f elite
+  target preference, never the verb).
+- Item 3 calibration (released to agent; decisions on the record):
+  - CAPACITY FINDING: steady-state 3 live is unreachable with 44
+    cars — zero-slack caps a standard request's window at ~13s
+    (ratio 3 boundary), so 44 windows can't sum to 3×190s without
+    parking every request at the slack line. The car field grew as
+    DATA (round-1 retune precedent): 69 cars (10 lux incl. 2
+    deck-lux, 14 deck, 45 ground; 11 dressing incl. 3 past
+    maxScroll that never exit). 58 requests.
+  - Metric: live = scheduled request windows [fire, exit] assuming
+    unserved (the pre-play instrument; played counts run lower).
+    Fitted curve: warmup avg 1.9 (cap 3) → steady 2.9 (cap 4) →
+    rush avg 3.8 PEAK 5 → finale avg 3.0 peak 5. Steady-state
+    (20-175s) 3.11. Hard caps enforced: peaks 4-5 live only in
+    phases 3-4.
+  - Band: floor 1.04 HELD (three finale standards forced to
+    1.04-1.08), max 2.90, zero slack. Runtime instrument (real
+    validateRequests, dash-unlocked effSpeed): 58/58 green, 0
+    slack, floor 1.054 (0.1s fire-time rounding drift).
+  - Cross-tier conflicts: 26 seconds of deliberate lux+deck+ground
+    triple-overlap in phases 3-4; every P3/P4 lux window contains
+    deck and ground work (deck-lux cars make the tier conflict a
+    route conflict under feet-reach).
+  - Gap: HELD at 112px, verified rather than resized — the flat
+    air-dash line (jump → dash at height → fall) lands 11px deep
+    on the far deck; a roll-off dash falls short; jump-only falls
+    in 20px short (the -c frame-perfect edge-clip remains as the
+    flex). No cars park on row-9 decks, so no roof-assisted
+    crossing exists.
+  - BUG FOUND BY THE GAP PROBE, FIXED IN THE SHARED SCENE:
+    collectible pickup used a physics overlap pair, and Arcade's
+    overlap pass sets body.touching — flying through an NFC tag
+    read as onGround() mid-air, silently refreshing the air dash
+    and arming coyote (a tag-touch coyote-jump could cross the
+    showcase gap with NO dash). Pickup is now a manual AABB check
+    in updateCollectibles; verified: zero grounded frames inside a
+    tag, air dash stays consumed, pickups unchanged.
+- Item 4: ruling entry appended verbatim below.
+
+2026-08-09 — Round 3 stabilized and ratified (handoff
+2026-08-09-h): elite cap 2, wander-not-follow, feet-level
+reach — camping starved at all three feeds. Whiff cost
+ruled out permanently (whiffs are clean by -b). Round-4
+calibration released to the agent: request count free,
+band floor held, cross-tier overlap deliberate, showcase
+gap sized for the air-dash line. Human verdict closes.

@@ -87,12 +87,15 @@ export default class LevelScene extends Phaser.Scene {
           .setDepth(9)
       : null
 
-    // collectibles (BRIEF-04): one group, registry-driven behavior
+    // collectibles (BRIEF-04): one group, registry-driven behavior.
+    // Pickup is a manual AABB check in updateCollectibles, NOT a physics
+    // overlap pair — Arcade's overlap pass sets body.touching on both
+    // bodies, which read as onGround() mid-air and silently refreshed
+    // the air dash + coyote when flying through a tag (found by the
+    // round-4 gap probe, 2026-08-10: a tag-touch coyote-jump could
+    // cross the showcase gap with no dash).
     this.collectibles = this.physics.add.group({ allowGravity: false })
     this.physics.add.collider(this.collectibles, this.mainLayer)
-    this.physics.add.overlap(this.player.sprite, this.collectibles, (p, c) =>
-      this.onCollectiblePickup(c)
-    )
     // map-placed collectibles: `collectibles` object layer, point objects
     // typed by collectible key (assets/maps/README.md)
     for (const obj of this.map.getObjectLayer('collectibles')?.objects ?? []) {
@@ -711,8 +714,20 @@ export default class LevelScene extends Phaser.Scene {
   }
 
   updateCollectibles(time) {
+    const pb = this.player.body
     for (const c of this.collectibles.getChildren()) {
       if (!c.active) continue
+      // manual AABB pickup (no physics pair — see create): overlap
+      // separation polluted body.touching and read as onGround mid-air
+      if (
+        pb.right > c.body.left &&
+        pb.left < c.body.right &&
+        pb.bottom > c.body.top &&
+        pb.top < c.body.bottom
+      ) {
+        this.onCollectiblePickup(c)
+        if (!c.active) continue
+      }
       const def = COLLECTIBLES[c.getData('type')]
       // magnet drift (NFC tags): pull toward Chexy inside the radius
       if (def.magnet) {
