@@ -1,0 +1,32 @@
+GIMP Palette
+Name: Garage Environment (Chexy's BIG DAY)
+Columns: 7
+#
+ 21  23  28	Concrete Void (undersides)
+ 35  38  46	Concrete Deep
+ 52  56  65	Concrete Dark
+ 74  79  89	Concrete Mid
+ 99 106 117	Concrete Light
+126 133 145	Concrete Edge (standable tops)
+154 161 172	Concrete Highlight (sparse)
+ 27  26  23	Oil Stain Dark
+ 46  43  36	Oil Stain
+ 61  58  49	Asphalt Warm Gray
+ 85  82  74	Asphalt Light
+ 92  36  16	Sodium Ember (pool edge)
+147  64  15	Sodium Mid
+200  90  18	Sodium Bright
+240 162  74	Sodium Core
+255 217 160	Sodium Hotspot (sparse px)
+ 11  19  84	Signage Blue Deep
+ 21  40 166	Action Blue (brand)
+ 74  99 216	Signage Glow
+169 184 245	Signage Glow Core
+ 14  21  36	Night Sky
+ 29  43  69	Night Building
+ 62  90 128	Night Window Cool
+184 180  62	Lane Paint Yellow (worn)
+138 135  48	Lane Paint Shade
+199 203 210	Bay Paint White (worn)
+ 52  62  48	Standpipe Green-Gray
+ 16  24  40	Fixture Cool Black (Gray 900)

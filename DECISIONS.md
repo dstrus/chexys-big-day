@@ -2175,3 +2175,34 @@ found by garage probes (collectible grounded-state, dash-wedge).
 2026-08-10-a): twelve tags final, BRIEF-ART-01 delivered
 in full. The character has no remaining placeholder
 anywhere.
+
+## 2026-08-11 — Handoff 2026-08-10-a REVISED applied (supersedes the draft)
+
+- The earlier -a draft was applied and committed (bbc9b4c) before
+  the revision arrived; its items 1 and 3 (animation-set completion
+  log; win-parks/lose-loops verification, twelve tags, zero console
+  noise) stand as done. This entry applies the revision's delta.
+- Item 0: held per the file check — BRIEF-ART-04.md was absent from
+  HEAD and the working tree (searched tree, case-insensitive names,
+  and full git history before flagging); the human dropped it in.
+  art/palettes/garage-env.gpl had landed with the handoff. Both now
+  committed.
+- Item 2: BRIEF-ART-04 read and tracked (garage art: cars, elite
+  V3, tiles, parallax; wiring contract §6 is agent-side after each
+  drop; nothing in it invalidates existing code — it conforms art
+  to the ratified collision field). Both step-0 inventories
+  produced in art/garage-inventory.md: (a) car-body dimensions per
+  tier with roof lines, parking bottoms, the 32px deck-clearance
+  fact, canvas guidance, and the current chip anchor; (b) the
+  garage tile-role inventory (gids 1/2/6/7/5 in use with placements
+  and the double-faced deck-strip note; 3/4/8 and all of 9–24 free;
+  layer stack; deck/gap coordinates). Wiring note flagged: the
+  per-map tileset image keying lands with the first tile drop.
+- Item 4: ruling entry appended verbatim below.
+
+2026-08-10 — Chexy animation set COMPLETE; BRIEF-ART-04
++ garage-env.gpl landed with the two step-0 inventories
+produced (handoff 2026-08-10-a). With BRIEF-05 closed,
+the project's remaining build surface: Level 4 design +
+brief, Level 5 + boss, garage/Bell Desk art and audio
+content, polish ledger.
