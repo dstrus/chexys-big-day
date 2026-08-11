@@ -395,7 +395,10 @@ export default class LevelScene extends Phaser.Scene {
   spawnScheduledItem(spawnPointName, category, tier, fallbackSpawnPoints = []) {
     if (this.runOver) return // late delayedCalls from a fired entry
     const onField = this.items.getChildren().filter((i) => this.isTaggable(i)).length
-    if (onField >= TUNING.maxItemsOnField) return // schedule pressure valve
+    // field count is a per-level lever (BRIEF-06: density is the museum's
+    // identity AND its perf ceiling) — map property overrides the global
+    const cap = this.levelProps.maxItemsOnField ?? TUNING.maxItemsOnField
+    if (onField >= cap) return // schedule pressure valve
     const pt = this.pickFairSpawnPoint(spawnPointName, fallbackSpawnPoints)
     this.spawnItem(pt.x, pt.y, tier, category)
   }

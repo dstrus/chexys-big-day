@@ -9,7 +9,8 @@ export const LEVELS = [
   { id: 'belldesk', name: 'THE BELL DESK', mapKey: 'belldesk', requiresClear: 'coatroom' },
   // the garage runs its own scene (auto-scroll core, BRIEF-05)
   { id: 'garage', name: 'THE GARAGE', mapKey: 'garage', sceneKey: 'Garage', requiresClear: 'belldesk' },
-  { id: 'stroller', name: '???', unlocked: false },
+  // the museum runs its own scene (rolling items, BRIEF-06)
+  { id: 'museum', name: 'THE STROLLER VALET', mapKey: 'museum', sceneKey: 'Museum', requiresClear: 'garage' },
   { id: 'exodus', name: '???', unlocked: false },
 ]
 

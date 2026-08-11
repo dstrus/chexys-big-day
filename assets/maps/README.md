@@ -69,6 +69,7 @@ Optional properties:
 |----------|------|---------|
 | `stealCooldownMs` | int | Per-level steal-initiation cooldown override |
 | `dashUnlockBeat` | bool | Run the 10s dash-unlock beat at level start (Bell Desk only) |
+| `maxItemsOnField` | int | Per-level cap on taggable items on field (BRIEF-06: field count is the density/perf lever; default = tuning.maxItemsOnField) |
 | `dashAllowed` | bool | Dash usable in this level once unlocked — set on Bell Desk and every level after it; omit on the Coatroom (DESIGN.md §3.2: the unlock persists for SUBSEQUENT levels) |
 
 ## Tileset

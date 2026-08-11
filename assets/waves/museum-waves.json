@@ -1,0 +1,343 @@
+{
+  "entries": [
+    {
+      "time": 1.0,
+      "type": "items",
+      "spawnPoint": "any",
+      "itemCategory": "backpack",
+      "weightTier": 1,
+      "count": 3,
+      "interval": 0.4
+    },
+    {
+      "time": 4.0,
+      "type": "items",
+      "spawnPoint": "any",
+      "itemCategory": "cup",
+      "weightTier": 1,
+      "count": 2,
+      "interval": 0.4
+    },
+    {
+      "time": 12.0,
+      "type": "items",
+      "spawnPoint": "any",
+      "itemCategory": "backpack",
+      "weightTier": 1,
+      "count": 2,
+      "interval": 0.4
+    },
+    {
+      "time": 16.0,
+      "type": "items",
+      "spawnPoint": "any",
+      "itemCategory": "cup",
+      "weightTier": 1,
+      "count": 2,
+      "interval": 0.4
+    },
+    {
+      "time": 20,
+      "type": "enemy",
+      "count": 1,
+      "interval": 0.6
+    },
+    {
+      "time": 24.0,
+      "type": "items",
+      "spawnPoint": "any",
+      "itemCategory": "backpack",
+      "weightTier": 1,
+      "count": 3,
+      "interval": 0.4
+    },
+    {
+      "time": 31.0,
+      "type": "items",
+      "spawnPoint": "any",
+      "itemCategory": "cup",
+      "weightTier": 1,
+      "count": 1,
+      "interval": 0.4
+    },
+    {
+      "time": 34,
+      "type": "enemy",
+      "count": 1,
+      "interval": 0.6
+    },
+    {
+      "time": 42.0,
+      "type": "items",
+      "spawnPoint": "roll-left",
+      "itemCategory": "stroller",
+      "weightTier": 1,
+      "count": 2,
+      "interval": 6.0
+    },
+    {
+      "time": 48,
+      "type": "enemy",
+      "count": 1,
+      "interval": 0.6
+    },
+    {
+      "time": 50.0,
+      "type": "items",
+      "spawnPoint": "any",
+      "itemCategory": "backpack",
+      "weightTier": 1,
+      "count": 2,
+      "interval": 0.4
+    },
+    {
+      "time": 58.0,
+      "type": "items",
+      "spawnPoint": "roll-right",
+      "itemCategory": "stroller",
+      "weightTier": 1,
+      "count": 2,
+      "interval": 6.0
+    },
+    {
+      "time": 62,
+      "type": "enemy",
+      "count": 1,
+      "interval": 0.6
+    },
+    {
+      "time": 64.0,
+      "type": "items",
+      "spawnPoint": "any",
+      "itemCategory": "cup",
+      "weightTier": 1,
+      "count": 2,
+      "interval": 0.4
+    },
+    {
+      "time": 72.0,
+      "type": "items",
+      "spawnPoint": "roll-left",
+      "itemCategory": "stroller",
+      "weightTier": 1,
+      "count": 2,
+      "interval": 6.0
+    },
+    {
+      "time": 75,
+      "type": "collectible",
+      "collectibleType": "insightReport",
+      "spawnPoint": "item-04"
+    },
+    {
+      "time": 76,
+      "type": "enemy",
+      "count": 2,
+      "interval": 0.6
+    },
+    {
+      "time": 80.0,
+      "type": "items",
+      "spawnPoint": "any",
+      "itemCategory": "backpack",
+      "weightTier": 1,
+      "count": 3,
+      "interval": 0.4
+    },
+    {
+      "time": 92.0,
+      "type": "items",
+      "spawnPoint": "roll-right",
+      "itemCategory": "stroller",
+      "weightTier": 1,
+      "count": 3,
+      "interval": 4.0
+    },
+    {
+      "time": 94,
+      "type": "enemy",
+      "count": 2,
+      "interval": 0.6
+    },
+    {
+      "time": 98.0,
+      "type": "items",
+      "spawnPoint": "any",
+      "itemCategory": "backpack",
+      "weightTier": 1,
+      "count": 2,
+      "interval": 0.4
+    },
+    {
+      "time": 104.0,
+      "type": "items",
+      "spawnPoint": "any",
+      "itemCategory": "cup",
+      "weightTier": 1,
+      "count": 3,
+      "interval": 0.4
+    },
+    {
+      "time": 108,
+      "type": "enemy",
+      "count": 2,
+      "interval": 0.6
+    },
+    {
+      "time": 111.0,
+      "type": "items",
+      "spawnPoint": "roll-left",
+      "itemCategory": "stroller",
+      "weightTier": 1,
+      "count": 3,
+      "interval": 4.0
+    },
+    {
+      "time": 112,
+      "type": "collectible",
+      "collectibleType": "contactCard",
+      "spawnPoint": "item-03"
+    },
+    {
+      "time": 119.0,
+      "type": "items",
+      "spawnPoint": "any",
+      "itemCategory": "backpack",
+      "weightTier": 1,
+      "count": 2,
+      "interval": 0.4
+    },
+    {
+      "time": 124,
+      "type": "enemy",
+      "count": 2,
+      "interval": 0.6
+    },
+    {
+      "time": 127.0,
+      "type": "items",
+      "spawnPoint": "roll-right",
+      "itemCategory": "stroller",
+      "weightTier": 1,
+      "count": 3,
+      "interval": 4.0
+    },
+    {
+      "time": 134.0,
+      "type": "items",
+      "spawnPoint": "any",
+      "itemCategory": "cup",
+      "weightTier": 1,
+      "count": 3,
+      "interval": 0.4
+    },
+    {
+      "time": 140,
+      "type": "enemy",
+      "count": 2,
+      "interval": 0.6
+    },
+    {
+      "time": 141.0,
+      "type": "items",
+      "spawnPoint": "any",
+      "itemCategory": "backpack",
+      "weightTier": 1,
+      "count": 2,
+      "interval": 0.4
+    },
+    {
+      "time": 148.0,
+      "type": "items",
+      "spawnPoint": "roll-left",
+      "itemCategory": "stroller",
+      "weightTier": 1,
+      "count": 3,
+      "interval": 4.0
+    },
+    {
+      "time": 154,
+      "type": "enemy",
+      "count": 2,
+      "interval": 0.6
+    },
+    {
+      "time": 162.0,
+      "type": "items",
+      "spawnPoint": "any",
+      "itemCategory": "backpack",
+      "weightTier": 1,
+      "count": 3,
+      "interval": 0.4
+    },
+    {
+      "time": 166,
+      "type": "enemy",
+      "count": 2,
+      "interval": 0.6
+    },
+    {
+      "time": 167.0,
+      "type": "items",
+      "spawnPoint": "any",
+      "itemCategory": "cup",
+      "weightTier": 1,
+      "count": 3,
+      "interval": 0.4
+    },
+    {
+      "time": 170,
+      "type": "collectible",
+      "collectibleType": "contactCard",
+      "spawnPoint": "item-06"
+    },
+    {
+      "time": 175.0,
+      "type": "items",
+      "spawnPoint": "roll-right",
+      "itemCategory": "stroller",
+      "weightTier": 1,
+      "count": 6,
+      "interval": 0.8
+    },
+    {
+      "time": 180,
+      "type": "enemy",
+      "count": 2,
+      "interval": 0.6
+    },
+    {
+      "time": 186.0,
+      "type": "items",
+      "spawnPoint": "any",
+      "itemCategory": "backpack",
+      "weightTier": 1,
+      "count": 2,
+      "interval": 0.4
+    },
+    {
+      "time": 192.0,
+      "type": "items",
+      "spawnPoint": "roll-left",
+      "itemCategory": "stroller",
+      "weightTier": 1,
+      "count": 2,
+      "interval": 4.0
+    },
+    {
+      "time": 194,
+      "type": "enemy",
+      "count": 2,
+      "interval": 0.6
+    },
+    {
+      "time": 198.0,
+      "type": "items",
+      "spawnPoint": "any",
+      "itemCategory": "cup",
+      "weightTier": 1,
+      "count": 3,
+      "interval": 0.4
+    }
+  ]
+}

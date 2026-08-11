@@ -8,6 +8,10 @@ export const ITEM_CATEGORIES = {
   valet: 0xe91717, // red
   stroller: 0xffc0cb, // pink
   rental: 0x68a11c, // green
+  // museum items (BRIEF-06) — NOT ChexApp tag colors; picked clear of
+  // enemy paper tones and Chexy orange
+  backpack: 0x8a5a2b, // kid-pack brown
+  cup: 0x66c7e8, // sippy-cup blue
 }
 
 export function categoryColor(category) {

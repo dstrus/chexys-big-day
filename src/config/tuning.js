@@ -100,6 +100,15 @@ export const TUNING = {
   // car's wheels — deck cars can't be tagged through the deck floor,
   // so the roof routes and dash gaps are load-bearing, not optional
 
+  // stroller valet (BRIEF-06): rolling items
+  strollerSpeed: 45, // mover roll speed. HARD RULE (BRIEF-06 §1): must
+  // stay ≤ 0.3× maxSpeed — the mover fairness rail. Spawn-time fairness
+  // validation stays honest over a mover's drift only at this ratio
+  // (the carrierSpeedFactor logic applied to movers).
+  backpackBounce: 0.5, // energetic entrance, settles in ~1s under drag
+  cupBounce: 0.75, // high-restitution comedy bouncer, settles ~1.5s
+  cupScoreFactor: 0.4, // sippy cups: standard tap, small score (§1)
+
   // adaptive intensity / multiplier (DESIGN.md §2.5 skeleton)
   adaptiveBand: 0.3,
   adaptiveStep: 0.1,
@@ -173,6 +182,9 @@ export const TUNING_SCHEMA = [
   { key: 'eliteMaxActive', label: 'Elite cap', min: 0, max: 8, step: 1 },
   { key: 'eliteSanctuaryS', label: 'Elite sanctuary (s)', min: 0, max: 8, step: 0.5 },
   { key: 'tagReachY', label: 'Tag reach (y px)', min: 8, max: 96, step: 2 },
+  { key: 'strollerSpeed', label: 'Stroller speed', min: 10, max: 45, step: 5 },
+  { key: 'backpackBounce', label: 'Backpack bounce', min: 0.1, max: 0.9, step: 0.05 },
+  { key: 'cupBounce', label: 'Cup bounce', min: 0.3, max: 0.95, step: 0.05 },
   { key: 'tagMagnetRadius', label: 'Tag magnet radius', min: 0, max: 80, step: 2 },
   { key: 'tagScoreValue', label: 'Tag score', min: 0, max: 200, step: 10 },
   { key: 'cardLingerMs', label: 'Card linger (ms)', min: 2000, max: 20000, step: 500 },

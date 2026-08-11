@@ -2229,3 +2229,49 @@ and loiters follow movers; no feet-reach outside the
 garage; density is the level identity and the perf
 ceiling test; field count is the perf lever. Garage
 round system + close-out criteria apply.
+
+## 2026-08-11 — BRIEF-06 EXECUTED: The Stroller Valet (core + waves)
+
+One session per the brief. Shipped:
+- MuseumScene ('Museum') extends LevelScene — no feet-reach (garage-
+  scoped), ground-plus-mezzanine per the Bell Desk pattern. Three
+  item classes on tinted rects: strollers 26×18 (movers), backpacks
+  14×14 (bounce-settle ~1s), cups 8×8 (high-restitution confetti,
+  cupScoreFactor 0.4). Tag BRAKES a stroller: the full check-in beat
+  lands (score/chip/pose/guest) and the item PARKS in place instead
+  of whisking — braked, static, chip on. Movers re-assert
+  strollerSpeed whenever grounded (one loop covers roll-out, post-
+  rescue resume — perpetual until tagged — and landings); wall
+  rebounds via bounce.x 1.
+- Tunables: strollerSpeed 45 with the HARD RULE noted on the tunable
+  (≤0.3× maxSpeed — the mover fairness rail), backpackBounce 0.5,
+  cupBounce 0.75, cupScoreFactor 0.4 (+ sliders, stroller slider
+  capped at 45 so the rail can't be broken from the panel).
+- Map museum.json 120×17 (~4 screens): marble ground, two exhibit
+  mezzanines (double-faced strips), return-alcove counter block
+  center — the deliberate rebound anchor making two readable lanes;
+  roll-in spawn points at both lane ends. Waves: 210s four-phase arc
+  (backpacks+cups teach → sparse strollers → chaos → convoy bait),
+  mix 38/35/28 vs the brief's ~40/35/25; collectibles 8 tags +
+  2 cards + 1 insight. maxItemsOnField is now a per-level map
+  property (museum: 20) — field count is the density/perf lever.
+- Registrations: scene, map, waves, levels row (id 'museum',
+  "THE STROLLER VALET", requiresClear garage; music hook
+  music/museum.<ext> via levelId).
+Verified (staged headless per §4): instruments green at boot, no
+console noise; tap mid-roll brakes/chips/scores/parks; WINDUP-DRIFT
+TAP LANDS — and the §2 ruling held with ZERO code change (the -04-b
+windup already re-validates taggability only, never radius; drift
+was never invalidity); thief lock follows the mover (lockedTarget
+ref tracks it while rolling) and grabs in place, carrier rules
+unchanged; a stroller rolls off a mezzanine and remains valid,
+rolling, and taggable below. Map bug caught by the spawn gate during
+verification (player spawn inside the alcove block) and fixed.
+Observation for the design chat (no lever invented, per -i): a
+tail-chase against a mover closes at only 10px/s (enemy 55 vs
+stroller 45) — thief pressure on movers comes from intercepts and
+rebound returns, not pursuit. Reads as intended texture; flagging
+in case round play contradicts.
+Awaiting the human: full rush start-to-results, punch-list rounds
+per garage precedent, and the perf ceiling test — 60fps ×2 at peak
+density on hardware (the lever is field count, not physics).
