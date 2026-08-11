@@ -2375,3 +2375,15 @@ lever spent. TRAVEL BUDGET canonized as instrument three
 scroll had been hiding). Zoned fronts pre-armed for a
 scattered round-2 verdict; finale opposite-end
 simultaneity reserved as priced bait.
+
+## 2026-08-11 — Museum PLAYTEST SUCCESS; mid-air brake polish
+
+Human verdict on round 2: playtest is a success (steal-clock 5500 +
+hand-drawn platforms held; zoned fronts stay pre-armed, unused).
+One aesthetic note, fixed: tagging a mid-air stroller (e.g. just
+rescued) froze it in the air. The brake now kills horizontal motion
+immediately but lets gravity finish — the stroller falls and locks
+on touchdown (brakePending, resolved in the mover loop). Grounded
+tags still lock instantly. Verified: mid-air tag fell from y=110 to
+y=231 (resting exactly on the ground) before locking; grounded
+regression locks same-tick; no console noise.

@@ -87,11 +87,18 @@ export default class MuseumScene extends LevelScene {
     item.setData('chip', chip)
     item.once(Phaser.GameObjects.Events.DESTROY, () => chip.destroy())
     this.syncChip(item)
-    // the brake: parked, static
+    // the brake: parked, static. A mid-air stroller (e.g. just rescued)
+    // falls to the ground first and locks on touchdown — freezing it in
+    // the air read wrong (human aesthetic note, 2026-08-11)
     item.setData('braked', true)
-    item.body.setVelocity(0, 0)
+    item.body.setVelocityX(0)
     item.setBounce(0, 0)
-    item.body.moves = false
+    if (item.body.blocked.down) {
+      item.body.setVelocity(0, 0)
+      item.body.moves = false
+    } else {
+      item.setData('brakePending', true)
+    }
     item.setTint(0x7ee87e) // check-in flash...
     this.time.delayedCall(220, () => {
       if (item.active) item.setTint(categoryColor('stroller')) // ...then parked pink
@@ -108,7 +115,15 @@ export default class MuseumScene extends LevelScene {
     super.update(time, delta)
     if (this.runOver) return
     for (const item of this.items.getChildren()) {
-      if (!item.active || !item.getData('mover') || !item.body?.enable) continue
+      if (!item.active || !item.body?.enable) continue
+      // a braked stroller that was mid-air locks on touchdown
+      if (item.getData('brakePending') && item.body.blocked.down) {
+        item.setData('brakePending', false)
+        item.body.setVelocity(0, 0)
+        item.body.moves = false
+        continue
+      }
+      if (!item.getData('mover')) continue
       if (item.getData('tagged') || item.getData('stolen')) continue
       const vx = item.body.velocity.x
       if (Math.abs(vx) > 8) item.setData('rollDir', Math.sign(vx))
