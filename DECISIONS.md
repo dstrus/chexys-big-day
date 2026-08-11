@@ -2075,3 +2075,35 @@ bank with a cooldown-cleared elite pinned on the car (and the car
 NOT yet safe — sanctuary is distinct); control rip lands at 8s;
 locks release on sanctuary entry with the tag intact. Human played
 it: "Much better. Still quite challenging. Keep it." Ratified.
+
+## 2026-08-10 — Handoff 2026-08-09-i applied
+
+- Sequence check: 2026-08-09-h applied and committed first ✓ (round-4
+  package: 87e0eda, be853d2, 091f1f8, 85fb6a6).
+- Item 1: round-4 package RATIFIED in full — the 69-car field (field
+  density is henceforth a FREE data lever, no per-change ruling
+  needed while instruments stay green); the declared "live" metric;
+  the fire-position deadline with the catchability-vs-feel
+  distinction on the record; the gap held at 112px (showcase line =
+  only clean crossing); the tag-touch grounded-state fix (manual
+  AABB pickup); the mid-dash verb drop (the -g contract's last edge
+  closed); the elite sanctuary as the spent -f lever.
+- Item 2: GARAGE CLOSE-OUT CRITERIA set — BRIEF-05 closes on one
+  full clean session: at least three consecutive start-to-results
+  rushes with no new structural findings, hanger/score/feel verdict
+  filed, 60fps confirmed twice on hardware. A new finding that needs
+  design (not a panel slider) resets the criterion; in-session panel
+  nudges do NOT (panel play is calibration, not structure). On
+  close: standard sign-off entry, levers frozen at played values.
+- Item 3: lever ledger acknowledged — pre-armed answers SPENT.
+  Standing rule: post-close garage needs return to the design chat;
+  no invented levers agent-side.
+- Item 4: ruling entry appended verbatim below.
+
+2026-08-09 — Round 4 ratified (handoff 2026-08-09-i):
+deadline instrument canonized (catchability vs feel),
+field density freed as data, sanctuary spent, dash-tap
+contract closed. Close-out criteria set: three clean
+consecutive rushes + hardware 60fps = BRIEF-05 signs
+off. Lever cupboard empty by design — future garage
+needs are design-chat matters.
