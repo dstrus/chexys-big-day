@@ -208,8 +208,15 @@ export default class GarageScene extends LevelScene {
   // whiff), the glow never lands on it, tap and hold cannot reach it.
   // Elite untags return a car to requested-unmet, so it re-gates open.
   // Tag-banking is dead; POSITION-banking is the intended skill.
+  // FEET-LEVEL REACH (in-session ruling 2026-08-10): the tag verb works
+  // at the car's level — Chexy's feet within tagReachY of its wheels.
+  // Deck requests demand actual ascent (the roof routes and dash gaps
+  // earn their keep); a jump beside a deck edge tags mid-air; arrows,
+  // ranking, and Contact Card still see unreachable cars (routing info
+  // and card saves stay legal per BRIEF-05 §4).
   isTaggable(car) {
-    return car.active && car.getData('requested') === true && !car.getData('tagged')
+    if (!car.active || car.getData('requested') !== true || car.getData('tagged')) return false
+    return Math.abs(this.player.body.bottom - car.body.bottom) <= TUNING.tagReachY
   }
 
   onCarMissed(car) {
@@ -332,6 +339,14 @@ export default class GarageScene extends LevelScene {
     if (this.runOver) return
     if (this.enemies.countActive() >= 8) return
     const elite = !!entry.elite
+    // concurrent elite cap (in-session ruling 2026-08-10): the scroll
+    // bounds the arena, so extra elites only stack the trailing edge
+    if (elite) {
+      const active = this.enemies
+        .getChildren()
+        .filter((e) => e.active && e.getData('elite')).length
+      if (active >= TUNING.eliteMaxActive) return
+    }
     const useArt = this.textures.exists('enemy-atlas')
     // spawn relative to the VIEW, always AHEAD (2026-08-09-c): elites
     // enter from the leading edge and fly back toward tagged targets,
@@ -556,7 +571,23 @@ export default class GarageScene extends LevelScene {
         if (locked) enemy.setData('lockedTagged', locked)
       }
 
-      const goal = locked || this.player
+      // no tagged backlog: wander between random in-view points
+      // (in-session ruling 2026-08-10) — shadowing the player fed the
+      // edge-camp loop and read as menace without an actual threat
+      let goal = locked
+      if (!goal) {
+        let w = enemy.getData('wander')
+        const arrived = w && Math.abs(enemy.x - w.x) < 10 && Math.abs(enemy.y - w.y) < 10
+        if (!w || arrived || time >= w.until) {
+          w = {
+            x: this.scrollX + Phaser.Math.Between(40, this.scale.width - 40),
+            y: Phaser.Math.Between(30, this.worldHeight - 60),
+            until: time + Phaser.Math.Between(1200, 2600),
+          }
+          enemy.setData('wander', w)
+        }
+        goal = w
+      }
       let goalX = goal.x
       let goalY = goal.y
       if (locked && (!this.clearedToSteal(enemy) || !this.carVisible(locked))) {

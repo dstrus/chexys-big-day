@@ -1926,3 +1926,38 @@ charged variant rejected as scope. Anti-crush guarantee:
 the edge push slides Chexy through yielding vehicles —
 the pinch pocket cannot exist. Blockout rule: tiles may
 never enclose an edge-reachable pocket.
+
+## 2026-08-10 — In-session rulings: round-3 playtest prep (ratified by play)
+
+Round-3 symptom (human report): every run collapsed into hugging the
+trailing edge spamming Z — always effective, and the only effective
+answer to last-second steals. Contributing mechanics on the record:
+stunnable chip-carriers are class-0 auto-target priority, so edge
+camping made Z-spam a zero-commitment interceptor for every rip; and
+deck cars were taggable from the ground through the deck floor
+(66px radius vs ~40px vertical gap), so verticality — and the air
+dash the map was built to showcase — was optional. Three tweaks,
+played and ratified ("plays well now"):
+
+1. Elite cap: at most eliteMaxActive (2) concurrent elites — the
+   auto-scroll bounds the arena; more elites only stacked the edge.
+   Capped spawns are skipped; wave timing untouched.
+2. Idle wander: elites with no tagged backlog drift between random
+   in-view points. The follow-the-player fallback is deleted —
+   shadowing fed the camp loop and read as menace without a threat.
+3. Feet-level tag reach: a car is taggable only when Chexy's feet
+   are within tagReachY (28px) of its wheels. Deck requests demand
+   ascent (roof routes and dash gaps are load-bearing now); jumping
+   beside a deck edge still tags mid-air; under-deck ceilings
+   prevent hop-tags through the floor. Arrows, ranking, and Contact
+   Card still see unreachable cars (routing info; card saves on
+   unreached cars stay legal per BRIEF-05 §4). Held in reserve if
+   camping persists: the -f lever (elite target preference biased
+   away from near-safe cars) and a cost on whiffed/spammed stuns
+   (touches the shared verb — design-chat call).
+
+Also this session (human-supplied): level 3 display name renamed
+"THE VALET GARAGE" → "THE GARAGE" (levels.js; DESIGN §3.3 heading
+synced). First real SFX landed: assets/audio/tag.mp3 replaces the
+tap-tag synth via the BRIEF-02 drop-in contract — zero code changes,
+verified loading as audio-tag with a clean boot.

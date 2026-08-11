@@ -84,6 +84,13 @@ export const TUNING = {
   edgePushMargin: 10, // trailing-edge nudge zone (px past the view edge)
   swarmSlowFactor: 0.4, // swarm contact-slow (2026-08-09-c): speed cap factor
   swarmSlowMs: 600, // refresh-not-stack; dash immune and dash cancels it
+  eliteMaxActive: 2, // concurrent elite cap (in-session ruling 2026-08-10):
+  // the auto-scroll bounds the usable space — more elites just stack the
+  // trailing edge and feed the camp-and-spam loop
+  tagReachY: 28, // feet-level reach gate (in-session ruling 2026-08-10):
+  // a car is taggable only when Chexy's feet are within this of the
+  // car's wheels — deck cars can't be tagged through the deck floor,
+  // so the roof routes and dash gaps are load-bearing, not optional
 
   // adaptive intensity / multiplier (DESIGN.md §2.5 skeleton)
   adaptiveBand: 0.3,
@@ -154,6 +161,8 @@ export const TUNING_SCHEMA = [
   { key: 'driveOffDelayMs', label: 'Drive-off delay (ms)', min: 0, max: 6000, step: 250 },
   { key: 'swarmSlowFactor', label: 'Swarm slow factor', min: 0.1, max: 1, step: 0.05 },
   { key: 'swarmSlowMs', label: 'Swarm slow (ms)', min: 0, max: 2000, step: 50 },
+  { key: 'eliteMaxActive', label: 'Elite cap', min: 0, max: 8, step: 1 },
+  { key: 'tagReachY', label: 'Tag reach (y px)', min: 8, max: 96, step: 2 },
   { key: 'tagMagnetRadius', label: 'Tag magnet radius', min: 0, max: 80, step: 2 },
   { key: 'tagScoreValue', label: 'Tag score', min: 0, max: 200, step: 10 },
   { key: 'cardLingerMs', label: 'Card linger (ms)', min: 2000, max: 20000, step: 500 },

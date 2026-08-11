@@ -285,7 +285,7 @@ tier 3 = ×2.0 (tier2ScoreFactor / tier3ScoreFactor,
 tunable). The adaptive multiplier and BIG DAY bonus apply
 on top as ever.
 
-### 3.3 Level 3 — The Valet Garage
+### 3.3 Level 3 — The Garage
 Auto-scrolling parking structure, night shift. **New mechanic:**
 the request queue — the level scrolls right at constant speed
 (per-section knob built, shipped flat); guests text for their
