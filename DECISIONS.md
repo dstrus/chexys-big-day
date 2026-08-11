@@ -2107,3 +2107,18 @@ contract closed. Close-out criteria set: three clean
 consecutive rushes + hardware 60fps = BRIEF-05 signs
 off. Lever cupboard empty by design — future garage
 needs are design-chat matters.
+
+## 2026-08-10 — In-session ruling: fulfilled-request checkmark
+
+Human ruling: fulfilled requests (tagged but still stealable) must
+read differently on the HUD queue — "perhaps a checkmark."
+Implemented: request chips wear a small Success Green check from the
+moment the car is tagged until the chip resolves at bank/drive-off;
+an elite rip removes the check (the request is live work again), and
+any re-tag — player or stun-rescue chip-flight — restores it. Wired
+as request-tagged / request-untagged events from GarageScene's three
+tag-state transitions (completeTag, elite rip, chip-flight reapply).
+Verified through the full lifecycle: request (no check) → tag
+(check) → elite rip (check removed) → re-tag (check restored); no
+console errors. Queue now reads "handled" vs "still needs me" at a
+glance.

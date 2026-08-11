@@ -252,6 +252,9 @@ export default class GarageScene extends LevelScene {
   // double-pays.
   completeTag(item, viaCard = false) {
     item.setData('tagged', true)
+    // queue legibility (human ruling 2026-08-10): fulfilled chips wear
+    // a check until they bank/drive off; an elite rip removes it
+    this.game.events.emit('request-tagged', { key: item.name })
 
     this.physics.pause()
     this.time.delayedCall(TUNING.hitstopMs, () => {
@@ -456,6 +459,7 @@ export default class GarageScene extends LevelScene {
 
     this.lastStealAt = this.time.now
     item.setData('tagged', false) // reverts to requested-unmet
+    this.game.events.emit('request-untagged', { key: item.name })
     const chip = item.getData('chip')
     item.setData('chip', null)
     enemy.setData('chipCar', item)
@@ -510,6 +514,7 @@ export default class GarageScene extends LevelScene {
           }
           car.setData('tagged', true)
           car.setData('chip', chip)
+          this.game.events.emit('request-tagged', { key: car.name })
           this.scheduleDriveOff(car)
         },
       })

@@ -81,6 +81,8 @@ export default class UIOverlayScene extends Phaser.Scene {
     bus.on('system-bubble', this.onSystemBubble, this)
     bus.on('request-added', this.onRequestAdded, this)
     bus.on('request-done', this.onRequestDone, this)
+    bus.on('request-tagged', this.onRequestTagged, this)
+    bus.on('request-untagged', this.onRequestUntagged, this)
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
       bus.off('hud', this.onHud, this)
       bus.off('run-over', this.onRunOver, this)
@@ -93,6 +95,8 @@ export default class UIOverlayScene extends Phaser.Scene {
       bus.off('system-bubble', this.onSystemBubble, this)
       bus.off('request-added', this.onRequestAdded, this)
       bus.off('request-done', this.onRequestDone, this)
+      bus.off('request-tagged', this.onRequestTagged, this)
+      bus.off('request-untagged', this.onRequestUntagged, this)
     })
   }
 
@@ -133,6 +137,33 @@ export default class UIOverlayScene extends Phaser.Scene {
     chip.setDepth(21)
     this.requestChips.set(key, chip)
     this.layoutRequestChips()
+  }
+
+  // fulfilled-but-stealable (human ruling 2026-08-10): a tagged car's
+  // chip wears a Success Green check until it banks or drives off —
+  // the queue reads "handled" vs "still needs me" at a glance. An
+  // elite rip removes the check (the request is live work again).
+  onRequestTagged({ key }) {
+    const chip = this.requestChips?.get(key)
+    if (!chip || chip.getData('check')) return
+    const check = this.add.graphics()
+    check.lineStyle(2, 0x12b76a, 1) // Success Green
+    check.beginPath()
+    check.moveTo(-3, 0)
+    check.lineTo(-1, 2)
+    check.lineTo(3, -3)
+    check.strokePath()
+    check.setPosition(7, -4) // top-right corner of the silhouette
+    chip.add(check)
+    chip.setData('check', check)
+  }
+
+  onRequestUntagged({ key }) {
+    const chip = this.requestChips?.get(key)
+    const check = chip?.getData('check')
+    if (!check) return
+    check.destroy()
+    chip.setData('check', null)
   }
 
   onRequestDone({ key, ok }) {
