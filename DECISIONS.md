@@ -2435,3 +2435,28 @@ the Museum joins the certified list. Four of five levels
 complete. Remaining gameplay build surface: the Mass
 Exodus and the Paper Ticket King, pending the design
 chat's BOSS-SPEC reconciliation pass.
+
+## 2026-08-12 — Handoff 2026-08-11-a applied
+
+- Sequence check: first of the -11 series; the -10 chain closed at
+  -d ✓. Item 0: BRIEF-07.md landed with the handoff (read in full;
+  no shipped code invalidated — the BOSS-SPEC supersessions kill
+  spec-only concepts like stealRefund before they were built).
+- Item 2 standing: BRIEF-07 Session 1 (Act-1 rush) executes on the
+  human's go.
+- Item 1: design-session entry appended verbatim below.
+
+2026-08-11 — MASS EXODUS DESIGN SESSION (compiled into
+BRIEF-07; its amendments supersede BOSS-SPEC where they
+conflict). Rulings: two-act structure with the Boss Door
+checkpoint (act-1 losses AND score bank; boss retries
+restore both; hangers judge the full shift); claw = rip
+grammar (giant elite — the King undoes work, never
+creates losses; minions steal untagged under the standard
+stack); tier-weighted Return Meter (1.0/1.5/2.0 mirroring
+score, symmetric rip/restore, stealRefund deleted,
+thresholds 12/15/18 points first-calibration). Fiction
+flips level-wide: tags RETURN items to departing guests.
+Act 1 is the medley finale and the zoned fronts' true
+home. Watchdog rule lands on the King's state machines
+per the -03-b promise.
