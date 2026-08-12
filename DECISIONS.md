@@ -2420,3 +2420,18 @@ truth (tap grace held with zero code change; locks follow movers).
 
 Four levels built, played, and closed. Remaining build surface:
 Level 5 + boss, garage/museum art and audio content, polish ledger.
+
+## 2026-08-11 — Handoff 2026-08-10-d applied
+
+- Sequence check: 2026-08-10-c applied ✓; the closure package this
+  handoff ratifies is committed (round-2 pass, frozen levers,
+  touchdown-lock polish, travel budget live, zoned fronts pre-armed
+  and unspent, sign-off d6af7fe).
+- Item 1: ratified in full — nothing outstanding.
+- Item 2: ruling entry appended verbatim below.
+
+2026-08-10 — BRIEF-06 CLOSED (handoff 2026-08-10-d):
+the Museum joins the certified list. Four of five levels
+complete. Remaining gameplay build surface: the Mass
+Exodus and the Paper Ticket King, pending the design
+chat's BOSS-SPEC reconciliation pass.
