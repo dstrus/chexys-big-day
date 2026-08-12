@@ -68,12 +68,19 @@ export function createParallax(scene, levelId) {
   return layers
 }
 
+// stage-glow pulse range (human note 2026-08-12: deeper low end — the
+// dip should read as the glow breathing out, not just dimming)
+const GLOW_MIN = 0.3
+const GLOW_MAX = 1.0
+
 // per frame: scroll offsets + the §3 autonomous motion (crowd sway on
 // p3, glow pulse) — cheap sines, no art needed
 export function updateParallax(layers, cam, time) {
   for (const l of layers) {
     if (l.isGlow) {
-      l.sprite.setAlpha(0.75 + 0.25 * Math.sin(time / 900))
+      const mid = (GLOW_MAX + GLOW_MIN) / 2
+      const amp = (GLOW_MAX - GLOW_MIN) / 2
+      l.sprite.setAlpha(mid + amp * Math.sin(time / 900))
       continue
     }
     let x = cam.scrollX * l.factor
