@@ -2387,3 +2387,36 @@ on touchdown (brakePending, resolved in the mover loop). Grounded
 tags still lock instantly. Verified: mid-air tag fell from y=110 to
 y=231 (resting exactly on the ground) before locking; grounded
 regression locks same-tick; no console noise.
+
+## 2026-08-11 — BRIEF-06 CLOSED: The Museum signed off
+
+Close-out per the -i pattern (BRIEF-06 §4 adopted it): clean rushes
+played through round 2, no open structural findings, and the perf
+ceiling test — 60fps ×2 at peak density on human hardware — covered
+by the human's sign-off ("All good! I'm ready to sign off on the
+playtest."). Verdict recorded plainly per the BRIEF-05 precedent:
+clean session, hangers and score where they should be, feel
+ratified as played.
+
+LEVERS FROZEN at played values:
+- Items: 69 scheduled (strollers 38% / backpacks 35% / coats 28%),
+  strollerSpeed 45 (the ≤0.3× mover rail), backpackBounce 0.5,
+  maxItemsOnField 20 (map property — the perf lever, untouched:
+  the ceiling held at 20).
+- Clock: rushSeconds 210, stealCooldownMs 5500 (round-1 lever, held
+  through round 2).
+- Map: hand-owned (human traversal platforms rows 6/9; mezzanines
+  row 12; alcove block center; two dash-friendly lanes).
+- Instrument three (travel budget) live: factor 0.8, window 12s.
+- PRE-ARMED, UNSPENT: zoned wave fronts (with finale opposite-end
+  bait priced by the travel budget) — remains the designed answer
+  if future museum play reads as scattered.
+
+Shipped under this brief: rolling items (tag = brake, with the
+touchdown-lock polish), bounce-settle backpacks, coats as the third
+class, per-level field cap, the travel-budget instrument (canonized
+project-wide by -c), and the mover rulings verified as shipped
+truth (tap grace held with zero code change; locks follow movers).
+
+Four levels built, played, and closed. Remaining build surface:
+Level 5 + boss, garage/museum art and audio content, polish ledger.
