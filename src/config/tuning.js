@@ -63,7 +63,9 @@ export const TUNING = {
   // travel budget — instrument three (handoff 2026-08-10-c): fairness
   // floor = catchability per event, tension band = heat per request,
   // travel budget = serial ROUTING feasibility. No schedule may demand
-  // an impossible itinerary.
+  // an impossible itinerary. Instrument applicability is per-level
+  // grammar (2026-08-11-b): no request surface = no tension band —
+  // absence is N/A, not omission.
   travelBudgetFactor: 0.8, // required serial travel may use at most this
   // fraction of wall-clock across the window — the player must never
   // need >80% of real time just in transit

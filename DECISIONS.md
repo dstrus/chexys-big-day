@@ -2501,3 +2501,21 @@ steal, stun landed, item freed); fiction flip live (registry flag +
 exodus pools drawing). Two verification misreads corrected along the
 way (completed tags whisk — asserts must observe the tag in flight),
 logged so the next battery author knows.
+
+## 2026-08-12 — Handoff 2026-08-11-b applied
+
+- Sequence check: 2026-08-11-a applied ✓; S1 shipped at 98f3f9a.
+- Item 1 ratified, two principles canonized: INSTRUMENTS CONSTRAIN
+  BLOCKOUTS, BRIEFS PROPOSE (the venue sized by the (c) inequality at
+  create time, 2400→2112px); and INSTRUMENT APPLICABILITY IS
+  PER-LEVEL GRAMMAR — no request surface, no tension band; absence
+  reads as N/A, not omission (noted on the instrument docs: the
+  lineage comments in LevelScene and tuning.js).
+- Item 2: zoned fronts logged SPENT in their true home; the climax
+  window's static-check exemption + runtime travel-budget pricing
+  ratified as the deliberate BIG DAY bait pattern.
+- Item 3: ruling entry appended verbatim below.
+
+2026-08-11 — S1 ratified (handoff 2026-08-11-b): venue
+instrument-sized, fronts spent, medley verified, fiction
+flip live. Act-1 round 1 is the human's next verdict.

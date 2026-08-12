@@ -374,7 +374,11 @@ export default class LevelScene extends Phaser.Scene {
 
   // TRAVEL BUDGET — instrument three (handoff 2026-08-10-c). The
   // lineage: fairness floor = catchability per event, tension band =
-  // heat per request, travel budget = serial ROUTING feasibility. The
+  // heat per request, travel budget = serial ROUTING feasibility.
+  // APPLICABILITY IS PER-LEVEL GRAMMAR (handoff 2026-08-11-b): a level
+  // without a request surface has no tension band — its absence reads
+  // as N/A, not omission. The exodus, e.g., is priced by spawn
+  // fairness + the (c) inequality + this instrument. The
   // formalized event set (agent, per the handoff): (1) an untagged item
   // ENTERING danger — the first enemy lock landing on it, re-armed
   // after 4s so lock churn doesn't spam; (2) a steal INITIATING — the
