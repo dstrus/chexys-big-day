@@ -1,7 +1,13 @@
 import Phaser from 'phaser'
 import { GAME_WIDTH, GAME_HEIGHT } from '../main.js'
 import { TUNING } from '../config/tuning.js'
-import { HAPPY_LINES, UNHAPPY_LINES, CARD_LINES } from '../config/guestLines.js'
+import {
+  HAPPY_LINES,
+  UNHAPPY_LINES,
+  CARD_LINES,
+  EXODUS_HAPPY_LINES,
+  EXODUS_UNHAPPY_LINES,
+} from '../config/guestLines.js'
 import { audio } from '../systems/AudioBus.js'
 import { createHanger } from '../ui/hanger.js'
 
@@ -199,7 +205,19 @@ export default class UIOverlayScene extends Phaser.Scene {
   }
 
   pickLine(kind) {
-    const pool = kind === 'happy' ? HAPPY_LINES : kind === 'card' ? CARD_LINES : UNHAPPY_LINES
+    // fiction flip (BRIEF-07): the exodus hands items BACK — its map
+    // property swaps the guest pools (card lines stay: still a save)
+    const handback = this.game.registry.get('handbackCopy') === true
+    const pool =
+      kind === 'happy'
+        ? handback
+          ? EXODUS_HAPPY_LINES
+          : HAPPY_LINES
+        : kind === 'card'
+          ? CARD_LINES
+          : handback
+            ? EXODUS_UNHAPPY_LINES
+            : UNHAPPY_LINES
     let i
     do {
       i = Phaser.Math.Between(0, pool.length - 1)

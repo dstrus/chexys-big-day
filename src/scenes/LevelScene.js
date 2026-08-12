@@ -239,6 +239,9 @@ export default class LevelScene extends Phaser.Scene {
 
     this.levelProps = {}
     for (const p of map.properties ?? []) this.levelProps[p.name] = p.value
+    // fiction flip (BRIEF-07): exodus tags RETURN items to departing
+    // guests — the bubble copy pools swap on this map property
+    this.game.registry.set('handbackCopy', this.levelProps.handbackCopy === true)
 
     const spawns = map.getObjectLayer('spawns').objects
     this.playerSpawn = spawns.find((o) => o.name === 'player')

@@ -19,8 +19,8 @@ import { audio } from '../systems/AudioBus.js'
 // and loiters follow movers (locks are object refs); spawn fairness
 // validates at spawn position, kept honest by the ≤0.3× speed cap.
 export default class MuseumScene extends LevelScene {
-  constructor() {
-    super('Museum')
+  constructor(key = 'Museum') {
+    super(key) // subclassable: the Exodus inherits the mover stack (BRIEF-07)
   }
 
   create() {

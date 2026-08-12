@@ -2460,3 +2460,44 @@ flips level-wide: tags RETURN items to departing guests.
 Act 1 is the medley finale and the zoned fronts' true
 home. Watchdog rule lands on the King's state machines
 per the -03-b promise.
+
+## 2026-08-12 — BRIEF-07 SESSION 1 EXECUTED: the Exodus Rush (Act 1)
+
+Shipped at the brief's first seam:
+- ExodusScene ('Exodus') extends MuseumScene — the mover stack
+  (brake-on-tag, touchdown lock, perpetual roll) inherited whole;
+  coats and tier-2/3 luggage flow to the base scene. Thieves at full
+  standard grammar; sanctuary-less by construction (no scroll).
+  MuseumScene's constructor gained a key parameter to be
+  subclassable. Act 2 + the Boss Door land at the S2 seam (the rush
+  currently ends with standard results).
+- FICTION FLIP, level-wide: handbackCopy map property → registry →
+  the UIOverlay bubble pools swap to EXODUS_HAPPY/UNHAPPY_LINES
+  (hand-back copy; card lines stay — still a save). Placeholder
+  copy, human punches up later, per the guestLines convention.
+- Venue: exodus.json 132×17 — SIZED BY THE (c) INSTRUMENT: the
+  2400px proposal violated steal fairness by 1036ms (carrier escape
+  11.46s vs traversal + margin); at 2112px the margin holds with
+  400ms slack. The brief's "~5 screens" bent to the instrument.
+  Three mezzanines (row 12), two rack blocks (rebound anchors),
+  roll-in lanes at both ends. Generator proposal — human owns the
+  map on first hand-edit, per the -10-c rule.
+- Waves: ZONED FRONTS SPENT (their true home per the -11-a session):
+  five zones (L/ML/M/MR/R), the front opens at L and MIGRATES across
+  the venue through four phases over 240s; 58 items (32 coats, 13
+  luggage t2/t3, 13 strollers), 22 enemies. Opposite-end
+  simultaneity ONLY in the pre-checkpoint climax window (t≈190-206),
+  exempted from the static itinerary check as the deliberate BIG DAY
+  bait and priced at runtime by the travel budget. Static itinerary
+  check otherwise CLEAN.
+- Instrument note: a static arena has no request surface, so the
+  tension band does not apply here — the instrument set pricing the
+  exodus is spawn fairness + the (c) inequality + the travel budget.
+Verified (S1 acceptance): 55s LIVE with the schedule running — zero
+red frames on fairness and travel budget, no console noise; the
+medley in one rush — a tier-3 HOLD (started, completed, whisked), a
+stroller BRAKE mid-roll (parked with chip), and a RESCUE (staged
+steal, stun landed, item freed); fiction flip live (registry flag +
+exodus pools drawing). Two verification misreads corrected along the
+way (completed tags whisk — asserts must observe the tag in flight),
+logged so the next battery author knows.

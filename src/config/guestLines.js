@@ -31,6 +31,30 @@ export const CARD_LINES = [
   'Saved by the text! You rock, Chexy!',
 ]
 
+// The Mass Exodus fiction flip (BRIEF-07): the show is over — every
+// tag RETURNS an item to a departing guest. Hand-back energy.
+export const EXODUS_HAPPY_LINES = [
+  'My coat! Goodnight, Chexy! 👋',
+  'Handed back before I even stopped walking!',
+  'Straight to the car. INCREDIBLE.',
+  'The line is MOVING?! Unheard of.',
+  'Got my bag, catch you next show!',
+  'Fastest exit of my LIFE.',
+  'No ticket, no wait, no problem. Bye!!',
+  'They should name the exit after this squirrel.',
+  'out the door in 4 seconds flat',
+  'Chexy said gooooodnight! 🌙',
+]
+
+export const EXODUS_UNHAPPY_LINES = [
+  'I was ALMOST out the door!!',
+  'The paper took my coat INTO the crowd?!',
+  'My bag is going the wrong way!!',
+  "I can't leave without my stuff!!",
+  'one star. the PAPER gets one star.',
+  'my ride is HERE and my coat is THERE',
+]
+
 export const UNHAPPY_LINES = [
   'Hey!! That ticket took my coat!',
   "losing my stuff is nobody's vibe",

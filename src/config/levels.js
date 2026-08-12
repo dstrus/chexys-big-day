@@ -11,7 +11,8 @@ export const LEVELS = [
   { id: 'garage', name: 'THE GARAGE', mapKey: 'garage', sceneKey: 'Garage', requiresClear: 'belldesk' },
   // the museum runs its own scene (rolling items, BRIEF-06)
   { id: 'museum', name: 'THE MUSEUM', mapKey: 'museum', sceneKey: 'Museum', requiresClear: 'garage' },
-  { id: 'exodus', name: '???', unlocked: false },
+  // the finale runs its own scene (medley + boss, BRIEF-07)
+  { id: 'exodus', name: 'THE MASS EXODUS', mapKey: 'exodus', sceneKey: 'Exodus', requiresClear: 'museum' },
 ]
 
 export function isLevelUnlocked(lvl) {
