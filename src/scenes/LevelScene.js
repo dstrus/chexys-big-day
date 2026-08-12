@@ -8,6 +8,7 @@ import WaveRunner from '../systems/WaveRunner.js'
 import { audio } from '../systems/AudioBus.js'
 import { recordRun, isDashUnlocked, unlockDash } from '../systems/progress.js'
 import { isTuningPanelOpen, setPanelReadout } from '../debug/tuningPanel.js'
+import { createParallax, updateParallax } from '../systems/parallax.js'
 
 // Generic level scene: boots any Tiled map by key (assets/maps/README.md
 // documents the conventions). The map supplies geometry, spawn points,
@@ -242,6 +243,9 @@ export default class LevelScene extends Phaser.Scene {
     // fiction flip (BRIEF-07): exodus tags RETURN items to departing
     // guests — the bubble copy pools swap on this map property
     this.game.registry.set('handbackCopy', this.levelProps.handbackCopy === true)
+    // parallax drop-in stack (BRIEF-ART-02 §2): whatever paintings
+    // exist for this levelId render behind the tile layers
+    this.parallaxLayers = createParallax(this, this.levelProps.levelId ?? this.mapKey)
 
     const spawns = map.getObjectLayer('spawns').objects
     this.playerSpawn = spawns.find((o) => o.name === 'player')
@@ -1499,6 +1503,7 @@ export default class LevelScene extends Phaser.Scene {
       })
     }
     this.updateCamera()
+    updateParallax(this.parallaxLayers, this.cameras.main, time)
     this.updateTargeting()
     this.updateTagging(time)
     this.updateEnemies(time)

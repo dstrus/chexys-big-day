@@ -5,6 +5,7 @@ import garageMap from '../../assets/maps/garage.json'
 import museumMap from '../../assets/maps/museum.json'
 import exodusMap from '../../assets/maps/exodus.json'
 import { audio } from '../systems/AudioBus.js'
+import { preloadParallax } from '../systems/parallax.js'
 
 // Placeholder art only: every "sprite" is a generated texture. Maps are
 // real Tiled JSON (assets/maps/), imported through Vite and injected
@@ -111,6 +112,7 @@ export default class BootScene extends Phaser.Scene {
 
   preload() {
     audio.preload(this) // queue any dropped-in audio files
+    preloadParallax(this) // queue any dropped-in parallax paintings
     const tilesUrl = Object.values(TILES_PNG)[0]
     if (tilesUrl) this.load.image('tiles', tilesUrl)
     const coatsUrl = Object.values(COATS_PNG)[0]

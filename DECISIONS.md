@@ -2519,3 +2519,20 @@ logged so the next battery author knows.
 2026-08-11 — S1 ratified (handoff 2026-08-11-b): venue
 instrument-sized, fronts spent, medley verified, fiction
 flip live. Act-1 round 1 is the human's next verdict.
+
+## 2026-08-12 — Parallax drop-in wired (BRIEF-ART-02 §4, the agent's pass)
+
+Triggered by the artist's first export (coatroom P4). The loader is
+a full drop-in per the house contract: assets/parallax/<levelId>/
+p1..p4.png (+ optional glow.png), discovered by glob, missing
+layers skipped, partial stacks fine. Scroll-factor table per
+BRIEF-ART-02 §2 (0.05/0.2/0.45/0.7), depths −9…−6 behind the tile
+map's bg layers; tileSprites for repeat-x. The §3 autonomous motion
+shipped code-side with it: P3 crowd sway (±1px sine) and the
+glow.png additive alpha-pulse — sconce flicker stays tile-side art
+debt. Convention documented in assets/parallax/README.md (the
+garage's three-layer stack per BRIEF-ART-04 §4 just omits p4).
+Verified: coatroom P4 loads at depth −9 and tracks the camera at
+its factor while walking; paintingless levels boot with empty
+stacks; no console noise. The 60fps re-check with a full stack
+stays on the human's hardware per the brief.
