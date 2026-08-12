@@ -2536,3 +2536,16 @@ Verified: coatroom P4 loads at depth −9 and tracks the camera at
 its factor while walking; paintingless levels boot with empty
 stacks; no console noise. The 60fps re-check with a full stack
 stays on the human's hardware per the brief.
+
+## 2026-08-12 — Coatroom parallax stack COMPLETE (five layers live)
+
+The artist delivered the full BRIEF-ART-02 §2 stack — p4/p3/p2/p1 +
+glow, every canvas at exactly the contract size (480/960/1280/1600
+×270). Drop-in, zero code changes. Verified live: all four layers
+track the camera at their scrollFactors (p4 5.3/5.3, p2 47.3/47.3,
+p1 73.5/73.5 at scrollX 105), p3 rides its ±1px crowd sway on top
+of 0.2 (21.9 vs 21.0 base — the sway visible in the numbers), and
+the glow overlay alpha-pulses (0.704 → 0.517 across a sample). The
+coatroom is the first level with its full painted depth. Remaining
+BRIEF-ART-02 §3 debt: sconce flicker (tile-side art). The 60fps
+full-stack re-check is the human's, per the brief.
