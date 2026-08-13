@@ -53,16 +53,12 @@ const IDLE_PNG = import.meta.glob('../../assets/sprites/chexy-idle.png', {
 })
 // real tileset art (BRIEF-ART-02): drop-in like sprites/audio — present
 // wins, absent falls back to the generated placeholder strip
-const TILES_PNG = import.meta.glob('../../assets/tiles/coatroom.png', {
-  eager: true,
-  query: '?url',
-  import: 'default',
-})
-// alternate coatroom sheet (experiment, 2026-08-13): a DIFFERENT role
-// layout — 4 repeating floor tiles + platform left/middle×2/right. Its
-// skin table lives in LevelScene; drop the file to switch looks, delete
-// it to fall back to the original sheet.
-const TILES2_PNG = import.meta.glob('../../assets/tiles/coatroom2.png', {
+// PER-LEVEL TILESETS. Every assets/tiles/<name>.png loads as texture
+// 'tiles-<name>'; a level's skin table names the one it wants
+// (TILE_SKINS in LevelScene), which is what lets levels stop sharing a
+// single sheet. coatroom.png additionally keeps the legacy shared key
+// 'tiles' — the fallback for any level without a skin.
+const TILESET_PNGS = import.meta.glob('../../assets/tiles/*.png', {
   eager: true,
   query: '?url',
   import: 'default',
@@ -131,10 +127,11 @@ export default class BootScene extends Phaser.Scene {
   preload() {
     audio.preload(this) // queue any dropped-in audio files
     preloadParallax(this) // queue any dropped-in parallax paintings
-    const tilesUrl = Object.values(TILES_PNG)[0]
-    if (tilesUrl) this.load.image('tiles', tilesUrl)
-    const tiles2Url = Object.values(TILES2_PNG)[0]
-    if (tiles2Url) this.load.image('tiles2', tiles2Url)
+    for (const [path, url] of Object.entries(TILESET_PNGS)) {
+      const stem = path.split('/').pop().replace('.png', '')
+      this.load.image(`tiles-${stem}`, url)
+      if (stem === 'coatroom') this.load.image('tiles', url) // shared fallback
+    }
     const coatsUrl = Object.values(COATS_PNG)[0]
     if (coatsUrl) this.load.spritesheet('coats', coatsUrl, { frameWidth: 24, frameHeight: 24 })
     for (const [path, url] of Object.entries(CAR_PNGS)) {

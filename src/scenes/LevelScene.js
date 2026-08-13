@@ -17,7 +17,7 @@ import { createParallax, updateParallax } from '../systems/parallax.js'
 //   row 2 — [4 counter TOP tiles][4 counter BOTTOM tiles]
 const TILE_SKINS = {
   coatroom: {
-    texture: 'tiles2',
+    texture: 'tiles-coatroom2',
     ground: (x) => 1 + (x % 4), // the four floor tiles repeat, in order
     leftCap: () => 5,
     middle: (x) => 6 + (x % 2), // the two middles alternate
@@ -26,6 +26,22 @@ const TILE_SKINS = {
     // 9-12, every row beneath it 13-16
     counter: (x, y, { dx, isTop }) => (isTop ? 9 : 13) + (dx % 4),
     hideDressing: true, // this sheet draws no bg1/bg2 dressing
+  },
+  // garage-tile sheet, first drop (2026-08-13): row 1 is three walked
+  // SURFACE tiles then two FILL tiles — nothing else drawn yet.
+  garage: {
+    texture: 'tiles-garage',
+    // the garage floor is two rows: 15 is walked, 16 is fill beneath
+    ground: (x, y) => (y >= 16 ? 4 + (x % 2) : 1 + (x % 3)),
+    // deck art hasn't landed. Read decks as walked concrete from the
+    // surface period — without this the caps (gids 6/7) would sample
+    // empty slots and the platforms would lose their ends entirely.
+    middle: (x) => 1 + (x % 3),
+    leftCap: () => 1,
+    rightCap: () => 3,
+    // bg2 dressing is left VISIBLE on purpose: its tiles are 1-wide,
+    // 6-tall runs every 12 columns, and gid 5 lands on a fill tile —
+    // so the far dressing reads as concrete support pillars already.
   },
 }
 

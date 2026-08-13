@@ -2764,3 +2764,31 @@ With sedan, SUV and lux drawn, the garage's interim tinted rects are
 fully retired — CAR_COLORS now only serves levels that have no car
 art at all. Remaining garage art: the tileset (which also lands the
 per-map tileset keying) and parallax.
+
+## 2026-08-13 — Garage tileset, first drop (ground) + per-map tilesets
+
+Artist drew garage-tile.aseprite: row 1 = three walked SURFACE tiles
+then two FILL tiles, nothing else yet. Wired via the skin convention:
+the garage floor is two rows, so the skin splits them by y — row 15
+takes the 3-tile surface period, row 16 the 2-tile fill.
+PER-MAP TILESETS LAND WITH IT (the debt flagged in the inventory's
+wiring note is retired): every assets/tiles/<name>.png now loads as
+texture 'tiles-<name>' and a level's skin names the sheet it wants,
+so the garage no longer borrows the coatroom's tiles. coatroom.png
+keeps the legacy shared key 'tiles' as the no-skin fallback; the
+coatroom skin's texture renamed 'tiles2' → 'tiles-coatroom2'.
+Two judgement calls, both interim and logged: (1) DECKS have no art
+yet and their caps live at gids 6/7 — empty slots in this sheet — so
+untouched every deck would have lost both ends. The skin temporarily
+reads deck middles AND caps from the surface period; they read as
+concrete slabs until deck art lands. (2) bg2 dressing left VISIBLE:
+its tiles are 1-wide, 6-tall runs every 12 columns and gid 5 lands on
+a fill tile, so the far dressing already reads as concrete support
+pillars — a happy accident of this sheet's layout.
+Verified: garage texture is tiles-garage, row 15 reads 1,2,3,1,2,3,
+row 16 reads 4,5,4,5, deck caps visible and solid, ground solid, bg2
+visible; COATROOM REGRESSION CLEAN (its own sheet, floor period
+1,2,3,4 unchanged); no console noise.
+Harness note: launch()/start() live on a SCENE's plugin, not the
+SceneManager — and inside an async IIFE that mistake rejects
+silently, surfacing only as a timeout.
