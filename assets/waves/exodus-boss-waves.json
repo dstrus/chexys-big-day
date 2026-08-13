@@ -1,0 +1,250 @@
+{
+  "entries": [
+    {
+      "time": 1.0,
+      "type": "items",
+      "spawnPoint": "any",
+      "itemCategory": "coat",
+      "weightTier": 1,
+      "count": 3,
+      "interval": 0.5
+    },
+    {
+      "time": 8.5,
+      "type": "items",
+      "spawnPoint": "any",
+      "itemCategory": "luggage",
+      "weightTier": 2,
+      "count": 2,
+      "interval": 0.5
+    },
+    {
+      "time": 16.0,
+      "type": "items",
+      "spawnPoint": "any",
+      "itemCategory": "coat",
+      "weightTier": 1,
+      "count": 3,
+      "interval": 0.5
+    },
+    {
+      "time": 23.5,
+      "type": "items",
+      "spawnPoint": "any",
+      "itemCategory": "luggage",
+      "weightTier": 2,
+      "count": 2,
+      "interval": 0.5
+    },
+    {
+      "time": 31.0,
+      "type": "items",
+      "spawnPoint": "any",
+      "itemCategory": "luggage",
+      "weightTier": 3,
+      "count": 1,
+      "interval": 0.5
+    },
+    {
+      "time": 38.5,
+      "type": "items",
+      "spawnPoint": "any",
+      "itemCategory": "coat",
+      "weightTier": 1,
+      "count": 3,
+      "interval": 0.5
+    },
+    {
+      "time": 46.0,
+      "type": "items",
+      "spawnPoint": "any",
+      "itemCategory": "luggage",
+      "weightTier": 2,
+      "count": 2,
+      "interval": 0.5
+    },
+    {
+      "time": 53.5,
+      "type": "items",
+      "spawnPoint": "any",
+      "itemCategory": "coat",
+      "weightTier": 1,
+      "count": 3,
+      "interval": 0.5
+    },
+    {
+      "time": 60,
+      "type": "collectible",
+      "collectibleType": "contactCard",
+      "spawnPoint": "item-M1"
+    },
+    {
+      "time": 61.0,
+      "type": "items",
+      "spawnPoint": "any",
+      "itemCategory": "luggage",
+      "weightTier": 2,
+      "count": 2,
+      "interval": 0.5
+    },
+    {
+      "time": 68.5,
+      "type": "items",
+      "spawnPoint": "any",
+      "itemCategory": "luggage",
+      "weightTier": 3,
+      "count": 1,
+      "interval": 0.5
+    },
+    {
+      "time": 76.0,
+      "type": "items",
+      "spawnPoint": "any",
+      "itemCategory": "coat",
+      "weightTier": 1,
+      "count": 3,
+      "interval": 0.5
+    },
+    {
+      "time": 83.5,
+      "type": "items",
+      "spawnPoint": "any",
+      "itemCategory": "luggage",
+      "weightTier": 2,
+      "count": 2,
+      "interval": 0.5
+    },
+    {
+      "time": 91.0,
+      "type": "items",
+      "spawnPoint": "any",
+      "itemCategory": "coat",
+      "weightTier": 1,
+      "count": 3,
+      "interval": 0.5
+    },
+    {
+      "time": 98.5,
+      "type": "items",
+      "spawnPoint": "any",
+      "itemCategory": "luggage",
+      "weightTier": 2,
+      "count": 2,
+      "interval": 0.5
+    },
+    {
+      "time": 106.0,
+      "type": "items",
+      "spawnPoint": "any",
+      "itemCategory": "luggage",
+      "weightTier": 3,
+      "count": 1,
+      "interval": 0.5
+    },
+    {
+      "time": 113.5,
+      "type": "items",
+      "spawnPoint": "any",
+      "itemCategory": "coat",
+      "weightTier": 1,
+      "count": 3,
+      "interval": 0.5
+    },
+    {
+      "time": 120,
+      "type": "collectible",
+      "collectibleType": "insightReport",
+      "spawnPoint": "item-M2"
+    },
+    {
+      "time": 121.0,
+      "type": "items",
+      "spawnPoint": "any",
+      "itemCategory": "luggage",
+      "weightTier": 2,
+      "count": 2,
+      "interval": 0.5
+    },
+    {
+      "time": 128.5,
+      "type": "items",
+      "spawnPoint": "any",
+      "itemCategory": "coat",
+      "weightTier": 1,
+      "count": 3,
+      "interval": 0.5
+    },
+    {
+      "time": 136.0,
+      "type": "items",
+      "spawnPoint": "any",
+      "itemCategory": "luggage",
+      "weightTier": 2,
+      "count": 2,
+      "interval": 0.5
+    },
+    {
+      "time": 143.5,
+      "type": "items",
+      "spawnPoint": "any",
+      "itemCategory": "luggage",
+      "weightTier": 3,
+      "count": 1,
+      "interval": 0.5
+    },
+    {
+      "time": 151.0,
+      "type": "items",
+      "spawnPoint": "any",
+      "itemCategory": "coat",
+      "weightTier": 1,
+      "count": 3,
+      "interval": 0.5
+    },
+    {
+      "time": 158.5,
+      "type": "items",
+      "spawnPoint": "any",
+      "itemCategory": "luggage",
+      "weightTier": 2,
+      "count": 2,
+      "interval": 0.5
+    },
+    {
+      "time": 166.0,
+      "type": "items",
+      "spawnPoint": "any",
+      "itemCategory": "coat",
+      "weightTier": 1,
+      "count": 3,
+      "interval": 0.5
+    },
+    {
+      "time": 173.5,
+      "type": "items",
+      "spawnPoint": "any",
+      "itemCategory": "luggage",
+      "weightTier": 2,
+      "count": 2,
+      "interval": 0.5
+    },
+    {
+      "time": 181.0,
+      "type": "items",
+      "spawnPoint": "any",
+      "itemCategory": "luggage",
+      "weightTier": 3,
+      "count": 1,
+      "interval": 0.5
+    },
+    {
+      "time": 188.5,
+      "type": "items",
+      "spawnPoint": "any",
+      "itemCategory": "coat",
+      "weightTier": 1,
+      "count": 3,
+      "interval": 0.5
+    }
+  ]
+}

@@ -1143,6 +1143,13 @@ export default class LevelScene extends Phaser.Scene {
     return enemy.active && enemy.getData('carrying') && !enemy.getData('stunnedUntil')
   }
 
+  // what the tap's rescue class (0) may target. Subclasses extend it —
+  // the Exodus adds the King's claw, which is stunnable but is NOT a
+  // thief and must never see the thief AI (BRIEF-07 Act 2).
+  stunnableCandidates() {
+    return this.enemies.getChildren()
+  }
+
   // THE one endangerment ranking (DESIGN.md §2.4, handoff 2026-08-04-d):
   // carried (0) > enemy-locked (1) > at-rest (2). Every system that
   // reasons about item danger — tap auto-target, the Contact Card save
@@ -1177,7 +1184,7 @@ export default class LevelScene extends Phaser.Scene {
         best = obj
       }
     }
-    for (const enemy of this.enemies.getChildren()) {
+    for (const enemy of this.stunnableCandidates()) {
       if (this.isStunnable(enemy)) consider(enemy, 0) // carried: rescue first
     }
     for (const item of this.items.getChildren()) {

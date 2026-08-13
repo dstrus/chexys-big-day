@@ -2686,3 +2686,58 @@ collision failure).
 CAR_TOP_INSET over multi-rect (measured), skins canon
 project-wide, P2 forked to the artist (lean: complete
 it). S2 ordered; Act-1 round verdict still owed.
+
+## 2026-08-13 — BRIEF-07 SESSION 2 EXECUTED: Boss Door + the King's core
+
+Shipped at the brief's second seam (S3 remains: full kit, phase
+tables, the scripted ending):
+- BOSS DOOR checkpoint. Act 1 ending on the rush timer no longer ends
+  the run — it banks losses AND score to the registry, empties the
+  lobby, plays a breath beat (bossDoorBreathMs), then opens Act 2 in
+  the same run. Three losses in Act 1 still ends it. A boss defeat
+  retries ACT 2 ONLY with the bank restored exactly; the checkpoint
+  clears on victory and on exit, so a fresh run can never resume a
+  stale one. Hangers judge the FULL SHIFT (losses accumulate across
+  acts — they are never reset at the door).
+- PaperTicketKing entity: three phases, shrinking bodies (128/104/80,
+  crown spools 5/3/1), speed scaling UP as he shrinks, phase 3
+  descending to floor level, chest-ticket meter drawn on the body
+  (the interim-art allowance, §4).
+- TIER-WEIGHTED RETURN METER as amended: returns add the item's weight
+  (1.0 / 1.5 / 2.0), thresholds 12/15/18 POINTS per phase. Rips
+  regress by exactly the ripped weight and restores re-add it —
+  symmetric, so bookkeeping can never drift. stealRefund never built.
+- CLAW = giant elite with rip grammar: telegraphs over a racked
+  return, then rips — the return un-counts, the meter regresses, the
+  item goes RE-TAGGABLE, and the claw carries the chip home. NO new
+  loss channel: the King undoes work, he never creates losses. Two
+  counters: tap during the telegraph (the rip never happens) or stun
+  the carrier (item re-racks, meter re-adds the same weight). The
+  claw reaches the tap's rescue class through a new base extension
+  point (stunnableCandidates) so it is stunnable WITHOUT ever seeing
+  the thief AI.
+- Act-2 returns stay RACKED on screen (they must persist for the claw
+  to rip them); arena locks to a single 480px screen with the player
+  confined; Stub Spew minions run the standard thief stack with
+  per-phase steal cooldowns; act 2 runs its own wave schedule on a
+  fresh clock (73 points of returns available against 45 needed).
+- WATCHDOGS brought forward from S3 (the state machine is S2's
+  deliverable, so it ships guarded): every phase transition arms a
+  timeout that forces the state and warns.
+BUG CAUGHT BY THE BATTERY, fixed: a resumed Act 2 kept Act 1's
+countdown running and would have "won" the shift when the old clock
+hit zero. Act 2 has no rush clock — the fight ends on the meter — so
+the timer now dies in startAct2(), the one place both entries
+converge.
+Verified (S2 acceptance): two-act run with the bank correct at the
+door, arena locked to 480 with the player inside and boss waves live;
+meter arithmetic on a tier-3 item — return +2.0, rip −2.0 (item
+re-taggable), restore +2.0 (re-racked); telegraph counter-tap leaves
+the meter untouched and the return intact; watchdog forces a stalled
+transition and warns; boss defeat → retry restores lostItems 1 /
+score 500 at phase 0 with the act-1 clock dead; victory reports
+full-shift losses (1 → two hangers) and clears the checkpoint. No
+console errors.
+Harness note for future batteries: Phaser REUSES the scene instance
+across restart() (init/create re-run on the same object), so scene
+identity cannot discriminate a restart — wait on restored STATE.

@@ -117,6 +117,25 @@ export const TUNING = {
   // (the carrierSpeedFactor logic applied to movers).
   backpackBounce: 0.5, // energetic entrance, settles in ~1s under drag
 
+  // The Paper Ticket King (BRIEF-07 Act 2 / BOSS-SPEC as amended by
+  // handoff 2026-08-11-a). He is never damaged by tagging — damage is
+  // THE LINE MOVING: successful returns advance the meter.
+  bossReturnThresholds: [12, 15, 18], // POINTS per phase, tier-weighted
+  // (standard 1.0, tier-2 1.5, tier-3 2.0, strollers 1.0) — supersedes
+  // BOSS-SPEC's flat 10/12/14 return COUNTS. Rips regress by exactly the
+  // ripped item's weight and restores re-add it (symmetric; the old
+  // stealRefund is deleted, never built).
+  bossSpeedByPhase: [26, 38, 54], // small = desperate = fast
+  bossTelegraphMsByPhase: [1100, 850, 650], // counter-tap windows, measured
+  // from PRESS — they budget the ~80ms tap windup (BOSS-SPEC forward note)
+  bossSpewCountByPhase: [3, 5, 7],
+  bossSpewIntervalMs: [9000, 7500, 6000],
+  bossClawIntervalMs: [5200, 4200, 3400],
+  bossStealCooldownMs: [5000, 4200, 3500], // per-phase minion steal spacing
+  bossTransitionMs: 1000, // stagger between body states
+  bossWatchdogMs: 4000, // state-machine watchdog (BRIEF-07 §5)
+  bossDoorBreathMs: 2600, // the lobby empties before Act 2
+
   // adaptive intensity / multiplier (DESIGN.md §2.5 skeleton)
   adaptiveBand: 0.3,
   adaptiveStep: 0.1,
