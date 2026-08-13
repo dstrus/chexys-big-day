@@ -2741,3 +2741,26 @@ console errors.
 Harness note for future batteries: Phaser REUSES the scene instance
 across restart() (init/create re-run on the same object), so scene
 identity cannot discriminate a restart — wait on restored STATE.
+
+## 2026-08-13 — Luxury car art lands: the garage car field is fully drawn
+
+car-lux drawn (60×16 full-bleed, low sleek profile) — exported with
+its six palette variants through the CARS pass; body art-defined at
+60×16 with the standard 2px roof inset (body 60×14, roof line 226,
+wheel line 240). Width +4 vs the specced 56, the third consecutive
++4; every height came in exactly as ratified, so no parked bottom
+ever moved. Verified: all three tiers' bodies exact (44×12 / 48×16 /
+60×14, each inset 2 with the wheel line untouched), landing on a roof
+grounds Chexy with feet on the inset top, tightest gaps 66px ground /
+22px deck, instruments 58/58 green with floor 1.558, gap crossings
+unchanged, no console noise.
+MEASUREMENT FLAGGED, not acted on: the lux has the steepest nose in
+the field — an 8px ramp over 29 columns, with only 27% of its length
+flat (sedan 6px, SUV 7px). At the shared inset it still floats ~6px
+at the very tip. Recorded in the inventory with the remedy if play
+dislikes it: a PER-TIER inset table (lux 3, others 2), never a deeper
+inset for every car.
+With sedan, SUV and lux drawn, the garage's interim tinted rects are
+fully retired — CAR_COLORS now only serves levels that have no car
+art at all. Remaining garage art: the tileset (which also lands the
+per-map tileset keying) and parallax.

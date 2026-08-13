@@ -10,9 +10,10 @@ TOP row of ink must be the roof (nothing — mirror, antenna, aerial —
 may sit above it, or players would stand on air) and the BOTTOM row
 must be the wheel contact. Height changes move the parked bottoms and
 the deck-clearance facts, so flag one when you draw it; width changes
-are free. Sedan came in 44 wide (specced 40) and SUV 48 (specced 44);
-the field's tightest gaps absorbed both (ground 68px, deck 22px) and
-the instruments re-verified green each time.
+are free. Sedan came in 44 wide (specced 40), SUV 48 (specced 44), lux 60
+(specced 56) — all three +4, all heights exactly as ratified. The
+field's tightest gaps absorbed them (ground 66px, deck 22px) and the
+instruments re-verified green after each drop.
 
 **ROOF INSET (human ruling 2026-08-13):** a drawn car's top is not
 flat — the roof runs level for about half the length, then the hood
@@ -21,7 +22,11 @@ a ramp, and splitting the car into several rects would put hop-over
 lips mid-roof on surfaces players RUN across (Arcade has no step-up),
 so the single rect stays and its top drops `CAR_TOP_INSET` = 2px:
 the roof reads as a 2px sink (invisible against a 2px roof line) and
-the nose float halves. The wheel line — the body BOTTOM — never moves,
+the nose float halves. Measured ramps: sedan 6px over 17 columns, SUV
+7px over 18, LUX 8px over 29 (the steepest — its flat cabin is only
+27% of its length, so it still floats ~6px at the very tip). If that
+reads badly in play the fix is a PER-TIER inset table (lux 3, others
+2), not a deeper inset for every car. The wheel line — the body BOTTOM — never moves,
 so parked bottoms stay 240 / 192. Roof lines and deck headroom in the
 table above are post-inset (headroom only grew). Arted tiers only;
 placeholder rects are flat and need no correction.
@@ -32,7 +37,7 @@ placeholder rects are flat and need no correction.
 |------|-------------|----------------------|-----------------------|---------------------|----------------------------------|
 | Sedan | `car-sedan` | **44×14** art, body 44×12 | 228 | 180 | 20px |
 | SUV | `car-suv` | **48×18** art, body 48×16 | 224 | 176 | 16px |
-| Luxury | `car-lux` | 56×16 | 224 | 176 | 16px |
+| Luxury | `car-lux` | **60×16** art, body 60×14 | 226 | 178 | 18px |
 
 Facts the drawings must respect:
 
@@ -109,7 +114,7 @@ art either way).
 |--------|----------------|--------|------|
 | `art/aseprite/car-sedan.aseprite` | 44×14 — DRAWN, shipped | 44×14 | the workhorse, 45 in the field; standard tap |
 | `art/aseprite/car-suv.aseprite` | 48×18 — DRAWN, shipped | 48×18 | taller silhouette, 14 in the field; standard tap |
-| `art/aseprite/car-lux.aseprite` | 56×16 | 60×16 | 10 in the field; the TIER-3 HOLD car — must read "this one costs you time" at a squint |
+| `art/aseprite/car-lux.aseprite` | 60×16 — DRAWN, shipped | 60×16 | 10 in the field; the TIER-3 HOLD car — must read "this one costs you time" at a squint |
 
 - **Nose points RIGHT.** Cars drive off rightward (code tweens +340px)
   and the level scrolls right; no flipping happens.
