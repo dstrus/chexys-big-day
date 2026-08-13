@@ -80,7 +80,7 @@ export function updateParallax(layers, cam, time) {
     if (l.isGlow) {
       const mid = (GLOW_MAX + GLOW_MIN) / 2
       const amp = (GLOW_MAX - GLOW_MIN) / 2
-      l.sprite.setAlpha(mid + amp * Math.sin(time / 900))
+      l.sprite.setAlpha(mid + amp * Math.sin(time / 400))
       continue
     }
     let x = cam.scrollX * l.factor
