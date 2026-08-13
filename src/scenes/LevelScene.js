@@ -27,18 +27,28 @@ const TILE_SKINS = {
     counter: (x, y, { dx, isTop }) => (isTop ? 9 : 13) + (dx % 4),
     hideDressing: true, // this sheet draws no bg1/bg2 dressing
   },
-  // garage-tile sheet, first drop (2026-08-13): row 1 is three walked
-  // SURFACE tiles then two FILL tiles — nothing else drawn yet.
+  // garage-tile sheet. Row 1: three walked SURFACE tiles + two FILL
+  // tiles. Row 2: pillar-top, deck left/middle/right, bay-number and
+  // oil-stain breakers. Row 3 col 0: pillar-bottom.
   garage: {
     texture: 'tiles-garage',
-    // the garage floor is two rows: 15 is walked, 16 is fill beneath
-    ground: (x, y) => (y >= 16 ? 4 + (x % 2) : 1 + (x % 3)),
-    // deck art hasn't landed. Read decks as walked concrete from the
-    // surface period — without this the caps (gids 6/7) would sample
-    // empty slots and the platforms would lose their ends entirely.
-    middle: (x) => 1 + (x % 3),
-    leftCap: () => 1,
-    rightCap: () => 3,
+    // the garage floor is two rows: 15 is walked, 16 is fill beneath.
+    // The 3-tile surface period is interrupted by breakers on two
+    // out-of-phase cadences (23 and 17) so they never line up into a
+    // visible grid — the SotN lesson from BRIEF-ART-04 §3.
+    ground: (x, y) => {
+      if (y >= 16) return 4 + (x % 2) // sub-floor fill
+      if (x % 23 === 11) return 13 // painted bay number: wayfinding cadence
+      if (x % 17 === 5) return 14 // oil stain
+      return 1 + (x % 3)
+    },
+    // deck strips are laid 6 [2 …] 7 and are DOUBLE-FACED (walked top,
+    // visible underside). The odd oil stain rides the middles — cars
+    // park up here too, and the breakers share the decks' exact edge
+    // signature, so they drop in seamlessly.
+    middle: (x, y, { dx }) => (dx % 9 === 5 ? 14 : 11),
+    leftCap: () => 10,
+    rightCap: () => 12,
     // CONCRETE PILLARS (2026-08-13): sheet col 0 of rows 2-3 — gid 9
     // fades in at its top, gid 17 fades out at its bottom, so the pair
     // tiles vertically as precast segments with a dark joint every 32px.

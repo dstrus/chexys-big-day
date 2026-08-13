@@ -2814,3 +2814,29 @@ tiles tall, rows 4-14): the pillar reads 9,17,9,17,9,17,9,17,9,17,9 —
 fading in at the top, meeting the floor on a solid edge. Ground,
 decks, collision, and the coatroom regression all unchanged; no
 console noise.
+
+## 2026-08-13 — Garage deck strips + floor breakers wired
+
+Artist exported row 2 of the garage sheet: deck left cap (gid 10),
+middle (11), right cap (12), bay-number breaker (13), oil-stain
+breaker (14). The deck stopgap that borrowed surface tiles is retired
+— decks now render their own double-faced art (walked top, visible
+underside), caps correctly oriented (transparent outer edges,
+confirmed from the pixels).
+Breaker placement (agent's call, easily vetoed): the ground's 3-tile
+surface period is interrupted on two OUT-OF-PHASE cadences so they
+can never line up into a grid — bay numbers every 23 columns (a
+wayfinding rhythm), oil stains every 17. Oil stains also ride deck
+middles about once per deck: the pixel evidence supports it, since
+BOTH breakers carry the DECK tiles' exact edge signature (Bay Paint
+White walked top, Concrete Mid underside) rather than the ground
+surface's Asphalt Light bottom. Flagged to the artist: on the ground
+row that leaves a 1px seam difference against neighbouring surface
+tiles — invisible at 480×270, but if the breakers were drawn strictly
+as DECK tiles they come off the floor in one line.
+Verified: deck strip reads 10,11×5,14,11×6,12 with caps solid;
+surface row 1,2,3,1,2,14 (the x%17 cadence); bay breakers at columns
+11/34/57, oil at 5/22/39/56; pillars still 9,17,…; collision
+unchanged; coatroom regression clean; no console noise. Note for
+future skins: a middle's `dx` counts from the MIDDLES run, not from
+the cap — the caps are their own index.
