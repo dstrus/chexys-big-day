@@ -95,11 +95,50 @@ flank a 7-tile (112px) gap — gaps at columns 220–226 (x 3520–3632)
 and 450–456 (x 7200–7312). Caps on every end per the 6/2/7 rule;
 no run shorter than 2 tiles exists.
 
-**Wiring note (agent-side, when tiles drop):** all maps currently
-share one drop-in image (`assets/tiles/coatroom.png`); the garage
-tileset (garage-tiles.aseprite → its own strip) needs the loader to
-key the tileset image per map. That's on the wiring contract
-(BRIEF-ART-04 §6), not the artist.
+### UPDATE 2026-08-13 — skins changed what this section demands
+
+Tile SKINS are now ratified project-wide (handoff 2026-08-12-a), so
+**the garage sheet does NOT have to match the gid roles above.** Lay
+it out however is natural to draw — the skin table translates roles →
+your indices, exactly as the coatroom sheet does. Two consequences
+worth having while drawing:
+
+- **Ground can be two different tiles.** Skin functions receive
+  `(x, y)`, and the garage floor is two rows: row 15 is the walked
+  SURFACE, row 16 is fill beneath it. Draw a surface period (4–6
+  tiles) *and* a separate sub-floor tile if you want them to differ,
+  plus the two breakers (oil stain, painted bay number).
+- **Deck strips are DOUBLE-FACED.** They are one tile thick, so a
+  single 16×16 must read as both the walked top and the visible
+  underside — Chexy passes beneath with exactly 32px of clearance.
+  Minimum three tiles (left cap / middle / right cap); two alternating
+  middles is the coatroom precedent and reads better across 14-wide
+  decks.
+
+**Sheet format:** 16×16 tiles, 8 columns × 3 rows = **24 slots**
+(image 128×48), same as coatroom-tiles2. That ceiling is the garage
+map's declared tileset, not a hard limit — if the sheet wants more
+than 24, say so and the map's tileset declaration widens (a data
+edit, no geometry touched).
+
+**Shipped geometry to texture against** (re-derived from the map):
+ground rows 15–16 across all 564 columns; twelve row-12 decks, every
+one 14 tiles wide, at column 18 + 46k; fourteen row-9 runs, 12 wide
+at 28 + 46k, except the two dash-gap modules where 8-wide runs flank
+a 7-tile (112px) gap — the showcase gaps at columns 220–226 and
+450–456. bg2 carries 253 dressing tiles (pillars/far dressing);
+**bg1 and fg are empty and available** — fg renders in front of play,
+the natural home for sodium lamp-pool overlays.
+
+**Rough counts:** ~11 tiles is a viable sheet (4 floor + 1 fill + 2
+breakers + 3 deck + 1 pillar); 16–20 is comfortable inside 24.
+
+**Wiring note (agent-side, when tiles drop):** the skin's `texture`
+field already selects a per-level sheet, so dropping
+`assets/tiles/garage.png` plus a skin entry also retires the debt
+where the garage borrows the coatroom's tileset. Tell me the sheet's
+layout in a sentence (as with the coatroom) and the skin lands with
+the drop.
 
 ## (c) Car drawing kit + palette-swap contract
 
