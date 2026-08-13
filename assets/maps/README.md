@@ -107,12 +107,19 @@ reverts to the original sheet with no code change.
 
 Shipped skin — `coatroom` → `assets/tiles/coatroom2.png` (source
 `art/aseprite/coatroom-tiles2.aseprite`, exported by
-`scripts/export-sprites.sh`): row 1 is four floor tiles that repeat in
-order (role `ground`), then platform left cap, two alternating middles,
-right cap (roles `leftCap` / `middle` / `rightCap`). The sheet has no
-dressing or counter art, so the skin sets `hideDressing` (bg1/bg2 tile
-layers off — the parallax paintings carry that depth) and the return
-counter (role gid 3) currently renders as floor.
+`scripts/export-sprites.sh`):
+
+- **row 1** — four floor tiles that repeat in order (role `ground`),
+  then platform left cap, two alternating middles, right cap (roles
+  `leftCap` / `middle` / `rightCap`).
+- **row 2** — four counter TOP tiles then four counter BOTTOM tiles
+  (role `counter`). Counter tiles are BLOCK-RELATIVE: a skin function
+  receives `{ dx, isTop }` — columns from its block's left edge, and
+  whether it is the block's first row — so moving or resizing the
+  counter in Tiled still skins correctly.
+- The sheet draws no bg1/bg2 dressing, so the skin sets
+  `hideDressing` (those tile layers render off; the parallax paintings
+  carry that depth). Row 3 (gids 17-24) is still free.
 
 ## Placement-validity gate (handoff 2026-08-04-d)
 

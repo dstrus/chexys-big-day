@@ -2577,3 +2577,18 @@ mid-screen "seam" in the composite is P2: p2.png holds a single
 column in an otherwise transparent 1280px canvas, so one lonely
 pillar appears every ~2800 world px and its hard edge reads as a
 seam. P4/P3/P1 all verified clean and tiling correctly.
+
+## 2026-08-13 — coatroom2 skin: counter role added (row 2)
+
+Artist re-exported with row 2 = four counter TOP tiles + four counter
+BOTTOM tiles. Wired as the `counter` role (gid 3), and the skin
+contract grew a block-relative context: role functions now receive
+{ dx, isTop } — columns from the block's left edge and whether it's
+the block's first row — computed from a SNAPSHOT of original indices
+so neighbor lookups never see already-skinned tiles. The coatroom's
+2×4 counter therefore reads 9,10,11,12 across its top and 13,14,15,16
+beneath, and a counter moved or resized in Tiled still skins right (a
+3-row counter would use the bottom set for both lower rows). Verified:
+both counter rows exact, block still solid (standable top), floor and
+platform mappings unchanged, no console noise. Remaining sheet space:
+row 3 (gids 17-24) free; bg1/bg2 dressing still unskinned and hidden.

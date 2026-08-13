@@ -12,8 +12,9 @@ import { createParallax, updateParallax } from '../systems/parallax.js'
 
 // TILE SKINS (2026-08-13). Keyed by levelId; applied only when the
 // sheet's texture is present, so deleting the art file reverts the look
-// with no code change. coatroom2 (art/aseprite/coatroom-tiles2): row 1
-// is [4 floor tiles][platform left cap][2 platform middles][right cap].
+// with no code change. coatroom2 (art/aseprite/coatroom-tiles2):
+//   row 1 — [4 floor tiles][platform left cap][2 middles][right cap]
+//   row 2 — [4 counter TOP tiles][4 counter BOTTOM tiles]
 const TILE_SKINS = {
   coatroom: {
     texture: 'tiles2',
@@ -21,7 +22,10 @@ const TILE_SKINS = {
     leftCap: () => 5,
     middle: (x) => 6 + (x % 2), // the two middles alternate
     rightCap: () => 8,
-    hideDressing: true, // this sheet draws floor + platforms only
+    // the counter reads left-to-right across its own block: top row
+    // 9-12, every row beneath it 13-16
+    counter: (x, y, { dx, isTop }) => (isTop ? 9 : 13) + (dx % 4),
+    hideDressing: true, // this sheet draws no bg1/bg2 dressing
   },
 }
 
@@ -246,12 +250,24 @@ export default class LevelScene extends Phaser.Scene {
   // translates. Collision is per-tile and already set, so re-indexing
   // for looks cannot change what's solid — re-asserted below regardless.
   applyTileSkin(skin, dressingLayers) {
-    const ROLES = { 1: 'ground', 2: 'middle', 6: 'leftCap', 7: 'rightCap' }
-    this.mainLayer.forEachTile((t) => {
-      const role = ROLES[t.index]
-      if (role && skin[role]) t.index = skin[role](t.x, t.y)
+    const ROLES = { 1: 'ground', 2: 'middle', 3: 'counter', 6: 'leftCap', 7: 'rightCap' }
+    const L = this.mainLayer
+    // snapshot the ORIGINAL indices first: block-relative roles (the
+    // counter) read their neighbors, which must not already be skinned
+    const orig = new Map()
+    L.forEachTile((t) => orig.set(`${t.x},${t.y}`, t.index))
+    const at = (x, y) => orig.get(`${x},${y}`) ?? -1
+    L.forEachTile((t) => {
+      const index = at(t.x, t.y)
+      const role = ROLES[index]
+      if (!role || !skin[role]) return
+      // dx = columns from the left edge of this run; isTop = nothing of
+      // the same role directly above (a block's first row)
+      let dx = 0
+      while (at(t.x - dx - 1, t.y) === index) dx++
+      t.index = skin[role](t.x, t.y, { dx, isTop: at(t.x, t.y - 1) !== index })
     })
-    this.mainLayer.setCollisionByExclusion([-1])
+    L.setCollisionByExclusion([-1])
     // a sheet with no dressing art would render bg1/bg2 as stray floor
     // and cap pieces — hide them; the parallax paintings carry depth now
     if (skin.hideDressing) for (const l of dressingLayers) l.setVisible(false)
