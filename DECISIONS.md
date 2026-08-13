@@ -2592,3 +2592,34 @@ beneath, and a counter moved or resized in Tiled still skins right (a
 both counter rows exact, block still solid (standable top), floor and
 platform mappings unchanged, no console noise. Remaining sheet space:
 row 3 (gids 17-24) free; bg1/bg2 dressing still unskinned and hidden.
+
+## 2026-08-13 — Cars: collision follows the ART (human ruling) + swap live
+
+First garage car drawn (sedan, cobalt, nose-right, 44×14 full-bleed).
+The human ruled that the collision rect should follow the art rather
+than the reverse — an inversion of BRIEF-ART-04 §0 and of the
+frozen-field posture from BRIEF-05's close-out, so it is recorded as a
+deliberate amendment (brief + inventory both annotated in place). The
+guard rails that make it safe, now canon: the top row of ink must BE
+the roof (nothing above it, or players stand on air), the bottom row
+must be the wheel contact, and any change re-verifies the instruments.
+Height changes move parked bottoms and the deck-clearance facts;
+width changes are free.
+This drop was width-only: sedan 40 → 44. Every ratified platforming
+fact therefore stands untouched (roof lines 226/178, the exactly-32px
+deck clearance, tagReachY 28). Checked, not assumed: tightest car
+gaps 68px ground / 22px deck (no overlaps introduced), and the full
+round-4 battery re-ran green — 58/58 requests, zero slack, band floor
+1.558 (up from 1.537: the 2px-wider right edge exits marginally
+later), max 2.92, both showcase-gap crossings unchanged, no console
+noise. Runtime confirms body 44×14 from the texture.
+PALETTE SWAP SHIPPED as specified in the inventory kit: one drawing →
+six hues. scripts/palette-variants.mjs rewrites only the indexed PNG's
+PLTE chunk (+CRC) — pixel indices untouched, zero dependencies, so it
+cannot disturb the drawing; the export script's new CARS pass runs it
+per drawn tier and skips undrawn ones. Tint retires per arted tier
+(it would muddy glass/tires/chrome); the HUD request chip now takes
+its color from the drawn hue so chip-to-car matching survives.
+Known, pre-existing and unrelated: the garage still renders the
+coatroom tileset (all maps share one drop-in image — the per-map
+keying debt already flagged in the inventory's wiring note).

@@ -1,14 +1,24 @@
 # Garage inventories — BRIEF-ART-04 step 0
 
 Produced per handoff 2026-08-10-a (revised). Round 4 froze the
-collision geometry (handoff 2026-08-09-i): art conforms to these
-numbers, not the reverse.
+collision geometry (handoff 2026-08-09-i).
+
+**AMENDED 2026-08-13 (human ruling): for CARS the relation inverts —
+the drawn silhouette IS the collision rect.** A tier's art defines its
+body; the numbers below track the art. Two rules keep that safe: the
+TOP row of ink must be the roof (nothing — mirror, antenna, aerial —
+may sit above it, or players would stand on air) and the BOTTOM row
+must be the wheel contact. Height changes move the parked bottoms and
+the deck-clearance facts, so flag one when you draw it; width changes
+are free. The sedan came in at 44 wide (was specced 40) — the field's
+tightest gaps absorbed it (ground 68px, deck 22px) and all three
+instruments re-verified green.
 
 ## (a) Car-body dimensions per silhouette tier
 
 | Tier | Texture key | Collision rect (w×h) | Roof y, ground-parked | Roof y, deck-parked | Headroom above roof under a deck |
 |------|-------------|----------------------|-----------------------|---------------------|----------------------------------|
-| Sedan | `car-sedan` | 40×14 | 226 | 178 | 18px |
+| Sedan | `car-sedan` | **44×14** | 226 | 178 | 18px |
 | SUV | `car-suv` | 44×18 | 222 | 174 | 14px |
 | Luxury | `car-lux` | 56×16 | 224 | 176 | 16px |
 
@@ -85,7 +95,7 @@ art either way).
 
 | Source | Collision rect | Canvas | Role |
 |--------|----------------|--------|------|
-| `art/aseprite/car-sedan.aseprite` | 40×14 | 44×14 | the workhorse, 45 in the field; standard tap |
+| `art/aseprite/car-sedan.aseprite` | 44×14 — DRAWN, shipped | 44×14 | the workhorse, 45 in the field; standard tap |
 | `art/aseprite/car-suv.aseprite` | 44×18 | 48×18 | taller silhouette, 14 in the field; standard tap |
 | `art/aseprite/car-lux.aseprite` | 56×16 | 60×16 | 10 in the field; the TIER-3 HOLD car — must read "this one costs you time" at a squint |
 
@@ -143,8 +153,16 @@ that accent is the elite enemy's identity and stays exclusive to it.
 Also off-limits per BRIEF-ART-04 §1: ChexApp tag colors (the chip
 carries category), enemy paper tones, and Chexy orange.
 
-### Agent side, on your first drop
+### Shipped 2026-08-13 (sedan drop)
 
-The interim tinted rects retire: `CAR_COLORS` + `setTint` go away and
-each tier loads as a 6-frame variant strip, one frame chosen per car.
-Nothing about the ratified collision field changes.
+- `scripts/export-sprites.sh` gained a CARS pass: it exports each drawn
+  tier flat/indexed, then runs `scripts/palette-variants.mjs`, which
+  rewrites ONLY the PNG's PLTE chunk to emit the six hue variants
+  (pixels never touched, no dependencies). Undrawn tiers are skipped.
+- Boot loads every `assets/sprites/car-*.png`; the garage rotates a
+  tier's variants per car and takes the HUD request-chip color from the
+  drawn hue, so the chip still matches the car you're hunting.
+- Tint retires per tier as its art lands (multiplying over real art
+  would muddy glass, tires, and chrome). SUV and lux keep interim rects
+  until drawn — mixed states are fine.
+- The collision body is the texture's own size, i.e. the drawing.

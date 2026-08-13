@@ -14,8 +14,19 @@ import { isTuningPanelOpen, setPanelReadout } from '../debug/tuningPanel.js'
 // (obstruct only) and elites (untag tagged cars and flee with the
 // chip). Garage design session rulings: handoff 2026-08-09-b.
 
-// car body colors: garment-hue family, never ChexApp tag colors
+// car body colors: garment-hue family, never ChexApp tag colors.
+// CAR_COLORS tints the interim rects; CAR_HUES are the actors.gpl
+// garment pairs the palette-swap variants ship in (BRIEF-ART-04 §1) —
+// keyed by the file suffix palette-variants.mjs writes.
 const CAR_COLORS = [0x8a4b2a, 0x3e5f8a, 0x6d7f43, 0x7a5f9e, 0x555f66, 0x9e6b4a]
+const CAR_HUES = {
+  crimson: 0xc22f3a,
+  cobalt: 0x2e6fd0,
+  olive: 0x7a8c2e,
+  mustard: 0xd9a62b,
+  burgundy: 0x83323f,
+  winterteal: 0x3fa08c,
+}
 const ELITE_ACCENT = 0xd94848 // raffle-red accent until V3 art exists
 const CHIP_TEAL = 0x006483 // the applied claim chip, as everywhere
 const SAFE_GREEN = 0x12b76a // Success Green — the banked-at-edge cue
@@ -39,6 +50,7 @@ export default class GarageScene extends LevelScene {
 
     // ---- cars: the level's item vocabulary AND platform vocabulary
     this.makeCarTextures()
+    this.carHueIdx = 0
     let colorIdx = 0
     for (const obj of this.map.getObjectLayer('cars')?.objects ?? []) {
       this.spawnCar(obj, CAR_COLORS[colorIdx++ % CAR_COLORS.length])
@@ -83,17 +95,20 @@ export default class GarageScene extends LevelScene {
     this.emitHud()
   }
 
+  // interim tinted rects, per TIER — generated only for tiers whose art
+  // hasn't landed (checked per key, so one drawn tier never blocks the
+  // others' placeholders). Sizes ARE the collision rects.
   makeCarTextures() {
-    if (this.textures.exists('car-sedan')) return
     const g = this.add.graphics()
     const make = (key, w, h) => {
+      if (this.textures.exists(key)) return // real art (or an earlier run) wins
       g.clear()
       g.fillStyle(0xffffff, 1)
       g.fillRect(0, 3, w, h - 3) // body
       g.fillRect(Math.round(w * 0.22), 0, Math.round(w * 0.5), 4) // cabin hint
       g.generateTexture(key, w, h)
     }
-    make('car-sedan', 40, 14)
+    make('car-sedan', 44, 14) // 44 wide since the drawing defined it (2026-08-13)
     make('car-suv', 44, 18)
     make('car-lux', 56, 16)
     g.destroy()
@@ -101,13 +116,19 @@ export default class GarageScene extends LevelScene {
 
   spawnCar(obj, color) {
     const tier = Number(obj.properties?.find((p) => p.name === 'tier')?.value ?? 1)
-    const key = tier >= 3 ? 'car-lux' : obj.properties?.find((p) => p.name === 'suv')?.value ? 'car-suv' : 'car-sedan'
-    const car = this.items.create(obj.x, obj.y, key)
+    const kind = tier >= 3 ? 'car-lux' : obj.properties?.find((p) => p.name === 'suv')?.value ? 'car-suv' : 'car-sedan'
+    // real art: rotate the tier's palette-swap variants and take the
+    // body color from the drawn hue, so the HUD request chip still
+    // matches the car you're looking for. Tinting is INTERIM ONLY —
+    // multiplying over real art would muddy glass, tires, and chrome.
+    const hues = Object.keys(CAR_HUES).filter((h) => this.textures.exists(`${kind}-${h}`))
+    const hue = hues.length ? hues[this.carHueIdx++ % hues.length] : null
+    const car = this.items.create(obj.x, obj.y, hue ? `${kind}-${hue}` : kind)
     car.setName(obj.name)
-    car.setTint(color)
+    if (!hue) car.setTint(color)
     car.setData('tier', tier)
     car.setData('heavy', tier >= 3)
-    car.setData('bodyColor', color)
+    car.setData('bodyColor', hue ? CAR_HUES[hue] : color)
     car.setData('spawnedAt', this.time.now)
     car.body.setAllowGravity(false)
     car.body.setImmovable(true)

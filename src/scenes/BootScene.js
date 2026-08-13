@@ -74,6 +74,15 @@ const COATS_PNG = import.meta.glob('../../assets/sprites/coats.png', {
   query: '?url',
   import: 'default',
 })
+// garage cars (BRIEF-ART-04 §1): one drawing per silhouette tier plus
+// its palette-swap variants (car-sedan.png, car-sedan-crimson.png, …).
+// Each loads under its own file stem; the drawn size IS the collision
+// rect (ruling 2026-08-13), so no frame slicing here.
+const CAR_PNGS = import.meta.glob('../../assets/sprites/car-*.png', {
+  eager: true,
+  query: '?url',
+  import: 'default',
+})
 // enemy V1 "Stub" atlas (BRIEF-ART-03 §2). Its anims register
 // SPRITE-LOCALLY per the 2026-07-30-a namespace policy — the enemy's
 // tag names (move/grab/carry/stun) never touch the global namespace.
@@ -128,6 +137,9 @@ export default class BootScene extends Phaser.Scene {
     if (tiles2Url) this.load.image('tiles2', tiles2Url)
     const coatsUrl = Object.values(COATS_PNG)[0]
     if (coatsUrl) this.load.spritesheet('coats', coatsUrl, { frameWidth: 24, frameHeight: 24 })
+    for (const [path, url] of Object.entries(CAR_PNGS)) {
+      this.load.image(path.split('/').pop().replace('.png', ''), url)
+    }
     const hangerUrl = Object.values(HANGER_PNG)[0]
     if (hangerUrl) this.load.spritesheet('hanger', hangerUrl, { frameWidth: 12, frameHeight: 12 })
     for (const [path, url] of Object.entries(COLLECTIBLE_PNGS)) {

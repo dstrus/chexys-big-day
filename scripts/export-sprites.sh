@@ -24,6 +24,13 @@ ICONS=(nfc-chip:nfc-tag contact-card insight-report)
 # "source:output" — output lands in assets/tiles/<output>.png.
 TILES=(coatroom-tiles2:coatroom2)
 
+# Garage cars (BRIEF-ART-04 §1). One drawing per silhouette tier, drawn
+# in the cobalt body pair; palette-variants.mjs then swaps that pair
+# through the six garment hues (art/garage-inventory.md §(c)). Flat save,
+# indexed, no extrude — the collision body is the art's own size.
+# Tiers not yet drawn are simply skipped.
+CARS=(car-sedan car-suv car-lux)
+
 resolve_source() {
   local name="$1"
   local aseprite="art/aseprite/${name}.aseprite"
@@ -91,6 +98,20 @@ for ENTRY in "${ICONS[@]}"; do
     --sheet-type horizontal
 
   echo "Exported $SHEET from $SRC — the game picks it up automatically."
+done
+
+for NAME in "${CARS[@]}"; do
+  if [ ! -f "art/aseprite/${NAME}.aseprite" ] && [ ! -f "art/aseprite/${NAME}.ase" ]; then
+    echo "Skipping $NAME (not drawn yet)."
+    continue
+  fi
+  SRC="$(resolve_source "$NAME")"
+  IMG="assets/sprites/${NAME}.png"
+
+  "$ASE_BIN" -b "$SRC" --save-as "$IMG"
+  node scripts/palette-variants.mjs "$IMG"
+
+  echo "Exported $IMG + variants from $SRC — the game picks them up automatically."
 done
 
 for ENTRY in "${TILES[@]}"; do
