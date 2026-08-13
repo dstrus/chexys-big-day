@@ -39,9 +39,11 @@ const TILE_SKINS = {
     middle: (x) => 1 + (x % 3),
     leftCap: () => 1,
     rightCap: () => 3,
-    // bg2 dressing is left VISIBLE on purpose: its tiles are 1-wide,
-    // 6-tall runs every 12 columns, and gid 5 lands on a fill tile —
-    // so the far dressing reads as concrete support pillars already.
+    // CONCRETE PILLARS (2026-08-13): sheet col 0 of rows 2-3 — gid 9
+    // fades in at its top, gid 17 fades out at its bottom, so the pair
+    // tiles vertically as precast segments with a dark joint every 32px.
+    // bg2's dressing runs are 1-wide and 6 tall → 9,17,9,17,9,17.
+    dressing: (x, y, { dy }) => (dy % 2 === 0 ? 9 : 17),
   },
 }
 
@@ -266,27 +268,42 @@ export default class LevelScene extends Phaser.Scene {
   // translates. Collision is per-tile and already set, so re-indexing
   // for looks cannot change what's solid — re-asserted below regardless.
   applyTileSkin(skin, dressingLayers) {
-    const ROLES = { 1: 'ground', 2: 'middle', 3: 'counter', 6: 'leftCap', 7: 'rightCap' }
-    const L = this.mainLayer
-    // snapshot the ORIGINAL indices first: block-relative roles (the
-    // counter) read their neighbors, which must not already be skinned
+    const MAIN_ROLES = { 1: 'ground', 2: 'middle', 3: 'counter', 6: 'leftCap', 7: 'rightCap' }
+    this.skinLayer(this.mainLayer, (index) => MAIN_ROLES[index], skin)
+    this.mainLayer.setCollisionByExclusion([-1])
+
+    if (skin.hideDressing) {
+      // a sheet with no dressing art would render bg1/bg2 as stray floor
+      // and cap pieces — hide them; the paintings carry that depth
+      for (const l of dressingLayers) l.setVisible(false)
+    } else if (skin.dressing) {
+      // the sheet dresses the background itself (the garage's pillars are
+      // 1-wide vertical runs, so they skin by dy)
+      for (const l of dressingLayers) this.skinLayer(l, () => 'dressing', skin)
+    }
+  }
+
+  // remap one layer's tiles through the skin. Roles are BLOCK-RELATIVE:
+  // a skin function receives dx / dy (columns and rows from the top-left
+  // of its own contiguous run) and isTop, so multi-tile structures —
+  // counters, pillars — skin correctly wherever they are placed.
+  skinLayer(layer, roleOf, skin) {
+    // snapshot the ORIGINAL indices first: neighbor lookups must never
+    // see a tile this pass has already re-indexed
     const orig = new Map()
-    L.forEachTile((t) => orig.set(`${t.x},${t.y}`, t.index))
+    layer.forEachTile((t) => orig.set(`${t.x},${t.y}`, t.index))
     const at = (x, y) => orig.get(`${x},${y}`) ?? -1
-    L.forEachTile((t) => {
+    layer.forEachTile((t) => {
       const index = at(t.x, t.y)
-      const role = ROLES[index]
+      if (index < 0) return
+      const role = roleOf(index)
       if (!role || !skin[role]) return
-      // dx = columns from the left edge of this run; isTop = nothing of
-      // the same role directly above (a block's first row)
       let dx = 0
       while (at(t.x - dx - 1, t.y) === index) dx++
-      t.index = skin[role](t.x, t.y, { dx, isTop: at(t.x, t.y - 1) !== index })
+      let dy = 0
+      while (at(t.x, t.y - dy - 1) === index) dy++
+      t.index = skin[role](t.x, t.y, { dx, dy, isTop: dy === 0 })
     })
-    L.setCollisionByExclusion([-1])
-    // a sheet with no dressing art would render bg1/bg2 as stray floor
-    // and cap pieces — hide them; the parallax paintings carry depth now
-    if (skin.hideDressing) for (const l of dressingLayers) l.setVisible(false)
   }
 
   buildMap() {

@@ -2792,3 +2792,25 @@ visible; COATROOM REGRESSION CLEAN (its own sheet, floor period
 Harness note: launch()/start() live on a SCENE's plugin, not the
 SceneManager — and inside an async IIFE that mistake rejects
 silently, surfacing only as a timeout.
+
+## 2026-08-13 — Garage pillars: skins now dress BACKGROUND layers too
+
+Artist pointed the two tiles at sheet (0,16)-(15,47) — gids 9 and 17 —
+at the concrete pillars. Read from the pixels rather than assumed: gid
+9 dithers Concrete Deep→Dark across its TOP rows, gid 17 dithers back
+out across its BOTTOM rows, so they are a vertical PAIR — stacked
+9,17,9,17 they read as precast segments with a dark joint every 32px.
+Wired as a new `dressing` role, which required extending the skin
+system: applyTileSkin now skins DRESSING LAYERS (bg1/bg2), not just
+the collision layer, and the per-tile context grew `dy` beside `dx` —
+so multi-tile structures skin correctly whether they run horizontally
+(the coatroom counter) or vertically (these pillars), wherever the map
+places them. `hideDressing` and `dressing` are mutually exclusive per
+skin. The remap moved into a reusable skinLayer(layer, roleOf, skin).
+Verified against the SHIPPED map geometry (my first probe used
+coordinates recalled from the exodus generator and read nulls — the
+garage's pillars are at columns 12, 36, 60… every 24, and are ELEVEN
+tiles tall, rows 4-14): the pillar reads 9,17,9,17,9,17,9,17,9,17,9 —
+fading in at the top, meeting the floor on a solid edge. Ground,
+decks, collision, and the coatroom regression all unchanged; no
+console noise.
