@@ -73,3 +73,78 @@ share one drop-in image (`assets/tiles/coatroom.png`); the garage
 tileset (garage-tiles.aseprite → its own strip) needs the loader to
 key the tileset image per map. That's on the wiring contract
 (BRIEF-ART-04 §6), not the artist.
+
+## (c) Car drawing kit + palette-swap contract
+
+Answers the artist's pre-drawing questions (2026-08-13). Field counts
+are from the frozen round-4 map: **69 cars — 45 sedan, 14 SUV, 10
+luxury** (2 of the luxes park on decks; 8 standard cars do too — same
+art either way).
+
+### What to draw: three canvases, one frame each
+
+| Source | Collision rect | Canvas | Role |
+|--------|----------------|--------|------|
+| `art/aseprite/car-sedan.aseprite` | 40×14 | 44×14 | the workhorse, 45 in the field; standard tap |
+| `art/aseprite/car-suv.aseprite` | 44×18 | 48×18 | taller silhouette, 14 in the field; standard tap |
+| `art/aseprite/car-lux.aseprite` | 56×16 | 60×16 | 10 in the field; the TIER-3 HOLD car — must read "this one costs you time" at a squint |
+
+- **Nose points RIGHT.** Cars drive off rightward (code tweens +340px)
+  and the level scrolls right; no flipping happens.
+- **The roof line must equal the physics top EXACTLY** — players
+  platform on it. Wheels/mirrors/trim may overhang the SIDES by ~2px
+  each (that's the canvas slack); nothing may overhang below the
+  bottom contact line.
+- **One drawn state per car.** Requested glow, target highlight, tag
+  chip, and the safe-at-edge flash are all code overlays — do not draw
+  state variants.
+- **Wheels are static.** A 2-frame drive-off spin is optional polish,
+  last on the list.
+- Note the **chip anchor** per tier when you deliver. Code currently
+  places it at (center x + width/4, center y − height/6) — top-third,
+  windshield side; the code will match whatever you document.
+
+### Palette swap: exactly two swappable colors
+
+Draw the body with these two entries from `actors.gpl` and nothing
+else — they are the ONLY colors the swap touches:
+
+| Slot | Color | RGB |
+|------|-------|-----|
+| body base | Coat Cobalt | 46, 111, 208 |
+| body shadow | Cobalt Shade | 30, 76, 150 |
+
+The export pass swaps that pair through the six garment hues —
+crimson, cobalt, olive, mustard, burgundy, winter teal — producing 6
+variants per drawing (18 visible cars from 3 drawings). Mechanism:
+save **indexed** (Sprite → Color Mode → Indexed) and the script
+re-palettes via Aseprite's own `--palette` flag; no new tooling.
+Two rules make the swap reliable: use no anti-aliasing or dithering
+that invents in-between body colors, and keep the body to those two
+values only.
+
+### Fixed colors (never swapped) — the rest of the kit
+
+| Part | Color | RGB | From |
+|------|-------|-----|------|
+| outline | Outline Cool | 16, 24, 40 | actors (the garage is cold-lit) |
+| glass | Night Window Cool | 62, 90, 128 | garage-env |
+| glass glint | Signage Glow Core | 169, 184, 245 | garage-env |
+| tires | Concrete Void | 21, 23, 28 | garage-env |
+| hub / tread detail | Concrete Deep | 35, 38, 46 | garage-env |
+| chrome / bumper | Metal Mid | 102, 112, 133 | actors |
+| bright chrome | Concrete Highlight | 154, 161, 172 | garage-env |
+| LUX trim + hood ornament | Hanger Gold / Shade | 255, 210, 74 / 201, 154, 31 | actors |
+| head/tail lamps | Sodium Core | 240, 162, 74 | garage-env (ties to the lamp pools) |
+| specular glint | Pure White | 255, 255, 255 | actors |
+
+**Never** use Raffle Red (192, 24, 24) or Raffle Red Deep on a car —
+that accent is the elite enemy's identity and stays exclusive to it.
+Also off-limits per BRIEF-ART-04 §1: ChexApp tag colors (the chip
+carries category), enemy paper tones, and Chexy orange.
+
+### Agent side, on your first drop
+
+The interim tinted rects retire: `CAR_COLORS` + `setTint` go away and
+each tier loads as a 6-frame variant strip, one frame chosen per car.
+Nothing about the ratified collision field changes.
