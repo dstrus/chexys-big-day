@@ -2549,3 +2549,31 @@ the glow overlay alpha-pulses (0.704 → 0.517 across a sample). The
 coatroom is the first level with its full painted depth. Remaining
 BRIEF-ART-02 §3 debt: sconce flicker (tile-side art). The 60fps
 full-stack re-check is the human's, per the brief.
+
+## 2026-08-13 — Tile SKINS: the coatroom2 sheet experiment
+
+The artist dropped art/aseprite/coatroom-tiles2.aseprite with a
+DIFFERENT role layout than the original sheet (row 1: four repeating
+floor tiles, then platform left cap / two middles / right cap).
+Rather than rewrite the hand-owned coatroom map to the new indices,
+map data keeps speaking ROLE gids and a SKIN translates roles →
+sheet indices (TILE_SKINS in LevelScene, keyed by levelId, applied
+only when its texture exists — delete the PNG and the level reverts,
+no code change). Convention documented in assets/maps/README.md.
+Also: scripts/export-sprites.sh gained a TILES pass (flat canvas
+save, NO --extrude — the tilemap slices on a fixed grid, so padding
+would shift every tile), so re-export stays one command.
+Verified: floor row reads 1,2,3,4,1,2,3,4 across columns; a platform
+strip reads 5,[6/7…],8; collision survives the re-index (floor and
+strip solid, empties still empty); tileset texture is tiles2; no
+console noise. buildMap now parses map properties BEFORE creating
+layers (the skin needs levelId) — the parallax/copy hooks read the
+same object as before.
+Two art notes reported to the human, not acted on: (a) bg1/bg2 tile
+dressing is hidden under this skin (no dressing art in the sheet) and
+the return counter renders as floor — it wants a role of its own if
+the experiment ships; (b) PER-LAYER ISOLATION CAPTURE found the
+mid-screen "seam" in the composite is P2: p2.png holds a single
+column in an otherwise transparent 1280px canvas, so one lonely
+pillar appears every ~2800 world px and its hard edge reads as a
+seam. P4/P3/P1 all verified clean and tiling correctly.

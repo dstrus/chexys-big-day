@@ -58,6 +58,15 @@ const TILES_PNG = import.meta.glob('../../assets/tiles/coatroom.png', {
   query: '?url',
   import: 'default',
 })
+// alternate coatroom sheet (experiment, 2026-08-13): a DIFFERENT role
+// layout — 4 repeating floor tiles + platform left/middle×2/right. Its
+// skin table lives in LevelScene; drop the file to switch looks, delete
+// it to fall back to the original sheet.
+const TILES2_PNG = import.meta.glob('../../assets/tiles/coatroom2.png', {
+  eager: true,
+  query: '?url',
+  import: 'default',
+})
 // coat item sprites (BRIEF-ART-03 §1): 3-frame 24x24 strip; garment
 // colors baked in per the -b ruling (the tag chip carries category)
 const COATS_PNG = import.meta.glob('../../assets/sprites/coats.png', {
@@ -115,6 +124,8 @@ export default class BootScene extends Phaser.Scene {
     preloadParallax(this) // queue any dropped-in parallax paintings
     const tilesUrl = Object.values(TILES_PNG)[0]
     if (tilesUrl) this.load.image('tiles', tilesUrl)
+    const tiles2Url = Object.values(TILES2_PNG)[0]
+    if (tiles2Url) this.load.image('tiles2', tiles2Url)
     const coatsUrl = Object.values(COATS_PNG)[0]
     if (coatsUrl) this.load.spritesheet('coats', coatsUrl, { frameWidth: 24, frameHeight: 24 })
     const hangerUrl = Object.values(HANGER_PNG)[0]

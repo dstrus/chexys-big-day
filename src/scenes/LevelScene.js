@@ -10,6 +10,21 @@ import { recordRun, isDashUnlocked, unlockDash } from '../systems/progress.js'
 import { isTuningPanelOpen, setPanelReadout } from '../debug/tuningPanel.js'
 import { createParallax, updateParallax } from '../systems/parallax.js'
 
+// TILE SKINS (2026-08-13). Keyed by levelId; applied only when the
+// sheet's texture is present, so deleting the art file reverts the look
+// with no code change. coatroom2 (art/aseprite/coatroom-tiles2): row 1
+// is [4 floor tiles][platform left cap][2 platform middles][right cap].
+const TILE_SKINS = {
+  coatroom: {
+    texture: 'tiles2',
+    ground: (x) => 1 + (x % 4), // the four floor tiles repeat, in order
+    leftCap: () => 5,
+    middle: (x) => 6 + (x % 2), // the two middles alternate
+    rightCap: () => 8,
+    hideDressing: true, // this sheet draws floor + platforms only
+  },
+}
+
 // Generic level scene: boots any Tiled map by key (assets/maps/README.md
 // documents the conventions). The map supplies geometry, spawn points,
 // zones, and rush parameters; gameplay systems are shared across levels.
@@ -224,28 +239,53 @@ export default class LevelScene extends Phaser.Scene {
 
   // ---- map ----
 
+  // Re-point ROLE gids at the indices a sheet actually uses, so new tile
+  // art never requires rewriting a hand-owned map (2026-08-13). Map data
+  // always speaks roles (assets/maps/README.md: 1 ground, 2 platform
+  // middle, 6 left cap, 7 right cap, 3 counter, 4/5 dressing); the skin
+  // translates. Collision is per-tile and already set, so re-indexing
+  // for looks cannot change what's solid — re-asserted below regardless.
+  applyTileSkin(skin, dressingLayers) {
+    const ROLES = { 1: 'ground', 2: 'middle', 6: 'leftCap', 7: 'rightCap' }
+    this.mainLayer.forEachTile((t) => {
+      const role = ROLES[t.index]
+      if (role && skin[role]) t.index = skin[role](t.x, t.y)
+    })
+    this.mainLayer.setCollisionByExclusion([-1])
+    // a sheet with no dressing art would render bg1/bg2 as stray floor
+    // and cap pieces — hide them; the parallax paintings carry depth now
+    if (skin.hideDressing) for (const l of dressingLayers) l.setVisible(false)
+  }
+
   buildMap() {
     const map = this.make.tilemap({ key: this.mapKey })
-    const tileset = map.addTilesetImage('placeholder', 'tiles')
-    map.createLayer('bg2', tileset).setDepth(-4)
-    map.createLayer('bg1', tileset).setDepth(-3)
+    // map properties are read FIRST: the tile skin below is chosen per
+    // levelId, and the parallax/copy hooks downstream want them anyway
+    this.levelProps = {}
+    for (const p of map.properties ?? []) this.levelProps[p.name] = p.value
+    const levelId = this.levelProps.levelId ?? this.mapKey
+
+    const skin = TILE_SKINS[levelId]
+    const useSkin = skin && this.textures.exists(skin.texture)
+    const tileset = map.addTilesetImage('placeholder', useSkin ? skin.texture : 'tiles')
+    const bg2 = map.createLayer('bg2', tileset).setDepth(-4)
+    const bg1 = map.createLayer('bg1', tileset).setDepth(-3)
     this.mainLayer = map.createLayer('main', tileset).setDepth(-2)
     map.createLayer('fg', tileset).setDepth(8)
     this.mainLayer.setCollisionByExclusion([-1])
+    if (useSkin) this.applyTileSkin(skin, [bg1, bg2])
 
     this.map = map
     this.worldWidth = map.widthInPixels
     this.worldHeight = map.heightInPixels
     this.physics.world.setBounds(0, 0, this.worldWidth, this.worldHeight)
 
-    this.levelProps = {}
-    for (const p of map.properties ?? []) this.levelProps[p.name] = p.value
     // fiction flip (BRIEF-07): exodus tags RETURN items to departing
     // guests — the bubble copy pools swap on this map property
     this.game.registry.set('handbackCopy', this.levelProps.handbackCopy === true)
     // parallax drop-in stack (BRIEF-ART-02 §2): whatever paintings
     // exist for this levelId render behind the tile layers
-    this.parallaxLayers = createParallax(this, this.levelProps.levelId ?? this.mapKey)
+    this.parallaxLayers = createParallax(this, levelId)
 
     const spawns = map.getObjectLayer('spawns').objects
     this.playerSpawn = spawns.find((o) => o.name === 'player')

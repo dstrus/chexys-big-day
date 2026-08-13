@@ -18,6 +18,12 @@ CHARACTERS=(chexy enemy-stub particle)
 # "source:output" where the .aseprite name differs from the texture key.
 ICONS=(nfc-chip:nfc-tag contact-card insight-report)
 
+# Tilesets (BRIEF-ART-02). A tileset is ONE image on a fixed 16x16 grid,
+# not a frame sheet: save the canvas flat — no JSON, and NO --extrude
+# (the tilemap slices by grid, so padding would shift every tile).
+# "source:output" — output lands in assets/tiles/<output>.png.
+TILES=(coatroom-tiles2:coatroom2)
+
 resolve_source() {
   local name="$1"
   local aseprite="art/aseprite/${name}.aseprite"
@@ -85,4 +91,15 @@ for ENTRY in "${ICONS[@]}"; do
     --sheet-type horizontal
 
   echo "Exported $SHEET from $SRC — the game picks it up automatically."
+done
+
+for ENTRY in "${TILES[@]}"; do
+  NAME="${ENTRY%%:*}"
+  OUT="${ENTRY##*:}"
+  SRC="$(resolve_source "$NAME")"
+  IMG="assets/tiles/${OUT}.png"
+
+  "$ASE_BIN" -b "$SRC" --save-as "$IMG"
+
+  echo "Exported $IMG from $SRC — the game picks it up automatically."
 done
