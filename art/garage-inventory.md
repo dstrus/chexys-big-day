@@ -10,16 +10,28 @@ TOP row of ink must be the roof (nothing — mirror, antenna, aerial —
 may sit above it, or players would stand on air) and the BOTTOM row
 must be the wheel contact. Height changes move the parked bottoms and
 the deck-clearance facts, so flag one when you draw it; width changes
-are free. The sedan came in at 44 wide (was specced 40) — the field's
-tightest gaps absorbed it (ground 68px, deck 22px) and all three
-instruments re-verified green.
+are free. Sedan came in 44 wide (specced 40) and SUV 48 (specced 44);
+the field's tightest gaps absorbed both (ground 68px, deck 22px) and
+the instruments re-verified green each time.
+
+**ROOF INSET (human ruling 2026-08-13):** a drawn car's top is not
+flat — the roof runs level for about half the length, then the hood
+RAMPS to the nose (sedan 6px of drop, SUV 7px). One AABB cannot follow
+a ramp, and splitting the car into several rects would put hop-over
+lips mid-roof on surfaces players RUN across (Arcade has no step-up),
+so the single rect stays and its top drops `CAR_TOP_INSET` = 2px:
+the roof reads as a 2px sink (invisible against a 2px roof line) and
+the nose float halves. The wheel line — the body BOTTOM — never moves,
+so parked bottoms stay 240 / 192. Roof lines and deck headroom in the
+table above are post-inset (headroom only grew). Arted tiers only;
+placeholder rects are flat and need no correction.
 
 ## (a) Car-body dimensions per silhouette tier
 
 | Tier | Texture key | Collision rect (w×h) | Roof y, ground-parked | Roof y, deck-parked | Headroom above roof under a deck |
 |------|-------------|----------------------|-----------------------|---------------------|----------------------------------|
-| Sedan | `car-sedan` | **44×14** | 226 | 178 | 18px |
-| SUV | `car-suv` | 44×18 | 222 | 174 | 14px |
+| Sedan | `car-sedan` | **44×14** art, body 44×12 | 228 | 180 | 20px |
+| SUV | `car-suv` | **48×18** art, body 48×16 | 224 | 176 | 16px |
 | Luxury | `car-lux` | 56×16 | 224 | 176 | 16px |
 
 Facts the drawings must respect:
@@ -96,7 +108,7 @@ art either way).
 | Source | Collision rect | Canvas | Role |
 |--------|----------------|--------|------|
 | `art/aseprite/car-sedan.aseprite` | 44×14 — DRAWN, shipped | 44×14 | the workhorse, 45 in the field; standard tap |
-| `art/aseprite/car-suv.aseprite` | 44×18 | 48×18 | taller silhouette, 14 in the field; standard tap |
+| `art/aseprite/car-suv.aseprite` | 48×18 — DRAWN, shipped | 48×18 | taller silhouette, 14 in the field; standard tap |
 | `art/aseprite/car-lux.aseprite` | 56×16 | 60×16 | 10 in the field; the TIER-3 HOLD car — must read "this one costs you time" at a squint |
 
 - **Nose points RIGHT.** Cars drive off rightward (code tweens +340px)

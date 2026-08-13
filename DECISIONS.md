@@ -2623,3 +2623,36 @@ its color from the drawn hue so chip-to-car matching survives.
 Known, pre-existing and unrelated: the garage still renders the
 coatroom tileset (all maps share one drop-in image — the per-map
 keying debt already flagged in the inventory's wiring note).
+
+## 2026-08-13 — SUV art lands; ROOF INSET ruled (multi-rect rejected)
+
+SUV drawn (48×18 full-bleed, boxy roof) — exported with its six
+palette variants through the CARS pass, no new wiring needed; the
+loader and hue rotation are generic, and its body is art-defined
+(48×18, +4 wide vs the specced 44 — same width-only amendment as the
+sedan). Source had been saved to art/palettes/ by mistake; moved to
+art/aseprite/ (the canonical home the export script reads).
+MULTI-RECT COLLISION CONSIDERED AND REJECTED (human asked; agent
+recommended against, human chose the alternative). Measured both
+drawings: the top is level for ~half the length (sedan 19/44 columns,
+SUV 27/48) and then the hood RAMPS down 1px per column to the nose
+(6px sedan, 7px SUV). Findings that decided it: (1) a ramp cannot be
+matched by any finite set of AABBs — 3 bands would still leave 2-3px;
+(2) every band boundary becomes a LIP, and since Arcade has no
+step-up, running toward the cabin would be blocked mid-roof — cars
+are the garage's platform vocabulary and roofs are ROUTES, so that
+trades a cosmetic artifact for a traversal one; (3) the artifact only
+shows on the sloped nose, while the flat roof (43-56% of the length)
+is pixel-perfect under one rect.
+Chosen instead: CAR_TOP_INSET = 2 — the collision top drops 2px on
+arted cars, the wheel line (body bottom) never moves. Roof reads as a
+2px sink instead of a 6-7px float; deck headroom only grows (18→20,
+14→16). Verified: sedan body 44×12 top 228 bottom 240, SUV 48×16 top
+224 bottom 240, placeholder lux uninset at 56×16; landing on a roof
+leaves Chexy grounded with feet exactly on the inset top (2px into the
+drawn roof); instruments 58/58 green with both real widths, gaps
+unchanged, no console noise. Restart needed to re-apply if dialed.
+Harness note: the between-frame body.reset pitfall bit again — staged
+placement must run inside time.delayedCall(0) or the render-snap
+restore undoes it (the player never leaves spawn, which reads as a
+collision failure).

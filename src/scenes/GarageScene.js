@@ -27,6 +27,16 @@ const CAR_HUES = {
   burgundy: 0x83323f,
   winterteal: 0x3fa08c,
 }
+// Split-the-error roof inset (human ruling 2026-08-13). A drawn car's
+// top is not flat: the roof runs level for ~half the length, then the
+// hood RAMPS to the nose (sedan 6px, SUV 7px of drop). One AABB can't
+// follow a ramp, and banding it into several rects would put hop-over
+// lips in the middle of a roof that players run across — so the single
+// rect stays and its top drops by this much: the roof reads as a ~2px
+// SINK (invisible against a 2px roof line) and the nose float halves.
+// Applies to ARTED tiers only — placeholder rects are flat and need no
+// correction. Applied at spawn, so changing it wants a restart.
+const CAR_TOP_INSET = 2
 const ELITE_ACCENT = 0xd94848 // raffle-red accent until V3 art exists
 const CHIP_TEAL = 0x006483 // the applied claim chip, as everywhere
 const SAFE_GREEN = 0x12b76a // Success Green — the banked-at-edge cue
@@ -125,7 +135,14 @@ export default class GarageScene extends LevelScene {
     const hue = hues.length ? hues[this.carHueIdx++ % hues.length] : null
     const car = this.items.create(obj.x, obj.y, hue ? `${kind}-${hue}` : kind)
     car.setName(obj.name)
-    if (!hue) car.setTint(color)
+    if (hue) {
+      // arted car: drop the collision top by the roof inset, leaving the
+      // wheel line (body bottom) exactly where the drawing puts it
+      car.body.setSize(car.width, car.height - CAR_TOP_INSET, false)
+      car.body.setOffset(0, CAR_TOP_INSET)
+    } else {
+      car.setTint(color)
+    }
     car.setData('tier', tier)
     car.setData('heavy', tier >= 3)
     car.setData('bodyColor', hue ? CAR_HUES[hue] : color)
