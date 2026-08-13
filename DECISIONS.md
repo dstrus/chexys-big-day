@@ -2656,3 +2656,33 @@ Harness note: the between-frame body.reset pitfall bit again — staged
 placement must run inside time.delayedCall(0) or the render-snap
 restore undoes it (the player never leaves spawn, which reads as a
 collision failure).
+
+## 2026-08-13 — Handoff 2026-08-12-a applied
+
+- Sequence check: 2026-08-11-b applied ✓ (bf7003a).
+- Items 1-3: the three art-track rulings ratified as shipped
+  (collision-follows-art with its guard rails; CAR_TOP_INSET 2 over
+  multi-rect, on the measured evidence — roofs are routes and
+  traversal integrity outranks nose cosmetics; coatroom dressing
+  layers stay hidden).
+- Item 4: TILE SKINS ratified as a PROJECT-WIDE convention (maps
+  speak role gids, skin tables translate per sheet, block-relative
+  roles for multi-tile structures, delete-the-PNG reverts) — noted
+  as such in assets/maps/README.md; applies to the garage and museum
+  sheets when they land.
+- Item 5: P2 forked to the artist — (a) complete the architecture
+  layer (pillar rank at varied spacing + balcony rail + coats in
+  shadow) or (b) shorten P2's repeat as an interim stopgap. Design
+  lean (a); logged again when the artist calls it.
+- Item 6: BRIEF-07 Session 2 ordered — GO. Noted: S2 does NOT close
+  Act 1's round; the human's Act-1 round-1 verdict (front
+  readability, medley texture, climax window, arc sag, breath beat)
+  is still owed, and rounds run parallel to build per the garage
+  precedent.
+- Item 7: ruling entry appended verbatim below.
+
+2026-08-12 — Art-track rulings ratified (handoff
+2026-08-12-a): collision-follows-art with guard rails,
+CAR_TOP_INSET over multi-rect (measured), skins canon
+project-wide, P2 forked to the artist (lean: complete
+it). S2 ordered; Act-1 round verdict still owed.

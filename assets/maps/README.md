@@ -96,9 +96,11 @@ Platform strips are laid as `6 [2 ...] 7` (caps on both ends,
 middles between). Runs shorter than 2 tiles stay all-middle —
 avoid them in layouts.
 
-## Tile SKINS (2026-08-13)
+## Tile SKINS (2026-08-13; ratified project-wide, handoff 2026-08-12-a)
 
-Map data always speaks the ROLE gids above. A *skin* re-points those
+Map data always speaks the ROLE gids above. This is the convention for
+EVERY level's sheet — the garage and museum sheets use it when they
+land. A *skin* re-points those
 roles at whatever indices a real art sheet uses, so new tile art never
 requires rewriting a hand-owned map. Skins live in `TILE_SKINS` at the
 top of `src/scenes/LevelScene.js`, keyed by `levelId`, and apply only
