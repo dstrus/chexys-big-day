@@ -2840,3 +2840,23 @@ surface row 1,2,3,1,2,14 (the x%17 cadence); bay breakers at columns
 unchanged; coatroom regression clean; no console noise. Note for
 future skins: a middle's `dx` counts from the MIDDLES run, not from
 the cap — the caps are their own index.
+
+## 2026-08-13 — Floor and deck oil stains separated (artist correction)
+
+Artist's correction: the row-2 oil stain (sheet index 14) is for DECKS
+ONLY, and a dedicated FLOOR stain landed at sheet (80,0)-(95,15) =
+index 6. Wired exactly: ground uses 6 on its cadence, deck middles use
+14 on theirs, and the battery now asserts the deck stain NEVER lands
+on the floor. The pixels confirm why they can't be interchangeable —
+each breaker carries the bottom edge of the surface it belongs to (the
+floor stain meets Asphalt Light fill, the deck stain is an underside
+in Concrete Mid). The same export also moved the BAY-NUMBER tile's
+bottom edge to the ground signature, which retires the 1px-seam
+caveat logged in the previous entry: every breaker now matches its
+surface exactly, with no compromise anywhere in the garage.
+Naming trap noted in the skin comment for future readers: a SHEET
+index is not a map ROLE gid — sheet index 6 is the floor oil stain,
+while map gid 6 means "deck left cap" and skins to index 10.
+Verified: surface row 1,2,3,1,2,6; deck 10,11×5,14,11×6,12; floor
+stains at columns 5/22/39/56, bay numbers at 11/34/57; pillars,
+collision, and the coatroom regression unchanged; no console noise.

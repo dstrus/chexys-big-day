@@ -36,16 +36,20 @@ const TILE_SKINS = {
     // The 3-tile surface period is interrupted by breakers on two
     // out-of-phase cadences (23 and 17) so they never line up into a
     // visible grid — the SotN lesson from BRIEF-ART-04 §3.
+    // The floor and the decks have SEPARATE oil stains — each drawn with
+    // its own bottom edge (the floor's meets asphalt fill, the deck's is
+    // an underside), so they are not interchangeable. Sheet index 6 is
+    // the floor stain; index 14 is the deck stain. (Sheet index ≠ the
+    // map's role gid: map gid 6 means "deck left cap" and skins to 10.)
     ground: (x, y) => {
       if (y >= 16) return 4 + (x % 2) // sub-floor fill
       if (x % 23 === 11) return 13 // painted bay number: wayfinding cadence
-      if (x % 17 === 5) return 14 // oil stain
+      if (x % 17 === 5) return 6 // floor oil stain
       return 1 + (x % 3)
     },
     // deck strips are laid 6 [2 …] 7 and are DOUBLE-FACED (walked top,
-    // visible underside). The odd oil stain rides the middles — cars
-    // park up here too, and the breakers share the decks' exact edge
-    // signature, so they drop in seamlessly.
+    // visible underside). The deck's own oil stain rides the middles
+    // about once per strip — cars park up here too.
     middle: (x, y, { dx }) => (dx % 9 === 5 ? 14 : 11),
     leftCap: () => 10,
     rightCap: () => 12,
