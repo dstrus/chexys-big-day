@@ -16,7 +16,7 @@ CHARACTERS=(chexy enemy-stub particle)
 # assumes a tight grid — so they export as plain horizontal sheets with
 # no JSON and NO --extrude (padding would break the fixed-grid slicing).
 # "source:output" where the .aseprite name differs from the texture key.
-ICONS=(nfc-chip:nfc-tag contact-card insight-report)
+ICONS=(nfc-chip:nfc-tag contact-card insight-report request-chips)
 
 # Tilesets (BRIEF-ART-02). A tileset is ONE image on a fixed 16x16 grid,
 # not a frame sheet: save the canvas flat — no JSON, and NO --extrude
@@ -90,6 +90,10 @@ done
 for ENTRY in "${ICONS[@]}"; do
   NAME="${ENTRY%%:*}"
   OUT="${ENTRY##*:}"
+  if [ ! -f "art/aseprite/${NAME}.aseprite" ] && [ ! -f "art/aseprite/${NAME}.ase" ]; then
+    echo "Skipping $NAME (not drawn yet)."
+    continue
+  fi
   SRC="$(resolve_source "$NAME")"
   SHEET="assets/sprites/${OUT}.png"
 

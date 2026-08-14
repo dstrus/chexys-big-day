@@ -144,6 +144,7 @@ export default class GarageScene extends LevelScene {
       car.setTint(color)
     }
     car.setData('tier', tier)
+    car.setData('kind', kind) // silhouette, for the HUD request chip
     car.setData('heavy', tier >= 3)
     car.setData('bodyColor', hue ? CAR_HUES[hue] : color)
     car.setData('spawnedAt', this.time.now)
@@ -211,6 +212,10 @@ export default class GarageScene extends LevelScene {
       key: carName,
       color: car.getData('bodyColor'),
       luxury: (car.getData('tier') ?? 1) >= 3,
+      // SILHOUETTE, so two same-coloured requests stay tellable apart
+      // (human report 2026-08-13): colour alone can't separate a sedan
+      // from an SUV in the queue
+      kind: car.getData('kind'),
     })
   }
 

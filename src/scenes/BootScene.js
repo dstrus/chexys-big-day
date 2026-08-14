@@ -79,6 +79,15 @@ const CAR_PNGS = import.meta.glob('../../assets/sprites/car-*.png', {
   query: '?url',
   import: 'default',
 })
+// HUD request-chip silhouettes: one 16x10 frame per car tier, in the
+// sheet order sedan / SUV / luxury. Drawn flat (white or light gray) —
+// the HUD tints each chip with its car's body hue. Drop-in: absent,
+// the chips fall back to proportioned colour rectangles.
+const CHIP_PNG = import.meta.glob('../../assets/sprites/request-chips.png', {
+  eager: true,
+  query: '?url',
+  import: 'default',
+})
 // enemy V1 "Stub" atlas (BRIEF-ART-03 §2). Its anims register
 // SPRITE-LOCALLY per the 2026-07-30-a namespace policy — the enemy's
 // tag names (move/grab/carry/stun) never touch the global namespace.
@@ -136,6 +145,10 @@ export default class BootScene extends Phaser.Scene {
     if (coatsUrl) this.load.spritesheet('coats', coatsUrl, { frameWidth: 24, frameHeight: 24 })
     for (const [path, url] of Object.entries(CAR_PNGS)) {
       this.load.image(path.split('/').pop().replace('.png', ''), url)
+    }
+    const chipUrl = Object.values(CHIP_PNG)[0]
+    if (chipUrl) {
+      this.load.spritesheet('request-chips', chipUrl, { frameWidth: 16, frameHeight: 10 })
     }
     const hangerUrl = Object.values(HANGER_PNG)[0]
     if (hangerUrl) this.load.spritesheet('hanger', hangerUrl, { frameWidth: 12, frameHeight: 12 })

@@ -2883,3 +2883,31 @@ Verified: crack at columns 4/15/26/37/48/59, grate at 18/55, bay at
 DECK stain still never appears on the floor (asserted); decks,
 pillars, collision and the coatroom regression unchanged; no console
 noise.
+
+## 2026-08-13 — Request chips carry SILHOUETTE, not just colour
+
+Human report: two live requests of the same body colour are
+indistinguishable in the HUD queue (a sedan from an SUV). Asked
+whether the chips could be scaled car sprites.
+RULED (agent recommendation, human's own alternative accepted):
+scaling is rejected — the cars are 14-18px tall, so a chip-sized
+version needs a ~0.35x NON-INTEGER downscale, which is mush and
+breaks the nearest-neighbor discipline locked in DESIGN §5. The
+answer is purpose-drawn icons at target size, which is also the
+project's own precedent (the 12x12 collectible icons).
+Shipped now (no art needed): the request-added event carries the
+car's `kind`, and each tier gets distinct chip PROPORTIONS — sedan
+16x7, SUV 13x10, luxury 18x6 — so shape separates them immediately.
+Wired and waiting for art: assets/sprites/request-chips.png, one
+16x10 frame per tier in sheet order sedan / SUV / luxury, drawn FLAT
+(white or light gray) because the HUD tints each chip with its car's
+hue — colour-matching to the car survives, shape is added on top.
+Boot loads it as a spritesheet, the ICONS export pass covers it, and
+the gold luxury dot retires automatically when the art lands (the
+silhouette says luxury by itself).
+Also fixed: adding request-chips to the ICONS list would have broken
+the next export run, since the script errors on a missing source. The
+ICONS pass now SKIPS undrawn sources, matching the CARS pass.
+Verified: three requests fired with an identical forced hue produce
+three distinct chip shapes (16x7 / 13x10 / 18x6), all correctly
+tinted; no console noise.

@@ -132,11 +132,25 @@ export default class UIOverlayScene extends Phaser.Scene {
   // car's body color, stacked left-to-right under the timer; a resolved
   // chip flashes its outcome (green tag / red miss) and leaves the row
 
-  onRequestAdded({ key, color, luxury }) {
+  // Chip SILHOUETTES (human report 2026-08-13): body colour alone can't
+  // separate two live requests of the same hue, so the chip carries the
+  // car's shape too. Drawn icons win when the strip exists
+  // (assets/sprites/request-chips.png, one 16x10 frame per silhouette,
+  // tinted by hue); until then each tier gets its own PROPORTIONS —
+  // sedan low and wide, SUV short and tall, luxury longest and lowest.
+  // Scaling the car sprites was rejected: at 14-18px tall they would
+  // need a ~0.35x non-integer downscale, which is mush (DESIGN §5).
+  onRequestAdded({ key, color, luxury, kind }) {
     if (!this.requestChips) this.requestChips = new Map()
+    const CHIP_SHAPE = { 'car-sedan': [16, 7], 'car-suv': [13, 10], 'car-lux': [18, 6] }
+    const frame = { 'car-sedan': 0, 'car-suv': 1, 'car-lux': 2 }[kind] ?? 0
+    const [w, h] = CHIP_SHAPE[kind] ?? [16, 9]
+    const art = this.textures.exists('request-chips')
     const chip = this.add.container(0, 0, [
-      this.add.rectangle(0, 0, 16, 9, color).setStrokeStyle(1, 0xf2ecd8, 0.9),
-      ...(luxury
+      art
+        ? this.add.image(0, 0, 'request-chips', frame).setTint(color)
+        : this.add.rectangle(0, 0, w, h, color).setStrokeStyle(1, 0xf2ecd8, 0.9),
+      ...(luxury && !art
         ? [this.add.rectangle(5, -2, 3, 3, 0xffe066)] // gold dot = hold-tier
         : []),
     ])
