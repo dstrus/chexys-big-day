@@ -3062,3 +3062,22 @@ edge still reads 'run' at vx -150. Regressions clean: the anti-crush
 slide-through still crosses a yielding car (it never needed the
 boost — the carry does it), dash-through and both showcase-gap
 crossings unchanged, instruments 58/58 green, no console noise.
+
+## 2026-08-14 — Sedan re-export + the garage's first painted layer (P3)
+
+Sedan re-exported again: all six variants IN SYNC (identical pixel
+data, correct body pairs), geometry unchanged at 44×14 with the same
+0-6 nose ramp, so no collision, inset or parked-bottom facts move.
+Body battery re-run green.
+GARAGE P3 landed (960×270, the far wall: Action Blue "EXIT →" glow
+and city-night window slots). Checked before trusting it: ink in all
+960 columns, and the repeat-x wrap is PIXEL-PERFECT — 0 of 270 rows
+differ between column 0 and column 959. That matters more here than
+in the coatroom, since the garage's 8544px camera travel wraps p3
+about 1.8 times per rush (vs 0.23 in the coatroom, where no layer
+even completes one loop).
+Verified live under the auto-scroll: the layer loads at depth −8,
+tracks at its 0.2 factor (tile 41.6 vs 40.8 expected at scrollX 204),
+and the garage stack correctly reports p3 ONLY — p2 and p1 stay
+absent without complaint, which is the per-layer drop-in contract.
+No console noise.
