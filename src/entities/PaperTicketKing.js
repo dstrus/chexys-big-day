@@ -49,6 +49,10 @@ export default class PaperTicketKing {
 
     this.nextSpewAt = scene.time.now + TUNING.bossSpewIntervalMs[0]
     this.nextClawAt = scene.time.now + TUNING.bossClawIntervalMs[0]
+    this.nextCarpetAt = scene.time.now + TUNING.bossCarpetIntervalMs[0]
+    this.nextTornadoAt = Infinity // phase 2 unlocks it
+    this.nextGrabAt = Infinity // phase 3 unlocks it
+    this.lastGaspFired = false
     this.bob = Math.random() * Math.PI * 2
   }
 
@@ -83,6 +87,12 @@ export default class PaperTicketKing {
   addReturn(weight) {
     if (this.state !== 'idle') return
     this.points += weight
+    // Last Gasp: one scripted all-out wave as the phase closes out —
+    // fires once per phase, and the final phase's is the real one
+    if (!this.lastGaspFired && this.points >= this.threshold * TUNING.bossLastGaspFrac) {
+      this.lastGaspFired = true
+      this.scene.lastGasp(this.phase)
+    }
     if (this.points >= this.threshold) this.advancePhase()
   }
 
@@ -109,8 +119,21 @@ export default class PaperTicketKing {
     this.sprite.body.setSize(BODY[this.phase].size, BODY[this.phase].size, true)
     this.state = 'idle'
     this.watchdogAt = 0
-    this.nextSpewAt = this.scene.time.now + TUNING.bossSpewIntervalMs[this.phase]
-    this.nextClawAt = this.scene.time.now + TUNING.bossClawIntervalMs[this.phase]
+    this.lastGaspFired = false
+    const now = this.scene.time.now
+    this.nextSpewAt = now + TUNING.bossSpewIntervalMs[this.phase]
+    this.nextClawAt = now + TUNING.bossClawIntervalMs[this.phase]
+    this.nextCarpetAt = now + TUNING.bossCarpetIntervalMs[this.phase]
+    // the kit unlocks by phase: Tornado at the Middle Manager, Grab
+    // Chexy at the Desperate Clerk
+    this.nextTornadoAt =
+      TUNING.bossTornadoIntervalMs[this.phase] > 0
+        ? now + TUNING.bossTornadoIntervalMs[this.phase]
+        : Infinity
+    this.nextGrabAt =
+      TUNING.bossGrabIntervalMs[this.phase] > 0
+        ? now + TUNING.bossGrabIntervalMs[this.phase]
+        : Infinity
   }
 
   die() {
@@ -130,10 +153,18 @@ export default class PaperTicketKing {
     if (this.watchdogAt && time > this.watchdogAt) {
       console.warn(
         `King state machine WATCHDOG: '${this.state}' exceeded ${TUNING.bossWatchdogMs}ms ` +
-          `(phase ${this.phase}) — forcing the transition.`
+          `(phase ${this.phase}) — forcing it forward.`
       )
+      const stuck = this.state
       this.watchdogAt = 0
-      this.finishTransition()
+      // a stuck TRANSITION completes; any other stuck state (a grab
+      // whose lunge never resolved) simply returns to idle — the
+      // machine may never hang, whatever wedged it
+      if (stuck === 'transition') this.finishTransition()
+      else {
+        this.state = 'idle'
+        this.scene.endGrab?.()
+      }
       return
     }
     if (this.state !== 'idle') return
@@ -156,6 +187,18 @@ export default class PaperTicketKing {
     if (time >= this.nextClawAt) {
       this.nextClawAt = time + TUNING.bossClawIntervalMs[this.phase]
       this.scene.launchClaw()
+    }
+    if (time >= this.nextCarpetAt) {
+      this.nextCarpetAt = time + TUNING.bossCarpetIntervalMs[this.phase]
+      this.scene.dropCarpet()
+    }
+    if (time >= this.nextTornadoAt) {
+      this.nextTornadoAt = time + TUNING.bossTornadoIntervalMs[this.phase]
+      this.scene.ticketTornado()
+    }
+    if (time >= this.nextGrabAt) {
+      this.nextGrabAt = time + TUNING.bossGrabIntervalMs[this.phase]
+      this.scene.startGrab()
     }
     this.drawMeter()
   }

@@ -41,6 +41,8 @@ export default class ExodusScene extends MuseumScene {
     this.king = null
     this.claws = this.physics.add.group({ allowGravity: false })
     this.bossParticles = this.tagParticles
+    this.carpets = []
+    this.grab = null
 
     if (this.resumeBoss) {
       const cp = this.game.registry.get(CHECKPOINT_KEY)
@@ -62,7 +64,10 @@ export default class ExodusScene extends MuseumScene {
       this.beginBossDoor()
       return
     }
-    if (this.act === 2 && cleared) this.game.registry.remove(CHECKPOINT_KEY) // shift complete
+    if (this.act === 2 && cleared) {
+      this.game.registry.remove(CHECKPOINT_KEY) // shift complete
+      this.finaleWin = true // the results screen leads on ITEM RETURN RATE
+    }
     super.endRun(cleared)
   }
 
@@ -102,7 +107,7 @@ export default class ExodusScene extends MuseumScene {
     for (const i of this.items.getChildren().slice()) {
       if (!i.getData('tagged')) i.destroy()
     }
-    audio.play('rushEnd')
+    audio.play('chime') // threshold beat (rushEnd has no synth)
     this.game.events.emit('system-bubble', {
       text: 'The lobby empties… something enormous is unfolding.',
       accent: CLAW_RED,
@@ -335,11 +340,268 @@ export default class ExodusScene extends MuseumScene {
     for (let i = 0; i < 12 * scale; i++) this.bossParticles.emitParticleAt(x, y)
   }
 
-  onKingDefeated() {
-    // S2 lands the outcome; the scripted collapse/stamp ending is S3
-    this.time.delayedCall(700, () => {
-      if (!this.runOver) this.endRun(true)
+  // ---- his kit (BRIEF-07 §3 reconciliations) --------------------------
+
+  // PAPER CARPET: a litter zone that saps traction. Runs the swarm
+  // contact-slow rules exactly — speed CAP, refresh-not-stack, NOT
+  // interrupt-class — and dash crosses clean, which is the dash's
+  // promised finale moment.
+  dropCarpet() {
+    const w = TUNING.bossCarpetWidth
+    const x0 = Phaser.Math.Clamp(
+      Math.round(this.player.x - w / 2 + Phaser.Math.Between(-40, 40)),
+      this.arenaX + 8,
+      this.arenaX + this.scale.width - w - 8
+    )
+    const until = this.time.now + TUNING.bossCarpetMs
+    const stubs = []
+    for (let i = 0; i < 10; i++) {
+      const s = this.add
+        .image(x0 + Phaser.Math.Between(0, w), this.worldHeight - 40 + Phaser.Math.Between(-3, 3), 'ticket')
+        .setTint(0xf2e9d0)
+        .setAlpha(0.85)
+        .setDepth(0)
+        .setAngle(Phaser.Math.Between(-40, 40))
+      stubs.push(s)
+    }
+    this.carpets.push({ x0, x1: x0 + w, until, stubs })
+    audio.play('spawn', this.panFor(x0 + w / 2))
+  }
+
+  updateCarpets(time) {
+    for (let i = this.carpets.length - 1; i >= 0; i--) {
+      const c = this.carpets[i]
+      if (time >= c.until) {
+        for (const s of c.stubs) s.destroy()
+        this.carpets.splice(i, 1)
+        continue
+      }
+      const p = this.player
+      const inZone = p.body.bottom >= this.worldHeight - 52 && p.x >= c.x0 && p.x <= c.x1
+      if (inZone && time >= p.dashUntil) {
+        const cap = TUNING.maxSpeed * TUNING.slipFactor
+        const vx = p.body.velocity.x
+        if (Math.abs(vx) > cap) p.body.setVelocityX(Math.sign(vx) * cap)
+        p.body.setMaxVelocity(cap, TUNING.fallMaxSpeed)
+      }
+    }
+  }
+
+  // TICKET TORNADO: scatters UNCHECKED items to fresh positions —
+  // re-routing pressure, never a loss. Every landing runs through the
+  // placement-validity gate, as all item placement must.
+  ticketTornado() {
+    const loose = this.items
+      .getChildren()
+      .filter((i) => i.active && !i.getData('returned') && !i.getData('stolen'))
+    if (!loose.length) return
+    const picks = Phaser.Utils.Array.Shuffle(loose).slice(0, TUNING.bossTornadoCount)
+    for (const item of picks) {
+      this.bossBurst(item.x, item.y)
+      const x = Phaser.Math.Between(this.arenaX + 30, this.arenaX + this.scale.width - 30)
+      const y = this.worldHeight - 60
+      this.placeItemClear(item, x, y)
+      item.body.setVelocity(0, -40)
+    }
+    audio.play('interrupt', this.panFor(this.player.x))
+  }
+
+  // GRAB CHEXY (phase 3): telegraphed lunge; on connect it costs TIME,
+  // never items. Interrupt-class, so post-interrupt grace shields it —
+  // a graced player walks through the lunge untouched.
+  startGrab() {
+    if (this.grab || this.time.now < this.graceUntil || !this.king?.alive) return
+    const tel = TUNING.bossTelegraphMsByPhase[this.king.phase]
+    this.grab = { state: 'telegraph', until: this.time.now + tel }
+    // hand the King over to the grab: his idle drift would otherwise
+    // overwrite the lunge velocity every frame. The watchdog covers the
+    // borrowed state, so a grab that never resolves can't wedge him.
+    this.king.state = 'grab'
+    this.king.watchdogAt = this.time.now + TUNING.bossWatchdogMs
+    this.king.sprite.setTint(0xff8888)
+    audio.play('gloat', this.panFor(this.king?.sprite.x ?? this.player.x))
+  }
+
+  updateGrab(time) {
+    const g = this.grab
+    if (!g) return
+    const k = this.king?.sprite
+    if (!k || !this.king.alive) return this.endGrab()
+
+    if (g.state === 'telegraph') {
+      if (time < g.until) return
+      g.state = 'lunge'
+      g.until = time + 900
+      const ang = Phaser.Math.Angle.Between(k.x, k.y, this.player.x, this.player.y)
+      k.body.setVelocity(Math.cos(ang) * 260, Math.sin(ang) * 260)
+      return
+    }
+    if (g.state === 'lunge') {
+      const caught =
+        Phaser.Math.Distance.Between(k.x, k.y, this.player.x, this.player.y) < 34 &&
+        time >= this.graceUntil // grace shields the grab (-07-e)
+      if (caught) {
+        g.state = 'held'
+        g.until = time + TUNING.grabMashMs
+        this.player.frozen = true
+        this.player.body.setVelocity(0, 0)
+        if (this.hold) this.interruptHold(true) // interrupt-class
+        this.king.sprite.clearTint()
+        audio.play('interrupt', this.panFor(this.player.x))
+        return
+      }
+      if (time >= g.until) this.endGrab()
+      return
+    }
+    // held: mash ANY key to shorten it — lost time, nothing more
+    if (this.anyKeyPressed()) g.until -= TUNING.grabMashRelief
+    this.player.body.setVelocity(0, 0)
+    if (time >= g.until) {
+      this.graceUntil = time + TUNING.iframesMs // released with grace, as any interrupt
+      this.endGrab()
+    }
+  }
+
+  // Mash detection must do its OWN edge tracking: Player.update runs
+  // first and consumes every one of these keys through JustDown (which
+  // clears the flag), so a JustDown check here would almost never see a
+  // press and the mash would silently do nothing.
+  anyKeyPressed() {
+    const p = this.player
+    const keys = [
+      p.cursors.left,
+      p.cursors.right,
+      p.cursors.up,
+      p.cursors.down,
+      p.keys.SPACE,
+      p.keys.Z,
+      p.keys.J,
+      p.keys.X,
+      p.keys.K,
+    ].filter(Boolean)
+    const prev = this.mashDown ?? new Set()
+    const now = new Set()
+    let pressed = false
+    for (const k of keys) {
+      if (!k.isDown) continue
+      now.add(k)
+      if (!prev.has(k)) pressed = true
+    }
+    this.mashDown = now
+    return pressed
+  }
+
+  endGrab() {
+    this.grab = null
+    this.player.frozen = false
+    if (!this.king) return
+    this.king.sprite.clearTint()
+    if (this.king.state === 'grab') {
+      this.king.state = 'idle'
+      this.king.watchdogAt = 0
+    }
+  }
+
+  // LAST GASP: one scripted all-out wave as a phase closes
+  lastGasp(phase) {
+    this.stubSpew(TUNING.bossSpewCountByPhase[phase])
+    this.dropCarpet()
+    if (phase >= 1) this.ticketTornado()
+    this.game.events.emit('system-bubble', {
+      text: 'The King empties his drawers!',
+      accent: CLAW_RED,
+      holdMs: 2200,
     })
+  }
+
+  // THE ENDING (BOSS-SPEC, scripted and short): the last perforation
+  // gives → the crown falls with an oversized clatter → the body
+  // collapses into dead stubs → the 0045 stub flutters down and lands
+  // → a rubber stamp slams. Then results, leading with ITEM RETURN
+  // RATE. "Death to the paper ticket."
+  onKingDefeated() {
+    this.endGrab()
+    this.player.frozen = true
+    const kx = this.king.sprite.x
+    const ky = this.king.sprite.y
+    for (const c of this.carpets) for (const s of c.stubs) s.destroy()
+    this.carpets.length = 0
+    for (const e of this.enemies.getChildren().slice()) e.destroy()
+    for (const c of this.claws.getChildren().slice()) this.releaseClaw(c)
+
+    // 1. the crown falls, oversized, and clatters
+    const crown = this.add.rectangle(kx, ky - 40, 44, 14, CLAW_RED).setDepth(9)
+    this.tweens.add({
+      targets: crown,
+      y: this.worldHeight - 40,
+      angle: 220,
+      duration: 900,
+      ease: 'Quad.easeIn',
+      onComplete: () => {
+        audio.play('heavyTag', this.panFor(kx))
+        this.tweens.add({ targets: crown, alpha: 0, delay: 900, duration: 500 })
+      },
+    })
+    // 2. the body collapses into a confetti burst of dead stubs
+    this.bossBurst(kx, ky, 4)
+    audio.play('runClear')
+
+    // 3. the 0045 stub flutters down, swaying, and lands
+    this.time.delayedCall(900, () => {
+      const stub = this.add.image(kx, ky - 10, 'ticket').setTint(0xfffdf5).setDepth(9)
+      const swayFrom = kx
+      this.tweens.add({
+        targets: stub,
+        y: this.worldHeight - 44,
+        duration: 1400,
+        ease: 'Sine.easeInOut',
+        onUpdate: (tw) => {
+          stub.x = swayFrom + Math.sin(tw.progress * Math.PI * 3) * 14
+          stub.setAngle(Math.sin(tw.progress * Math.PI * 6) * 22)
+        },
+        onComplete: () => {
+          // 4. the rubber stamp slams
+          const stamp = this.add
+            .text(stub.x, stub.y - 6, '0045', {
+              fontFamily: 'monospace',
+              fontSize: '16px',
+              fontStyle: 'bold',
+              color: '#c01818',
+            })
+            .setOrigin(0.5)
+            .setDepth(10)
+            .setScale(4)
+            .setAlpha(0)
+            .setAngle(-12)
+          this.tweens.add({
+            targets: stamp,
+            scale: 1,
+            alpha: 1,
+            duration: 180,
+            ease: 'Quad.easeIn',
+            onComplete: () => {
+              this.physics.pause()
+              audio.play('stamp')
+              this.cameras.main.shake(160, 0.008)
+              this.time.delayedCall(900, () => {
+                this.player.frozen = false
+                if (!this.runOver) this.endRun(true)
+              })
+            },
+          })
+        },
+      })
+    })
+  }
+
+  // Instrument applicability is per-level GRAMMAR (handoff
+  // 2026-08-11-b): Act 2 is a single 480px arena, so serial routing
+  // feasibility is answered by the arena itself — the travel budget
+  // reads N/A here rather than firing on tight simultaneity that a
+  // player can see and reach. Act 1's 2112px venue still prices it.
+  recordTravelEvent(x) {
+    if (this.act === 2) return
+    super.recordTravelEvent(x)
   }
 
   // ---- frame ----------------------------------------------------------
@@ -354,6 +616,8 @@ export default class ExodusScene extends MuseumScene {
     if (this.runOver || this.act !== 2) return
     this.king?.update(time, delta)
     this.updateClaws(time)
+    this.updateCarpets(time)
+    this.updateGrab(time)
   }
 }
 

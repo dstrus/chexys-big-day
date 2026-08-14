@@ -2947,3 +2947,45 @@ rip-grammar claw, dead-clock fix. HUD silhouette chips
 ratified; no-non-integer-scaling recorded as canon. Skins
 gained bg layers + dy. S3 ordered. Act-1 round verdict
 still owed.
+
+## 2026-08-13 — BRIEF-07 SESSION 3 EXECUTED: the King's kit and his ending
+
+The finale is code-complete (interim rect King; BRIEF-ART-06 runs
+parallel). Shipped at the third seam:
+- PAPER CARPET: a litter zone running the swarm contact-slow rules
+  exactly — speed CAP at slipFactor (0.45), refresh-not-stack, NOT
+  interrupt-class — and DASH CROSSES IT CLEAN, the dash's promised
+  finale moment. Verified: capped at 68px/s (= maxSpeed × slipFactor)
+  walking, full 400 through a real dash.
+- TICKET TORNADO (phase 2+): scatters UNCHECKED items to fresh
+  positions through the placement-validity gate. Racked returns are
+  never touched and nothing is ever lost — re-routing pressure only.
+  Verified: 3 moved, 3 alive, racked untouched, 0 embedded, 0 losses.
+- GRAB CHEXY (phase 3): telegraph → lunge → held, escaped by mashing
+  any key; costs TIME, never items; interrupt-class (breaks a hold)
+  and grants grace on release. A GRACED player is immune outright.
+- LAST GASP: one scripted all-out wave at bossLastGaspFrac (0.9) of a
+  phase threshold, firing once and never advancing the phase itself.
+- THE ENDING, scripted and short: crown falls with an oversized
+  clatter → body bursts into dead stubs → the 0045 stub flutters down
+  swaying → a rubber stamp slams with a screen shake → results under
+  DEATH TO THE PAPER TICKET, LEADING with ITEM RETURN RATE (the
+  number the whole game argues). Verified end to end: finale flag
+  true, headline and first line correct, sequence ran ~3.4s.
+THREE BUGS CAUGHT BY THE BATTERY, all fixed:
+1. The grab's lunge never connected — the King's idle drift overwrote
+   the lunge velocity every frame. He now hands his state to the grab,
+   and the WATCHDOG was widened to cover it: a stuck transition still
+   completes, any other wedged state returns to idle. The watchdog
+   earned its keep on the first new state it met.
+2. The mash escape was dead on arrival: Player.update consumes every
+   key through JustDown before the boss code runs, so a JustDown check
+   there could never see a press. Mash detection now does its own
+   isDown edge tracking.
+3. The Boss Door cue used 'rushEnd', which has no synth — it was
+   silent AND warning. Swapped to 'chime'.
+INSTRUMENT SCOPE (applying the -11-b per-level-grammar ruling, flagged
+for ratification): the travel budget reads N/A in Act 2. The arena is
+a single 480px screen, so serial routing feasibility is answered by
+the arena itself; left running it fired RED on tight simultaneity a
+player can both see and reach. Act 1's 2112px venue still prices it.

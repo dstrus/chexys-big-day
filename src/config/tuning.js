@@ -135,6 +135,19 @@ export const TUNING = {
   bossTransitionMs: 1000, // stagger between body states
   bossWatchdogMs: 4000, // state-machine watchdog (BRIEF-07 §5)
   bossDoorBreathMs: 2600, // the lobby empties before Act 2
+  // his kit — every attack targets THE JOB, never Chexy's health
+  slipFactor: 0.45, // Paper Carpet traction: swarm contact-slow rules
+  // (speed cap, refresh-not-stack, NOT interrupt-class) and dash is
+  // immune — the dash finally gets its finale moment
+  bossCarpetMs: 7000,
+  bossCarpetWidth: 150,
+  bossCarpetIntervalMs: [11000, 9000, 7500],
+  bossTornadoCount: 3, // UNCHECKED items re-routed, never lost
+  bossTornadoIntervalMs: [0, 12000, 9500], // phase 2+
+  bossGrabIntervalMs: [0, 0, 8500], // phase 3 only
+  grabMashMs: 1500, // lost TIME, not lost items; a graced player is immune
+  grabMashRelief: 110, // each key press shaves this much off the hold
+  bossLastGaspFrac: 0.9, // one scripted all-out wave near the end
 
   // adaptive intensity / multiplier (DESIGN.md §2.5 skeleton)
   adaptiveBand: 0.3,

@@ -572,13 +572,17 @@ export default class UIOverlayScene extends Phaser.Scene {
     lost,
     bestMultiplier,
     returnRate,
+    finale = false,
   }) {
     this.hangerTimers.forEach((t) => t.remove())
     this.hangerTimers = []
     this.resultHangers.forEach((h) => h.setVisible(false)) // fail layout shows none
     this.stampText.setVisible(false)
 
-    this.resultsTitle.setText(cleared ? 'RUSH SURVIVED!' : 'TOO MANY LOST ITEMS')
+    // the finale earns its own headline (BOSS-SPEC ending)
+    this.resultsTitle.setText(
+      cleared ? (finale ? 'DEATH TO THE PAPER TICKET' : 'RUSH SURVIVED!') : 'TOO MANY LOST ITEMS'
+    )
     this.resultsTitle.setColor(cleared ? '#7ee87e' : '#ff6666')
 
     if (!cleared) {
@@ -602,13 +606,23 @@ export default class UIOverlayScene extends Phaser.Scene {
     // stack centered as a group regardless of line count
     const hangers = Math.max(0, 3 - lost)
 
-    const lines = [
-      `ITEMS RETURNED  ${itemsReturned}`,
-      `GUESTS SERVED  ${guestsServed}`,
-      `ITEM RETURN RATE  ${returnRate}%`,
-      `BEST MULTIPLIER  x${bestMultiplier.toFixed(2)}`,
-      `SCORE  ${score}`,
-    ]
+    // on the finale the RETURN RATE leads — the whole game argues that
+    // number (BOSS-SPEC / DESIGN §3.6)
+    const lines = finale
+      ? [
+          `ITEM RETURN RATE  ${returnRate}%`,
+          `ITEMS RETURNED  ${itemsReturned}`,
+          `GUESTS SERVED  ${guestsServed}`,
+          `BEST MULTIPLIER  x${bestMultiplier.toFixed(2)}`,
+          `SCORE  ${score}`,
+        ]
+      : [
+          `ITEMS RETURNED  ${itemsReturned}`,
+          `GUESTS SERVED  ${guestsServed}`,
+          `ITEM RETURN RATE  ${returnRate}%`,
+          `BEST MULTIPLIER  x${bestMultiplier.toFixed(2)}`,
+          `SCORE  ${score}`,
+        ]
     // collectible minor lines only when nonzero (BRIEF-04 §4)
     if (insightsCaught > 0) lines.splice(2, 0, `INSIGHTS CAUGHT  ${insightsCaught}`)
     if (cardsUsed > 0) lines.splice(2, 0, `CARDS USED  ${cardsUsed}`)

@@ -870,6 +870,9 @@ export default class LevelScene extends Phaser.Scene {
       lost: this.lostItems,
       bestMultiplier: this.bestMultiplier,
       returnRate,
+      // the Paper Ticket King is dead: the results screen leads with
+      // ITEM RETURN RATE (BOSS-SPEC's ending)
+      finale: this.finaleWin === true,
     })
   }
 
