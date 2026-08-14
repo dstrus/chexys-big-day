@@ -29,6 +29,12 @@ game.
 
 ## Testing notes
 
+- Reach TUNING through the URL the page actually loaded. Vite stamps
+  edited modules (`/src/config/tuning.js?t=<ts>`), and a bare dynamic
+  import of the unstamped path hands back a second instance the running
+  scenes never read — writes to it are silently ignored, `godMode`
+  included. Resolve the stamped URL from
+  `performance.getEntriesByType('resource')` and import that.
 - Seed progression explicitly; fresh-profile defaults are a test
   hazard, not a baseline. Headless/staged test profiles must
   explicitly seed progression state (unlocks, settings) rather than

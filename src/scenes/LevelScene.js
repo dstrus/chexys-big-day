@@ -67,6 +67,9 @@ const TILE_SKINS = {
     // sodium lamp pools live on the fg layer (gids 20/21/22) and are
     // LIGHT, not paint — see the blend note in buildMap
     fgAdditive: true,
+    fgFlicker: true,
+    // the pools only read against a dimmed room — see TUNING.fgAmbient
+    fgAmbient: true,
   },
 }
 
@@ -352,6 +355,22 @@ export default class LevelScene extends Phaser.Scene {
     // whatever is beneath — floor, cars, and Chexy as she walks through.
     // Without this an opaque pool would paint over her instead.
     if (useSkin && skin.fgAdditive) this.fgLayer.setBlendMode(Phaser.BlendModes.ADD)
+    // …and only an ADDITIVE fg may be alpha-flickered: on an opaque fg,
+    // alpha under 1 would let the play field show through the art.
+    this.fgFlickers = Boolean(useSkin && skin.fgAdditive && skin.fgFlicker)
+    // Ambient scrim: MULTIPLY, above the play field but BELOW the pools
+    // (depth 7.5 vs 8), so it dims the room and the additive light then
+    // has headroom to read against it. Screen-fixed and one quad — the
+    // whole lighting model is a rectangle. UIOverlay is a separate scene
+    // and renders after, so the HUD never dims with the room.
+    if (useSkin && skin.fgAmbient) {
+      this.ambientScrim = this.add
+        .rectangle(0, 0, this.scale.width, this.scale.height, 0xffffff)
+        .setOrigin(0, 0)
+        .setScrollFactor(0)
+        .setDepth(7.5)
+        .setBlendMode(Phaser.BlendModes.MULTIPLY)
+    }
 
     this.map = map
     this.worldWidth = map.widthInPixels
@@ -1632,6 +1651,7 @@ export default class LevelScene extends Phaser.Scene {
     }
     this.updateCamera()
     updateParallax(this.parallaxLayers, this.cameras.main, time)
+    this.updateFgLight(time)
     this.updateTargeting()
     this.updateTagging(time)
     this.updateEnemies(time)
@@ -1655,6 +1675,30 @@ export default class LevelScene extends Phaser.Scene {
   // (jitter while idle). Deriving scroll from the ROUNDED player position
   // quantizes player and world to the same grid: the player renders at a
   // constant screen x and the world scrolls exactly its integer delta.
+  // The garage's lighting, such as it is: a dimmed room and pools that
+  // buzz. Both values are read live so the panel tunes them mid-run,
+  // and both cost one write per frame regardless of how many pools are
+  // on screen — no per-tile work, no extra frames.
+  updateFgLight(time) {
+    if (this.ambientScrim) {
+      const v = Math.round(Phaser.Math.Clamp(TUNING.fgAmbient, 0, 1) * 255)
+      this.ambientScrim.setFillStyle((v << 16) | (v << 8) | v)
+    }
+    if (!this.fgFlickers) return
+    if (!TUNING.fgFlicker) {
+      this.fgLayer.setAlpha(1)
+      return
+    }
+    const min = TUNING.fgFlickerMin
+    const max = TUNING.fgFlickerMax
+    // 0.65 breath + 0.35 ripple: the two periods are deliberately not
+    // multiples, so the pattern doesn't visibly repeat on a short loop
+    const wave =
+      0.65 * Math.sin((time / TUNING.fgFlickerHumMs) * Math.PI * 2) +
+      0.35 * Math.sin((time / TUNING.fgFlickerBuzzMs) * Math.PI * 2)
+    this.fgLayer.setAlpha((max + min) / 2 + ((max - min) / 2) * wave)
+  }
+
   updateCamera() {
     const cam = this.cameras.main
     cam.setScroll(

@@ -85,6 +85,26 @@ export const TUNING = {
   insightDurationMs: 10000,
   insightFactor: 2.0, // Insights Report: score gains ×, MULTIPLICATIVE with adaptive
 
+  // fg light pools (art/garage-inventory §(d)). Two dials:
+  //
+  // AMBIENT is the one that makes the pools work at all. Additive light
+  // can only brighten what has headroom, and the garage floor is light
+  // grey — pools drawn on it clip to white no matter how they're drawn.
+  // A MULTIPLY scrim under the fg layer dims the ROOM so the light has
+  // somewhere to go. 1 = no dim (pools clip); below ~0.6 the cars and
+  // elites stop reading, which is a gameplay floor, not a taste one.
+  fgAmbient: 0.7,
+  // FLICKER: sodium lamps buzz. Two incommensurate sines on the fg
+  // layer's alpha — a slow breath the eye reads as the tube warming,
+  // plus a faster ripple that keeps it from looking like a tween. Sum
+  // stays in [-1,1], so min/max are hard bounds and no clamp is needed.
+  // Subtle on purpose: it rides EVERY pool on screen at once.
+  fgFlickerMin: 0.78,
+  fgFlickerMax: 1,
+  fgFlickerHumMs: 4200, // the slow breath
+  fgFlickerBuzzMs: 700, // the ripple on top
+  fgFlicker: true, // flag: off = pools hold a steady alpha 1
+
   // valet garage (BRIEF-05): request-queue auto-scroll
   requestGraceMs: 1500, // lead-time slack the request readout must hold
   requestFireDeadlineFrac: 0.75, // a request must arrive before its car
@@ -243,6 +263,12 @@ export const TUNING_SCHEMA = [
   { key: 'masterVolume', label: 'Master volume', min: 0, max: 1, step: 0.05 },
   { key: 'sfxVolume', label: 'SFX volume', min: 0, max: 1, step: 0.05 },
   { key: 'musicVolume', label: 'Music volume', min: 0, max: 1, step: 0.05 },
+  { key: 'fgAmbient', label: 'Ambient light', min: 0.4, max: 1, step: 0.02 },
+  { key: 'fgFlickerMin', label: 'Lamp flicker min alpha', min: 0.3, max: 1, step: 0.02 },
+  { key: 'fgFlickerMax', label: 'Lamp flicker max alpha', min: 0.3, max: 1, step: 0.02 },
+  { key: 'fgFlickerHumMs', label: 'Lamp hum period (ms)', min: 800, max: 9000, step: 100 },
+  { key: 'fgFlickerBuzzMs', label: 'Lamp buzz period (ms)', min: 100, max: 3000, step: 50 },
+  { key: 'fgFlicker', label: 'Lamp flicker', type: 'flag' },
   { key: 'physicsFixedStep', label: 'Fixed physics step', type: 'flag' },
   { key: 'godMode', label: 'God mode', type: 'flag' },
   { key: 'fairnessDebug', label: 'Fairness overlay', type: 'flag' },

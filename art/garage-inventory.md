@@ -311,6 +311,15 @@ dither in the core so it gradients instead of checkers. The pools over
 DARK pixels need no change, so a hotspot that looks weak on black is
 probably correct on the floor.
 
-Optional and cheap once the tiles exist: a **slow flicker** on the fg
-layer's alpha — sodium lamps buzz — the same code-side pulse the
-coatroom glow already uses. Two lines, no extra frames.
+**Shipped 2026-08-14:** the **flicker** is in — the fg layer's alpha
+rides a 4200ms breath plus a 700ms ripple between `fgFlickerMin` 0.78
+and `fgFlickerMax` 1.0. Tune all four values (or switch it off) from
+the `` ` `` panel; nothing about it needs art. **And the fix for the clipping is code-side after all.** The pools were
+never really an art problem — additive light can only brighten what has
+headroom, and this floor is light grey, so any warm value clips to
+white however it's drawn. The room now dims to meet them:
+`TUNING.fgAmbient` (0.7, panel slider) is a MULTIPLY scrim under the fg
+layer. At 0.7 the tiles as drawn read as warm orange dither with the
+room fully legible; below ~0.6 the cars and elites stop reading, so
+that's a gameplay floor. Nothing about the pool tiles needs redrawing —
+if anything the hotspot is now free to go BRIGHTER.

@@ -3225,3 +3225,63 @@ land within a shade of ADD, because the floor is already bright enough
 that any lightening blows out. The fix belongs in the art (a dimmer
 hotspot, or sparser dither in the core), so the blend stays ADD and
 the tiles ship as drawn pending the artist's call.
+
+## 2026-08-14 — Lamp flicker (human request, same day)
+
+The optional fg flicker from art/garage-inventory §(d) is in. One alpha
+write per frame on the fg layer, so every pool on screen buzzes for the
+cost of a single tint — no extra frames, no per-tile work.
+
+Shape: two incommensurate sines, 0.65 × a 4200ms breath + 0.35 × a
+700ms ripple. The sum stays in [-1,1], so `fgFlickerMin`/`Max`
+(0.78/1.0) are hard bounds and nothing needs clamping; the mismatched
+periods keep the pattern from visibly looping. All four values plus an
+`fgFlicker` flag are TUNING keys with panel sliders.
+
+Gate: flicker requires BOTH `fgAdditive` and `fgFlicker` on the skin.
+Alpha-dimming an OPAQUE fg layer would let the play field bleed through
+the art, so the two flags are deliberately separate — a future
+non-additive fg (foliage, grating) gets no flicker.
+
+Verified live: alpha swept 0.782→0.997 across 4.6s inside its bounds,
+the panel's min/max retargeted the swing mid-run, and the flag pinned
+alpha to exactly 1. The dip is currently hard to SEE, because the
+clipped white core (previous entry) dominates the pool and the flicker
+mostly modulates the falloff. It should read properly once the hotspot
+comes down.
+
+Follow-up the same day — the previous entry's verdict was HALF right.
+After several art passes the human said the pools still looked bad and
+was ready to cut them. The clipping was never really an art problem:
+additive light can only brighten what has HEADROOM, and the garage
+floor is light grey, so any warm value lands at white however it is
+drawn. The room was the problem, not the tiles.
+
+So the fg layer gains a partner: an AMBIENT SCRIM. One screen-fixed
+MULTIPLY quad at depth 7.5 — above the play field, below the pools at
+depth 8 — dims the room so the additive light has somewhere to go.
+`TUNING.fgAmbient` 0.7, panel slider, skins opt in with `fgAmbient`.
+UIOverlay is a separate scene rendered after, so the HUD never dims.
+
+Ambient sweep, same tiles, no art changes: at 1.0 the pool core clips
+white (today's original finding); at 0.7 it reads as warm orange
+dither with the room still fully legible; at 0.55 the pool looks great
+but cars and elites start to disappear. 0.6 is therefore a GAMEPLAY
+floor, not a taste one — this level's readability is load-bearing at
+speed. Shipped at 0.7; the human can dial it live and the level
+reverts to its old look at 1.0.
+
+Testing note (cost two failed rounds): Vite serves an edited module at
+`/src/config/tuning.js?t=<stamp>`, and a bare dynamic import of the
+unstamped path returns a SECOND instance the running scenes never
+read. Harness writes to TUNING silently did nothing — including
+`godMode` in earlier harnesses this session, which means some of those
+runs were not actually in god mode. Resolve the real URL from
+`performance.getEntriesByType('resource')` and import that.
+
+Second testing note: `npx prettier --write` on this repo runs with NO
+project config (there is no .prettierrc) and reformats to defaults —
+it added semicolons throughout two files and turned a 20-line change
+into 1800 lines of churn, which was committed before it was noticed.
+The formatting was restored and the change re-applied by hand. Do not
+run a formatter here; match the surrounding style instead.
