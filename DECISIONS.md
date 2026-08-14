@@ -3341,3 +3341,13 @@ the artist: if the spill was drawn and landed on the transparent index
 by accident, the numbers above are the tell. Placement still assumes
 3-tile pools (24 ground + 12 deck), which is why the cones are spaced
 as they are.
+
+## 2026-08-14 — Garage pools: falloff answered
+
+Third pass on the same three gids, nothing else in the sheet touched.
+The previous entry's open question is answered: the falloff WAS meant
+to carry light. Gids 20/22 now hold Sodium Mid (92,36,16) and Bright
+(147,64,15) instead of Ember alone — brightest luma 83 against the
+earlier 26 — so the cone spreads across all three tiles again while
+the core keeps its graded, non-clipping ramp. Committed; the 3-tile
+placement rhythm is once again the right assumption.
