@@ -730,8 +730,14 @@ export default class GarageScene extends LevelScene {
     const p = this.player
     if (p.body.left < edge) {
       if (this.hold) this.clearHold() // QUIET reset — the scroll is nobody's fault
-      p.sprite.x += edge - p.body.left // firm clamp...
-      if (p.body.velocity.x < 60) p.body.setVelocityX(60 + this.scrollSpeed) // ...with a bouncy nudge
+      // The screen CARRIES her: a position clamp only, no velocity
+      // injection. The old "bouncy nudge" set vx to 105, which is well
+      // past the run threshold — so a player standing still at the edge
+      // was shoved along playing a full-clip RUN cycle, which read as
+      // very odd (human report 2026-08-14). Carried at scroll speed with
+      // vx untouched, she rides in IDLE; walking against the scroll
+      // still animates as running, because then she really is running.
+      p.sprite.x += edge - p.body.left
     }
 
     // safe-at-edge bank pass (2026-08-09-e), then exit checks

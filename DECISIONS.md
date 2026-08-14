@@ -3039,3 +3039,26 @@ session in the middle:
 - The King prefers drawn art per phase and falls back to its rect,
   playing the 'idle' tag only when the atlas actually declares it.
 Boss battery re-run after the wiring: ALL PASS, no console noise.
+
+## 2026-08-14 — Trailing edge CARRIES Chexy (animation fix)
+
+Human report: letting the auto-scroll edge push her looked very odd —
+asked for the screen to slide her along in idle instead. Cause found
+in one line: the edge push set velocity to 60 + scrollSpeed (105),
+and Player's anim rule is |vx| > 10 → 'run', so a player standing
+still at the edge was shoved along playing a FULL-CLIP RUN cycle.
+Fixed by making the push a position clamp only — the screen carries
+her at exactly scroll speed with velocity untouched, so she rides in
+IDLE (or teeter at a ledge, jump/fall in the air). Walking against
+the scroll still animates as running, because then she really is.
+BRIEF-05 §3's "firm bouncy nudge" wording amended in place to "the
+screen CARRIES her" — flagged for design-chat ratification since
+BRIEF-05 is closed; treated as presentation polish on a direct human
+report, not a lever change.
+Verified: 160 idle frames and ZERO run frames across a 1.5s carry,
+max |vx| 0, still on-screen, and the steady-state carry distance
+equals the scroll distance exactly (45px/45px). Walking left at the
+edge still reads 'run' at vx -150. Regressions clean: the anti-crush
+slide-through still crosses a yielding car (it never needed the
+boost — the carry does it), dash-through and both showcase-gap
+crossings unchanged, instruments 58/58 green, no console noise.

@@ -83,8 +83,14 @@ out and drives off (paperless — no carrying, no backtracking).
   (luxuryLeadFactor, default 1.5×) because holding while the
   world scrolls spends position — this is the level's
   signature tension, priced fairly.
-- **Trailing edge:** pushes, never harms — a firm bouncy
-  nudge keeping Chexy on-screen (comedy, not punishment). If
+- **Trailing edge:** pushes, never harms — the screen CARRIES
+  Chexy, keeping her on-screen (comedy, not punishment).
+  (AMENDED 2026-08-14, human report: the original "firm bouncy
+  nudge" injected forward speed, which pushed her past the run
+  threshold — a player standing still was shoved along playing a
+  full-clip run cycle. It is a position carry now, so she rides
+  in IDLE; walking against the scroll still animates as running.)
+  If
   the push reaches Chexy mid-hold: QUIET RESET, no struggle
   penalty (the scroll is nobody's fault; -d arrival-overlap
   logic's sibling). Edge push cannot interrupt the tap root
