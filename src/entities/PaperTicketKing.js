@@ -23,9 +23,9 @@ import { audio } from '../systems/AudioBus.js'
 // logic, animations only follow. If a transition hasn't completed within
 // bossWatchdogMs the machine forces itself forward and warns.
 const BODY = [
-  { size: 128, spools: 5, tint: 0xf2e9d0 },
-  { size: 104, spools: 3, tint: 0xe8dcbb },
-  { size: 80, spools: 1, tint: 0xdccfa6 },
+  { size: 128, spools: 5, tint: 0xf2e9d0, art: 'king-intact' },
+  { size: 104, spools: 3, tint: 0xe8dcbb, art: 'king-torn' },
+  { size: 80, spools: 1, tint: 0xdccfa6, art: 'king-ragged' },
 ]
 const CROWN_RED = 0xc01818
 
@@ -40,7 +40,8 @@ export default class PaperTicketKing {
     this.homeX = x
     this.makeTextures()
 
-    this.sprite = scene.physics.add.sprite(x, floorY - 150, 'king-0')
+    this.sprite = scene.physics.add.sprite(x, floorY - 150, this.bodyKey(0))
+    this.applyBodyArt(0)
     this.sprite.setDepth(6)
     this.sprite.body.setAllowGravity(false)
     this.sprite.body.setImmovable(true)
@@ -73,6 +74,22 @@ export default class PaperTicketKing {
       g.generateTexture(key, b.size, b.size)
     })
     g.destroy()
+  }
+
+  // drawn state art wins per STATE (BRIEF-ART-06 drops them one at a
+  // time, starting with the style-proof gate); otherwise the interim
+  // tinted rect stands in
+  bodyKey(phase) {
+    const art = BODY[phase].art
+    return this.scene.textures.exists(art) ? art : `king-${phase}`
+  }
+
+  applyBodyArt(phase) {
+    if (!this.scene.textures.exists(BODY[phase].art)) return
+    // sprite-local registration (2026-07-30-a): his tags never touch
+    // the global namespace
+    const tags = this.scene.anims.createFromAseprite(BODY[phase].art, undefined, this.sprite)
+    if (tags?.some((a) => a.key === 'idle')) this.sprite.play({ key: 'idle', repeat: -1 }, true)
   }
 
   get threshold() {
@@ -115,7 +132,8 @@ export default class PaperTicketKing {
     if (this.state !== 'transition') return // already forced by the watchdog
     this.phase += 1
     if (this.phase >= BODY.length) return this.die()
-    this.sprite.setTexture(`king-${this.phase}`)
+    this.sprite.setTexture(this.bodyKey(this.phase))
+    this.applyBodyArt(this.phase)
     this.sprite.body.setSize(BODY[this.phase].size, BODY[this.phase].size, true)
     this.state = 'idle'
     this.watchdogAt = 0

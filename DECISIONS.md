@@ -3018,3 +3018,24 @@ pillar balcony rail, coats-in-shadow cut. Level 1 is the
 first fully dressed level — skinned tiles, four painted
 layers, glow, sway, real items, music. Sconce flicker is
 its last art item.
+
+## 2026-08-14 — BRIEF-ART-06 landed; the King's art drop-in wired ahead
+
+The human added BRIEF-ART-06 (the King's three bodies — the game's
+largest drawing project) and art/palettes/paper-king.gpl (16 colours:
+the shared paper family plus crown reds, tear-edge dark and a gold
+glint that are HIS ALONE — kin to the swarm, royalty over it).
+Wired ahead of the art so the brief's §4 order works without a code
+session in the middle:
+- Each body state is its own tagged atlas (king-intact / king-torn /
+  king-ragged), loaded per state and registered SPRITE-LOCALLY per
+  the 2026-07-30-a namespace policy. Per-state drop-in is what makes
+  §4 step 1 possible: the STYLE-PROOF GATE drops state 1 alone over
+  the interim rect King, judged at arena distance, while states 2-3
+  keep their rects.
+- The characters export pass gained the missing skip guard, so
+  running the export before the King is drawn prints "skipping"
+  instead of failing (the same fix the icons and cars passes needed).
+- The King prefers drawn art per phase and falls back to its rect,
+  playing the 'idle' tag only when the atlas actually declares it.
+Boss battery re-run after the wiring: ALL PASS, no console noise.

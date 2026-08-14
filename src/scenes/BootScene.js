@@ -88,6 +88,19 @@ const CHIP_PNG = import.meta.glob('../../assets/sprites/request-chips.png', {
   query: '?url',
   import: 'default',
 })
+// The Paper Ticket King's body states (BRIEF-ART-06): king-intact /
+// king-torn / king-ragged, each a tagged atlas. Drop-in per STATE — the
+// style-proof gate drops state 1 alone over the interim rect King.
+const KING_PNGS = import.meta.glob('../../assets/sprites/king-*.png', {
+  eager: true,
+  query: '?url',
+  import: 'default',
+})
+const KING_JSONS = import.meta.glob('../../assets/sprites/king-*.json', {
+  eager: true,
+  query: '?url',
+  import: 'default',
+})
 // enemy V1 "Stub" atlas (BRIEF-ART-03 §2). Its anims register
 // SPRITE-LOCALLY per the 2026-07-30-a namespace policy — the enemy's
 // tag names (move/grab/carry/stun) never touch the global namespace.
@@ -173,6 +186,17 @@ export default class BootScene extends Phaser.Scene {
         new Blob([JSON.stringify(normalized)], { type: 'application/json' })
       )
       this.load.aseprite('enemy-atlas', enemyPng, blobUrl)
+    }
+    // king body states: one tagged atlas per state, keyed 'king-<state>'
+    for (const [path, pngUrl] of Object.entries(KING_PNGS)) {
+      const stem = path.split('/').pop().replace('.png', '')
+      const jsonEntry = Object.entries(KING_JSONS).find(([p]) => p.endsWith(`${stem}.json`))
+      if (!jsonEntry) continue
+      const normalized = normalizeAsepriteAtlas(jsonEntry[1])
+      const blobUrl = URL.createObjectURL(
+        new Blob([JSON.stringify(normalized)], { type: 'application/json' })
+      )
+      this.load.aseprite(stem, pngUrl, blobUrl)
     }
     const atlasPng = Object.values(ATLAS_PNG)[0]
     const atlasJson = Object.values(ATLAS_JSON)[0]

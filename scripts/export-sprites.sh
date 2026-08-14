@@ -9,7 +9,11 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-CHARACTERS=(chexy enemy-stub particle)
+# Tagged sprite atlases (sheet + JSON, anims registered SPRITE-LOCALLY).
+# The King's three body states join them as they are drawn
+# (BRIEF-ART-06): undrawn states are skipped, so the style-proof drop
+# of state 1 alone works on its own.
+CHARACTERS=(chexy enemy-stub particle king-intact king-torn king-ragged)
 
 # 12x12 icon strips (BRIEF-04 collectibles). These are NOT atlases:
 # BootScene loads them with load.spritesheet({frameWidth: 12}), which
@@ -66,6 +70,10 @@ if ! command -v "$ASE_BIN" >/dev/null 2>&1; then
 fi
 
 for NAME in "${CHARACTERS[@]}"; do
+  if [ ! -f "art/aseprite/${NAME}.aseprite" ] && [ ! -f "art/aseprite/${NAME}.ase" ]; then
+    echo "Skipping $NAME (not drawn yet)."
+    continue
+  fi
   SRC="$(resolve_source "$NAME")"
   SHEET="assets/sprites/${NAME}.png"
   DATA="assets/sprites/${NAME}.json"
