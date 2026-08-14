@@ -3081,3 +3081,19 @@ tracks at its 0.2 factor (tile 41.6 vs 40.8 expected at scrollX 204),
 and the garage stack correctly reports p3 ONLY — p2 and p1 stay
 absent without complaint, which is the per-layer drop-in contract.
 No console noise.
+
+## 2026-08-14 — HUD NFC tag drawn at HUD scale (the scaling law again)
+
+Human: the 12×12 world nfc-tag "doesn't scale very well in the HUD",
+so a dedicated nfc-tag-hud (10×10) was drawn. Wired: the HUD counter
+prefers it and renders at SCALE 1; the old path (nfc-tag, or the
+generated placeholder) stays as fallback. Source added to the ICONS
+export pass as nfc-chip-10x10:nfc-tag-hud.
+Worth recording WHY this was already wrong: the counter had been
+doing setScale(0.75) on the 12×12 icon — a non-integer squeeze, i.e.
+exactly what DESIGN §5.x forbids, sitting in the HUD unnoticed since
+BRIEF-04. That makes three applications of the law in as many days
+(request chips, this, and the refusal to scale car sprites), and the
+first where it caught existing code rather than a proposal.
+Verified: the icon renders from nfc-tag-hud at scale 1, 10×10 source
+and 10×10 on screen; no console noise.

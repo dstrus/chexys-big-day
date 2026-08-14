@@ -20,7 +20,7 @@ CHARACTERS=(chexy enemy-stub particle king-intact king-torn king-ragged)
 # assumes a tight grid — so they export as plain horizontal sheets with
 # no JSON and NO --extrude (padding would break the fixed-grid slicing).
 # "source:output" where the .aseprite name differs from the texture key.
-ICONS=(nfc-chip:nfc-tag contact-card insight-report request-chips)
+ICONS=(nfc-chip:nfc-tag nfc-chip-10x10:nfc-tag-hud contact-card insight-report request-chips)
 
 # Tilesets (BRIEF-ART-02). A tileset is ONE image on a fixed 16x16 grid,
 # not a frame sheet: save the canvas flat — no JSON, and NO --extrude

@@ -34,10 +34,20 @@ export default class UIOverlayScene extends Phaser.Scene {
     // NFC tag counter (BRIEF-04 §1): small icon + count under the
     // hangers. Real art wins over the generated placeholder, same
     // drop-in contract as the in-world collectibles.
+    // A HUD-scale draw wins outright: the 12×12 world icon only fitted
+    // here via setScale(0.75) — precisely the non-integer squeeze the
+    // pixel-art scaling law forbids (DESIGN §5.x). nfc-tag-hud is drawn
+    // at 10×10 and renders at scale 1; the old path stays as fallback.
+    const hudTag = this.textures.exists('nfc-tag-hud')
+    const tagKey = hudTag
+      ? 'nfc-tag-hud'
+      : this.textures.exists('nfc-tag')
+        ? 'nfc-tag'
+        : 'collectible-nfcTag'
     this.tagIcon = this.add
-      .image(14, 24, this.textures.exists('nfc-tag') ? 'nfc-tag' : 'collectible-nfcTag')
+      .image(14, 24, tagKey)
       .setOrigin(0.5)
-      .setScale(0.75)
+      .setScale(hudTag ? 1 : 0.75)
     this.tagCountText = this.add
       .text(22, 19, '0', { ...TEXT_STYLE, fontSize: '9px' })
       .setOrigin(0, 0)

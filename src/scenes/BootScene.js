@@ -127,6 +127,14 @@ const COLLECTIBLE_PNGS = import.meta.glob(
   ['../../assets/sprites/nfc-tag.png', '../../assets/sprites/contact-card.png', '../../assets/sprites/insight-report.png'],
   { eager: true, query: '?url', import: 'default' }
 )
+// HUD-scale NFC tag (10×10). The 12×12 world icon did not hold up
+// shrunk into the counter, so it is DRAWN at HUD size instead of
+// scaled — the pixel-art scaling law (DESIGN §5.x).
+const TAG_HUD_PNG = import.meta.glob('../../assets/sprites/nfc-tag-hud.png', {
+  eager: true,
+  query: '?url',
+  import: 'default',
+})
 // stub particle (BRIEF-ART-03 §2, "highest-reuse asset"): rescue poof
 // now, boss confetti later. The export is untagged, so the anim is
 // built from the atlas under a namespaced fx key with the .ase
@@ -165,6 +173,8 @@ export default class BootScene extends Phaser.Scene {
     }
     const hangerUrl = Object.values(HANGER_PNG)[0]
     if (hangerUrl) this.load.spritesheet('hanger', hangerUrl, { frameWidth: 12, frameHeight: 12 })
+    const tagHudUrl = Object.values(TAG_HUD_PNG)[0]
+    if (tagHudUrl) this.load.image('nfc-tag-hud', tagHudUrl)
     for (const [path, url] of Object.entries(COLLECTIBLE_PNGS)) {
       const key = path.split('/').pop().replace('.png', '')
       this.load.spritesheet(key, url, { frameWidth: 12, frameHeight: 12 })
