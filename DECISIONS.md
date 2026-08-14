@@ -3285,3 +3285,28 @@ it added semicolons throughout two files and turned a 20-line change
 into 1800 lines of churn, which was committed before it was noticed.
 The formatting was restored and the change re-applied by hand. Do not
 run a formatter here; match the surrounding style instead.
+
+## 2026-08-14 — Lamp flicker: human values from play
+
+Panel dump diffed against tuning.js: THREE keys moved, nothing else.
+
+- fgFlickerMin  0.78 → 0.44 (the dip roughly doubles in depth)
+- fgFlickerHumMs 4200 → 4600
+- fgFlickerBuzzMs 700 → 250 (a 4Hz stutter, not a ripple)
+
+Character change worth naming: the shipped default was a subtle breath
+on a healthy lamp. These values read as a FAILING tube — deep, fast
+stutter. That reads as the right call for a valet garage at the end of
+a long shift, and it also means the flicker survives the ambient dim
+instead of being lost in it. Ambient stayed at 0.7, so the sweep
+verdict from earlier today is ratified by play, not just by capture.
+
+Verified at the new values: alpha sweeps 0.444→0.993 inside its
+bounds, flag still pins to 1, no console noise.
+
+Accessibility note, not a blocker: 250ms puts the ripple at 4Hz, which
+touches the 3–5Hz photosensitive band. The mitigating facts are that
+the flashing area is small (three 16px tiles per pool), the contrast is
+low (warm dither on dimmed concrete), and it never covers the screen.
+If a full-screen flash effect is ever added to this level, that
+combination should be re-examined rather than assumed safe.

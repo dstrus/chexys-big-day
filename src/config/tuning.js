@@ -98,11 +98,14 @@ export const TUNING = {
   // layer's alpha — a slow breath the eye reads as the tube warming,
   // plus a faster ripple that keeps it from looking like a tween. Sum
   // stays in [-1,1], so min/max are hard bounds and no clamp is needed.
-  // Subtle on purpose: it rides EVERY pool on screen at once.
-  fgFlickerMin: 0.78,
+  // Human values from play (2026-08-14): the dip goes to 0.44 and the
+  // ripple to 250ms — a failing tube that stutters, not the subtle
+  // breath the first pass shipped. It rides every pool on screen at
+  // once, so the depth is the lever that matters most.
+  fgFlickerMin: 0.44,
   fgFlickerMax: 1,
-  fgFlickerHumMs: 4200, // the slow breath
-  fgFlickerBuzzMs: 700, // the ripple on top
+  fgFlickerHumMs: 4600, // the slow breath
+  fgFlickerBuzzMs: 250, // the stutter on top
   fgFlicker: true, // flag: off = pools hold a steady alpha 1
 
   // valet garage (BRIEF-05): request-queue auto-scroll
