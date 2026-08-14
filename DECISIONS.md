@@ -2989,3 +2989,32 @@ for ratification): the travel budget reads N/A in Act 2. The arena is
 a single 480px screen, so serial routing feasibility is answered by
 the arena itself; left running it fired RED on tight simultaneity a
 player can both see and reach. Act 1's 2112px venue still prices it.
+
+## 2026-08-13 — Handoff 2026-08-13-a applied
+
+- Sequence check: 2026-08-12-b applied ✓ (f9db080).
+- Item 1: P2 fork resolved by the artist — completed, not stopgapped.
+  Verified in the shipped file rather than taken on faith: p2.png now
+  carries ink in 556 of 1280 columns (was one lonely pillar) — THREE
+  full-height pillars at 200 / 533 / 1031 with 499 columns of rail
+  spanning 195..1054, i.e. a rank with the rail running pillar to
+  pillar. Columns 1055-1279 stay empty, so the repeat-x wrap is still
+  seamless. Coats-in-shadow cut from the spec.
+  TRANSCRIPTION NOTE: the handoff cites "BRIEF-ART-02 §4's P2 line",
+  but the P2 content line lives in the §2 layer table (§4 is the
+  export/wiring contract). Amended the §2 table row, which is the line
+  that actually specified coats-in-shadow — intent applied, location
+  corrected.
+- Item 2: the coatroom parallax stack is COMPLETE. Regression clean
+  after the drop: all four layers track their scrollFactors (p4
+  5.5/5.5, p2 49.5/49.5, p1 77/77 at scrollX 110), p3 rides its crowd
+  sway (23 vs 22 base), the glow pulses (0.988 → 0.366), other levels
+  still boot with empty stacks, no console noise.
+- Item 3: ruling entry appended verbatim below.
+
+2026-08-13 — Coatroom parallax COMPLETE (handoff
+2026-08-13-a): P2 resolved as pillar rank + pillar-to-
+pillar balcony rail, coats-in-shadow cut. Level 1 is the
+first fully dressed level — skinned tiles, four painted
+layers, glow, sway, real items, music. Sconce flicker is
+its last art item.

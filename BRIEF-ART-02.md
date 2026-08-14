@@ -64,7 +64,7 @@ listed for the agent's wiring pass:
 |-------|---------|------|--------------|
 | P4 (farthest) | venue back wall: stage glow, truss silhouettes, haze gradient | 480×270, static | 0.05 |
 | P3 | crowd silhouette mass, heads/hands, nearly black-on-indigo | 960×270, repeats | 0.2 |
-| P2 | mid architecture: columns, balcony rail, hung coats in shadow | 1280×270 | 0.45 |
+| P2 | mid architecture: pillar rank + pillar-to-pillar balcony rail (coats-in-shadow CUT 2026-08-13 — the play-plane racks and P1's ropes already carry that vocabulary; a third coat layer competed) | 1280×270 | 0.45 |
 | P1 | near dressing behind play plane: rack rows, velvet rope line | 1600×270 | 0.7 |
 | (map) | bg1/main/fg tile layers | full map | 1.0 |
 
