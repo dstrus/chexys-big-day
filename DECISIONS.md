@@ -3097,3 +3097,47 @@ BRIEF-04. That makes three applications of the law in as many days
 first where it caught existing code rather than a proposal.
 Verified: the icon renders from nfc-tag-hud at scale 1, 10×10 source
 and 10×10 on screen; no console noise.
+
+## 2026-08-14 — Handoff 2026-08-13-b applied
+
+- Sequence check: 2026-08-13-a applied ✓ (5199c95).
+- Item 1: S3 ratified — WITH ONE DIVERGENCE FLAGGED AND RESOLVED IN
+  THE CODE'S FAVOUR OF THE RULING. What shipped was a speed CAP
+  (built from BRIEF-07 §3's reconciliation, "Paper Carpet = swarm
+  contact-slow rules"); the ratification describes ACCEL/DECEL
+  SCALING, which is BOSS-SPEC's original "slippery stubs / reduced
+  traction" reading. Rather than leave the design record describing
+  something the code doesn't do, the carpet was rebuilt to match:
+  a new Player.traction multiplier scales acceleration AND
+  deceleration (slower to start, slower to stop, TOP SPEED
+  UNCHANGED — slippery, not slow), consumed each frame so a surface
+  must re-assert it. The handoff's parenthetical is exactly right
+  that dash immunity comes FREE: a dash sets velocity directly with
+  acceleration zeroed, so the explicit dash guard is gone. Reversible
+  in one commit if the design chat meant the reverse.
+- Item 2: SCATTER CLAMP canonized — displacement obeys the placement-
+  validity principle. Tornado destinations are bounded to the arena
+  floor, inset from both walls, and pushed clear of the King's own
+  footprint, with a far-side fallback if every roll lands under him.
+  No item can be thrown where only he can reach it.
+- Item 3: LAST GASP SPLIT implemented. The spawn burst stays exempt
+  from pacing (the swarm is the spectacle); steal INITIATIONS inside
+  the window (bossLastGaspMs 6000) run lastGaspStealCooldownMs (2000)
+  instead of the phase clock. Confirmed rather than assumed that the
+  "impossible by construction" guarantee holds: every steal passes
+  ONE global gate (lastStealAt), so a cooldown value can only space
+  chases — it can never permit two at once, at any setting.
+- Item 4: ruling entry appended verbatim below.
+Verified: carpet start-up crawls (72px/s at 120ms) while top speed
+stays 150 and a dash crosses at the full 400 with no guard; scatter
+destinations clear of the King and inside the arena; gasp clock 2000
+vs the phase's 5000; grab, grace immunity, and the ending unchanged.
+No console noise.
+
+2026-08-13 — S3 ratified; BRIEF-07 build COMPLETE
+(handoff 2026-08-13-b). Scatter clamp canonized
+(displacement obeys placement validity). Last Gasp split:
+spawn burst free, steals on a compressed dedicated clock
+— the exemption pattern holds even at the climax. The
+game's full gameplay surface now exists; rounds are the
+remaining distance to Gate 3.

@@ -136,9 +136,11 @@ export const TUNING = {
   bossWatchdogMs: 4000, // state-machine watchdog (BRIEF-07 §5)
   bossDoorBreathMs: 2600, // the lobby empties before Act 2
   // his kit — every attack targets THE JOB, never Chexy's health
-  slipFactor: 0.45, // Paper Carpet traction: swarm contact-slow rules
-  // (speed cap, refresh-not-stack, NOT interrupt-class) and dash is
-  // immune — the dash finally gets its finale moment
+  slipFactor: 0.45, // Paper Carpet TRACTION multiplier on accel AND
+  // decel (ratified 2026-08-13-b): the floor turns slippery, not slow —
+  // slower to start, slower to stop, same top speed. Dash immunity is
+  // free (a dash sets velocity with acceleration zeroed), which is the
+  // dash's finale moment. NOT interrupt-class; re-asserted per frame.
   bossCarpetMs: 7000,
   bossCarpetWidth: 150,
   bossCarpetIntervalMs: [11000, 9000, 7500],
@@ -148,6 +150,11 @@ export const TUNING = {
   grabMashMs: 1500, // lost TIME, not lost items; a graced player is immune
   grabMashRelief: 110, // each key press shaves this much off the hold
   bossLastGaspFrac: 0.9, // one scripted all-out wave near the end
+  bossLastGaspMs: 6000, // how long that wave's window lasts
+  lastGaspStealCooldownMs: 2000, // inside Last Gasp the SPAWN burst is
+  // exempt from pacing, but steal INITIATIONS run this compressed clock
+  // instead of the phase's — chases stay sequential even at the climax
+  // (ratified 2026-08-13-b)
 
   // adaptive intensity / multiplier (DESIGN.md §2.5 skeleton)
   adaptiveBand: 0.3,

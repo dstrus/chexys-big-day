@@ -330,6 +330,9 @@ export default class ExodusScene extends MuseumScene {
 
   // per-phase steal spacing while the King is up
   stealCooldown() {
+    if (this.act === 2 && this.time.now < (this.lastGaspUntil ?? 0)) {
+      return TUNING.lastGaspStealCooldownMs // compressed, never absent
+    }
     if (this.act === 2 && this.king?.alive) {
       return TUNING.bossStealCooldownMs[this.king.phase] ?? super.stealCooldown()
     }
@@ -378,12 +381,12 @@ export default class ExodusScene extends MuseumScene {
       }
       const p = this.player
       const inZone = p.body.bottom >= this.worldHeight - 52 && p.x >= c.x0 && p.x <= c.x1
-      if (inZone && time >= p.dashUntil) {
-        const cap = TUNING.maxSpeed * TUNING.slipFactor
-        const vx = p.body.velocity.x
-        if (Math.abs(vx) > cap) p.body.setVelocityX(Math.sign(vx) * cap)
-        p.body.setMaxVelocity(cap, TUNING.fallMaxSpeed)
-      }
+      // TRACTION scaling, not a speed cap (ratified 2026-08-13-b): the
+      // stubs make the floor SLIPPERY — slower to get going, slower to
+      // stop — rather than simply slow. Dash immunity needs no guard
+      // here: a dash sets velocity directly with acceleration zeroed,
+      // so scaling accel/decel cannot touch it.
+      if (inZone) p.traction = TUNING.slipFactor
     }
   }
 
@@ -398,12 +401,31 @@ export default class ExodusScene extends MuseumScene {
     const picks = Phaser.Utils.Array.Shuffle(loose).slice(0, TUNING.bossTornadoCount)
     for (const item of picks) {
       this.bossBurst(item.x, item.y)
-      const x = Phaser.Math.Between(this.arenaX + 30, this.arenaX + this.scale.width - 30)
-      const y = this.worldHeight - 60
+      const { x, y } = this.scatterDestination()
       this.placeItemClear(item, x, y)
       item.body.setVelocity(0, -40)
     }
     audio.play('interrupt', this.panFor(this.player.x))
+  }
+
+  // SCATTER CLAMP (ratified 2026-08-13-b): displacement obeys the same
+  // principle as placement — a destination must be CONTESTABLE. Landing
+  // spots are bounded to the arena's floor, inset from both walls, and
+  // pushed clear of the King's own footprint. No item may be thrown
+  // where only he can reach it.
+  scatterDestination() {
+    const margin = 34
+    const lo = this.arenaX + margin
+    const hi = this.arenaX + this.scale.width - margin
+    const k = this.king?.sprite
+    for (let tries = 0; tries < 8; tries++) {
+      const x = Phaser.Math.Between(lo, hi)
+      const clearOfKing = !k || !this.king.alive || Math.abs(x - k.x) > k.displayWidth / 2 + 24
+      if (clearOfKing) return { x, y: this.worldHeight - 60 }
+    }
+    // every roll landed under him: step out to the far side of the arena
+    const away = k.x - this.arenaX > this.scale.width / 2 ? lo : hi
+    return { x: away, y: this.worldHeight - 60 }
   }
 
   // GRAB CHEXY (phase 3): telegraphed lunge; on connect it costs TIME,
@@ -502,8 +524,14 @@ export default class ExodusScene extends MuseumScene {
     }
   }
 
-  // LAST GASP: one scripted all-out wave as a phase closes
+  // LAST GASP: one scripted all-out wave as a phase closes. The SPAWN
+  // burst is exempt from pacing — the swarm IS the spectacle — but
+  // steal INITIATIONS inside the window run a compressed dedicated
+  // clock instead (ratified 2026-08-13-b), so chases stay SEQUENTIAL
+  // even at the climax. A simultaneous multi-grab stays impossible by
+  // construction: every steal passes one global gate.
   lastGasp(phase) {
+    this.lastGaspUntil = this.time.now + TUNING.bossLastGaspMs
     this.stubSpew(TUNING.bossSpewCountByPhase[phase])
     this.dropCarpet()
     if (phase >= 1) this.ticketTornado()

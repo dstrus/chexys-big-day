@@ -46,6 +46,12 @@ export default class Player {
 
     this.lastGroundedAt = -Infinity
     this.jumpPressedAt = -Infinity
+    // TRACTION multiplier on accel AND decel (1 = normal ground).
+    // Surfaces that scale it — the King's Paper Carpet — make Chexy
+    // slide rather than crawl, and dash immunity is FREE: a dash sets
+    // velocity directly with acceleration zeroed, so traction never
+    // touches it. Consumed each frame; a surface must re-assert it.
+    this.traction = 1
     this.dashUntil = 0
     this.lastDashAt = -Infinity
     this.airDashUsed = false // ONE air dash per airborne period (-g)
@@ -117,11 +123,11 @@ export default class Player {
       body.setAccelerationX(0)
       body.setVelocityY(0)
     } else if (left !== right) {
-      body.setAccelerationX(left ? -TUNING.moveAccel : TUNING.moveAccel)
+      body.setAccelerationX((left ? -TUNING.moveAccel : TUNING.moveAccel) * this.traction)
     } else {
       // no input: decelerate to a stop rather than sliding
       body.setAccelerationX(0)
-      const dv = (TUNING.moveDecel * delta) / 1000
+      const dv = (TUNING.moveDecel * this.traction * delta) / 1000
       if (Math.abs(body.velocity.x) <= dv) body.setVelocityX(0)
       else body.setVelocityX(body.velocity.x - Math.sign(body.velocity.x) * dv)
     }
@@ -213,6 +219,7 @@ export default class Player {
     this.tagHeld = this.keys.Z.isDown || this.keys.J.isDown
 
     if (this.mode === 'atlas') this.updateAnimState()
+    this.traction = 1 // consumed: surfaces re-assert every frame
   }
 
   // dash afterimage: a snapshot of the current sprite frame, additive
