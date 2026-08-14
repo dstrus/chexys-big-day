@@ -64,6 +64,9 @@ const TILE_SKINS = {
     // tiles vertically as precast segments with a dark joint every 32px.
     // bg2's dressing runs are 1-wide and 6 tall → 9,17,9,17,9,17.
     dressing: (x, y, { dy }) => (dy % 2 === 0 ? 9 : 17),
+    // sodium lamp pools live on the fg layer (gids 20/21/22) and are
+    // LIGHT, not paint — see the blend note in buildMap
+    fgAdditive: true,
   },
 }
 
@@ -340,9 +343,15 @@ export default class LevelScene extends Phaser.Scene {
     const bg2 = map.createLayer('bg2', tileset).setDepth(-4)
     const bg1 = map.createLayer('bg1', tileset).setDepth(-3)
     this.mainLayer = map.createLayer('main', tileset).setDepth(-2)
-    map.createLayer('fg', tileset).setDepth(8)
+    this.fgLayer = map.createLayer('fg', tileset).setDepth(8)
     this.mainLayer.setCollisionByExclusion([-1])
     if (useSkin) this.applyTileSkin(skin, [bg1, bg2])
+    // fg draws IN FRONT of play, so a sheet whose fg tiles are LIGHT
+    // (the garage's sodium pools) wants additive blending: the dark end
+    // of their dither contributes nothing and the warm end brightens
+    // whatever is beneath — floor, cars, and Chexy as she walks through.
+    // Without this an opaque pool would paint over her instead.
+    if (useSkin && skin.fgAdditive) this.fgLayer.setBlendMode(Phaser.BlendModes.ADD)
 
     this.map = map
     this.worldWidth = map.widthInPixels

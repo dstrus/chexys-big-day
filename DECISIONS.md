@@ -3193,3 +3193,35 @@ the old name in another had me reading a STALE capture and briefly
 suspecting tool caching — the file was simply never overwritten.
 Distinct filenames per capture, and trust the numbers over a
 familiar-looking image.
+
+## 2026-08-14 — Sodium light pools: the fg layer's first use
+
+The garage tileset arrived with three pool tiles (gid 20 left, 21
+middle/hotspot, 22 right), drawn exactly to the inventory §(d) spec:
+opaque 16×16, dithered on near-black, warm ramp (27,26,23) →
+(92,36,16) → (147,64,15) → (200,90,18) → (240,162,74), with the middle
+tile dithering Hotspot (255,217,160) against the dark.
+
+Wiring: the `fg` layer is now captured as `this.fgLayer` in
+LevelScene.buildMap and gets `Phaser.BlendModes.ADD` when its skin
+declares `fgAdditive: true` (garage does; the coatroom does not).
+Additive is the whole reason the pools can be opaque art — the dark
+end of the dither contributes nothing, the warm end brightens what is
+beneath it. This is the first level in the game to use `fg` at all.
+
+Placement rhythm (agent-side per §(d), proposed not ratified): 24
+pools on the walkable ground row every 23 columns (368px — one per
+parking module, ~1.5 pools per screen), plus 12 on row-12 deck tops
+where the deck is solid under all three tiles. 36 pools, 108 tiles.
+
+Finding from the first in-game look: the pools read as warm light
+where they fall on dark or mid-dark pixels — the left/right falloff
+tiles dither convincingly orange over the concrete. The MIDDLE tile
+clips. Hotspot (255,217,160) added to the light concrete floor
+(~150,150,155) saturates all three channels, so the core reads as a
+white checkerboard rather than a hot centre. Code-side levers were
+tested and rejected as fixes: SCREEN blend and ADD at alpha 0.6 both
+land within a shade of ADD, because the floor is already bright enough
+that any lightening blows out. The fix belongs in the art (a dimmer
+hotspot, or sparser dither in the core), so the blend stays ADD and
+the tiles ship as drawn pending the artist's call.

@@ -294,6 +294,23 @@ and on row-12 deck tops beneath the row-9 runs. Say the rhythm you
 want (one pool per parking module, one per second pillar, …) or leave
 it and a proposal comes back with the drop.
 
+**Shipped 2026-08-14 (proposal, adjustable):** 24 pools on the
+walkable ground row every 23 columns — one per parking module, roughly
+1.5 pools per screen — plus 12 on row-12 deck tops wherever the deck
+is solid under all three tiles. 36 pools, 108 tiles.
+
+**First-look note:** the falloff tiles (20/22) read exactly right —
+warm orange dither over the concrete. The hotspot in tile 21 clips:
+(255,217,160) added to the ~(150,150,155) floor saturates every
+channel, so the core reads as a white checkerboard instead of a hot
+centre. SCREEN blend and ADD at 60% alpha were both tried and land
+within a shade of plain ADD — a bright floor blows out under any
+lightening — so this one is an art call, not a code one. Either dim
+the hotspot (something nearer Sodium Bright than white) or thin the
+dither in the core so it gradients instead of checkers. The pools over
+DARK pixels need no change, so a hotspot that looks weak on black is
+probably correct on the floor.
+
 Optional and cheap once the tiles exist: a **slow flicker** on the fg
 layer's alpha — sodium lamps buzz — the same code-side pulse the
 coatroom glow already uses. Two lines, no extra frames.
