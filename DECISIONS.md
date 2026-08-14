@@ -3434,3 +3434,36 @@ the garage's lesson attached — pools and ambient are one decision.
 Numbering: BRIEF-ART-05 (Museum) is still absent from HEAD and still
 owed by the design chat; ART-07 explicitly reserves it. Verified by
 `ls BRIEF-ART-0*.md` — 01, 02, 03, 04, 06, 07 present.
+
+## 2026-08-14 — Bell Desk desk: BESPOKE (human ruling)
+
+The §1-vs-map disagreement is settled: the 9×2 counter gets a bespoke
+9-wide drawing, not a repeating 4-tile period. Consequences applied:
+
+- Sheet grows to 144×96 — 9 columns × 6 rows, 54 tiles. Nine columns so
+  each desk row is one unbroken 144px run the artist draws straight
+  across instead of a 9-tile block wrapping an 8-wide sheet.
+- The `counter` role gets a nine-slot vocabulary: dx maps 0→8 onto
+  indices 28–36 (top) and 37–45 (face), clamped so a wider counter in
+  some future map repeats the last column instead of running off the
+  sheet.
+- The belldesk skin is WRITTEN NOW, ahead of the art. The texture
+  doesn't exist, so useSkin is false and the level keeps its
+  placeholder bones; the table wakes up when the PNG lands and
+  deleting the PNG reverts it. No code session at drop time.
+
+Proven live against a stand-in 54-cell canvas texture, because this is
+the first sheet whose geometry disagrees with the map's declared
+tileset (the map JSON says 8 columns / 24 tiles): Phaser's
+Tileset.setImage recomputes columns and total from the IMAGE, reporting
+9 / 54, and every role resolved to the promised index — ground period
+1-2-3-4 with fill 8 and marble borders at x54/x64, mezzanine caps
+10/13 on rows 6 AND 9, cart caps 19/20/21 on row 12, desk 28/32/36 on
+top and 37/45 on the face, sconce 24, no index out of range, no
+console noise.
+
+One flaw the numbers exposed before any art existed: bg2 column runs
+are 11 tall — ODD — so a 2-tile fade-in/fade-out pair ends the column
+on its fade-IN tile exactly where it meets the carpet. Row 14 now takes
+a dedicated plinth (index 27), leaving rows 4–13 as five clean pairs.
+Better art anyway: columns have plinths.

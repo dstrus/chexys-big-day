@@ -71,6 +71,51 @@ const TILE_SKINS = {
     // the pools only read against a dimmed room — see TUNING.fgAmbient
     fgAmbient: true,
   },
+  // belldesk-tile sheet (BRIEF-ART-07, laid out in art/belldesk-inventory
+  // .md). 9 columns × 6 rows. Written ahead of the art: the texture
+  // doesn't exist yet, so useSkin is false and the level keeps its
+  // placeholder bones until the PNG lands — then this table wakes up
+  // with no code session, and deleting the PNG reverts it.
+  belldesk: {
+    texture: 'tiles-belldesk',
+    // rows 15/16 across all 120 columns. Row 16 is fill; row 15 is the
+    // carpet the player spends the level on. Breakers ride out-of-phase
+    // prime cadences (the SotN lesson), rarest first, and the marble
+    // border overrides everything where the carpet meets the desk run
+    // at x 55–63.
+    ground: (x, y) => {
+      if (y >= 16) return 8 // sub-floor fill
+      if (x === 54 || x === 64) return 7 // marble border, desk-adjacent
+      if (x % 29 === 13) return 5 // brass medallion — the loud one
+      if (x % 13 === 6) return 6 // worn patch
+      return 1 + (x % 4)
+    },
+    // all three platform tiers speak the same role gids, so the tier is
+    // read off the ROW: 12 = bell-cart platforms, 6 and 9 = mezzanines
+    leftCap: (x, y) => (y === 12 ? 19 : 10),
+    rightCap: (x, y) => (y === 12 ? 21 : 13),
+    middle: (x, y, { dx }) => {
+      if (y === 12) return 20 // cart deck, no breaker (runs are 4 wide)
+      return dx % 7 === 4 ? 14 : 11 + (dx % 2) // brass drip once per strip
+    },
+    // BESPOKE DESK (human ruling 2026-08-14): dx maps straight onto the
+    // nine drawn columns, top row and face row. A counter wider than 9
+    // repeats the last column rather than wrapping to garbage.
+    counter: (x, y, { dx, isTop }) => (isTop ? 28 : 37) + Math.min(dx, 8),
+    // bg1 is twelve 1×1 tiles on row 3 (the sconce line); bg2 is six
+    // 11-tall column runs, rows 4–14. One dressing function serves both
+    // layers, so it branches on the row rather than on the layer.
+    //
+    // The pair tiles at 32px and 11 is ODD, so a plain dy alternation
+    // would end the column on its fade-IN tile exactly where it meets
+    // the floor. Row 14 gets a dedicated plinth instead, which leaves
+    // rows 4–13 as five clean pairs ending on the fade-out.
+    dressing: (x, y, { dy }) => {
+      if (y === 3) return 24 // sconce line (1×1 tiles, no run)
+      if (y === 14) return 27 // column plinth, meeting the carpet
+      return dy % 2 === 0 ? 22 : 23
+    },
+  },
 }
 
 // Generic level scene: boots any Tiled map by key (assets/maps/README.md

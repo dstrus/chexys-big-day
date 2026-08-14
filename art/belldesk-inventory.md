@@ -14,27 +14,41 @@ Draw **`art/aseprite/belldesk-tile.aseprite`**, export to
 `./scripts/export-sprites.sh` picks it up the moment the source
 exists, and the loader keys it `tiles-belldesk` automatically.
 
-**Sheet size: 128×64 — 8 columns × 4 rows, 32 tiles.** Indices run
-left-to-right, top-to-bottom, 1-based (index 1 = top-left). Undrawn
-indices are fine to leave transparent; the level keeps its
-placeholder look until each role is filled.
+**Sheet size: 144×96 — 9 columns × 6 rows, 54 tiles.** Nine columns
+because the desk is drawn bespoke (decision below): a 9-wide sheet
+lets each desk row be one unbroken run you draw straight across,
+rather than a 9-tile block wrapping awkwardly across an 8-wide sheet.
+Indices run left-to-right, top-to-bottom, 1-based (index 1 =
+top-left). Undrawn indices are fine to leave transparent; the level
+keeps its placeholder look until each role is filled.
 
-| # | Sheet index | What |
+| Row | Sheet index | What |
 |---|---|---|
-| Row 0 | 1,2,3,4 | **carpet floor sequence** — 4-tile period, burgundy field + quiet figure |
+| 0 | 1,2,3,4 | **carpet floor sequence** — 4-tile period, burgundy field + quiet figure |
 | | 5 | brass floor medallion (breaker) |
 | | 6 | worn patch (breaker) |
 | | 7 | **marble border** — carpet meets the desk run |
 | | 8 | sub-floor fill (below the walked row; never seen edge-on) |
-| Row 1 | 9,10,11,12 | **mezzanine strip**: left cap, middle A, middle B, right cap |
-| | 13 | mezzanine middle breaker — brass drip line accent |
-| | 14,15,16 | *free* |
-| Row 2 | 17,18,19 | **cart platform**: left cap, middle, right cap (brass frame + red velvet deck) |
-| | 20,21 | **column segment pair** — 20 fades in at its top, 21 out at its bottom (garage pillar grammar: they alternate down an 11-tall run) |
-| | 22 | wall sconce (warm) |
-| | 23,24 | *free* — potted palm pair, if you want it here |
-| Row 3 | 25,26,27,28 | **desk hero block, TOP row** — marble top with the standable light edge, 4-tile period |
-| | 29,30,31,32 | **desk hero block, FACE row** — wood panelling, cubbies, bell glint, 4-tile period |
+| | 9 | *free* |
+| 1 | 10,11,12,13 | **mezzanine strip**: left cap, middle A, middle B, right cap |
+| | 14 | mezzanine middle breaker — brass drip line accent |
+| | 15–18 | *free* |
+| 2 | 19,20,21 | **cart platform**: left cap, middle, right cap (brass frame + red velvet deck) |
+| | 22,23 | **column segment pair** — 22 fades in at its top, 23 out at its bottom (garage pillar grammar: they alternate down an 11-tall run) |
+| | 24 | wall sconce (warm) |
+| | 25,26 | potted palm pair |
+| | 27 | **column plinth** — the segment that meets the carpet (see below) |
+| 3 | **28–36** | **desk hero block, TOP row** — nine bespoke tiles, marble top with the standable light edge, drawn left-to-right as one 144px run |
+| 4 | **37–45** | **desk hero block, FACE row** — nine bespoke tiles, wood panelling / key cubbies / bell glint, same run |
+| 5 | 46–54 | *free* — spare row |
+
+**Why the column needs three tiles, not two.** The bg2 runs are **11
+tall** (rows 4–14) and the fade-in/fade-out pair tiles at 32px, so a
+plain alternation would end the column on its fade-IN tile exactly
+where it meets the floor. Row 14 takes a dedicated **plinth** (index
+27) instead, which leaves rows 4–13 as five clean pairs ending on the
+fade-out. Draw 22 as "column continues above", 23 as "column continues
+below", 27 as "column lands on the carpet".
 
 ## (b) Roles, gids, and exact placements
 
@@ -75,17 +89,20 @@ each one's standable edge has to read at a glance while running.
 
 ## (c) Two things the brief and the map disagree on
 
-1. **The desk is 9 wide, not "4–6".** §1 specifies the hero block as
-   "2-high, 4–6 wide"; the map's counter block is **9 × 2** at
-   x 55–63. The block-relative skin gives you `dx` (columns from the
-   run's left edge), so the practical answer is a **4-tile period that
-   repeats across the 9** — 4 top tiles and 4 face tiles, as in the
-   table above, which lands as `A B C D A B C D A`. If you would
-   rather draw a bespoke 9-wide desk with no repeat, say so and the
-   role gets a 9-slot vocabulary instead; it is a table change, not a
-   redraw. **Nothing about the desk should be drawn as a one-off until
-   you pick.** The Coatroom counter is 4-wide and repeats, for
-   reference — this desk outranks it, so a bespoke run is defensible.
+1. **The desk is 9 wide, not "4–6" — SETTLED 2026-08-14: bespoke.**
+   §1 specifies the hero block as "2-high, 4–6 wide"; the map's
+   counter block is **9 × 2** at x 55–63, and the human chose to draw
+   it bespoke rather than as a repeating period. So the `counter` role
+   now has a nine-slot vocabulary: `dx` (columns from the run's left
+   edge) maps 0→8 straight onto sheet indices 28–36 on top and 37–45
+   on the face. Draw the desk as **one 144×32 picture** — cubbies,
+   bell, panel joints wherever they want to be, no tiling constraint
+   inside the run. It is cut into 16px columns only because the engine
+   stores it as tiles.
+   Two consequences worth knowing: the desk art is now specific to a
+   9-wide counter (a future map placing a wider one repeats index 36 /
+   45 to the right rather than breaking), and this is why the sheet is
+   9 columns instead of 8.
 2. **The return zone is not a tile.** The bell-cart return zone is an
    object rect (x 1040–1136, rows 11–14), immediately RIGHT of the
    desk at the level's centre. It has no tiles of its own and needs
@@ -96,8 +113,9 @@ each one's standable edge has to read at a glance while running.
 
 ## (d) Free and available
 
-- **Sheet indices 14, 15, 16, 23, 24** — spare, plus anything you
-  don't use above.
+- **Sheet indices 9, 15–18, 46–54** — spare, plus anything you don't
+  use above. The spare row 5 exists precisely so a role can grow
+  without re-cutting the sheet.
 - **The `fg` layer exists and is EMPTY.** The garage's lighting
   machinery is generic and already built: an additive fg tile layer
   over a MULTIPLY ambient scrim, with a flicker on the layer's alpha
@@ -121,7 +139,9 @@ each one's standable edge has to read at a glance while running.
 2. Mezzanine strip (4 + breaker) — 10 platforms, all three tiers get
    *something* immediately since cart platforms can borrow the strip
    until row 2 of the sheet is drawn.
-3. Desk hero block (8 tiles) — after this the level stops wearing the
-   Coatroom's bones, which is §3's own milestone.
-4. Cart platform strip (3), column pair (2), sconce (1).
+3. Desk hero block (18 tiles — the bespoke 144×32 run) — after this
+   the level stops wearing the Coatroom's bones, which is §3's own
+   milestone.
+4. Cart platform strip (3), column pair + plinth (3), sconce (1),
+   palms (2).
 5. Parallax P4 → P3 → P2 → P1, then the glow overlay.
