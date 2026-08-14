@@ -70,6 +70,7 @@ export default class GarageScene extends LevelScene {
     // pinching vehicle yields to the edge push (anti-crush guarantee).
     // Structure tiles keep their own collider: dash never passes walls.
     this.crushYieldCar = null
+    this.wedgeCar = null // car Chexy is being backed out of (updateWedge)
     this.physics.add.collider(this.player.sprite, this.items, null, (_p, car) =>
       this.carCollideFilter(car)
     )
@@ -233,11 +234,66 @@ export default class GarageScene extends LevelScene {
     // anti-crush: a pinching vehicle yields to the edge push, latched
     // until Chexy is clear of it (structure tiles NEVER yield)
     if (car === this.crushYieldCar) return false
+    // the pinch is tested BEFORE the wedge so a pinching car still
+    // latches its own anti-crush state — the two resolutions move Chexy
+    // the same way, but only this one is the crush guarantee
     if (this.isPinch(car)) {
       this.crushYieldCar = car
       return false
     }
+    if (car === this.wedgeCar) return false // being backed out of, below
     return true
+  }
+
+  // THE WEDGE (human report 2026-08-14). Dash-through assumes the far
+  // side of a car is reachable. For a car already crossing the trailing
+  // edge it isn't: exiting left would mean standing offscreen, so the
+  // edge clamp cancels the dash's movement, extend-until-clear never
+  // clears, and Chexy rides inside the car until it scrolls away.
+  //
+  // The test is geometric, not a stuck-timer: there is insufficient room
+  // when the car's LEFT side has already passed the edge Chexy can be
+  // carried to. Then the only way out is back the way she came.
+  isWedged(car) {
+    return car.body.left < this.scrollX + TUNING.edgePushMargin + this.player.body.width
+  }
+
+  // Back her out to the right at a fixed rate until her left side clears
+  // the car's right side. Position-only, like the edge carry — no
+  // velocity injection to fight her input or her animation state. The
+  // car yields while this runs (carCollideFilter), so separation can't
+  // shove her back in; structure tiles still stop her, in which case the
+  // eject simply waits, and the car scrolling past releases it anyway.
+  updateWedge(time, delta) {
+    const p = this.player
+    if (this.wedgeCar && !this.wedgeCar.active) this.wedgeCar = null
+    // The latch is set by the dash path in update() and NOWHERE else.
+    // Scanning for "embedded in a car" instead looks equivalent and is
+    // not: the edge carry is a position teleport, so it can shove her a
+    // few pixels into a perfectly solid car every frame, and a scan
+    // reads that as a wedge and dissolves the car she was supposed to
+    // jump. A dash is the only thing that puts her genuinely inside one.
+    if (!this.wedgeCar) return
+    const car = this.wedgeCar
+    if (p.body.left >= car.body.right) {
+      this.wedgeCar = null
+      return
+    }
+    const step = Math.min(
+      (TUNING.carEjectSpeed * delta) / 1000,
+      car.body.right - p.body.left + 1
+    )
+    // Wall guard, phrased as a CHANGE rather than a state: block only if
+    // the destination is solid and her current position isn't. A wedged
+    // body is often clipping a tile already (a car sits on the floor she
+    // stands on), and an absolute test reads that as "walled in" and
+    // never moves her — which is the bug wearing a different hat.
+    const solidAt = (x) =>
+      this.mainLayer
+        .getTilesWithinWorldXY(x + 1, p.body.top + 1, p.body.width - 2, p.body.height - 2)
+        .some((t) => t.collides)
+    if (solidAt(p.body.left + step) && !solidAt(p.body.left)) return
+    p.sprite.x += step
   }
 
   // the pinch (2026-08-09-g): edge push pressing + vehicle blocking
@@ -689,19 +745,36 @@ export default class GarageScene extends LevelScene {
     // never ends embedded, never pops vertically. Checked BEFORE
     // Player.update so the expiry can't land this frame; once clear,
     // the dash ends on its own terms (fresh fall, -g air rules intact).
+    // …but a dash into a car that is already leaving the screen has no
+    // far side to reach (isWedged): extending it forever is exactly how
+    // Chexy ends up riding inside the car, so that case ends the dash
+    // and hands the frame to updateWedge instead.
     if (
       this.player &&
       time < this.player.dashUntil &&
       this.physics.overlap(this.player.sprite, this.items)
     ) {
-      this.player.dashUntil = Math.max(this.player.dashUntil, time + delta + 10)
+      const wedged = this.items
+        .getChildren()
+        .find(
+          (car) =>
+            car.active && this.physics.overlap(this.player.sprite, car) && this.isWedged(car)
+        )
+      if (wedged) {
+        // hand the frame to updateWedge: end the dash and latch the car
+        // it ended inside, so the eject owns her from here
+        this.player.dashUntil = 0
+        this.wedgeCar = wedged
+      } else {
+        this.player.dashUntil = Math.max(this.player.dashUntil, time + delta + 10)
+      }
     }
     super.update(time, delta)
     if (this.runOver) return
-    this.updateGarage(time)
+    this.updateGarage(time, delta)
   }
 
-  updateGarage(time) {
+  updateGarage(time, delta) {
     // swarm contact-slow: cap ground speed while the drag is live;
     // Player.update re-asserts full maxVelocity every frame, so expiry
     // restores itself with no cleanup
@@ -739,6 +812,10 @@ export default class GarageScene extends LevelScene {
       // still animates as running, because then she really is running.
       p.sprite.x += edge - p.body.left
     }
+
+    // wedge eject runs AFTER the edge carry: both only ever move her
+    // right, so they compose instead of fighting
+    this.updateWedge(time, delta)
 
     // safe-at-edge bank pass (2026-08-09-e), then exit checks
     for (const car of this.items.getChildren()) {

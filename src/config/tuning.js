@@ -119,6 +119,10 @@ export const TUNING = {
   // out — retuned 2500→5000 after the first punch list: the tagged
   // backlog must persist long enough for elite pressure to exist
   edgePushMargin: 10, // trailing-edge nudge zone (px past the view edge)
+  carEjectSpeed: 220, // wedge eject (human report 2026-08-14): a dash into
+  // a car that is already leaving the screen has no far side to reach, so
+  // Chexy is backed out to the RIGHT at this rate instead of riding
+  // inside it. Above maxSpeed on purpose — holding left must not beat it.
   swarmSlowFactor: 0.4, // swarm contact-slow (2026-08-09-c): speed cap factor
   swarmSlowMs: 600, // refresh-not-stack; dash immune and dash cancels it
   eliteMaxActive: 2, // concurrent elite cap (in-session ruling 2026-08-10):
@@ -249,6 +253,7 @@ export const TUNING_SCHEMA = [
   { key: 'requestFireDeadlineFrac', label: 'Request deadline (screen frac)', min: 0.3, max: 0.95, step: 0.05 },
   { key: 'luxuryLeadFactor', label: 'Luxury lead factor', min: 1, max: 3, step: 0.1 },
   { key: 'driveOffDelayMs', label: 'Drive-off delay (ms)', min: 0, max: 6000, step: 250 },
+  { key: 'carEjectSpeed', label: 'Car eject speed', min: 60, max: 400, step: 10 },
   { key: 'swarmSlowFactor', label: 'Swarm slow factor', min: 0.1, max: 1, step: 0.05 },
   { key: 'swarmSlowMs', label: 'Swarm slow (ms)', min: 0, max: 2000, step: 50 },
   { key: 'eliteMaxActive', label: 'Elite cap', min: 0, max: 8, step: 1 },

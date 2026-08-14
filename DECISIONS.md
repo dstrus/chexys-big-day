@@ -3351,3 +3351,49 @@ to carry light. Gids 20/22 now hold Sodium Mid (92,36,16) and Bright
 earlier 26 — so the cone spreads across all three tiles again while
 the core keeps its graded, non-clipping ramp. Committed; the 3-tile
 placement rhythm is once again the right assumption.
+
+## 2026-08-14 — The wedge: dashing into a car that is leaving the screen
+
+Human report: "As a car begins to scroll offscreen, it remains possible
+to dash into it and get stuck until the car is fully scrolled offscreen.
+If there is insufficient room to dash through the car, the player should
+be pushed to the right until outside the car's collision rect."
+
+Mechanism: dash-through assumes the far side of a car is reachable, and
+extend-until-clear (2026-08-09-g) keeps the dash alive until it is. For
+a car straddling the trailing edge the far side is OFFSCREEN — the edge
+clamp cancels the dash's movement every frame, so the dash extends
+forever and Chexy rides inside the car until it scrolls away.
+
+Fix, in the human's terms. `isWedged(car)` is geometric, not a stuck
+timer: insufficient room means the car's left side has already passed
+the leftmost point Chexy can be carried to. A dash that overlaps such a
+car ends immediately and latches `wedgeCar`; `updateWedge` then backs
+her out to the RIGHT at `carEjectSpeed` (220, panel slider, above
+maxSpeed so holding left can't beat it) until her left clears the car's
+right. Position-only, like the edge carry — no velocity injection to
+fight her input or her animation state.
+
+Two things this fix got wrong first, both caught by the existing
+dash-through suite rather than by inspection:
+
+1. Latching the wedge before testing isPinch stole the anti-crush
+   latch. Same resolution, but the crush GUARANTEE stopped recording
+   itself. The pinch is now tested first.
+2. Scanning for "embedded in a car" as the latch condition dissolved
+   solid cars during ordinary play. The edge carry is a position
+   teleport, so it shoves her a few pixels into a perfectly solid car
+   every frame; the scan read that as a wedge and let her walk through
+   a car she was meant to jump. The latch now comes from the dash path
+   and nowhere else — a dash is the only thing that puts her genuinely
+   inside a car.
+
+Also: the wall guard tests a CHANGE (destination solid, current not)
+rather than an absolute. A wedged body is usually clipping the floor
+tile the car rests on, and an absolute test reads that as "walled in"
+and never moves her.
+
+Verified: escape in ~0.5s with no residual overlap; mid-screen cars
+still dash-through with no eject; B1 pinch latch, B2 open-sky solidity,
+A1/A2 dash-through and C air-dash all still pass; edge-carry idle
+unchanged.
