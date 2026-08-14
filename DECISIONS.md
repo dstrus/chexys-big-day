@@ -3141,3 +3141,25 @@ spawn burst free, steals on a compressed dedicated clock
 — the exemption pattern holds even at the climax. The
 game's full gameplay surface now exists; rounds are the
 remaining distance to Gate 3.
+
+## 2026-08-14 — DEV-only boss skip (playtest tool)
+
+Human asked for a way to skip to the boss fight for playtesting.
+Added: press B during Act 1 of The Mass Exodus and the run banks as
+it stands, then opens the Boss Door. Two deliberate choices — it
+takes the REAL transition path (bank → breath beat → Act 2) rather
+than teleporting into the arena, so what gets playtested is the
+shipping transition; and whatever losses/score you have at the
+moment of the skip are what the boss inherits, so specific states
+are settable (skip at once for a clean fight, or take a loss first
+to exercise full-shift hanger math).
+Gated on import.meta.env.DEV, so the key cannot exist in a built
+game. 'B' collides with nothing (R/C results, ESC/P pause, F jitter
+capture, Z/J/X/K/SPACE gameplay). Debug shortcuts are now documented
+in the README next to the testing notes — the tuning panel and
+jitter capture had only ever been discoverable by reading source.
+Verified: mid-run state (score 250, 1 loss) banked exactly, Act 2
+reached with the King up at phase 0, arena locked; no console noise.
+NOTE for the human: the exodus still needs a museum clear to appear
+unlocked on the level select — say the word if a dev-only unlock
+there would help.

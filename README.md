@@ -15,6 +15,18 @@ npm run build   # static dist/ for GitHub Pages / itch.io
 
 Phaser 3 + Vite, JavaScript ES modules. Node 22 (see .tool-versions).
 
+## Debug shortcuts (dev server only)
+
+Gated on `import.meta.env.DEV`, so none of these exist in a built
+game.
+
+| Key | Where | Does |
+|-----|-------|------|
+| `` ` `` | anywhere | tuning panel: live sliders, flags, readouts |
+| `B` | The Mass Exodus, Act 1 | **skip to the boss** — banks the run as it stands and opens the Boss Door, taking the real transition path |
+| `F` | in a level | jitter capture: logs 60 frames of movement deltas |
+| `M` | anywhere | mute toggle (ships; not debug) |
+
 ## Testing notes
 
 - Seed progression explicitly; fresh-profile defaults are a test

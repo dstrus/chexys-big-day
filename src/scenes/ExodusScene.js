@@ -43,6 +43,14 @@ export default class ExodusScene extends MuseumScene {
     this.bossParticles = this.tagParticles
     this.carpets = []
     this.grab = null
+    // DEV-ONLY boss skip (playtest tool): B during Act 1 banks the run
+    // as it stands and opens the Boss Door immediately. It takes the
+    // REAL door path — bank, breath beat, Act 2 — so what you land in
+    // is the shipping transition, just without playing four minutes
+    // first. Gated on import.meta.env.DEV, so it cannot exist in a
+    // built game. 'B' collides with nothing (R/C results, ESC/P pause,
+    // F jitter capture, Z/J/X/K/SPACE gameplay).
+    this.bossSkipKey = import.meta.env.DEV ? this.input.keyboard.addKey('B') : null
 
     if (this.resumeBoss) {
       const cp = this.game.registry.get(CHECKPOINT_KEY)
@@ -641,6 +649,20 @@ export default class ExodusScene extends MuseumScene {
 
   update(time, delta) {
     super.update(time, delta)
+    if (
+      this.bossSkipKey &&
+      Phaser.Input.Keyboard.JustDown(this.bossSkipKey) &&
+      this.act === 1 &&
+      !this.runOver
+    ) {
+      this.game.events.emit('system-bubble', {
+        text: 'DEBUG: skipping to the Boss Door',
+        accent: CLAW_RED,
+        holdMs: 1600,
+      })
+      this.beginBossDoor()
+      return
+    }
     if (this.runOver || this.act !== 2) return
     this.king?.update(time, delta)
     this.updateClaws(time)
