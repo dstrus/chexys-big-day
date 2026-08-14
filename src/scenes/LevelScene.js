@@ -41,10 +41,16 @@ const TILE_SKINS = {
     // an underside), so they are not interchangeable. Sheet index 6 is
     // the floor stain; index 14 is the deck stain. (Sheet index ≠ the
     // map's role gid: map gid 6 means "deck left cap" and skins to 10.)
+    // Four floor breakers on out-of-phase prime cadences, ordered
+    // RAREST FIRST so a collision shows the more meaningful tile. Each
+    // cadence is tuned against how loud the tile is (pixels differing
+    // from plain concrete): grate 136/256 → rarest, crack 28 → densest.
     ground: (x, y) => {
       if (y >= 16) return 4 + (x % 2) // sub-floor fill
-      if (x % 23 === 11) return 13 // painted bay number: wayfinding cadence
+      if (x % 37 === 18) return 19 // drain grate — the loud one, ~2.7%
+      if (x % 23 === 11) return 13 // painted bay number: wayfinding rhythm
       if (x % 17 === 5) return 6 // floor oil stain
+      if (x % 11 === 4) return 18 // hairline crack — subtlest, ~9%
       return 1 + (x % 3)
     },
     // deck strips are laid 6 [2 …] 7 and are DOUBLE-FACED (walked top,

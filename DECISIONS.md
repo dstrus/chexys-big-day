@@ -2860,3 +2860,26 @@ while map gid 6 means "deck left cap" and skins to index 10.
 Verified: surface row 1,2,3,1,2,6; deck 10,11×5,14,11×6,12; floor
 stains at columns 5/22/39/56, bay numbers at 11/34/57; pillars,
 collision, and the coatroom regression unchanged; no console noise.
+
+## 2026-08-13 — Two more garage floor breakers (crack, drain grate)
+
+Artist added a hairline CRACK (sheet index 18) and a drain GRATE
+(index 19), both floor tiles — confirmed by their bottom edges
+(Asphalt Light, matching the surface period rather than a deck
+underside). The floor now runs a 3-tile base period broken by FOUR
+tiles on out-of-phase prime cadences, ordered rarest-first so a
+collision shows the more meaningful tile:
+  grate  x % 37 === 18   (~2.7% — the loud one)
+  bay    x % 23 === 11   (wayfinding rhythm)
+  oil    x % 17 === 5
+  crack  x % 11 === 4    (~9% — the subtlest)
+Cadence chosen against MEASURED loudness (pixels differing from plain
+concrete: grate 136/256, bay 42, oil 40, crack 28) — density runs
+inversely to how much a tile shouts, leaving ~78% of the floor on the
+base period. All four numbers are the tuning surface if play reads
+busy or plain.
+Verified: crack at columns 4/15/26/37/48/59, grate at 18/55, bay at
+11/34/57, oil at 5/22/39/56, no collisions in the sampled span; the
+DECK stain still never appears on the floor (asserted); decks,
+pillars, collision and the coatroom regression unchanged; no console
+noise.
