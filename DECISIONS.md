@@ -3310,3 +3310,34 @@ the flashing area is small (three 16px tiles per pool), the contrast is
 low (warm dither on dimmed concrete), and it never covers the screen.
 If a full-screen flash effect is ever added to this level, that
 combination should be re-examined rather than assumed safe.
+
+## 2026-08-14 — Garage tiles: pools redrawn (human art pass)
+
+Re-exported from garage-tile.aseprite via export-sprites.sh; a full
+re-export reproduces every other asset byte-identically, so only
+assets/tiles/garage.png moved. Tile-by-tile diff of the sheet: gids
+20, 21 and 22 changed, nothing else — the ground, deck, pillar and
+breaker roles are untouched, so the skin table needs no update.
+
+What changed inside them:
+
+- The surround is now TRANSPARENT rather than drawn on black (242/256
+  transparent in 20 and 22, 220/256 in 21). Identical under additive —
+  transparent and black both contribute nothing — and easier to author.
+- gid 21 (core) lost the clipping. It was a 50% checkerboard of
+  (255,217,160) — 128 near-white pixels — and is now 36 pixels graded
+  across the full sodium ramp, brightest (240,162,74). This is the fix
+  for the white-checkerboard finding, and it works.
+- gids 20/22 (falloff) went the other way: they now hold 14 pixels
+  each of Sodium Ember (27,26,23) ONLY, luma 26. Under additive that
+  is +27 red on a dimmed floor — visually nothing.
+
+Consequence: the three-tile composition has collapsed to one effective
+tile. Pools read as a single ~16px cone rather than a 48px pool with
+spill. Captured in-game at ambient 0.7 and it genuinely looks good —
+a focused downlight — so this is committed as-is, not held. But
+whether the falloff tiles are meant to be near-empty is a question for
+the artist: if the spill was drawn and landed on the transparent index
+by accident, the numbers above are the tell. Placement still assumes
+3-tile pools (24 ground + 12 deck), which is why the cones are spaced
+as they are.
