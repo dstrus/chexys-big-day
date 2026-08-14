@@ -222,3 +222,78 @@ carries category), enemy paper tones, and Chexy orange.
   would muddy glass, tires, and chrome). SUV and lux keep interim rects
   until drawn — mixed states are fine.
 - The collision body is the texture's own size, i.e. the drawing.
+
+
+## (d) Sodium lamp pools — the `fg` layer
+
+Asked 2026-08-14: what goes in the fg image, what's it called, how big?
+
+**There is no fg image.** `fg` is one of the map's four TILE layers
+(bg2 · bg1 · main · fg), so the pools are more tiles in the sheet you
+already have — `art/aseprite/garage-tile.aseprite` →
+`assets/tiles/garage.png`. Nothing new to name. The fg layer renders
+at depth **+8**, i.e. IN FRONT of Chexy, the cars and the decks, which
+is exactly what a cast light should do.
+
+Note this would be the FIRST use of fg anywhere in the game — every
+map's fg layer is currently empty, so the "Coatroom light-pool trick"
+BRIEF-ART-04 §3 refers to was an aspiration, never built. The garage
+sets the precedent.
+
+### Free slots (nine of the sheet's 24)
+
+| gid | sheet position | gid | sheet position |
+|-----|----------------|-----|----------------|
+| 7 | (96, 0) | 20 | (48, 32) |
+| 8 | (112, 0) | 21 | (64, 32) |
+| 15 | (96, 16) | 22 | (80, 32) |
+| 16 | (112, 16) | 23 | (96, 32) |
+| | | 24 | (112, 32) |
+
+### Dimensions and composition
+
+16×16 like every tile — a pool is COMPOSED from a run, not drawn as
+one big sprite. Suggested set of three (plus one optional):
+
+- **pool-left** — the falloff edge, dark at the outer side
+- **pool-core** — the bright middle; repeats to widen a pool
+- **pool-right** — mirrored falloff
+- *optional* **pool-hot** — a brighter core variant for the tile
+  directly under a fixture
+
+That gives pools of 48px, 64px, 80px… by repeating the core. A
+separate **lamp fixture** tile (Fixture Cool Black in the palette)
+would belong on `main` or `bg1`, not fg — the fixture is an object,
+the pool is its light.
+
+### The one real constraint: draw the light on BLACK, not on alpha
+
+The sheet exports INDEXED, and Aseprite's indexed mode carries only a
+single fully-transparent index — so a soft, semi-transparent glow
+cannot be authored in the current path, and an opaque pool at depth +8
+would paint over Chexy's feet instead of lighting them.
+
+So: **the fg layer gets ADDITIVE blend, code-side** (one call, the
+same trick the coatroom's glow overlay uses). Under additive, black
+contributes nothing and warm pixels brighten whatever is beneath —
+including Chexy when she walks through the pool. Practically:
+
+- Draw the pool's falloff as a **dark→warm dithered gradient**. Dither
+  is the softness; additive turns the dark end into nothing.
+- Outer areas can be black OR transparent — both vanish under
+  additive. Black is easier to judge while drawing.
+- Palette: the sodium ramp — Sodium Ember → Mid → Bright → Core →
+  Hotspot (sparse). Blue signage tones stay out of the pools.
+
+### Placement is agent-side
+
+The fg layer is empty and the garage map is generator-owned, so tile
+PLACEMENT is not the artist's job. Physically the lamps hang from deck
+undersides, so pools want to fall on the ground beneath row-12 decks
+and on row-12 deck tops beneath the row-9 runs. Say the rhythm you
+want (one pool per parking module, one per second pillar, …) or leave
+it and a proposal comes back with the drop.
+
+Optional and cheap once the tiles exist: a **slow flicker** on the fg
+layer's alpha — sodium lamps buzz — the same code-side pulse the
+coatroom glow already uses. Two lines, no extra frames.
