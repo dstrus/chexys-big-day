@@ -3397,3 +3397,40 @@ Verified: escape in ~0.5s with no residual overlap; mid-screen cars
 still dash-through with no eject; B1 pinch latch, B2 open-sky solidity,
 A1/A2 dash-through and C air-dash all still pass; edge-carry idle
 unchanged.
+
+## 2026-08-14 — BRIEF-ART-07 (Bell Desk environment) + belldesk-env.gpl
+
+Both landed in the repo. Step zero (§0) answered with
+art/belldesk-inventory.md, measured off assets/maps/belldesk.json at
+HEAD: 120×17 = 4 screens, ground rows 15/16 full width, ten platforms
+in THREE tiers (row 6 ×2 at 7 wide, row 9 ×4 at 9 wide, row 12 ×4 at
+6 wide), counter 9×2 at x55–63, bg1 twelve 1×1 tiles on row 3, bg2 six
+11-tall column runs at x10/30/50/70/90/110, fg empty.
+
+Sheet spec: art/aseprite/belldesk-tile.aseprite → assets/tiles/
+belldesk.png, 128×64 (8×4 = 32 tiles), role-by-index table in the
+inventory. The export pass is wired now (belldesk-tile:belldesk), so
+the drop is automatic whenever the source appears — no code session.
+
+Two brief/map disagreements flagged rather than guessed:
+
+1. §1 specifies the desk hero block as "2-high, 4–6 wide"; the map's
+   counter is 9×2. Default offered is a 4-tile period repeating across
+   the 9 (ABCDABCDA) using the existing block-relative dx; a bespoke
+   9-wide run is available as a table change, not a redraw. The artist
+   picks BEFORE drawing the desk.
+2. §0 says "two mezzanine tiers" and the map has three platform rows.
+   Resolved without ambiguity: rows 6 and 9 are the mezzanines, row 12
+   is the cart platforms named in §1. Note for the skin: all three
+   tiers speak the same role gids, so the skin branches on y — which
+   is why the sheet needs both a mezzanine strip and a cart strip.
+
+Also recorded: the return zone is an object rect (x1040–1136), not
+tiles, so nothing marks it in the floor today; and the garage's
+lighting stack (additive fg + MULTIPLY ambient + flicker) is generic
+and available to this level for lamp pools or chandelier spill, with
+the garage's lesson attached — pools and ambient are one decision.
+
+Numbering: BRIEF-ART-05 (Museum) is still absent from HEAD and still
+owed by the design chat; ART-07 explicitly reserves it. Verified by
+`ls BRIEF-ART-0*.md` — 01, 02, 03, 04, 06, 07 present.

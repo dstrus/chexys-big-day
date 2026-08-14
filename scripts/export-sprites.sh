@@ -26,7 +26,7 @@ ICONS=(nfc-chip:nfc-tag nfc-chip-10x10:nfc-tag-hud contact-card insight-report r
 # not a frame sheet: save the canvas flat — no JSON, and NO --extrude
 # (the tilemap slices by grid, so padding would shift every tile).
 # "source:output" — output lands in assets/tiles/<output>.png.
-TILES=(coatroom-tiles2:coatroom2 garage-tile:garage)
+TILES=(coatroom-tiles2:coatroom2 garage-tile:garage belldesk-tile:belldesk)
 
 # Garage cars (BRIEF-ART-04 §1). One drawing per silhouette tier, drawn
 # in the cobalt body pair; palette-variants.mjs then swaps that pair
