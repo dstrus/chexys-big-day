@@ -3163,3 +3163,33 @@ reached with the King up at phase 0, arena locked; no console noise.
 NOTE for the human: the exodus still needs a museum clear to appear
 unlocked on the level select — say the word if a dev-only unlock
 there would help.
+
+## 2026-08-14 — Garage P2 lands; tile columns matched to the painted rank
+
+Artist updated garage/p3.png, added garage/p2.png, and redrew the
+TILESET pillars to resemble p2's columns — deliberately relating the
+two ranks rather than differentiating them (the inverse of the
+guidance offered when the stack was specced; the artist tested it and
+called it).
+Checked rather than assumed:
+- p3 960×270, ink in all 960 columns, wrap PIXEL-PERFECT (0/270 rows
+  differ).
+- p2 1280×270 = FOUR full-height pillars, 21 columns wide, at x 0 /
+  245 / 740 / 988 — varied spacing (245, 495, 248), which is the
+  anti-metronome guidance honoured. Its wrap difference (3 rows) is
+  benign: the leftmost pillar sits flush at x=0 with an empty right
+  edge, so repeats read pillar-gap-pillar and nothing splits.
+- Tileset pillar pair still occupies gids 9/17 as full 16×16 tiles,
+  so the skin's dressing role is unaffected by the redraw.
+- request-chips was updated too (unmentioned): still a 48×10 strip,
+  three frames, and the chip battery re-ran green.
+Verified live: the garage stack now reports ['p3','p2'] at depths
+−8/−7, each tracking its own factor exactly (p2 90.9/90.9 at scrollX
+202; 5/5 when framed at the level start). Screenshot with a painted
+pillar mid-frame confirms the two ranks read as related-but-separate
+depths, with p3's EXIT signage and city windows behind them.
+Harness note: a screenshot path renamed in one patch but logged under
+the old name in another had me reading a STALE capture and briefly
+suspecting tool caching — the file was simply never overwritten.
+Distinct filenames per capture, and trust the numbers over a
+familiar-looking image.
