@@ -2911,3 +2911,17 @@ ICONS pass now SKIPS undrawn sources, matching the CARS pass.
 Verified: three requests fired with an identical forced hue produce
 three distinct chip shapes (16x7 / 13x10 / 18x6), all correctly
 tinted; no console noise.
+
+## 2026-08-13 — Request-chip silhouette icons landed
+
+Artist drew request-chips (48×10 strip, three 16×10 frames: sedan /
+SUV / luxury, flat cream so the HUD tint carries each car's hue).
+Zero wiring needed — the drop-in path shipped ahead of the art. The
+fallback proportioned rectangles stepped aside automatically and the
+gold luxury dot retired, as designed: the silhouette says luxury by
+itself now.
+Verified with three requests forced to an IDENTICAL hue (the exact
+case the human reported as unreadable): each chip is an Image at
+16×10 on its own frame 0/1/2, all correctly tinted, and each chip
+container holds a single child — proving the gold dot is gone. No
+console noise.
