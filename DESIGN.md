@@ -328,6 +328,18 @@ Towering "Ticket #45" monster (nod to 45-minute paper-era lines).
 Design TBD in a dedicated design session before Phase 3 implements
 it. Victory screen shows "99% Item Return Rate."
 
+### 5.x Pixel-art scaling law (canon, handoff 2026-08-12-b)
+
+**Draw at target size; tint at runtime; never scale pixel art
+non-integrally.** Twice now a scale-down shortcut has been refused —
+first the request-chip thumbnails (cars are 14-18px tall; a chip needs
+~0.35x, which is mush), earlier the same logic on icons. A downscale
+that isn't an integer ratio destroys the nearest-neighbour discipline
+locked in §5. The pattern that works instead: a purpose-drawn asset at
+the size it will occupy, drawn FLAT, tinted per-instance at runtime so
+one drawing serves every colour (request chips, hangers, and the car
+palette-swap variants all follow it).
+
 ## 4. Collectibles & Power-ups
 
 - **NFC tags** — coin equivalent, scattered and dropped by enemies.

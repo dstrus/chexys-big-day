@@ -2925,3 +2925,25 @@ case the human reported as unreadable): each chip is an Image at
 16×10 on its own frame 0/1/2, all correctly tinted, and each chip
 container holds a single child — proving the gold dot is gone. No
 console noise.
+
+## 2026-08-13 — Handoff 2026-08-12-b applied
+
+- Sequence check: 2026-08-12-a applied ✓ (4df3b8f).
+- Item 1: S2 ratified as shipped — nothing outstanding.
+- Item 2: HUD chip ruling ratified. The standing note is now CANON in
+  DESIGN (§5.x, "Pixel-art scaling law"): draw at target size, tint at
+  runtime, never scale pixel art non-integrally — recorded after the
+  second refusal of a scale-down shortcut.
+- Item 3: skin convention extended and ratified (background layers +
+  dx AND dy on every role); carries forward to the museum and exodus
+  sheets when they land.
+- Item 4: BRIEF-07 Session 3 ordered — GO. Interim rect King is
+  acceptable throughout; BRIEF-ART-06 runs parallel.
+- Item 5: ruling entry appended verbatim below.
+
+2026-08-12 — S2 ratified (handoff 2026-08-12-b): the
+King's core, the Boss Door bank, tier-weighted meter,
+rip-grammar claw, dead-clock fix. HUD silhouette chips
+ratified; no-non-integer-scaling recorded as canon. Skins
+gained bg layers + dy. S3 ordered. Act-1 round verdict
+still owed.
