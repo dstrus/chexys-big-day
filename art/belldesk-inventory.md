@@ -24,7 +24,7 @@ keeps its placeholder look until each role is filled.
 
 | Row | Sheet index | What |
 |---|---|---|
-| 0 | 1,2,3,4 | **carpet floor sequence** — 4-tile period, burgundy field + quiet figure |
+| 0 | 1,2,3,4 | **carpet floor sequence** — 4-tile period, leopard field (two-value mottle + rosettes) per the Faena direction |
 | | 5 | brass floor medallion (breaker) |
 | | 6 | worn patch (breaker) |
 | | 7 | **marble border** — carpet meets the desk run |

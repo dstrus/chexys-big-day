@@ -3581,3 +3581,35 @@ me): BRIEF-ART-07's numbering note still says "ART-05 remains reserved
 for the Museum, still owed by the design chat" — the debt is now paid.
 That joins the §1-contradicts-the-Faena-direction and dusk-Appendix
 items already awaiting a ruling.
+
+## 2026-08-17 — BRIEF-ART-07 contradictions resolved
+
+The Faena amendment (2026-08-14-a) touched only the three targets the
+handoff listed, which left the rest of the brief arguing with itself.
+The human asked for the contradictions fixed, so the direction is now
+applied consistently:
+
+- §1 lobby floor: "deep muted burgundy field with a quiet geometric
+  figure" → LEOPARD, the two-value mottle with rosettes and a wood
+  border, named in v2 swatches. The semantic-red guard is sharpened
+  rather than dropped: the border's red is Carpet Border Red #7A1622,
+  explicitly non-semantic, and #EA5151 appears nowhere in the
+  environment (item 2's composite check still confirms it in situ).
+- §1 desk: "2-high, 4–6 wide" → 2-high and 9 wide BESPOKE, pointing at
+  the inventory's slots (28–36 top, 37–45 face). The brief had never
+  caught up with the 2026-08-14 bespoke ruling — a contradiction with
+  the shipped skin, not just with the new direction.
+- §1 dressing: palms are no longer "the only green on the sheet"
+  (malachite arrived with v2), and the column is three tiles, not two
+  — the odd-run plinth finding.
+- Appendix: all four concept prompts rewritten from dusk/steel-blue to
+  crimson lacquer, gold cove crown, brass grid, curved stair. These
+  are the highest-risk stale text in the file — run as written they
+  would have generated the deleted direction.
+- Header numbering note: ART-05's debt is paid, so it now says so.
+- §3 step 3 relabelled "cove crown, wall grid, chandelier" (it read
+  "sky, silhouettes", and the sky is gone).
+
+Deliberately left: the two remaining mentions of dusk and skylight are
+the amendment's own record of what was deleted and demoted, not
+surviving direction.

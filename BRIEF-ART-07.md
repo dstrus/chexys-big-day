@@ -1,7 +1,7 @@
 # BRIEF-ART-07 — The Bell Desk Environment
 
-**For:** Art track. (Numbering note: ART-05 remains reserved
-for the Museum, still owed by the design chat.)
+**For:** Art track. (Numbering note: ART-05 was reserved for
+the Museum and landed 2026-08-17 — the debt is paid.)
 **Read first:** BRIEF-ART-02 §0 (readability law — applies
 verbatim), the skin convention (-12-a: maps speak role gids,
 skins translate; this sheet ships as a skin like the garage's).
@@ -44,27 +44,36 @@ zone. Draw to the inventory, not the memory.
 
 ## 1. Tileset (belldesk skin)
 
-- **Lobby floor:** hotel carpet, 4–6 tile sequence period
-  (the SotN lesson) — deep muted burgundy field with a
-  quiet geometric figure; NOT alert-red (#EA5151 stays
-  semantic). Two breakers: a brass floor medallion, a worn
-  patch. Marble border tiles where carpet meets the desk
-  run.
+- **Lobby floor:** LEOPARD carpet, 4–6 tile sequence period
+  (the SotN lesson) — a quiet two-value mottle (Carpet Base
+  Dark/Tan with Mottle Light) carrying rosettes in Rosette
+  Dark, bordered in wood where the field ends. The border's
+  red is Carpet Border Red #7A1622, deep and NON-SEMANTIC;
+  alert-red #EA5151 stays semantic and appears nowhere in
+  the environment. Two breakers: a brass floor medallion, a
+  worn patch. Marble border tiles where carpet meets the
+  desk run.
 - **Mezzanine strips:** double-faced (top = carpeted walk
   with the standable light edge; underside = coffered soffit
   with a brass drip line). The garage deck grammar, dressed
   formal.
-- **The front desk hero block** (counter precedent): 2-high,
-  4–6 wide — wood paneling, marble top with the standable
-  edge, a service bell glint (2px gold), room-key cubbies
-  suggested on the face. The Coatroom counter was the set
-  piece; this desk outranks it — it is the level's name.
+- **The front desk hero block** (counter precedent): 2-high
+  and **9 wide, drawn BESPOKE** — the map's counter block is
+  9×2 and the human ruled 2026-08-14 that it gets one
+  unbroken 144×32 picture rather than a repeating period
+  (art/belldesk-inventory.md §(a), sheet indices 28–36 top
+  and 37–45 face). A circle-pattern face in wood and brass,
+  marble top with the standable edge, a service bell glint
+  (2px gold), malachite lamps, room-key cubbies suggested.
+  The Coatroom counter was the set piece; this desk outranks
+  it — it is the level's name.
 - **Cart platforms:** brass luggage-cart tiles (frame + red
   velvet deck) where the blockout uses them as surfaces.
-- **Dressing:** column bases, potted palm pair (muted
-  green — the only green on the sheet), wall sconce flicker
-  pair (warm), elevator door suggestion with a dim gold
-  indicator.
+- **Dressing:** column segments + plinth (three tiles — see
+  the inventory: the runs are 11 tall, an odd count), potted
+  palm pair (Palm Silhouette — the sheet's only other green
+  is the desk's malachite), wall sconce flicker pair (warm),
+  elevator door suggestion with a dim gold indicator.
 
 ## 2. Parallax (four layers, Coatroom depth grammar)
 
@@ -85,7 +94,7 @@ reads as gilding catching light, not as competition.
    this brief).
 2. Floor sequence + mezzanine strips + desk hero block
    (1–1.5 sessions) → skin drop transforms the level.
-3. P4 + P3 (1 session — sky, silhouettes, chandelier).
+3. P4 + P3 (1 session — cove crown, wall grid, chandelier).
 4. P2 + P1 (1 session).
 5. Sconce flicker pair + chandelier pulse overlay
    (half session, deferrable).
@@ -95,26 +104,27 @@ wearing the Coatroom's placeholder bones.
 ## Appendix — concept prompts (fresh generations, wide/
 panoramic, no people, no readable text)
 
-P4: "Tall arched windows of a grand hotel lobby at dusk —
-steel blue evening sky fading to a soft rose horizon, dark
-city building silhouettes outside, elegant dark interior
-wall between the windows, moody and serene, flat stylized
-color planes, wide panoramic composition"
-
-P3: "The upper reaches of a grand hotel lobby — one ornate
-chandelier glowing warmly, a coffered ceiling in cool dusk
-shadow, the tops of mezzanine arches, deep steel blue with
-small warm gold lights, flat stylized shapes, wide panoramic
+P4: "The upper wall of a grand crimson hotel lobby — deep
+lacquered red panels divided by thin brass seams, crowned
+by a stepped gold-leaf cove molding running the full width
+and glowing softly from within, no windows, opulent and
+still, flat stylized color planes, wide panoramic
 composition"
 
-P2: "Grand hotel lobby architecture in evening shadow — a
-rank of columns, potted palm silhouettes, a warm glowing
-revolving door entrance at one side, cool steel blue with
-one warm glow, flat stylized color planes, wide panoramic
+P3: "The upper reaches of a grand crimson hotel lobby — one
+ornate chandelier glowing warmly against a wall of deep red
+lacquer in a brass grid, small warm gold lights, rich reds
+and antique brass, flat stylized shapes, wide panoramic
 composition"
 
-P1: "Close dressing of a hotel bell desk area at dusk —
-brass luggage carts in silhouette, a line of brass
-stanchions with velvet rope, one warm glowing sign shape,
-rich cool blues with small brass accents, flat stylized
+P2: "Grand crimson hotel lobby architecture — a mezzanine
+rail in brass, a sweeping curved staircase as the hero
+passage, a warm glowing revolving door entrance at one
+side, deep lacquered red with one warm glow, flat stylized
 color planes, wide panoramic composition"
+
+P1: "Close dressing of a grand hotel bell desk area — brass
+luggage carts in silhouette, a line of brass stanchions
+with velvet rope, tall potted palms in shadow, deep crimson
+and antique brass, flat stylized color planes, wide
+panoramic composition"
