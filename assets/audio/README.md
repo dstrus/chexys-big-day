@@ -34,6 +34,13 @@ Drop `assets/audio/music/<levelId>.mp3` (e.g. `coatroom.mp3`) and it
 loops for that level; without one, a generated 4-bar chiptune stub
 plays.
 
+### Archived tracks
+
+A leading underscore means ARCHIVED: `music/_coatroom.mp3` is a
+superseded take kept for reference. The loader skips `_`-prefixed
+files entirely, so they are neither downloaded at boot nor bundled
+into a build. Rename without the underscore to bring one back.
+
 ### Results screen: two reserved names
 
 `music/success.mp3` and `music/fail.mp3` are not levels — they are the

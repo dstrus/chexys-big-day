@@ -3555,3 +3555,29 @@ inspiration (handoff 2026-08-14-a): crimson lacquer + gold cove
 crown + leopard carpet; palette v2; dusk windows deleted;
 cove-not-skylight ruled as ceiling identity; semantic-red separation
 guarded by palette and composite check."
+
+## 2026-08-17 — Untracked backlog committed; `_` means archived
+
+Five commits for the files that had been sitting untracked:
+BRIEF-ART-05 + museum-env.gpl (retires the reserved ART-05 number;
+its law is a readability INVERSION — the one bright level, actors
+saturated-and-darker on pale marble, squint test unchanged); fail.mp3;
+the pre-remix Coatroom/Title takes; the Chexy GIF previews and
+chexy.old.aseprite; the nfc-beep Audacity project.
+
+fail.mp3 needed no code, as designed: the results lookup is by outcome
+name, so the file landing IS the feature. Verified — a failed run now
+stops the level loop and plays music-fail rather than ducking.
+
+New convention, forced by committing the archived takes: a LEADING
+UNDERSCORE on an audio filename means archived, and the loader skips
+those files. Boot loads every file the audio glob returns, so without
+the skip the two retired tracks would have been downloaded by every
+player and bundled into every build — 1.5MB for takes nothing can
+reference. Rename without the underscore to restore one.
+
+Stale doc noted, not touched (it belongs to the human's brief, not to
+me): BRIEF-ART-07's numbering note still says "ART-05 remains reserved
+for the Museum, still owed by the design chat" — the debt is now paid.
+That joins the §1-contradicts-the-Faena-direction and dusk-Appendix
+items already awaiting a ruling.
