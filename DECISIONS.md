@@ -3735,3 +3735,35 @@ the desk.
 Doc updates: inventory sheet table (9/18 claimed, 22/23/25/26/27 freed,
 column note replaced, order list), the bg1/bg2 role rows, and
 BRIEF-ART-07 §1's dressing bullet.
+
+## 2026-08-17 — CORRECTION to the -14-b item 2 record
+
+The 2026-08-14-b entry states the shipped coat frames are
+"blue/blue/green with no crimson garment at all". That is WRONG, and
+the method was the fault: I read it off a single random spawn
+(spawnItem picks a frame with Between(0,2)) instead of decoding the
+sheet. Decoded properly, coats.png is 72×24 — three frames:
+
+- frame 0 COBALT, body #2E6FD0 / #1E4C96
+- frame 1 CRIMSON, body #C22F3A / #8E1F2C
+- frame 2 OLIVE, body #55621C / #7A8C2E
+
+So the crimson coat the handoff is about DOES exist and has since
+f266092. What does NOT exist is the outline fix: no coat frame carries
+an outline at all. Frames 0 and 2 hold four colours each — body,
+shade, gold chip, accent — and no perimeter dark; frame 1 holds six,
+of which the only warm brown (#3E2B20) is four pixels of detail, not a
+rim. The coats read by value contrast against dark fields, per the
+readability law, rather than by outline.
+
+Item 2's verification therefore stays deferred, but for the accurate
+reason: the crimson coat is present, the lighter warm-brown OUTLINE has
+not landed, and there is nothing yet to composite. The conclusion did
+not change; the stated basis for it was false and is corrected here.
+
+Pre-armed finding for when that composite does run: frame 1 already
+contains 12px of #E91717 and 14px of #C01818 — near-alert-red, bright
+and saturated. Against Alert Red #EA5151 the separation is mostly LUMA
+(63 vs 127), not hue, so the urgency flash stays distinguishable, but
+this is the closest the item set comes to the semantic colour and it is
+where the guard should look first.
