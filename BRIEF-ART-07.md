@@ -74,11 +74,11 @@ zone. Draw to the inventory, not the memory.
   it — it is the level's name.
 - **Cart platforms:** brass luggage-cart tiles (frame + red
   velvet deck) where the blockout uses them as surfaces.
-- **Dressing:** column segments + plinth (three tiles — see
-  the inventory: the runs are 11 tall, an odd count), potted
-  palm pair (Palm Silhouette — the sheet's only other green
-  is the desk's malachite), wall sconce flicker pair (warm),
-  elevator door suggestion with a dim gold indicator.
+- **Dressing:** COLUMNS CUT (2026-08-17). A single 16×32
+  potted palm (Palm Silhouette — the sheet's only other green
+  is the desk's malachite), placed as a matched pair flanking
+  the hero desk; wall sconce flicker pair (warm); elevator
+  door suggestion with a dim gold indicator.
 
 ## 2. Parallax (four layers, Coatroom depth grammar)
 

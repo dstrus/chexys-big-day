@@ -3701,3 +3701,37 @@ formal, leopard floor-only."
 "2026-08-14 — Marble border role cut (handoff 2026-08-14-c): orphaned
 apron spec retired; desk sits on carpet per references; shadow-line
 grounding pre-armed if ever needed."
+
+## 2026-08-17 — Bell Desk: columns cut, potted palms placed
+
+Human rulings, applied together.
+
+COLUMNS CUT. All 66 bg2 placements removed from belldesk.json; the
+layer is now empty. Indices 22/23 (the segment pair) and 27 (the
+plinth) are free, and the odd-run plinth problem those runs created is
+moot. A side benefit: dressing is bg1-only now, so bg1 and bg2 never
+needed splitting into separate roles — the prerequisite I had flagged
+for palms disappeared with the columns.
+
+PALMS PLACED. The human drew a single 16×32 plant at sheet indices
+**9 and 18** rather than the speculative 25/26, because those two sit
+one directly above the other on a 9-column sheet and so could be drawn
+in their proper orientation — the better choice, and worth remembering
+as a sheet-layout lesson: a multi-tile object wants its slots stacked
+the way the object is.
+
+Placement (human: "flanking the desk is the appropriate placement"):
+bg1 at x53 and x65, fronds row 13, pot row 14 — one plant each side of
+the hero desk, which occupies x55–63. bg1 draws behind the main layer,
+so they stand on the carpet behind the play plane. Room for two more
+pairs at x45–49 and x71–75 if the level ever wants more rhythm.
+
+Verified in-game: both palms resolve (9 above 18, both sides), bg2
+reports zero tiles, the sconce line still resolves to 24, and the
+carpet still runs unbroken under the desk. No console noise. At 3× the
+plant reads as a slender potted palm sitting on the carpet line behind
+the desk.
+
+Doc updates: inventory sheet table (9/18 claimed, 22/23/25/26/27 freed,
+column note replaced, order list), the bg1/bg2 role rows, and
+BRIEF-ART-07 §1's dressing bullet.

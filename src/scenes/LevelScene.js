@@ -102,18 +102,22 @@ const TILE_SKINS = {
     // nine drawn columns, top row and face row. A counter wider than 9
     // repeats the last column rather than wrapping to garbage.
     counter: (x, y, { dx, isTop }) => (isTop ? 28 : 37) + Math.min(dx, 8),
-    // bg1 is twelve 1×1 tiles on row 3 (the sconce line); bg2 is six
-    // 11-tall column runs, rows 4–14. One dressing function serves both
-    // layers, so it branches on the row rather than on the layer.
-    //
-    // The pair tiles at 32px and 11 is ODD, so a plain dy alternation
-    // would end the column on its fade-IN tile exactly where it meets
-    // the floor. Row 14 gets a dedicated plinth instead, which leaves
-    // rows 4–13 as five clean pairs ending on the fade-out.
-    dressing: (x, y, { dy }) => {
-      if (y === 3) return 24 // sconce line (1×1 tiles, no run)
-      if (y === 14) return 27 // column plinth, meeting the carpet
-      return dy % 2 === 0 ? 22 : 23
+    // the marble is drawn 7px down so the service bell has room to
+    // stand; collision follows the art (see insetCounterTops)
+    counterTopInset: 7,
+    // Dressing is bg1 only now: the column rank was CUT (human ruling
+    // 2026-08-17) and bg2 is empty, so this can branch on the row with
+    // no risk of a floor-level tile being mistaken for a column segment.
+    //   row 3      — the sconce line, twelve 1×1 tiles
+    //   rows 13/14 — the potted palms flanking the hero desk, one 16×32
+    //                plant per side: fronds above (9), pot below (18).
+    //                Those two indices sit one above the other on the
+    //                sheet, which is why the plant is drawn upright.
+    dressing: (x, y) => {
+      if (y === 3) return 24 // sconce line
+      if (y === 13) return 9 // palm fronds
+      if (y === 14) return 18 // palm pot
+      return 24
     },
   },
 }
@@ -154,6 +158,9 @@ export default class LevelScene extends Phaser.Scene {
 
     this.player = new Player(this, this.playerSpawn.x, this.playerSpawn.y)
     this.physics.add.collider(this.player.sprite, this.mainLayer)
+    // counter tops that were inset to meet their art collide with
+    // everything the tile they replaced did
+    if (this.counterTops) this.physics.add.collider(this.player.sprite, this.counterTops)
 
     this.cameras.main.setBounds(0, 0, this.worldWidth, this.worldHeight)
     // camera follow is manual + pixel-coherent — see updateCamera()
@@ -161,6 +168,7 @@ export default class LevelScene extends Phaser.Scene {
     // tagging
     this.items = this.physics.add.group()
     this.physics.add.collider(this.items, this.mainLayer)
+    if (this.counterTops) this.physics.add.collider(this.items, this.counterTops)
     this.target = null
     this.hold = null
     this.holdArmed = false // fresh-press arm for deferred hold start (-e)
@@ -205,6 +213,7 @@ export default class LevelScene extends Phaser.Scene {
     // cross the showcase gap with no dash).
     this.collectibles = this.physics.add.group({ allowGravity: false })
     this.physics.add.collider(this.collectibles, this.mainLayer)
+    if (this.counterTops) this.physics.add.collider(this.collectibles, this.counterTops)
     // map-placed collectibles: `collectibles` object layer, point objects
     // typed by collectible key (assets/maps/README.md)
     for (const obj of this.map.getObjectLayer('collectibles')?.objects ?? []) {
@@ -354,6 +363,43 @@ export default class LevelScene extends Phaser.Scene {
     }
   }
 
+  // Drop a counter block's standable surface by `inset` px to meet the
+  // drawn marble. Tile collision is whole-tile and Arcade has no
+  // sub-tile hitbox, so the block's TOP ROW goes non-solid and a static
+  // body covers what remains of it (y + inset → y + 16). Consequences,
+  // both intended: the inset strip above the marble is now open air, so
+  // a bell or lamp drawn up there is scenery rather than a wall, and the
+  // rows BELOW the top keep their own tile collision untouched.
+  insetCounterTops(cells, inset) {
+    const key = (x, y) => `${x},${y}`
+    const present = new Set(cells.map((c) => key(c.x, c.y)))
+    // a cell is a TOP cell when nothing sits directly above it
+    const tops = cells
+      .filter((c) => !present.has(key(c.x, c.y - 1)))
+      .sort((a, b) => a.y - b.y || a.x - b.x)
+    this.counterTops = this.physics.add.staticGroup()
+    let run = null
+    const flush = () => {
+      if (!run) return
+      const x = run.x0 * 16
+      const w = (run.x1 - run.x0 + 1) * 16
+      const y = run.y * 16 + inset
+      const h = 16 - inset
+      const bar = this.add.rectangle(x + w / 2, y + h / 2, w, h).setVisible(false)
+      this.counterTops.add(bar)
+      run = null
+    }
+    for (const c of tops) {
+      this.mainLayer.getTileAt(c.x, c.y)?.setCollision(false, false, false, false)
+      if (run && c.y === run.y && c.x === run.x1 + 1) run.x1 = c.x
+      else {
+        flush()
+        run = { y: c.y, x0: c.x, x1: c.x }
+      }
+    }
+    flush()
+  }
+
   // remap one layer's tiles through the skin. Roles are BLOCK-RELATIVE:
   // a skin function receives dx / dy (columns and rows from the top-left
   // of its own contiguous run) and isTop, so multi-tile structures —
@@ -393,7 +439,23 @@ export default class LevelScene extends Phaser.Scene {
     this.mainLayer = map.createLayer('main', tileset).setDepth(-2)
     this.fgLayer = map.createLayer('fg', tileset).setDepth(8)
     this.mainLayer.setCollisionByExclusion([-1])
+    // COLLISION FOLLOWS ART for counters, same principle as CAR_TOP_INSET
+    // (BRIEF-ART-04 §0 as amended): the belldesk marble is drawn 7px
+    // below the block's top edge so the service bell has room to stand,
+    // and the surface the player lands on is the DRAWN surface. Counter
+    // cells are captured BEFORE skinning, while they still speak role
+    // gid 3 — skinLayer rewrites indices in place.
+    // Phaser reuses scene instances across restart(), so a stale group
+    // from a previous run must not survive into a map without insets
+    this.counterTops = null
+    const counterCells = []
+    if (useSkin && skin.counterTopInset) {
+      this.mainLayer.forEachTile((t) => {
+        if (t.index === 3) counterCells.push({ x: t.x, y: t.y })
+      })
+    }
     if (useSkin) this.applyTileSkin(skin, [bg1, bg2])
+    if (counterCells.length) this.insetCounterTops(counterCells, skin.counterTopInset)
     // fg draws IN FRONT of play, so a sheet whose fg tiles are LIGHT
     // (the garage's sodium pools) wants additive blending: the dark end
     // of their dither contributes nothing and the warm end brightens

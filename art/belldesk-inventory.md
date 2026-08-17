@@ -29,26 +29,30 @@ keeps its placeholder look until each role is filled.
 | | 6 | worn patch (breaker) |
 | | 7 | *free (RETIRED 2026-08-14-c — was the marble border; art is drawn but unused, so the slot is reusable)* |
 | | 8 | sub-floor fill (below the walked row; never seen edge-on) |
-| | 9 | *free* |
+| | 9 | **palm fronds** — upper half of the 16×32 potted palm |
 | 1 | 10,11,12,13 | **mezzanine strip**: left cap, middle A, middle B, right cap — Faena formal per handoff 2026-08-14-b: MARBLE LIGHT walk top carrying the standable edge (same marble as the desk top), lacquer face band, brass drip on the coffered soffit. NOT carpet — leopard is floor-only |
 | | 14 | mezzanine middle breaker — brass drip line accent |
-| | 15–18 | *free* |
+| | 15–17 | *free* |
+| | 18 | **palm pot** — lower half of the palm; sits directly under index 9 on the sheet, so the plant is drawn upright |
 | 2 | 19,20,21 | **cart platform**: left cap, middle, right cap (brass frame + red velvet deck) |
-| | 22,23 | **column segment pair** — 22 fades in at its top, 23 out at its bottom (garage pillar grammar: they alternate down an 11-tall run) |
+| | 22,23 | *free (columns CUT 2026-08-17)* |
 | | 24 | wall sconce (warm) |
-| | 25,26 | potted palm pair |
-| | 27 | **column plinth** — the segment that meets the carpet (see below) |
+| | 25,26,27 | *free — 25/26 were the speculative palm slots, 27 the column plinth; the palm shipped at 9/18 instead* |
 | 3 | **28–36** | **desk hero block, TOP row** — nine bespoke tiles, marble top with the standable light edge, drawn left-to-right as one 144px run |
 | 4 | **37–45** | **desk hero block, FACE row** — nine bespoke tiles, wood panelling / key cubbies / bell glint, same run |
 | 5 | 46–54 | *free* — spare row |
 
-**Why the column needs three tiles, not two.** The bg2 runs are **11
-tall** (rows 4–14) and the fade-in/fade-out pair tiles at 32px, so a
-plain alternation would end the column on its fade-IN tile exactly
-where it meets the floor. Row 14 takes a dedicated **plinth** (index
-27) instead, which leaves rows 4–13 as five clean pairs ending on the
-fade-out. Draw 22 as "column continues above", 23 as "column continues
-below", 27 as "column lands on the carpet".
+**Columns are cut (2026-08-17).** The bg2 column rank is gone — all 66
+placements removed from the map and the layer is empty — so the
+odd-run plinth problem it created is moot and indices 22/23/27 are
+free. Dressing is now bg1 only, which is also why bg1 and bg2 never
+needed splitting into separate roles.
+
+**The potted palms** are one 16×32 plant per side **flanking the hero
+desk**, on bg1 at **x53 and x65** (the desk runs x55–63), fronds on row
+13 and pot on row 14. bg1 draws behind the main layer, so they stand on
+the carpet behind the play plane. Room remains for two more pairs at
+x45–49 and x71–75 if the level ever wants more rhythm.
 
 ## (b) Roles, gids, and exact placements
 
@@ -61,8 +65,8 @@ are all the map uses, and all it can use without a code change:
 | 1 | `ground` | rows **15 and 16**, full width (x 0–119). Row 15 is walked, row 16 is fill beneath it — the skin branches on `y`, exactly like the garage's asphalt. The carpet runs unbroken beneath the hero desk (no apron; -14-c). |
 | 6 / 2 / 7 | `leftCap` / `middle` / `rightCap` | ten platforms in **three tiers** — see below |
 | 3 | `counter` | **x 55–63, rows 13–14** — 9 wide × 2 high, sitting on the floor |
-| 4 | `dressing` (bg1) | twelve **1×1** tiles at **row 3**, every 10 columns from x 5 — ceiling height, the sconce line |
-| 5 | `dressing` (bg2) | six **1-wide × 11-tall** runs at **x 10, 30, 50, 70, 90, 110**, rows 4–14 — the column rank |
+| 4 | `dressing` (bg1) | twelve **1×1** tiles at **row 3**, every 10 columns from x 5 (the sconce line), plus the two palm columns at **x53 and x65, rows 13–14** |
+| 5 | `dressing` (bg2) | **EMPTY** — the column rank was cut 2026-08-17 |
 
 ### The three platform tiers
 
@@ -123,10 +127,10 @@ each one's standable edge has to read at a glance while running.
 
 ## (d) Free and available
 
-- **Sheet indices 7, 9, 15–18, 46–54** — spare, plus anything you
-  don't use above. Index 7 is the retired marble border: the tile is
-  drawn but nothing references it, so it is free to repurpose or
-  clear. The spare row 5 exists precisely so a role can grow
+- **Sheet indices 7, 15–17, 22, 23, 25–27, 46–54** — spare, plus
+  anything you don't use above. Two of those carry orphaned art: index
+  7 (the retired marble border) is drawn but unreferenced, and 22/23
+  would have been the columns. Free to repurpose or clear. The spare row 5 exists precisely so a role can grow
   without re-cutting the sheet.
 - **The `fg` layer exists and is EMPTY.** The garage's lighting
   machinery is generic and already built: an additive fg tile layer
@@ -154,6 +158,5 @@ each one's standable edge has to read at a glance while running.
 3. Desk hero block (18 tiles — the bespoke 144×32 run) — after this
    the level stops wearing the Coatroom's bones, which is §3's own
    milestone.
-4. Cart platform strip (3), column pair + plinth (3), sconce (1),
-   palms (2).
+4. Cart platform strip (3), sconce (1). Palms are DONE (9/18).
 5. Parallax P4 → P3 → P2 → P1, then the glow overlay.
