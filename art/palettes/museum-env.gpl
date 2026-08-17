@@ -1,0 +1,31 @@
+GIMP Palette
+Name: Museum Environment (Chexy's BIG DAY)
+Columns: 7
+#
+244 241 234	Marble Bright (sparse — lit slabs)
+230 225 214	Marble Light (floor field)
+210 204 190	Marble Mid
+181 174 158	Marble Shade
+143 136 122	Marble Joint/Shadow
+199 191 174	Stone Light
+168 159 140	Stone Mid
+126 118 102	Stone Shade
+ 85  80  63	Stone Dark (sparse)
+255 253 242	Daylight Core (sparse px)
+247 239 216	Daylight Warm
+228 232 226	Daylight Cool Edge
+ 56 110 111	Accent Teal Green (brand)
+ 42  82  83	Teal Shade
+ 78 141 140	Teal Light
+111 176 171	Teal Pale (banner fields)
+ 62  43  32	Bench Wood Dark
+ 92  66  48	Bench Wood Mid
+168 120  31	Brass Mid
+224 176  74	Brass Bright (sparse)
+140  74  78	Exhibit Muted Crimson
+ 78  98 137	Exhibit Muted Cobalt
+140 126  62	Exhibit Muted Ochre
+110  90 120	Exhibit Muted Violet
+ 46  42  36	Outline Warm Dark
+ 16  24  40	Outline Cool (Gray 900)
+ 58  74  60	Fig Green Muted
