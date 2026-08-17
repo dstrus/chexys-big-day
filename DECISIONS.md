@@ -3937,3 +3937,36 @@ clean, no console noise.
 2026-08-14-e): L1–4 polish is the active board; L5/boss rounds + King
 art deferred by product ruling; one smoke playthrough slotted as build
 insurance."
+
+## 2026-08-17 — Handoff 2026-08-14-f applied (addendum to -e)
+
+Filed as standalone -f: -14-e was already applied and committed.
+
+- Item 1 — ledger correction accepted, with two factual notes so the
+  record is straight. garage.mp3 IS in and is a level track; the free
+  check was run and it passes: entering the Garage scene plays
+  music-garage (looping, unducked, not the synth stub), the results
+  tracks still take over on the summary, and a retry restarts the level
+  loop. Worth having verified rather than assumed, because the Garage is
+  a SUBCLASS scene (GarageScene, its own scene key) and the music hook
+  fires from the shared LevelScene.create — a per-level scene could
+  plausibly have missed it.
+  Notes: (a) the drop was not unreported — it was called out in the
+  session report for 11f7461 ("the new garage.mp3, which the garage
+  picks up automatically by level id"), and -14-e's board item 5 already
+  listed garage among the six tracks in HEAD; (b) it landed 2026-08-16,
+  the same session, rather than several days prior. Neither changes the
+  correction's substance.
+- Open music slots are therefore MUSEUM, EXODUS and BOSS (layered) —
+  though by -14-e's ruling exodus and boss are parked with the finale,
+  which leaves MUSEUM as the only open slot on the active board.
+- Bookkeeping consequence, flagged: the -14-d item 3 line that is still
+  HELD pending P4/P3 contains "Remaining audio: garage/museum/exodus/
+  boss music", which this handoff supersedes. When P4/P3 land and that
+  line is finally appended verbatim as instructed, it will be appended
+  with a bracketed pointer to this entry so the log does not read as
+  though garage regressed.
+- Item 2 — the required line, verbatim:
+
+"2026-08-14 — garage.mp3 corrected into the record: track four,
+committed days prior. Music remaining: museum, exodus, boss."
