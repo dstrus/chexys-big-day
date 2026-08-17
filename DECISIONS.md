@@ -3848,3 +3848,50 @@ untinted, three variants each; with the PNGs deleted every tier falls
 back to item-standard / item-medium / item-heavy at the old sizes. The
 belldesk vocabulary guard still corrects a forced coat to luggage. Build
 clean, no console noise.
+
+## 2026-08-17 — Handoff 2026-08-14-d applied IN PART (item 1 blocked)
+
+- Sequence check: 2026-08-14-c applied ✓ (same session).
+- Item 1 — CANNOT BE APPLIED, and this is the third handoff in a row to
+  ratify art that is not in the repo. P4 and P3 do not exist:
+  `assets/parallax/belldesk/` is absent, `git log --all` shows nothing
+  ever committed under that path on any branch, and nothing named
+  p4/p3/cove/chandelier is staged in the usual drop spots. There is
+  also no drop report of mine whose flags could be resolved — the
+  parallax has never been in front of this repo. Recording "P4/P3
+  ratified, composite passing" would put a false claim in an
+  append-only log, so it is held, not written.
+- Item 1's PRINCIPLE is standing canon, though, and is recorded here
+  because it governs every future drop: OFF-PALETTE VALUES SNAP to the
+  nearest belldesk-env.gpl v2 ramp entry rather than extending the
+  palette. Light-source cores MAY join the palette; surfaces MAY NOT.
+- Applied that principle to the art that does exist, and it reports a
+  real flag on the committed tilesheet. assets/tiles/belldesk.png is
+  RGBA (PNG colour type 6, no PLTE) carrying **1820 distinct colours**
+  against a 28-entry palette. Of 7906 opaque pixels only 1207 (15.3%)
+  are exact palette entries; 4242 sit 9–20 from the nearest ramp entry
+  and 1211 sit further than 20 — i.e. genuinely new values, not
+  rounding. Per-tile counts confirm the cause is soft shading rather
+  than hand-picked shades: 56 colours in the carpet tile, 95 in a desk
+  top, 114 in a desk face, 118 in the palm fronds. Nine pixels carry
+  partial alpha (anti-aliased edges). For contrast, the garage sheet is
+  INDEXED (colour type 3).
+  It looks good on screen today — the composites read fine — so this is
+  not a "redraw" flag. What it costs is mechanical: the PLTE
+  palette-swap pipeline (scripts/palette-variants.mjs, which gives the
+  cars six hues for free) cannot touch an RGBA sheet, partial alpha has
+  no meaning in an indexed export path, and 84.7% off-palette means the
+  v2 ramps are documentation rather than the actual discipline. The fix
+  is an Aseprite-side one: work in indexed mode against the .gpl.
+- Item 2 — logged and made true. music/belldesk.mp3 was already
+  committed (0c24adf), verified playing as the level loop with the
+  results tracks still taking over. The outstanding Gemini keeper —
+  belldesk-gemini-tiles.jpeg — is committed here. Manifest arithmetic
+  differs from the handoff's prose again, so for the record the
+  belldesk reference set in HEAD is now SIX Gemini keepers (carts,
+  desk, elevator-door-stairs, 01, 02, tiles) and FOUR Faena photos
+  (chandelier, desk-angle, desk, staircase).
+- Item 3 — HELD, because its text asserts item 1. It will be appended
+  verbatim the moment P4/P3 land, or immediately on the human's word if
+  the design chat means it as bookkeeping ahead of the drop. The text
+  is quoted in the session report so nothing is lost.
