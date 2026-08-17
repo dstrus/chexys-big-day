@@ -32,8 +32,21 @@ Example: `assets/audio/tag.wav` replaces the tap-tag blip everywhere;
 
 Drop `assets/audio/music/<levelId>.mp3` (e.g. `coatroom.mp3`) and it
 loops for that level; without one, a generated 4-bar chiptune stub
-plays. Music ducks to 30% under the results screen and restores on
-retry.
+plays.
+
+### Results screen: two reserved names
+
+`music/success.mp3` and `music/fail.mp3` are not levels — they are the
+summary screen's own tracks, one per outcome. When the file for an
+outcome exists, the level loop STOPS and that track loops under the
+summary; when it doesn't, the level loop simply ducks to 30% as it
+always did. Both behaviours are drop-in: adding the file switches the
+level over, deleting it reverts to the duck. Leaving the summary
+(retry or exit) stops the results track, and a retry starts the level's
+own music from the top.
+
+Unlike level tracks these never fall back to the chiptune stub — a
+generated loop under a summary screen would be worse than the duck.
 
 ## Volumes
 

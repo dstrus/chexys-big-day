@@ -129,6 +129,14 @@ class AudioBus {
     this.refreshVolumes()
   }
 
+  // Is there a REAL file for this track? Distinct from startMusic, which
+  // falls back to the generated chiptune stub when a track is missing.
+  // The results screen wants the file or nothing: a stub loop under a
+  // summary would be worse than the duck it replaced.
+  hasMusic(name) {
+    return Boolean(this.music[name] && this.game?.cache.audio.exists(`music-${name}`))
+  }
+
   // pause holds the track's position; resume continues it — never a
   // restart (handoff 2026-08-07-d; the stub holds at bar granularity)
   pauseMusic() {

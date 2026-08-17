@@ -3467,3 +3467,41 @@ are 11 tall — ODD — so a 2-tile fade-in/fade-out pair ends the column
 on its fade-IN tile exactly where it meets the carpet. Row 14 now takes
 a dedicated plinth (index 27), leaving rows 4–13 as five clean pairs.
 Better art anyway: columns have plinths.
+
+## 2026-08-16 — Results music (human request)
+
+Longer remixes replaced title.mp3 and coatroom.mp3, garage.mp3 arrived,
+and success.mp3 was added with the instruction: play it at the
+conclusion of a successful run of ANY level, when the summary screen
+shows. A fail track is coming later.
+
+Implementation keeps the drop-in contract. endRun looks up a results
+track by OUTCOME — `success` when cleared, `fail` when not — and if a
+real file exists, the level loop stops and that track loops under the
+summary. With no file the old duck-to-30% happens exactly as before.
+So `fail.mp3` needs NO code when it lands, and deleting success.mp3
+reverts today's behaviour.
+
+`audio.hasMusic(name)` is new and deliberately distinct from
+startMusic's own fallback: level tracks fall back to the generated
+chiptune stub, results tracks must not — a stub loop under a summary
+screen would be worse than the duck it replaced.
+
+success.mp3 is 38s, a real track rather than a jingle, so it loops like
+any other music; the player can sit on the summary.
+
+Verified live: level plays music-coatroom → clearing swaps to
+music-success (looping, unducked, results panel up) → teardown/retry
+returns to music-coatroom from the top → a FAILED run still ducks
+music-coatroom, since no fail.mp3 exists yet. No console noise.
+
+Harness note, second sighting: the stamped-URL rule applies to every
+module, not just tuning.js. A bare dynamic import of AudioBus.js
+returned a second `audio` singleton whose `.game` was null, so
+hasMusic() answered false and every readout was empty — the code was
+fine. Resolve the URL the page actually loaded.
+
+Flagged, not touched: `music/_coatroom.mp3` and `music/_title.mp3`
+(the pre-remix backups) are untracked but still inside the glob, so
+Boot loads ~1.5MB of them at startup and a build would bundle them.
+The human's files, so the human's call.

@@ -920,7 +920,15 @@ export default class LevelScene extends Phaser.Scene {
     this.player.sprite.setAlpha(1) // never freeze mid-grace-flicker on results
     this.indicatorGfx.clear()
     this.player.playEndPose(cleared)
-    audio.duckMusic() // music dips under the results screen
+    // Results music (human request 2026-08-16): a cleared run hands the
+    // summary screen its own track instead of ducking the level loop.
+    // Drop-in, like every other asset: with no file for the outcome the
+    // old duck is exactly what happens, so deleting success.mp3 reverts
+    // this. `fail` is the name reserved for the unsuccessful-run track,
+    // which is still to come — it needs no code when it lands.
+    const resultsTrack = cleared ? 'success' : 'fail'
+    if (audio.hasMusic(resultsTrack)) audio.startMusic(resultsTrack)
+    else audio.duckMusic() // music dips under the results screen
     audio.play(cleared ? 'runClear' : 'runFail')
 
     // grading per DESIGN.md §2 + the Golden Hanger / BIG DAY math (§2.5)
