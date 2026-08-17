@@ -3800,3 +3800,51 @@ for this level and the schedule uses two of them today. A luggage/bag
 item spec (silhouettes per tier, collision, palette) is owed by the art
 track; BRIEF-ART-03 §1 owns item rules, so it belongs there rather than
 in ART-07, which is the environment brief.
+
+## 2026-08-17 — Luggage kit: hold tiers are GROUPS (human ruling)
+
+Ruling, and it reframes the mechanic's fiction: "For the items that
+require a hold, rather than a single piece of large luggage, they should
+be groups of luggage. Multi-tagging is a real process with Chexology,
+and it takes longer than checking a single item."
+
+So the hold is not weight, it is COUNT. Tier 1 = one bag (tap), tier 2 =
+a pair (180ms hold = holdTagMs × holdTier2Factor), tier 3 = a trolley
+load of three or four (300ms charged hold). The mechanic is unchanged —
+only what it depicts — so DESIGN's "weight tier" language and the
+`weightTier` / `tier` identifiers in code and wave files STAY. Renaming
+them would be churn with no gameplay behind it.
+
+Drawing consequence worth recording: groups grow WIDER, not taller. The
+new frames are 16×14 / 24×16 / 32×20 against interim rects of 14×14 /
+20×22 / 26×30 — tiers 2 and 3 get shorter and wider, because a group
+sits on the floor and a tall monolith was the old "heavy" reading.
+
+art/luggage-kit.md is the kit: sizes, the group semantics, the palette
+exclusion table (Chexy orange, semantic reds, paper manila, and — new —
+the Bell Desk's own carpet tans and lacquer crimsons, which bags would
+otherwise sink into), and the chip's composite position so the drawing
+leaves it room.
+
+The sharpest constraint in it comes from the -14-b one-drawing-per-item
+canon: luggage appears in the Bell Desk (dark field) AND the finale
+(whose scene descends from the Museum and whose readability law is
+INVERTED — pale field, darker actors). One drawing must survive both, so
+the kit asks for internal contrast — darker shadow plane plus lighter
+top plane — rather than overall brightness. No outline: nothing else in
+the item set has one.
+
+Wiring shipped ahead of the art, drop-in like everything else:
+src/config/itemArt.js holds the tier→(key, w, h) table, BootScene globs
+assets/sprites/luggage-*.png and slices each as a strip of same-size
+VARIANTS (the spawner picks one at random, as coats do), spawnItem
+prefers drawn bags over the interim rect and sets the body to the frame
+(collision follows art, untinted — the chip carries the category), and
+export-sprites.sh has the three ICONS entries.
+
+Verified both directions with stand-in strips: with the PNGs present all
+three tiers use their own strip at bodies 16×14 / 24×16 / 32×20,
+untinted, three variants each; with the PNGs deleted every tier falls
+back to item-standard / item-medium / item-heavy at the old sizes. The
+belldesk vocabulary guard still corrects a forced coat to luggage. Build
+clean, no console noise.

@@ -1,6 +1,7 @@
 import Phaser from 'phaser'
 import { TUNING } from '../config/tuning.js'
 import { categoryColor } from '../config/itemCategories.js'
+import { luggageArtFor } from '../config/itemArt.js'
 import { COLLECTIBLES } from '../config/collectibles.js'
 import { getWaveSchedule } from '../config/waveRegistry.js'
 import Player from '../entities/Player.js'
@@ -1266,10 +1267,22 @@ export default class LevelScene extends Phaser.Scene {
     // (tinted rect + chip, BRIEF-03 execution note 3) until its art
     // lands. Tier silhouette = rect size (small / medium / large).
     const useCoatArt = tier === 1 && category === 'coat' && this.textures.exists('coats')
+    // luggage art (art/luggage-kit.md): one file per tier, each a strip
+    // of same-size variants — the tier is the GROUP SIZE, so tier 3 is a
+    // trolley load rather than a bigger single case. Frame = body.
+    const bagArt = category === 'luggage' ? luggageArtFor(tier) : null
+    const useBagArt = bagArt && this.textures.exists(bagArt.key)
     const rectKey = tier >= 3 ? 'item-heavy' : tier === 2 ? 'item-medium' : 'item-standard'
     const item = useCoatArt
       ? this.items.create(x, y, 'coats', Phaser.Math.Between(0, 2))
-      : this.items.create(x, y, rectKey)
+      : useBagArt
+        ? this.items.create(
+            x,
+            y,
+            bagArt.key,
+            Phaser.Math.Between(0, this.textures.get(bagArt.key).frameTotal - 2)
+          )
+        : this.items.create(x, y, rectKey)
     item.setData('heavy', heavy)
     item.setData('tier', tier)
     item.setData('category', category)
@@ -1279,6 +1292,10 @@ export default class LevelScene extends Phaser.Scene {
       // garment colors are baked in (-b ruling: the chip carries the
       // category); BRIEF-ART-03 §1: smaller centered physics body
       item.body.setSize(16, 18)
+    } else if (useBagArt) {
+      // drawn bags carry their own colours; the chip carries the
+      // category, so no tint (tinting would muddy leather and canvas)
+      item.body.setSize(bagArt.w, bagArt.h)
     } else {
       item.setTint(categoryColor(category)) // ChexApp tag colors
     }

@@ -5,6 +5,7 @@ import garageMap from '../../assets/maps/garage.json'
 import museumMap from '../../assets/maps/museum.json'
 import exodusMap from '../../assets/maps/exodus.json'
 import { audio } from '../systems/AudioBus.js'
+import { LUGGAGE_ART } from '../config/itemArt.js'
 import { preloadParallax } from '../systems/parallax.js'
 
 // Placeholder art only: every "sprite" is a generated texture. Maps are
@@ -114,6 +115,14 @@ const ENEMY_JSON = import.meta.glob('../../assets/sprites/enemy-stub.json', {
   import: 'default',
 })
 // Golden Hanger icon strip (BRIEF-ART-03 §3): golden/tarnished/broken
+// luggage / bag items (art/luggage-kit.md): one file per tier, each
+// optionally a strip of same-size variants. Frame size comes from
+// LUGGAGE_ART because the frame IS the collision rect.
+const LUGGAGE_PNGS = import.meta.glob('../../assets/sprites/luggage-*.png', {
+  eager: true,
+  query: '?url',
+  import: 'default',
+})
 const HANGER_PNG = import.meta.glob('../../assets/sprites/hanger.png', {
   eager: true,
   query: '?url',
@@ -161,6 +170,11 @@ export default class BootScene extends Phaser.Scene {
       const stem = path.split('/').pop().replace('.png', '')
       this.load.image(`tiles-${stem}`, url)
       if (stem === 'coatroom') this.load.image('tiles', url) // shared fallback
+    }
+    for (const [path, url] of Object.entries(LUGGAGE_PNGS)) {
+      const key = path.split('/').pop().replace('.png', '')
+      const spec = Object.values(LUGGAGE_ART).find((a) => a.key === key)
+      if (spec) this.load.spritesheet(key, url, { frameWidth: spec.w, frameHeight: spec.h })
     }
     const coatsUrl = Object.values(COATS_PNG)[0]
     if (coatsUrl) this.load.spritesheet('coats', coatsUrl, { frameWidth: 24, frameHeight: 24 })
