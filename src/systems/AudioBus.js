@@ -37,6 +37,11 @@ function fileMap(globbed) {
   for (const [path, url] of Object.entries(globbed)) {
     const base = path.split('/').pop()
     if (!AUDIO_EXT.test(base)) continue
+    // `_name.mp3` is ARCHIVED, not playable: superseded takes kept in
+    // the repo for reference. Boot loads every file this map returns,
+    // so without the skip a retired track is still downloaded and
+    // bundled — 1.5MB of pre-remix Coatroom and Title, in this case.
+    if (base.startsWith('_')) continue
     map[base.replace(AUDIO_EXT, '')] = url
   }
   return map
