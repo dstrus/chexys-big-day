@@ -3505,3 +3505,53 @@ Flagged, not touched: `music/_coatroom.mp3` and `music/_title.mp3`
 (the pre-remix backups) are untracked but still inside the glob, so
 Boot loads ~1.5MB of them at startup and a build would bundle them.
 The human's files, so the human's call.
+
+## 2026-08-17 — Handoff 2026-08-14-a applied
+
+- Sequence check: 2026-08-13-b applied ✓ (logged 2026-08-14, this
+  file). No handoff between it and this one.
+- Item 0 — reference drop verified present before applying. First
+  attempt STOPPED and asked: the files were absent (searched
+  art/reference/, repo-wide `find -iname`, `git log --all` for the
+  paths). The human then dropped them. Committed here:
+  belldesk-faena-chandelier.jpg, -desk-angle.jpg, -desk.png,
+  -staircase.jpg (FOUR, where the handoff said three) and
+  belldesk-gemini-carts.jpeg, -desk.jpeg,
+  -elevator-door-stairs.jpeg (THREE, where the handoff said four).
+  Names match the convention exactly; only the counts are swapped
+  against the handoff's prose, so this was flagged rather than
+  treated as a missing file. art/palettes/belldesk-env.gpl replaced
+  with v2 (Faena direction), confirmed changed by hash.
+- Item 1 — BRIEF-ART-07 amended, exactly the three listed targets:
+  the mood paragraph (dusk/steel language and the disputed "only
+  level people want to be" line deleted; Faena direction and the
+  cove-crown ceiling identity in their place; anchor now Lacquer
+  Face #732032 with Gold Leaf Bright #C89A32); a palette table
+  carrying the v2 hexes; the parallax table (P4 upper wall + gold
+  cove crown full-length with the dusk windows deleted, P3
+  chandelier against the brass wall-grid mid-band, P2 mezzanine rail
+  + curved-stair hero passage + revolving-door glow, P1
+  carts/stanchions/palms). Layer sizes, seam rules, skin convention
+  and the step-0 inventory left untouched, as instructed.
+  Transcription note: the brief had NO standalone palette table to
+  amend, so one was created and populated from belldesk-env.gpl v2
+  verbatim (hexes derived from the file's RGB triples, not typed by
+  hand). Flagged for correction if a different table was meant.
+  NOT amended, because the handoff did not list them: §1's tileset
+  bullets (still "deep muted burgundy field", palms as "the only
+  green on the sheet") and the four Appendix concept prompts (all
+  still describe dusk / steel blue / city silhouettes). Both now
+  contradict the ruling in item 1 and are raised with the human.
+- Item 2 — composite guard recorded. Walls are crimson, so at the
+  FIRST SKIN DROP verify that Alert Red urgency flashes, crimson
+  coats, and the carpet border remain distinct at a squint. The
+  palette pre-separates them (Carpet Border Red #7A1622 is deep and
+  explicitly non-semantic, well away from Alert Red #EA5151); the
+  composite check confirms it in situ.
+- Item 3 — the required line, verbatim:
+
+"2026-08-14 — Bell Desk art direction changed to the Faena
+inspiration (handoff 2026-08-14-a): crimson lacquer + gold cove
+crown + leopard carpet; palette v2; dusk windows deleted;
+cove-not-skylight ruled as ceiling identity; semantic-red separation
+guarded by palette and composite check."

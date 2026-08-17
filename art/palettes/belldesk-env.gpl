@@ -1,31 +1,32 @@
 GIMP Palette
-Name: Bell Desk Environment (Chexy's BIG DAY)
+Name: Bell Desk v2 - Faena Direction (Chexy's BIG DAY)
 Columns: 7
 #
- 12  18  32	Dusk Void
- 20  33  58	Steel Deep
- 30  50  82	Steel Dark
- 45  83 120	Accent Steel Blue (brand)
- 64 105 154	Steel Light (sparse)
- 35  59  99	Sky Upper
- 74  90 140	Sky Mid
-158 107 126	Dusk Rose
-217 150 126	Horizon Rose (sparse)
- 58  30  40	Carpet Shadow
- 85  43  56	Carpet Burgundy
-110  58  69	Carpet Figure
-201 194 184	Marble Light (standable edges)
-163 155 144	Marble Mid
-110 103  94	Marble Shade
- 74  50  34	Desk Wood Dark
-102  71  51	Desk Wood Mid
-138  98  71	Desk Wood Light
-107  74  26	Brass Shadow
-168 120  31	Brass Mid
-224 176  74	Brass Bright
-255 217 140	Lamp Glow
-255 240 200	Lamp Core (sparse px)
- 46  66  48	Palm Dark
- 72  96  74	Palm Muted
+ 42  10  18	Lacquer Void
+ 64  16  28	Lacquer Deep
+ 88  24  38	Lacquer Dark
+115  32  50	Lacquer Face
+142  42  60	Lacquer Sheen (sparse — panel highlights)
+ 74  48  16	Brass Shadow
+122  85  24	Brass Mid
+176 132  40	Brass Bright
+224 184  88	Brass Glint (sparse)
+110  74  20	Gold Leaf Shadow
+156 110  30	Gold Leaf Mid
+200 154  50	Gold Leaf Bright
+239 201  99	Gold Leaf Mottle Light
+255 233 168	Cove Glow Strip
+255 247 220	Cove Glow Core (sparse px)
+110  74  38	Carpet Base Dark
+142 100  50	Carpet Base Tan
+168 126  68	Carpet Mottle Light
+ 56  32  15	Carpet Rosette Dark
+122  22  34	Carpet Border Red (deep, non-semantic)
+ 46  26  16	Wood Dark
+ 74  46  26	Wood Mid
+107  68  38	Wood Light
+216 210 198	Marble Light (desk top / standable)
+168 158 142	Marble Shade
+ 30  64  56	Malachite Green (lamp bases, desk top accent)
+ 28  36  24	Palm Silhouette
  16  24  40	Outline Cool (Gray 900)
- 29  41  57	Fixture Dark (Gray 800)
