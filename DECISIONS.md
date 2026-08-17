@@ -3895,3 +3895,45 @@ clean, no console noise.
   verbatim the moment P4/P3 land, or immediately on the human's word if
   the design chat means it as bookkeeping ahead of the drop. The text
   is quoted in the session report so nothing is lost.
+
+## 2026-08-17 — Handoff 2026-08-14-e applied
+
+- Sequence check: 2026-08-14-d applied ✓ (same session, partial — item 1
+  held pending the P4/P3 files; that hold is unaffected by this handoff).
+- Item 1 — FINALE PARKED by product-owner ruling. Level 5 / boss rounds,
+  King art (BRIEF-ART-06) and exodus/boss audio are formally parked in
+  favour of polishing Levels 1–4. Rationale on record: L1–4 constitute a
+  shippable game and polish compounds there first. Ledger effect,
+  applied from the next report onward: the Act-1 round-1 verdict and the
+  finale's first-play calibration (meter thresholds 12/15/18, telegraph
+  windows, phase intervals) come OFF the "owed by the design chat"
+  list. They are deferred, not forgotten, and return when the human
+  reopens the finale. The boss-skip debug key (`B`, dev-only) stays
+  wired, so reopening costs nothing.
+- Item 2 — one SMOKE PLAYTHROUGH of the full shift is slotted as build
+  insurance: a hold-together check, explicitly NOT a verdict session, to
+  de-risk the never-played-end-to-end BRIEF-07 build before polish-era
+  changes pile on top of it. The human schedules it. Any STRUCTURAL
+  finding reopens the finale early.
+- Item 3 — the polish backlog is the active board, in order, with its
+  state at opening measured from HEAD:
+    1. Bell Desk P2/P1 — no belldesk parallax exists at all yet (P4/P3
+       still owed too, per -14-d's hold)
+    2. Garage tiles/parallax — p2 and p3 present; **p1 absent**
+       (1600×270, factor 0.7, wraps ~3.7× so it wants a rhythm)
+    3. Museum pass (BRIEF-ART-05) — no museum tileset, no museum skin,
+       no parallax; the brief and museum-env.gpl are in
+    4. Coatroom sconce + tile variety — coatroom has the only COMPLETE
+       parallax stack (p1–p4 + glow); the sconce flicker pair is owed
+    5. Audio content + SFX pass — six music tracks in (title, coatroom,
+       belldesk, garage, success, fail); the ONLY real SFX file is
+       tag.mp3, so every other cue is still the generated synth
+    6. Small ledger
+  Code track wires drops as they land; no new briefs expected this
+  phase.
+- Item 4 — the required line, verbatim:
+
+"2026-08-14 — Finale parked, polish phase opened (handoff
+2026-08-14-e): L1–4 polish is the active board; L5/boss rounds + King
+art deferred by product ruling; one smoke playthrough slotted as build
+insurance."
