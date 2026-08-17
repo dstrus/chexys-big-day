@@ -53,10 +53,13 @@ zone. Draw to the inventory, not the memory.
   the environment. Two breakers: a brass floor medallion, a
   worn patch. Marble border tiles where carpet meets the
   desk run.
-- **Mezzanine strips:** double-faced (top = carpeted walk
-  with the standable light edge; underside = coffered soffit
-  with a brass drip line). The garage deck grammar, dressed
-  formal.
+- **Mezzanine strips (ruled, handoff 2026-08-14-b):** reskin
+  to Faena formal, NOT carpet. Double-faced: walk top in
+  MARBLE LIGHT carrying the standable edge — the same marble
+  as the desk top, because "bright marble = stand here" is
+  this level's promise — then a lacquer face band, and a
+  brass drip line on the coffered soffit underside. Leopard
+  stays FLOOR-ONLY.
 - **The front desk hero block** (counter precedent): 2-high
   and **9 wide, drawn BESPOKE** — the map's counter block is
   9×2 and the human ruled 2026-08-14 that it gets one

@@ -30,7 +30,7 @@ keeps its placeholder look until each role is filled.
 | | 7 | **marble border** — carpet meets the desk run |
 | | 8 | sub-floor fill (below the walked row; never seen edge-on) |
 | | 9 | *free* |
-| 1 | 10,11,12,13 | **mezzanine strip**: left cap, middle A, middle B, right cap |
+| 1 | 10,11,12,13 | **mezzanine strip**: left cap, middle A, middle B, right cap — Faena formal per handoff 2026-08-14-b: MARBLE LIGHT walk top carrying the standable edge (same marble as the desk top), lacquer face band, brass drip on the coffered soffit. NOT carpet — leopard is floor-only |
 | | 14 | mezzanine middle breaker — brass drip line accent |
 | | 15–18 | *free* |
 | 2 | 19,20,21 | **cart platform**: left cap, middle, right cap (brass frame + red velvet deck) |
@@ -77,6 +77,12 @@ row numbers are how the skin tells them apart: all three tiers speak
 the SAME role gids, so the skin function branches on `y` (`y === 12`
 → cart platform art, rows 6 and 9 → mezzanine strip). That is why the
 sheet needs both strip sets.
+
+**"Bright marble = stand here"** is the level's promise (ruled
+2026-08-14-b): the desk top and every mezzanine walk surface share
+Marble Light, so the player learns one cue for standable geometry.
+Cart platforms are the deliberate exception — brass frame and velvet —
+because they read as objects, not architecture.
 
 **All three tiers are double-faced** — the player walks the top and
 sees the underside from below (rows 6 and 9 hang over open lobby;

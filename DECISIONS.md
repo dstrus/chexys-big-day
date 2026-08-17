@@ -3613,3 +3613,58 @@ applied consistently:
 Deliberately left: the two remaining mentions of dusk and skylight are
 the amendment's own record of what was deleted and demoted, not
 surviving direction.
+
+## 2026-08-17 — Handoff 2026-08-14-b applied (item 2 verification deferred)
+
+- Sequence check: 2026-08-14-a applied ✓. Note this handoff was
+  received while its drop was not yet in the repo; the first attempt
+  STOPPED and asked. The tiles landed during the exchange (14:49) and
+  the work below is against them.
+- Item 1 — drop 1 ratification recorded, with its ACTUAL scope
+  measured off the sheet rather than assumed. `belldesk.png` exports
+  reproducibly at 144×96 (9 cols × 54 tiles, as speced) and the level
+  boots on `tiles-belldesk`. Drawn: indices 1–8 (leopard carpet
+  sequence, brass medallion, worn patch, marble border, sub-floor
+  fill) and 28–45 (the full bespoke 9-wide desk, top and face).
+  Everything else is still transparent — mezzanine strip, cart
+  platform, columns, plinth, sconce, palms. So of item 1's four named
+  pieces, CARPET and HERO DESK are in; WALLS and COVE CROWN are not —
+  those are parallax P4, and `assets/parallax/belldesk/` does not
+  exist yet.
+- Item 1, composite guard — run for real, PASSES on everything the
+  drop can express, and the palette's pre-separation is confirmed by
+  measurement: Alert Red #EA5151 sits at luma 127 against Carpet
+  Border Red #7A1622 at 53 (RGB distance 135) and Lacquer Face
+  #732032 at 59 (distance 132). At a squint the semantic red is the
+  only bright red on screen. Caveat on record: the crimson-WALL half
+  of the hazard cannot be tested yet, because the walls are the
+  missing P4 — today the field behind play is near-black, which is a
+  kinder background than crimson will be. The guard must be re-run
+  when P4 lands.
+- Item 2 — canon STATED: items are ONE DRAWING across all levels, no
+  per-level item variants ever; the skin system dresses environments
+  only. Verification DEFERRED, not skipped: the crimson-coat outline
+  fix is not in this repo. `assets/sprites/coats.png` is unchanged
+  since a9dd53e (2026-08-03), there is no coats source in
+  art/aseprite/, and the three shipped coat frames are blue/blue/green
+  with no crimson garment at all. Searched the repo, all of git
+  history for those paths, and the usual staging spots. Nothing to
+  composite, so nothing was forked and nothing was reported as
+  verified. The Museum half is doubly deferred — it has no tileset
+  and no skin, so its composite could only show placeholder bones.
+- Item 3 — mezzanine strips ruled and transcribed into BRIEF-ART-07 §1
+  and the inventory: Faena formal, NOT carpet. Marble Light walk top
+  carrying the standable edge (the same marble as the desk top),
+  lacquer face band, brass drip on the coffered soffit; leopard stays
+  floor-only. Recorded alongside it as the reason: "bright marble =
+  stand here" is now the level's promise, one cue for standable
+  geometry, with cart platforms the deliberate object-not-architecture
+  exception. The ruling needed NO code — the skin already routes rows
+  6 and 9 to indices 10–14, which are the slots still to be drawn, so
+  it landed exactly in time.
+- Item 4 — the required line, verbatim:
+
+"2026-08-14 — Bell Desk drop 1 ratified (handoff 2026-08-14-b):
+composite guard passed; crimson-coat outline lightened GLOBALLY
+(one-drawing-per-item canon stated); mezzanines ruled marble-top
+formal, leopard floor-only."
