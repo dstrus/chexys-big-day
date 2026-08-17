@@ -430,6 +430,11 @@ export default class LevelScene extends Phaser.Scene {
     this.levelProps = {}
     for (const p of map.properties ?? []) this.levelProps[p.name] = p.value
     const levelId = this.levelProps.levelId ?? this.mapKey
+    // item vocabulary, declared per map (see resolveItemCategory)
+    this.allowedItemCategories = String(this.levelProps.itemCategories ?? '')
+      .split(',')
+      .map((c) => c.trim())
+      .filter(Boolean)
 
     const skin = TILE_SKINS[levelId]
     const useSkin = skin && this.textures.exists(skin.texture)
@@ -1232,7 +1237,29 @@ export default class LevelScene extends Phaser.Scene {
     return Phaser.Math.Clamp((x - this.player.x) / 360, -1, 1)
   }
 
+  // A level's item vocabulary is the map's to declare (`itemCategories`,
+  // comma-separated). Where it does, that list is BINDING: a category
+  // from outside it is corrected to the level's first, loudly in dev.
+  // The Bell Desk is luggage and bags exclusively (human ruling
+  // 2026-08-17) and no scheduling slip may put a coat in its lobby;
+  // `category = 'coat'` is spawnItem's ancient default, which is exactly
+  // the kind of thing that leaks. Maps that declare nothing are
+  // unchanged.
+  resolveItemCategory(category) {
+    const allowed = this.allowedItemCategories
+    if (!allowed?.length || allowed.includes(category)) return category
+    if (import.meta.env.DEV) {
+      console.warn(
+        `${this.mapKey}: item category "${category}" is not in this level's ` +
+          `vocabulary [${allowed.join(', ')}] — spawning "${allowed[0]}" instead. ` +
+          `Fix the wave entry, or widen the map's itemCategories property.`
+      )
+    }
+    return allowed[0]
+  }
+
   spawnItem(x, y, tier = 1, category = 'coat') {
+    category = this.resolveItemCategory(category)
     const heavy = tier >= 3
     // real coat art (3 garment-colored variants) when the strip exists —
     // coats only; luggage stays on the accepted interim convention

@@ -3767,3 +3767,36 @@ and saturated. Against Alert Red #EA5151 the separation is mostly LUMA
 (63 vs 127), not hue, so the urgency flash stays distinguishable, but
 this is the closest the item set comes to the semantic colour and it is
 where the guard should look first.
+
+## 2026-08-17 — Bell Desk item vocabulary: luggage and bags only
+
+Human ruling: the Bell Desk should contain no coats at all — luggage
+and bags (backpacks and the like) exclusively.
+
+Measured first: it already does. All 22 item entries in
+belldesk-waves.json are itemCategory "luggage", and a census of the
+level's OWN schedule (spawnItem hooked, 90s of wave clock) spawned
+luggage tier 1 and tier 2 and nothing else. The coats visible in
+yesterday's composite screenshots were spawned by my test harness, not
+by the game — worth recording, because a harness spawn is easy to
+mistake for level content in a screenshot.
+
+What was actually missing was a GUARANTEE. `spawnItem`'s signature
+still defaults to `category = 'coat'`, so any wave entry that omitted
+itemCategory would silently put a coat in the hotel lobby. Levels now
+declare their vocabulary on the map (`itemCategories`, comma-separated)
+and it is BINDING: a category from outside the list is corrected to the
+level's first and warned about loudly in dev, naming the map, the
+offending category and the fix. Belldesk declares "luggage". Maps that
+declare nothing stay unrestricted, so the Coatroom, Museum, Garage and
+Exodus are untouched — verified: the Coatroom still spawns coats with
+coat art and no warning.
+
+Still open, and the real content gap: LUGGAGE HAS NO ART. Every item in
+this level renders as the interim tinted rect (teal #006483) in three
+tier sizes — item-standard, item-medium, item-heavy — while coats have
+had a drawing since f266092. DESIGN §3.2 specifies three weight tiers
+for this level and the schedule uses two of them today. A luggage/bag
+item spec (silhouettes per tier, collision, palette) is owed by the art
+track; BRIEF-ART-03 §1 owns item rules, so it belongs there rather than
+in ART-07, which is the environment brief.
