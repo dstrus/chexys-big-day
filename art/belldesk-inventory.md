@@ -27,7 +27,7 @@ keeps its placeholder look until each role is filled.
 | 0 | 1,2,3,4 | **carpet floor sequence** — 4-tile period, leopard field (two-value mottle + rosettes) per the Faena direction |
 | | 5 | brass floor medallion (breaker) |
 | | 6 | worn patch (breaker) |
-| | 7 | **marble border** — carpet meets the desk run |
+| | 7 | *free (RETIRED 2026-08-14-c — was the marble border; art is drawn but unused, so the slot is reusable)* |
 | | 8 | sub-floor fill (below the walked row; never seen edge-on) |
 | | 9 | *free* |
 | 1 | 10,11,12,13 | **mezzanine strip**: left cap, middle A, middle B, right cap — Faena formal per handoff 2026-08-14-b: MARBLE LIGHT walk top carrying the standable edge (same marble as the desk top), lacquer face band, brass drip on the coffered soffit. NOT carpet — leopard is floor-only |
@@ -58,7 +58,7 @@ are all the map uses, and all it can use without a code change:
 
 | Map gid | Role | Where it is in THIS map |
 |---|---|---|
-| 1 | `ground` | rows **15 and 16**, full width (x 0–119). Row 15 is walked, row 16 is fill beneath it — the skin branches on `y`, exactly like the garage's asphalt. |
+| 1 | `ground` | rows **15 and 16**, full width (x 0–119). Row 15 is walked, row 16 is fill beneath it — the skin branches on `y`, exactly like the garage's asphalt. The carpet runs unbroken beneath the hero desk (no apron; -14-c). |
 | 6 / 2 / 7 | `leftCap` / `middle` / `rightCap` | ten platforms in **three tiers** — see below |
 | 3 | `counter` | **x 55–63, rows 13–14** — 9 wide × 2 high, sitting on the floor |
 | 4 | `dressing` (bg1) | twelve **1×1** tiles at **row 3**, every 10 columns from x 5 — ceiling height, the sconce line |
@@ -109,7 +109,11 @@ each one's standable edge has to read at a glance while running.
    9-wide counter (a future map placing a wider one repeats index 36 /
    45 to the right rather than breaking), and this is why the sheet is
    9 columns instead of 8.
-2. **The return zone is not a tile.** The bell-cart return zone is an
+2. **Grounding, pre-armed and NOT applied (-14-c).** If the desk ever
+   reads un-anchored now that it sits straight on the carpet, the fix
+   is a **1px darker carpet shadow line under the desk base** — never
+   a floor material change. Nothing to draw until a composite says so.
+3. **The return zone is not a tile.** The bell-cart return zone is an
    object rect (x 1040–1136, rows 11–14), immediately RIGHT of the
    desk at the level's centre. It has no tiles of its own and needs
    none — but if you want it marked in the floor (a brass threshold, a
@@ -119,8 +123,10 @@ each one's standable edge has to read at a glance while running.
 
 ## (d) Free and available
 
-- **Sheet indices 9, 15–18, 46–54** — spare, plus anything you don't
-  use above. The spare row 5 exists precisely so a role can grow
+- **Sheet indices 7, 9, 15–18, 46–54** — spare, plus anything you
+  don't use above. Index 7 is the retired marble border: the tile is
+  drawn but nothing references it, so it is free to repurpose or
+  clear. The spare row 5 exists precisely so a role can grow
   without re-cutting the sheet.
 - **The `fg` layer exists and is EMPTY.** The garage's lighting
   machinery is generic and already built: an additive fg tile layer
@@ -139,9 +145,9 @@ each one's standable edge has to read at a glance while running.
 
 ## (e) Order, restated against the map
 
-1. Floor sequence (4 + 2 breakers + marble border + fill) — 8 tiles
-   covering **rows 15/16 across all 120 columns**, the surface the
-   player spends most of the level on.
+1. Floor sequence (4 + 2 breakers + fill) — 7 tiles covering **rows
+   15/16 across all 120 columns**, the surface the player spends most
+   of the level on. (Drawn.)
 2. Mezzanine strip (4 + breaker) — 10 platforms, all three tiers get
    *something* immediately since cart platforms can borrow the strip
    until row 2 of the sheet is drawn.

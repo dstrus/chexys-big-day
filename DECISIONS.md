@@ -3668,3 +3668,36 @@ surviving direction.
 composite guard passed; crimson-coat outline lightened GLOBALLY
 (one-drawing-per-item canon stated); mezzanines ruled marble-top
 formal, leopard floor-only."
+
+## 2026-08-17 — Handoff 2026-08-14-c applied
+
+- Sequence check: 2026-08-14-b applied ✓ (same session).
+- Item 1 — marble border role retired. Mechanism note, because the
+  handoff and the codebase disagree about WHERE the placements lived:
+  the map never placed a border. belldesk.json's main layer uses only
+  role gids 1/2/3/6/7 (ground, middle, counter, leftCap, rightCap) and
+  the border was purely skin-side — `x === 54 || x === 64 → sheet
+  index 7` inside the belldesk skin's `ground` function. Sheet index 7
+  and role gid 7 are different number spaces, which is likely what the
+  spec conflated. So the map needed NO edit; deleting the skin branch
+  is the whole retirement, and the carpet period now runs straight
+  through. Also updated: the inventory (index 7 marked retired and
+  reusable, ground row note, order list now "7 tiles" not 8) and
+  BRIEF-ART-07 §1's floor line, with "Marble border tiles where carpet
+  meets the desk run" deleted as instructed.
+- Verified in-game: sheet index 7 appears ZERO times across the main
+  layer, and row 15 from x54 to x64 reads 3,4,1,2,6,4,1,2,3,4,1 — the
+  4-tile carpet period unbroken beneath the hero desk, with only the
+  worn-patch breaker at x58 interrupting it. No console noise.
+- Item 2 — grounding note recorded, NOT applied: if the desk ever
+  reads un-anchored, the fix is a 1px darker carpet shadow line under
+  the desk base, never a floor material change. Logged in the
+  inventory's §(c) so the artist sees it beside the desk spec.
+- Leftover flagged: sheet index 7 is DRAWN (256 opaque px of marble
+  border) but now referenced by nothing. Left in place — the art is
+  the human's to clear or repurpose, and the slot is marked spare.
+- Item 3 — the required line, verbatim:
+
+"2026-08-14 — Marble border role cut (handoff 2026-08-14-c): orphaned
+apron spec retired; desk sits on carpet per references; shadow-line
+grounding pre-armed if ever needed."

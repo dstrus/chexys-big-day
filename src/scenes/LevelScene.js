@@ -80,12 +80,12 @@ const TILE_SKINS = {
     texture: 'tiles-belldesk',
     // rows 15/16 across all 120 columns. Row 16 is fill; row 15 is the
     // carpet the player spends the level on. Breakers ride out-of-phase
-    // prime cadences (the SotN lesson), rarest first, and the marble
-    // border overrides everything where the carpet meets the desk run
-    // at x 55–63.
+    // prime cadences (the SotN lesson), rarest first. The carpet runs
+    // UNBROKEN under the hero desk: the marble border role was retired
+    // by handoff 2026-08-14-c as an orphaned apron spec, since the
+    // chosen references seat the desk directly on the leopard.
     ground: (x, y) => {
       if (y >= 16) return 8 // sub-floor fill
-      if (x === 54 || x === 64) return 7 // marble border, desk-adjacent
       if (x % 29 === 13) return 5 // brass medallion — the loud one
       if (x % 13 === 6) return 6 // worn patch
       return 1 + (x % 4)

@@ -51,8 +51,10 @@ zone. Draw to the inventory, not the memory.
   red is Carpet Border Red #7A1622, deep and NON-SEMANTIC;
   alert-red #EA5151 stays semantic and appears nowhere in
   the environment. Two breakers: a brass floor medallion, a
-  worn patch. Marble border tiles where carpet meets the
-  desk run.
+  worn patch. The carpet runs UNBROKEN under the hero desk —
+  the marble-border role was retired by handoff 2026-08-14-c
+  (an orphaned apron spec; the references seat the desk
+  directly on the leopard).
 - **Mezzanine strips (ruled, handoff 2026-08-14-b):** reskin
   to Faena formal, NOT carpet. Double-faced: walk top in
   MARBLE LIGHT carrying the standable edge — the same marble
