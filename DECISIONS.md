@@ -4013,3 +4013,31 @@ committed days prior. Music remaining: museum, exodus, boss."
 guard rails; tag radius untouched (body-center measurement); spawn
 clearances re-verified at new silhouettes; hold fiction finally matches
 hold heft."
+
+## 2026-08-18 — Luggage tier 1 wired (4 variants)
+
+luggage-single.aseprite exported and in: 80×18 = FOUR variants of 20×18,
+matching the -15-a ruling. No code was needed — the drop-in path built
+on 2026-08-17 picked it up. Verified in belldesk: all four frames spawn
+from the drawn strip at body 16×14 (the ruled 2px inset), untinted, and
+the interim rect is gone from tier 1. Tiers 2 and 3 correctly still fall
+back to item-medium / item-heavy, since their sources are undrawn.
+
+Colour check against the kit's exclusion table — the reason that table
+exists is bags vanishing into the level they live in. All four are
+CLEAR: the closest approach is frame 2's olive body #3B4314, which is 55
+away from Lacquer Dark. Internal luma ranges are 51 / 68 / 130 / 51,
+so every variant carries the light-plane-plus-shadow-plane structure the
+one-drawing-two-value-fields constraint asks for; frame 2 is the
+strongest at 130.
+
+Second sighting of the palette-discipline pattern from -14-d: this
+export is RGBA (colour type 6) with 29–50 colours per 20×18 frame. Not
+blocking anything — it looks right in situ — but it does mean the PLTE
+swap path stays unavailable, which matches the standing advice not to
+use it for bags anyway.
+
+Composite judgement DEFERRED at the human's request: they want to see
+these against the Bell Desk parallax, which does not exist yet (P4/P3
+still owed, per -14-d's hold). Captured against today's near-black field
+so there is a before; the same framing gets re-shot when P4 lands.
