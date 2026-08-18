@@ -24,8 +24,9 @@ ticket*. Draw the tiers as counts:
 
 Consequences for the drawing:
 
-- A group sits on the floor, so tier 2 and 3 grow **wider, not taller**.
-  A single tall monolith was the old "heavy" reading and it's wrong now.
+- A group sits on the floor, so tier 2 and 3 grow **wider faster than
+  taller** — the ruled frames go 20→24→30 across, against 18→22→24 up. A
+  single tall monolith was the old "heavy" reading and it's wrong now.
 - The count should read at a squint, before any detail does: one shape,
   two shapes, a cluster. That silhouette IS the difficulty tell — the
   player decides tap-or-hold from it while running.
@@ -44,9 +45,14 @@ file can carry a suitcase, a duffel and a backpack.
 
 | Source | Export | Frame size | Contents |
 |---|---|---|---|
-| `art/aseprite/luggage-single.aseprite` | `assets/sprites/luggage-single.png` | **16 × 14** | one bag, N variants |
-| `art/aseprite/luggage-pair.aseprite` | `assets/sprites/luggage-pair.png` | **24 × 16** | two pieces, N variants |
-| `art/aseprite/luggage-group.aseprite` | `assets/sprites/luggage-group.png` | **32 × 20** | three or four pieces, N variants |
+| `art/aseprite/luggage-single.aseprite` | `assets/sprites/luggage-single.png` | **20 × 18** | one bag, N variants |
+| `art/aseprite/luggage-pair.aseprite` | `assets/sprites/luggage-pair.png` | **24 × 22** | two pieces, N variants |
+| `art/aseprite/luggage-group.aseprite` | `assets/sprites/luggage-group.png` | **30 × 24** | three or four pieces, N variants |
+
+Sizes are the **-15-a ruling** (the first pass at 16×14 read too small
+for the class fiction); the artist's final call is ±2px per drawing.
+Width still grows faster than height across the tiers — 20→24→30
+against 18→22→24 — which is the group reading holding.
 
 Export is wired: `./scripts/export-sprites.sh` picks each up the moment
 its source exists and writes a tight horizontal strip (no JSON, no
@@ -54,17 +60,37 @@ extrude — the loader slices on a fixed grid). Nothing else is needed;
 the game prefers drawn bags over the interim rects automatically, and
 deleting a PNG reverts that tier to its rect.
 
-**The frame IS the collision rect.** Same rule as the garage cars
-(collision follows art): draw to the frame edges, don't pad with
-transparency, and put the bottom row of ink where the bags touch the
-floor. `src/config/itemArt.js` holds these three sizes; if a frame size
-needs to change, say so and I'll change the table and re-run the
-fairness instruments — item footprints feed spawn spacing and field
-density, so a size change isn't purely cosmetic.
+**Collision follows art, inset 2px per side** (-12-a extended to items
+by -15-a, with the car pattern's guard rails). Draw to the frame edges
+and put the bottom row of ink where the bags touch the floor; the
+physics body is the frame minus 2px on every side, centred:
 
-For reference, the interim rects being replaced are 14×14 / 20×22 /
-26×30 — note the new tier-2 and tier-3 boxes are **wider and shorter**,
-which is the group reading.
+| Tier | Frame | Body |
+|---|---|---|
+| 1 | 20 × 18 | 16 × 14 |
+| 2 | 24 × 22 | 20 × 18 |
+| 3 | 30 × 24 | 26 × 20 |
+
+A couple of pixels of silhouette overhang are therefore free — a strap
+or a wheel can poke past the collision box. **Tag feel cannot shift**:
+auto-target measures centre-to-centre and an inset doesn't move the
+centre, so `targetRadius` is untouched.
+
+`src/config/itemArt.js` holds the sizes. If one needs to change, say so
+— I change the table and re-run the spawn-clearance and fairness
+batteries, because item footprints feed spawn spacing and field density.
+
+**Chip anchors** (the tag chip composites at +width/4, −height/6 from
+centre, so it moves with the frame):
+
+| Tier | Chip offset from centre |
+|---|---|
+| 1 | +5, −3 |
+| 2 | +6, −4 |
+| 3 | +8, −4 |
+
+Keep that upper-right area quiet in the drawing — buckles and handles
+there will fight the chip.
 
 ## 2. The hard constraint: one drawing, two value fields
 
@@ -116,7 +142,8 @@ riot of buckles there will fight the chip.
    silhouette and it proves the group reading works before you commit
    the middle case.
 3. `luggage-pair` — the interpolation, once the two ends exist.
-4. More variants per strip, whenever. Optional: the same PLTE
-   palette-swap trick the cars use (`scripts/palette-variants.mjs`) can
-   multiply one drawing into six hues without touching pixels, if you'd
-   rather draw one great bag than three good ones.
+4. More variants per strip, whenever — drawn in different colours as you
+   go, the way the coats are. The cars' PLTE palette-swap trick is
+   deliberately NOT recommended here (advice 2026-08-17): three of its
+   six hues — crimson, burgundy, mustard — are on the exclusion table
+   above, and luggage variety wants shape, which a swap cannot give.

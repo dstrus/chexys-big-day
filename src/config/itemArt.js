@@ -8,14 +8,27 @@
 //   tier 2  a pair         short hold (holdTagMs × holdTier2Factor)
 //   tier 3  a trolley load charged hold
 //
-// The frame size IS the collision rect (collision follows art, the car
-// precedent): draw to the frame edges. Each PNG may be a horizontal
-// STRIP of same-size variants — the spawner picks one at random, the way
-// coats do — so one file can carry a suitcase, a duffel and a backpack.
+// SIZES (handoff 2026-08-15-a): the first pass at 16×14 was too small
+// for the class fiction. Canvas targets are ~20×18 / 24×22 / 30×24, the
+// artist's final call within ±2px per drawing.
+//
+// Collision follows art (the -12-a car ruling, extended to items) with
+// the car pattern's guard rails: the body is INSET 2px per side from the
+// ink and stays centered, so a couple of pixels of silhouette overhang
+// are free and no bag blocks more than it looks like it should. Carry
+// visuals are unaffected — the thief positions the SPRITE, not the body.
+// Tag feel is unchanged by construction: auto-target measures from body
+// CENTER, which the inset does not move, and targetRadius is untouched.
+//
+// Each PNG may be a horizontal STRIP of same-size variants — the spawner
+// picks one at random, the way coats do — so one file can carry a
+// suitcase, a duffel and a backpack.
+export const BAG_BODY_INSET = 2 // per side, from the ink
+
 export const LUGGAGE_ART = {
-  1: { key: 'luggage-single', w: 16, h: 14 },
-  2: { key: 'luggage-pair', w: 24, h: 16 },
-  3: { key: 'luggage-group', w: 32, h: 20 },
+  1: { key: 'luggage-single', w: 20, h: 18 },
+  2: { key: 'luggage-pair', w: 24, h: 22 },
+  3: { key: 'luggage-group', w: 30, h: 24 },
 }
 
 export function luggageArtFor(tier) {

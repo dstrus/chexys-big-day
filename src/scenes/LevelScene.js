@@ -1,7 +1,7 @@
 import Phaser from 'phaser'
 import { TUNING } from '../config/tuning.js'
 import { categoryColor } from '../config/itemCategories.js'
-import { luggageArtFor } from '../config/itemArt.js'
+import { luggageArtFor, BAG_BODY_INSET } from '../config/itemArt.js'
 import { COLLECTIBLES } from '../config/collectibles.js'
 import { getWaveSchedule } from '../config/waveRegistry.js'
 import Player from '../entities/Player.js'
@@ -1294,8 +1294,11 @@ export default class LevelScene extends Phaser.Scene {
       item.body.setSize(16, 18)
     } else if (useBagArt) {
       // drawn bags carry their own colours; the chip carries the
-      // category, so no tint (tinting would muddy leather and canvas)
-      item.body.setSize(bagArt.w, bagArt.h)
+      // category, so no tint (tinting would muddy leather and canvas).
+      // Body inset 2px per side from the ink and centered (-15-a): a
+      // little overhang is free, and the CENTRE is unmoved, which is why
+      // tag feel can't shift — auto-target measures from body centre.
+      item.body.setSize(bagArt.w - BAG_BODY_INSET * 2, bagArt.h - BAG_BODY_INSET * 2)
     } else {
       item.setTint(categoryColor(category)) // ChexApp tag colors
     }

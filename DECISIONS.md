@@ -3970,3 +3970,46 @@ Filed as standalone -f: -14-e was already applied and committed.
 
 "2026-08-14 — garage.mp3 corrected into the record: track four,
 committed days prior. Music remaining: museum, exodus, boss."
+
+## 2026-08-17 — Handoff 2026-08-15-a applied
+
+- Sequence check: 2026-08-14-e ✓ and its addendum, filed as -14-f ✓.
+- Item 1 — LUGGAGE UPSIZED. src/config/itemArt.js now carries 20×18 /
+  24×22 / 30×24 (was 16×14 / 24×16 / 32×20), artist's call ±2px.
+  Collision-follows-art extended to items with the car guard rails: the
+  body is the frame INSET 2px per side and centred — 16×14 / 20×18 /
+  26×20 — so a strap or wheel may overhang for free. Carry visuals are
+  untouched by the inset because the thief positions the SPRITE, not the
+  body. Tag feel is unchanged by construction and now also by
+  inspection: updateTargeting measures Distance.Between(player, obj) to
+  the item's ORIGIN, which the centred inset does not move, and
+  targetRadius was not touched.
+- Item 2 — verification battery, run at the new silhouettes with
+  stand-ins cut to the ruled sizes.
+  SPAWN CLEARANCE: every luggage spawn point in both maps was loaded
+  with a TIER-3 silhouette and its post-placement y compared to the
+  requested y. belldesk 18/18 clean, exodus 13/13 clean — the
+  placement-validity gate did not have to walk a single one up, so no
+  spawn point needs moving. The BRIEF-03 embed landmine does not
+  re-arm at these sizes.
+  INSTRUMENTS: as predicted, unchanged — sizes don't enter the
+  inequalities. The (c) steal-fairness assertion holds on both:
+  belldesk escape 11.46s vs traverse 9.60s, exodus 11.46s vs 10.56s.
+  Exodus is the tighter of the two, with ~0.9s of headroom before the
+  margin, which is worth remembering the next time world width or
+  player speed moves.
+  CARRY: a 30×24 trunk on the 24×24 thief renders sanely — the bag
+  draws behind the thief and hangs about 3px past its right edge.
+  Comedy as expected, no clipping and no z-fighting.
+  CHIP ANCHORS re-documented per tier in the kit (chip sits at
+  +width/4, −height/6 from centre): +5,−3 / +6,−4 / +8,−4.
+- Kit updated: sizes, the body table, the anchors, and §0's "wider not
+  taller" line restated in the ruled numbers (width still grows faster
+  than height, so the group reading survives the upsize).
+- Item 3 — the required line, verbatim:
+
+"2026-08-15 — Luggage upsized (handoff 2026-08-15-a): ~20×18 / 24×22 /
+30×24 by tier, collision-follows-art extended to items with car-pattern
+guard rails; tag radius untouched (body-center measurement); spawn
+clearances re-verified at new silhouettes; hold fiction finally matches
+hold heft."
