@@ -28,6 +28,15 @@ Example: `assets/audio/tag.wav` replaces the tap-tag blip everywhere;
 `assets/audio/runClear.wav` gives the win jingle its own sound while
 `runFail` still falls back to `rushEnd.wav` (or the synth).
 
+## Variant pools ([VAR] events)
+
+`tag-1.mp3`, `tag-2.mp3`, `tag-3.mp3` form a POOL for the event `tag`:
+play() picks at random and never repeats the previous pick. Any count
+works, extensions may be mixed, and a bare `tag.mp3` alongside a pool
+loses to the pool. Aliases pool too, so `tap-1.mp3` … also serves `tag`.
+See SFX-MANIFEST.md for which events want variants and
+SFX-RECONCILE.md for the manifest-to-code name map.
+
 ## Music — one looping track per level
 
 Drop `assets/audio/music/<levelId>.mp3` (e.g. `coatroom.mp3`) and it

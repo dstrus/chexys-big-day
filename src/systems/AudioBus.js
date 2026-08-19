@@ -21,8 +21,18 @@ const MUSIC_URLS = import.meta.glob('../../assets/audio/music/*', {
 })
 
 const AUDIO_EXT = /\.(wav|mp3|ogg)$/
+// VARIANT POOLS (SFX-MANIFEST [VAR], confirmed 2026-08-19): `tag-1.mp3`,
+// `tag-2.mp3`, ... form a pool for the event `tag`. play() picks at
+// random and never repeats the previous pick, so the most-heard sounds
+// stop sounding mechanical. A bare `tag.mp3` is still a valid single;
+// pool and single can coexist, in which case the pool wins.
+const VARIANT_SUFFIX = /-(\d+)$/
 // finer-grained game events fall back to a canonical file name
-// (BRIEF-02's event list) when no exact-name file exists
+// (BRIEF-02's event list) when no exact-name file exists. The second
+// group are MANIFEST ALIASES (reconciled 2026-08-19): the design chat's
+// manifest names some events differently from the code, so a file
+// delivered under the manifest's name still plays. Code name wins when
+// both exist.
 const CANONICAL = {
   heavyTag: 'holdComplete',
   interrupt: 'holdInterrupt',
@@ -30,8 +40,15 @@ const CANONICAL = {
   heatUp: 'multiplierUp',
   runClear: 'rushEnd',
   runFail: 'rushEnd',
+  // manifest aliases
+  tag: 'tap',
+  stun: 'rescueStun',
+  gloat: 'stealGrab',
+  stamp: 'bigDayStamp',
+  chime: 'hangerChime',
 }
 
+// name -> url for singles; name -> [url, ...] for variant pools
 function fileMap(globbed) {
   const map = {}
   for (const [path, url] of Object.entries(globbed)) {
@@ -42,7 +59,22 @@ function fileMap(globbed) {
     // so without the skip a retired track is still downloaded and
     // bundled — 1.5MB of pre-remix Coatroom and Title, in this case.
     if (base.startsWith('_')) continue
-    map[base.replace(AUDIO_EXT, '')] = url
+    const stem = base.replace(AUDIO_EXT, '')
+    const m = stem.match(VARIANT_SUFFIX)
+    if (m) {
+      const event = stem.slice(0, -m[0].length)
+      // a bare single may already sit here (glob order is not
+      // guaranteed): the pool replaces it rather than pushing onto a
+      // string, which is how the documented "pool wins" resolves
+      if (!Array.isArray(map[event])) map[event] = []
+      map[event].push({ stem, url })
+    } else if (!Array.isArray(map[stem])) {
+      map[stem] = url
+    }
+  }
+  // deterministic pool order: -1, -2, -3 regardless of glob order
+  for (const [k, v] of Object.entries(map)) {
+    if (Array.isArray(v)) v.sort((a, b) => a.stem.localeCompare(b.stem, undefined, { numeric: true }))
   }
   return map
 }
@@ -63,11 +95,18 @@ class AudioBus {
     // master mute (handoff 2026-08-07-d): a persisted preference,
     // independent of the volume sliders — unmute restores prior levels
     this.muted = isMuted()
+    this.lastVariant = {} // per-event: the previous pool pick, never repeated
   }
 
   // Boot.preload: queue every discovered audio file
   preload(scene) {
-    for (const [name, url] of Object.entries(this.files)) scene.load.audio(`audio-${name}`, url)
+    for (const [name, entry] of Object.entries(this.files)) {
+      if (Array.isArray(entry)) {
+        for (const v of entry) scene.load.audio(`audio-${v.stem}`, v.url)
+        continue
+      }
+      scene.load.audio(`audio-${name}`, entry)
+    }
     for (const [name, url] of Object.entries(this.music)) scene.load.audio(`music-${name}`, url)
   }
 
@@ -90,8 +129,28 @@ class AudioBus {
     return this.muted
   }
 
+  // Resolve an event to a loaded cache key: the event's own pool or
+  // single first, then its CANONICAL/alias name. Pools pick at random
+  // without repeating the previous pick.
+  resolveSfxKey(name) {
+    for (const candidate of [name, CANONICAL[name]]) {
+      if (!candidate) continue
+      const entry = this.files[candidate]
+      if (!entry) continue
+      if (!Array.isArray(entry)) return candidate
+      if (entry.length === 1) return entry[0].stem
+      let pick
+      do {
+        pick = entry[Math.floor(Math.random() * entry.length)].stem
+      } while (pick === this.lastVariant[candidate] && entry.length > 1)
+      this.lastVariant[candidate] = pick
+      return pick
+    }
+    return null
+  }
+
   play(name, pan = 0) {
-    const fileKey = this.files[name] ? name : this.files[CANONICAL[name]] ? CANONICAL[name] : null
+    const fileKey = this.resolveSfxKey(name)
     if (fileKey && this.game?.cache.audio.exists(`audio-${fileKey}`)) {
       if (this.muted) return // master mute covers file SFX too
       const snd = this.game.sound.add(`audio-${fileKey}`)

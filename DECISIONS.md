@@ -4082,3 +4082,54 @@ Still clear of the exclusion table (frame 0's #55621C sits 61 from
 Carpet Base Tan), and the pair still reads as two pieces in situ. No
 code involvement in any of this — the drop-in path has now absorbed
 five luggage exports without a line changing.
+
+## 2026-08-19 — SFX-MANIFEST reconciled; variant pools implemented
+
+SFX-MANIFEST.md landed from the design chat and assigns the code track a
+task before production: reconcile its event names against the bus, and
+confirm-or-add [VAR] pool support because it changes export counts.
+Both done; the printed list is assets/audio/SFX-RECONCILE.md.
+
+Method note worth keeping: a naive grep for `audio.play('literal')`
+MISSES real call sites — the results sting is
+`audio.play(cleared ? 'runClear' : 'runFail')` and the collectibles play
+`def.sfx` from a table. The first pass of this reconciliation was wrong
+because of it, and reported runFail/tagPickup/cardPickup/insightPickup
+as uncalled when they are called. 21 events are genuinely called.
+
+Findings, in descending value:
+
+- FIVE NAME MISMATCHES where a delivered file would have been ignored:
+  manifest tap/rescueStun/stealGrab/bigDayStamp/hangerChime are code's
+  tag/stun/gloat/stamp/chime. Rather than rename events across five
+  scenes, CANONICAL gained them as aliases, so either name plays and the
+  code name wins. `tap` matters most: it is the most-heard sound and
+  tag.mp3 already ships.
+- hangerChime needs a RULING, not an alias: the manifest wants three
+  ascending tones, one per hanger, but code plays a single `chime` per
+  hanger. A variant pool is explicitly the wrong tool (pools randomise;
+  ascending order is ordered), so this is either three events or a code
+  change.
+- 14 manifest events have NO call site and will be silent until one is
+  added. Two of those need design answers first: `edgePush` contradicts
+  the 2026-08-14 silent-carry ruling (a comic boing re-asserts exactly
+  the reading that ruling removed), and `safeAtEdge` duplicates the
+  bank's existing cardReturn.
+- 3 events exist in code but not the manifest: `spawn` (high frequency —
+  every item and car arrival), and `runClear`/`runFail`, which both fall
+  back to rushEnd today, so a win and a loss currently sound identical.
+  `steal` is a dead synth voice.
+
+VARIANT POOLS shipped: `event-1`, `event-2`, … group into a pool, picked
+at random with no immediate repeat, any count, mixed extensions allowed,
+aliases pool too, and a pool beats a bare single. Verified with
+stand-ins: 12 consecutive `tag` resolutions hit all three files with
+zero immediate repeats, and a manifest-named file played for its code
+event.
+
+One latent bug caught during that verification and fixed before commit:
+the pool branch pushed onto whatever was already at the key, so a bare
+single globbed BEFORE its variants would have thrown on `.push`. It only
+passed the first run because `-` sorts before `.`. Re-verified with the
+hostile order forced (dash.mp3 alongside dash-1/dash-2): the pool wins
+either way.
