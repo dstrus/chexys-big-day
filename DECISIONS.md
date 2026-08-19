@@ -4069,3 +4069,16 @@ on, if the artist wants the set consistent.
 
 Tier 3 (luggage-group) is still undrawn and correctly still falls back
 to the item-heavy rect.
+
+## 2026-08-18 — Tier-2 frame 0 repainted to the palette
+
+The one outlier flagged in the previous entry is resolved: tier-2 frame
+0 went from 106 colours to 13, and its internal luma range went UP
+(124 → 130) rather than down — fewer, better-chosen shades, not a
+flattening. The bag set is now 13 / 29 / 16 colours across the pair
+strip and 29 / 36 / 12 / 32 across the singles, with no frame above 36.
+
+Still clear of the exclusion table (frame 0's #55621C sits 61 from
+Carpet Base Tan), and the pair still reads as two pieces in situ. No
+code involvement in any of this — the drop-in path has now absorbed
+five luggage exports without a line changing.
