@@ -4041,3 +4041,31 @@ Composite judgement DEFERRED at the human's request: they want to see
 these against the Bell Desk parallax, which does not exist yet (P4/P3
 still owed, per -14-d's hold). Captured against today's near-black field
 so there is a before; the same framing gets re-shot when P4 lands.
+
+## 2026-08-18 — Luggage tier 2 wired; tier 1 repainted
+
+luggage-pair.aseprite exported: 72×22 = THREE variants of 24×22, the
+ruled size, body 20×18 after the 2px inset. luggage-single re-exported
+with two of its four frames repainted (frame 1: 80px, frame 2: 243px;
+frames 0 and 3 byte-identical). Both picked up with no code change.
+
+In-game the GROUP READING works, which was the open question the whole
+tier scheme rests on: side by side, tier-1 items are visibly one bag and
+tier-2 items visibly two. A player can tell tap from hold by silhouette
+before colour registers, which is what the kit asked for.
+
+Colour checks against the exclusion table — both CLEAR. Tier 1's closest
+approach is frame 0's #354534, 59 from Lacquer Dark; tier 2's is frame
+2's #55621C, 61 from Carpet Base Tan.
+
+Worth recording as a trend: the repainted frames are getting more
+disciplined, not less. Tier-1 frame 2 went from 50 colours to 12 while
+its internal luma range stayed high (119), and tier-2 frames 1 and 2 sit
+at 29 and 16 colours. The outlier is tier-2 frame 0 at 106 colours in a
+24×22 tile. Nothing is broken by it — the exports remain RGBA and read
+correctly in situ — but frame 0 is the one place in the bag set where
+the palette-discipline note from -14-d actually has something to bite
+on, if the artist wants the set consistent.
+
+Tier 3 (luggage-group) is still undrawn and correctly still falls back
+to the item-heavy rect.
