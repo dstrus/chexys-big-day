@@ -4172,3 +4172,30 @@ Verified: after H the level is paused with no panel, the player's y and
 the rush clock are unchanged across 90 stepped frames, UIOverlay's
 timers are held, Esc does not resume, and H again resumes with motion
 and the clock continuing. No console noise.
+
+## 2026-08-20 — Luggage tier 1: six variants
+
+Two new tier-1 variants: luggage-single.png is now 120×18 = SIX frames
+of 20×18, all six spawning from the drawn strip. Both newcomers are the
+cleanest frames in the set — frame 4 at 10 colours, frame 5 at 4 — and
+both draw straight from actors.gpl (Coat Cobalt, Coat Mustard,
+Winterteal), which is the palette discipline arriving on its own rather
+than by instruction. Still clear of the exclusion table.
+
+Two small notes, neither blocking:
+
+- Frame 4 contains 2 pixels of PURE BLACK (#000000) plus two near-black
+  singletons. Pure black is not in any project palette (the darkest is
+  Outline Cool #101828), so this reads as a stray rather than a choice.
+  Two pixels; mentioned only because the rest of the frame is otherwise
+  a 10-colour drawing.
+- assets/sprites/luggage-pair.png came back MODIFIED from a re-export
+  even though its source is unchanged in git. Investigated rather than
+  waved through: the diff is exactly 6 pixels, all in frame 0's top two
+  rows, i.e. real art. Exporting twice in a row produces identical bytes
+  (md5 cf447aa2… both runs), so the exporter is deterministic and the
+  PNG committed at ab25274 was simply one save STALE — the .aseprite had
+  moved 6 pixels ahead between my export and my `git add`. The fix is
+  the re-export, and the lesson is that the full export pass is worth
+  running even when only one source changed, because it reconciles
+  stale siblings.
