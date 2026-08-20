@@ -4223,3 +4223,22 @@ variety, as the kit intended.
 Strip state: 29 / 36 / 12 / 32 / 7 / 5 colours, luma ranges 60 / 102 /
 119 / 51 / 127 / 96, nothing darker than Outline Cool, closest approach
 to an excluded value still frame 0 at 59 from Lacquer Dark.
+
+## 2026-08-20 — Tier-1 frames 0 and 3 repainted to the palette
+
+Frame 0: 29 colours → 7 (144px changed). Frame 3: 32 → 6 (132px). The
+other four frames byte-identical. Both now sit on actors.gpl garment
+pairs — frame 0 on Coat Olive #7A8C2E / Olive Shade #55621C, frame 3 on
+Coat Cobalt #2E6FD0 / Cobalt Shade #1E4C96 — with a few in-between
+shades and, in frame 3, Hanger Broken Dark #3E2B20 doing the strap.
+
+Strip is now 7 / 36 / 12 / 6 / 7 / 5 colours. FRAME 1 IS THE LAST
+OUTLIER at 36; every other frame is in single digits or twelve. Luma
+ranges 68 / 102 / 119 / 62 / 127 / 96, nothing darker than Outline
+Cool, closest approach to an excluded value frame 0's #3E4814 at 57
+from Lacquer Dark.
+
+Correction to the previous entry's report: it said frames 0, 1 and 3
+were "above 30 colours". Frame 0 was 29 — below. The human read the
+data correctly and cleaned 0 and 3, leaving frame 1 (36, genuinely the
+highest) as the remaining one.
