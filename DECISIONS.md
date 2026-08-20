@@ -4199,3 +4199,14 @@ Two small notes, neither blocking:
   the re-export, and the lesson is that the full export pass is worth
   running even when only one source changed, because it reconciles
   stale siblings.
+
+## 2026-08-20 — Stray blacks removed from tier-1 frame 4
+
+The two pure-black pixels (plus two near-black singletons) were an
+accident and are gone. Re-checked the WHOLE strip, not just the frame
+that was flagged: zero pixels anywhere darker than Outline Cool
+#101828. Frame 4 dropped from 10 colours to 7 and now sits entirely on
+actors.gpl values — Coat Cobalt #2E6FD0 with its #1E4C96/#122C51/#183B6B
+shades and Coat Mustard #D9A62B with #A3781A/#886416. Four pixels
+changed; the other five frames are byte-identical, so nothing else moved
+with it.
