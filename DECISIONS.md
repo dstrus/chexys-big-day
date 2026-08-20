@@ -4210,3 +4210,16 @@ actors.gpl values — Coat Cobalt #2E6FD0 with its #1E4C96/#122C51/#183B6B
 shades and Coat Mustard #D9A62B with #A3781A/#886416. Four pixels
 changed; the other five frames are byte-identical, so nothing else moved
 with it.
+
+## 2026-08-20 — Tier-1 frame 5 repainted
+
+78 pixels in frame 5; the other five frames byte-identical. It moved
+from Winterteal #3FA08C onto the darker teal pair #2B7263/#22594D —
+which is frame 1's body colour, so the strip now has two teal bags of
+different shape rather than two different teals. Reads as a check-in
+queue rather than a colour chart, and it means shape is carrying the
+variety, as the kit intended.
+
+Strip state: 29 / 36 / 12 / 32 / 7 / 5 colours, luma ranges 60 / 102 /
+119 / 51 / 127 / 96, nothing darker than Outline Cool, closest approach
+to an excluded value still frame 0 at 59 from Lacquer Dark.
