@@ -4242,3 +4242,26 @@ Correction to the previous entry's report: it said frames 0, 1 and 3
 were "above 30 colours". Frame 0 was 29 — below. The human read the
 data correctly and cleaned 0 and 3, leaving frame 1 (36, genuinely the
 highest) as the remaining one.
+
+## 2026-08-20 — Tier-1 frame 1 repainted: the singles strip is done
+
+36 colours → 4 (144px changed), the other five frames byte-identical.
+Frame 1 now runs on the Winter Teal pair — Coat Winter Teal #3FA08C /
+Winter Teal Shade #2B7263 with one deeper #1B463D — plus 2px of Mustard
+Shade. It is now the CLEANEST frame in the strip.
+
+Tier-1 singles, final state: 7 / 4 / 12 / 6 / 7 / 5 colours across six
+20×18 variants, no frame above twelve, nothing darker than Outline Cool,
+every body pair drawn from actors.gpl, luma ranges 68 / 73 / 119 / 62 /
+127 / 96 so the internal contrast the one-drawing-two-value-fields
+constraint needs survived every cleanup. Closest approach to an excluded
+value is frame 0's #3E4814, 57 from Lacquer Dark.
+
+For the record on how this landed: the strip went from 29/36/12/32/*/*
+to single digits over four passes, driven by the artist reading the
+colour-count readouts rather than by any instruction to conform. The
+readout was worth building.
+
+Note the RGBA export format is unchanged (colour type 6) — but at 4–12
+colours per frame the sheet is now trivially indexable if the PLTE
+variant path is ever wanted after all.
