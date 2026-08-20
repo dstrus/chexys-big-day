@@ -365,6 +365,9 @@ export default class UIOverlayScene extends Phaser.Scene {
     this.pausePanel.setDepth(30) // above guest bubbles
 
     this.pauseKeys = this.input.keyboard.addKeys('ESC,P,UP,DOWN,W,S,ENTER,Z,SPACE')
+    // dev-only clean freeze for screenshots — see toggleFreeze()
+    this.freezeKey = import.meta.env.DEV ? this.input.keyboard.addKey('H') : null
+    this.frozen = false
     this.pausedAt = 0
     this.setPauseMode('menu')
   }
@@ -389,6 +392,31 @@ export default class UIOverlayScene extends Phaser.Scene {
     opts.forEach((o, i) => o.setColor(i === this.pauseIdx ? '#f2ecd8' : '#98a2b3'))
   }
 
+  // SCREENSHOT FREEZE (dev only, human request 2026-08-19): halt the
+  // game with no dim, no menu, no music change — just a still frame.
+  // Lives here because UIOverlay keeps running while the level scene is
+  // paused, so it can still hear the key that un-freezes.
+  //
+  // It also holds this scene's OWN tweens and timers, which is the part
+  // that makes it useful: guest bubbles auto-dismiss on a timer, so
+  // without that a bubble would vanish out of the shot you froze to take.
+  toggleFreeze() {
+    const key = this.levelKey()
+    if (this.pausePanel.visible) return // the real pause menu owns the keys
+    if (this.frozen) {
+      this.frozen = false
+      this.tweens.resumeAll()
+      this.time.paused = false
+      this.scene.resume(key)
+      return
+    }
+    if (!this.game.scene.isActive(key)) return // nothing to freeze
+    this.frozen = true
+    this.scene.pause(key)
+    this.tweens.pauseAll()
+    this.time.paused = true
+  }
+
   onPaused() {
     this.pausedAt = this.time.now
     this.setPauseMode('menu')
@@ -408,6 +436,8 @@ export default class UIOverlayScene extends Phaser.Scene {
   }
 
   update(time) {
+    if (this.freezeKey && Phaser.Input.Keyboard.JustDown(this.freezeKey)) this.toggleFreeze()
+    if (this.frozen) return // a frozen frame stays exactly as captured
     audio.refreshVolumes() // volume sliders apply live
     this.updateInsightChip()
     this.muteIcon.setVisible(audio.muted)

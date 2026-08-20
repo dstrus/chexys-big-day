@@ -4133,3 +4133,42 @@ single globbed BEFORE its variants would have thrown on `.push`. It only
 passed the first run because `-` sorts before `.`. Re-verified with the
 hostile order forced (dash.mp3 alongside dash-1/dash-2): the pool wins
 either way.
+
+## 2026-08-19 — `H`: clean freeze for screenshots (dev only)
+
+Human request: a pause with no dimming and no overlay, purely to make
+captures easier. `H` in a level halts it — no panel, no dim, music
+untouched — and `H` again resumes.
+
+Two design points worth keeping:
+
+- It lives in UIOverlayScene, not the level. A paused scene stops
+  receiving input, so the key that un-freezes has to belong to a scene
+  that keeps running; UIOverlay already owns the pause/resume plumbing
+  for exactly that reason.
+- It also holds UIOverlay's OWN tweens and timers (`tweens.pauseAll()`,
+  `time.paused`). That is the part that makes it useful rather than
+  decorative: guest bubbles auto-dismiss on a timer, so without it a
+  bubble would expire out of the very shot you froze to take.
+
+`Esc` cannot un-freeze — the level scene is paused and never sees it.
+Documented in the README table rather than left as a surprise.
+
+Two harness lessons from verifying it, both likely to recur:
+
+1. `ScenePlugin.pause()` is QUEUED. Reading `scene.isActive()` in the
+   same expression that called pause reports the scene still running;
+   the status flips 5 (RUNNING) → 6 (PAUSED) on the next loop step. My
+   first probe read it too early and looked like a bug in the feature.
+2. A synthetic keydown+keyup dispatched in the SAME frame never
+   registers as JustDown: Phaser's `Key.onUp` clears `_justDown`, and
+   nothing read it in between. Real presses span frames, so a harness
+   must dispatch keydown, STEP, then keyup. Also note CDP's
+   Input.dispatchKeyEvent does not reach Phaser reliably in headless
+   (canvas focus) — dispatching a KeyboardEvent on `window` in-page
+   does, since that is where the KeyboardPlugin listens.
+
+Verified: after H the level is paused with no panel, the player's y and
+the rush clock are unchanged across 90 stepped frames, UIOverlay's
+timers are held, Esc does not resume, and H again resumes with motion
+and the clock continuing. No console noise.
