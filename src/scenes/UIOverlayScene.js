@@ -438,7 +438,6 @@ export default class UIOverlayScene extends Phaser.Scene {
   update(time) {
     if (this.freezeKey && Phaser.Input.Keyboard.JustDown(this.freezeKey)) this.toggleFreeze()
     if (this.frozen) return // a frozen frame stays exactly as captured
-    audio.refreshVolumes() // volume sliders apply live
     this.updateInsightChip()
     this.muteIcon.setVisible(audio.muted)
     if (!this.pausePanel.visible) return

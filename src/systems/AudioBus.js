@@ -112,6 +112,13 @@ class AudioBus {
 
   init(game) {
     this.game = game
+    // Volumes track the sliders GLOBALLY. This used to be polled from
+    // UIOverlayScene.update, which meant it only ran during gameplay:
+    // on the Title and Shift Select screens the music slider did
+    // nothing at all (human report 2026-08-21). The game loop steps
+    // regardless of which scenes exist — or whether they are paused —
+    // so the poll belongs here.
+    game.events.on('poststep', this.refreshVolumes, this)
     setSfxMuted(this.muted)
     // 'm' toggles master mute from ANY scene — DOM-level so it works on
     // menus, during gameplay, and while the Level scene is paused

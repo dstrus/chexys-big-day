@@ -200,7 +200,8 @@ export const TUNING = {
   // audio (master/sfx/music mix — AudioBus + synth read these live)
   masterVolume: 1,
   sfxVolume: 1,
-  musicVolume: 0.5,
+  musicVolume: 0.35, // lowered from 0.5 (human, 2026-08-21) — the real
+  // tracks sit louder than the synth stub they replaced
 
   // debug helpers
   // fixed 60Hz physics steps. A/B testing on real hardware showed the

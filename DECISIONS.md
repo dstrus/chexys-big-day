@@ -4320,3 +4320,32 @@ look at the composite before asking for a repaint.
 Also re-learned (second time): LevelScene.updateCamera re-centres on
 the player EVERY frame, so cameras.main.setScroll() in a harness never
 survives. Frame captures by moving the PLAYER.
+
+## 2026-08-21 — Music slider had no effect outside gameplay (fixed)
+
+Human report: with the MP3s in place the music slider does nothing.
+Reproduced and traced. The plumbing was fine — TUNING → refreshVolumes →
+the Phaser sound's volume all worked. The fault was WHERE the poll
+lived: `audio.refreshVolumes()` was called from UIOverlayScene.update,
+and UIOverlay only exists during gameplay. So on the Title and Shift
+Select screens — where a player naturally reaches for a volume slider,
+and where the title track is the only thing playing — nothing pumped it
+and the sound kept whatever volume startMusic set. Measured before the
+fix: TITLE with musicVolume 0.1 still reported soundVolume 0.5, while
+the same change inside a level tracked immediately.
+
+Fix: the poll moved to `game.events.on('poststep')` in AudioBus.init.
+The game loop steps regardless of which scenes exist or whether they
+are paused, so volumes now track everywhere — including on the PAUSE
+MENU, which carries the sliders and had the same latent problem. The
+UIOverlay call is gone; nothing else polls it.
+
+Note this was masked rather than caused by the MP3s: the synth stub had
+the identical bug, but the stub's own volume was less noticeable and the
+Title screen's stub was the only thing anyone would have heard.
+
+Also per the human: default musicVolume lowered 0.5 → 0.35, since the
+composed tracks sit louder than the stub they replaced.
+
+Verified after: TITLE tracks 0.1 and 1.0, level tracks 0.1 and the new
+0.35 default, and a PAUSED level tracks 0.8. Build clean, no noise.
