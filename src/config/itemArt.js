@@ -25,10 +25,15 @@
 // suitcase, a duffel and a backpack.
 export const BAG_BODY_INSET = 2 // per side, from the ink
 
+// `sitFlush` drops the BOTTOM inset only: the body's floor edge lines up
+// with the drawn floor edge, so the bag rests ON the ground instead of
+// 2px into it (human note 2026-08-20). Sides and top keep their inset,
+// which preserves the -15-a top-of-body alignment for carry visuals.
+// Per-tier because tiers 1 and 2 are drawn for the sink and are settled.
 export const LUGGAGE_ART = {
   1: { key: 'luggage-single', w: 20, h: 18 },
   2: { key: 'luggage-pair', w: 24, h: 22 },
-  3: { key: 'luggage-group', w: 30, h: 24 },
+  3: { key: 'luggage-group', w: 30, h: 24, sitFlush: true },
 }
 
 export function luggageArtFor(tier) {

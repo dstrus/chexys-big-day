@@ -1298,7 +1298,13 @@ export default class LevelScene extends Phaser.Scene {
       // Body inset 2px per side from the ink and centered (-15-a): a
       // little overhang is free, and the CENTRE is unmoved, which is why
       // tag feel can't shift — auto-target measures from body centre.
-      item.body.setSize(bagArt.w - BAG_BODY_INSET * 2, bagArt.h - BAG_BODY_INSET * 2)
+      // sitFlush keeps the bottom inset at 0 so the drawn floor edge IS
+      // the collision floor edge; setSize centres, so the offset then
+      // pushes the body down to sit against the ink's bottom row
+      const inset = BAG_BODY_INSET
+      const bh = bagArt.h - inset * (bagArt.sitFlush ? 1 : 2)
+      item.body.setSize(bagArt.w - inset * 2, bh)
+      if (bagArt.sitFlush) item.body.setOffset(inset, inset)
     } else {
       item.setTint(categoryColor(category)) // ChexApp tag colors
     }

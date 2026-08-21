@@ -4265,3 +4265,29 @@ readout was worth building.
 Note the RGBA export format is unchanged (colour type 6) — but at 4–12
 colours per frame the sheet is now trivially indexable if the PLTE
 variant path is ever wanted after all.
+
+## 2026-08-20 — Luggage tier 3 wired; `sitFlush` for the group
+
+luggage-group.aseprite exported: 30×24, ONE variant, and the first
+INDEXED luggage sheet (PNG colour type 3) at 16 colours with the
+strongest internal luma range in the item set, 156. Clear of the
+exclusion table by a mile — its teal body is 111 from Carpet Base Tan.
+It draws as a brass luggage cart carrying stacked bags, which is the
+trolley-load silhouette the group tier was named for.
+
+Human note applied: the other tiers sit 2px INTO the ground and the
+group should not. Cause is the -15-a centred inset — the body is 2px
+smaller than the ink on every side, so with body.bottom resting on the
+floor, two rows of drawn pixels fall below it. Fix is per-tier and drops
+the BOTTOM inset only: `sitFlush: true` in LUGGAGE_ART gives the group a
+26×22 body offset down by 2, so its drawn floor edge IS its collision
+floor edge. Sides and top keep their inset, which preserves -15-a's
+top-of-body alignment for carry visuals.
+
+Left tiers 1 and 2 alone deliberately — they are drawn for the sink and
+the human called them settled. Measured on the belldesk carpet (surface
+y 240): tier 1 and 2 ink bottoms land at 242 (2px sink, unchanged),
+tier 3 at 240 (flush), all three with body.bottom on 240.
+
+Every luggage tier now has art. The interim item-standard /
+item-medium / item-heavy rects are no longer reachable in belldesk.
