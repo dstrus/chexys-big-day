@@ -4291,3 +4291,32 @@ tier 3 at 240 (flush), all three with body.bottom on 240.
 
 Every luggage tier now has art. The interim item-standard /
 item-medium / item-heavy rects are no longer reachable in belldesk.
+
+## 2026-08-20 — Group tier: second cart variant; a false-positive flag
+
+luggage-group is now 60×24 = TWO variants of 30×24, still indexed, 16
+and 13 colours, both with a 156 internal luma range and both resting
+flush (sinkPx 0) via sitFlush.
+
+The colour checker FLAGGED frame 1: its most-used colour, Mustard Shade
+#A3781A, sits 42.7 RGB and only 9.8 LUMA from Carpet Mottle Light — the
+same value in the same hue family as the floor it stands on, which is
+exactly the camouflage the exclusion table exists to prevent.
+
+In situ it is a FALSE POSITIVE, and the reason is worth recording
+because the checker will do it again: the heuristic reports the
+most-used colour as "the body", which is wrong for a drawing whose mass
+is a STRUCTURE. Those 71 pixels are the brass cart's own shadow line,
+drawn as thin members immediately adjacent to #FFD24A highlight (luma
+208, a full 76 above the carpet) — not a bag surface lying on the
+carpet. The bags the cart carries are blue, green and navy. Checked at
+6× and at 1:1 on the leopard: both carts read cleanly, frame separating
+from floor by its gold.
+
+Lesson for the checker, not the art: dominant-colour proximity is a
+useful alarm but it cannot tell a mass from a line. When it fires,
+look at the composite before asking for a repaint.
+
+Also re-learned (second time): LevelScene.updateCamera re-centres on
+the player EVERY frame, so cameras.main.setScroll() in a harness never
+survives. Frame captures by moving the PLAYER.
