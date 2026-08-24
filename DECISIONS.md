@@ -4524,3 +4524,36 @@ things the artist has to know that the code cannot enforce: the WHOLE
 overlay shares one rhythm (a sconce wanting its own timing belongs on
 the fg layer), and alignment is a draw-time matter — copy
 belldesk-p3.aseprite, delete all but the light, export.
+
+## 2026-08-24 — Chandelier glow committed; P4 ceiling spec + a seam finding
+
+glow.png landed at 960×270 RGBA — the p3-aligned shape — and verified
+live: tracksP3 true, factor 0.2, depth -7.5 in front of p3's -8,
+additive, tilePositionX identical to p3's to 0.00px after walking, pulse
+running. 40 colours, luma 215-255, 5.2% ink: sparse and hot, which is
+exactly right for additive. (The colour checker's "20 from Paper manila"
+note is a false positive of the same class as the cart's brass shadow —
+the exclusion table governs SURFACES, and additive light legitimately
+runs near-white. The checker should not be pointed at glow layers.)
+
+Measured P4's current state while answering the human's question about
+the cove crown, and found two things worth recording.
+
+1. THE CROWN IS NOT DRAWN YET. P4 today is a 1px Brass Glint #E0B858
+   hairline on rows 0-1 and then flat Lacquer Dark #581826 all the way
+   down, with detail resuming around row 153. So the "gold-leaf stepped
+   cove crown" is still a placeholder hairline — and that hairline sits
+   at rows 0-1, underneath the HUD.
+2. P4 HAS A WRAP SEAM. Every parallax layer is a tileSprite, so a
+   480-wide P4 still WRAPS: at factor 0.05 the offset runs 0 → 72px
+   across the level's 1440px of scroll, and 9 rows (232-240) have
+   different left and right edge pixels — e.g. row 236 is Lacquer Face
+   #732032 on the left against Wood Mid #4A2E1A on the right. That
+   discontinuity will travel across the screen as the player walks. It
+   is in the lower-wall detail, not the ceiling, but the crown must
+   satisfy the same rule when it is drawn.
+
+HUD extents measured for the spec, since the ceiling band shares space
+with them: hangers at y5, timer and score text at y6, multiplier at y19,
+tag counter icon centred at y24 — so the HUD owns roughly y0-30 across
+the full width. The crown's hot passage wants to sit below that.
