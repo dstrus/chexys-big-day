@@ -4390,3 +4390,67 @@ brass panel grid, the chandelier, the curved-stair hero passage, brass
 mezzanine rails and the elevator door. Consequence worth flagging: the
 crimson-WALL half of the -14-a composite guard, untestable since drop
 1, is now runnable whenever the art is ready to be judged.
+
+## 2026-08-24 — COMPOSITE GUARD RUN against real crimson walls; -14-d
+## item 3 released
+
+The guard handoff 2026-08-14-a §2 armed at the Faena direction, and
+which has been untestable since drop 1 because the field behind play was
+black, has now run against the actual P2/P3/P4 art. Method: stage a bag
+of every tier plus a display-only crimson-coat control on the carpet
+with Chexy in frame, capture the COMPOSITED frame, decode it and sample
+the mean of each region's brighter half — a squint reads an object by
+its lit mass, not by averaging it into its own shadow.
+
+Measured (luma): WALL #581826 = 45 — which is Lacquer Dark's palette
+luma to the decimal, so the sampling is trustworthy and palette figures
+translate directly to the composite.
+
+| against the wall | luma gap | verdict |
+|---|---|---|
+| crimson COAT control #B64236 (99) | 55 | clear |
+| luggage t1 #407863 (101) | 56 | clear |
+| luggage t2 #566B51 (98) | 53 | clear |
+| luggage t3 cart #8F936B (141) | 97 | clear |
+| Chexy #F5C6AD (209) | 164 | clear |
+| Alert Red #EA5151 (127, palette) | 82 | clear |
+
+VERDICT: PASSES on all three pairs the guard names. The crimson coat —
+the sharpest worry, since items are one drawing across all levels and
+this level's walls are crimson — separates from the wall by 55 luma and
+reads unmistakably in situ.
+
+Two honest limits on the run, recorded rather than glossed:
+
+1. The Alert Red figure is the PALETTE value, not a composited sample.
+   The staged off-screen enemy did not produce an edge arrow in this
+   run, and a right-edge scan found brass, not the arrow. The wall
+   sample matching its palette luma exactly is what licenses using the
+   palette number here.
+2. Tightest pair in the whole set is Alert Red vs the crimson coat at
+   ~28 luma. NOT flagged as a problem: arrows are screen-edge UI and
+   coats are world items, so they are never adjacent, and the arrow
+   pulses. Noted so a future change that puts them together knows.
+
+Also fixed a method bug that produced a full page of nonsense first:
+the canvas letterbox was assumed at (20,25) when the page reports
+(20,9). A 16px error made every bag sample read as floor, and the bags
+appeared to MATCH the wall. Ask the page for
+`canvas.getBoundingClientRect()`; never assume the letterbox.
+
+The Bell Desk parallax is committed with this entry (p2 1280×270, p3
+960×270, p4 480×270, all indexed, plus the three .aseprite sources).
+The human called the art unfinished and is still iterating — committing
+it does not freeze it.
+
+Item 3 of handoff 2026-08-14-d, held since 2026-08-17 for want of these
+files, is now released and appended verbatim as instructed:
+
+"2026-08-14 — P4/P3 ratified; belldesk.mp3 (track three) and keeper
+four committed, closing the -14-a manifest (handoff 2026-08-14-d).
+Remaining Bell Desk art: P2/P1 session. Remaining audio:
+garage/museum/exodus/boss music + the SFX pass."
+
+[Superseded in part by handoff 2026-08-14-f: garage.mp3 is IN, so the
+open music slots are museum, exodus and boss — and by -14-e's parking,
+only museum is on the active board. P2 is also now in; P1 remains.]
