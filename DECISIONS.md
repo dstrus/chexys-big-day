@@ -4557,3 +4557,45 @@ HUD extents measured for the spec, since the ceiling band shares space
 with them: hangers at y5, timer and score text at y6, multiplier at y19,
 tag counter icon centred at y24 — so the HUD owns roughly y0-30 across
 the full width. The crown's hot passage wants to sit below that.
+
+## 2026-08-24 — Cove crown speced into §2; mock built and discarded
+
+The human asked for the ceiling treatment described in detail plus a
+visual. Both delivered; the spec is now BRIEF-ART-07 §2, and the
+reference page (row-by-row values, the in-engine mock, the constraints)
+is at
+https://claude.ai/code/artifact/98021083-7b63-4992-a11b-9db16ad8ea36
+
+Substance of the spec: cove crown = stepped cornice with a concealed
+source, so only graded gilding is visible, never a fixture — which is
+why it can be a ceiling IDENTITY and why the skylight was demoted.
+Measured vertical budget: the HUD owns y0-30 (hangers y5, timer/score
+y6, multiplier y19, tag counter y24) and the first mezzanine is y96, so
+the crown gets y31-y50. Ramp runs Shadow lip → Glow Strip + one Core
+row → Mottle inner face → three Bright/Mid/underside tiers dimming
+downward → a Shadow-to-Lacquer death row.
+
+Method note worth keeping: the mock was painted INTO the human's real
+p4 rather than onto an invented wall, shot in-engine, then reverted, so
+what they judged was their own art plus a proposal. No generated art was
+committed (-04-c disposition).
+
+What the mock EARNED, which prose would not have: horizontal rows alone
+read as a striped ribbon, not a stepped cove, because nothing gives the
+steps anywhere to recede to. The fix — periodic vertical returns or
+brackets every 48-96px, or tiers of varying width — is now the one open
+problem recorded in §2. Cheap experiment, real finding, before a
+drawing session was spent.
+
+Process failure to record, with its lesson: while cleaning up the mock I
+saw glow.png as modified, assumed it was my own test residue, and ran
+`git checkout` on it — discarding a newer export the human had just
+made. My stand-in had already been deleted, so the modification could
+only have been theirs. Nothing was lost (they re-exported, and the new
+one is committed at b7bddb4 with ink up from 5.2% to 11.7%), but the
+rule now is: a file showing as modified was changed by SOMEONE, and if
+it wasn't me, it is not mine to revert. Diff or ask first.
+
+Also noted: scratchpad screenshots are not reachable from the workspace,
+so links to them do not resolve for the human. Deliver visuals either as
+an artifact with the images embedded, or by naming the absolute path.

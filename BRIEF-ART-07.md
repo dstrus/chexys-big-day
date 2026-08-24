@@ -116,6 +116,49 @@ same coordinates on the same-size canvas. Practical
 workflow: copy belldesk-p3.aseprite, delete everything
 except the light, export as glow.png.
 
+**The gold-leaf stepped COVE CROWN** — P4's ceiling
+identity, speced 2026-08-24. A cornice where the ceiling
+steps up and back in tiers with the light source hidden in
+the recess: no fixture is ever visible, only graded bands of
+gilding getting hotter toward the concealed strip. That is
+what makes it an identity rather than a lamp — a line of
+light the length of the room — and why the skylight was
+demoted. Side-on, it reduces to horizontal rows: brightest
+at the top where the strip sits, darkening downward as each
+tier falls further from the source.
+
+VERTICAL BUDGET (measured, not guessed). The HUD owns
+y0–y30: hangers y5, timer and score y6, multiplier y19, tag
+counter centred y24. The first mezzanine is at y96, where
+marble takes over. So the crown gets **y31–y50**, and
+anything bright above y30 fights the score text.
+
+RAMP, top-down: Gold Leaf Shadow top lip (the crown's own
+shadow sells the overhang) → Cove Glow Strip with ONE row of
+Core as the concealed source → Mottle Light on the hot inner
+face → three tiers, each a Bright lit edge over a Mid face
+over a self-shadowed underside, dimming with distance from
+the source → a Shadow-to-Lacquer row where the crown dies
+into the wall.
+
+SEAM: every parallax layer is a tileSprite, so a 480-wide P4
+still WRAPS — at factor 0.05 its offset runs 0→72px across
+the level. Keep the tiers perfectly horizontal and constant
+and this costs nothing; a real cove is constant anyway. Any
+repeating motif wants a period that divides 480 (24px works:
+20 repeats). NOTE: P4 currently fails this in nine rows
+(232–240, lower-wall detail), which is a separate fix.
+
+THE OPEN PROBLEM, from a mock built to this spec and shot
+in-engine: horizontal rows alone read as a striped RIBBON,
+not a stepped cove, because nothing gives the steps
+somewhere to recede to. The finished art wants periodic
+vertical returns or brackets (every 48–96px), or tiers of
+varying width. A real cove reads as stepped because you see
+its returns at the corners. Row-by-row spec, mock and
+constraints:
+https://claude.ai/code/artifact/98021083-7b63-4992-a11b-9db16ad8ea36
+
 ## 3. Order & effort
 
 1. Inventory + palette (free — belldesk-env.gpl ships with
