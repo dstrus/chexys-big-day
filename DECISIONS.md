@@ -4454,3 +4454,37 @@ garage/museum/exodus/boss music + the SFX pass."
 [Superseded in part by handoff 2026-08-14-f: garage.mp3 is IN, so the
 open music slots are museum, exodus and boss — and by -14-e's parking,
 only museum is on the active board. P2 is also now in; P1 remains.]
+
+## 2026-08-24 — Bell Desk cart platforms wired; tileset all but complete
+
+Re-exported everything (the full pass reconciles stale siblings) and
+diffed cell by cell. Two files moved:
+
+- assets/tiles/belldesk.png — cells 19, 20, 21 repainted, ~223px each:
+  the CART PLATFORM strip (left cap / middle / right cap), which the
+  skin routes to row-12 platforms only. Verified in-game at x74-80, the
+  one column where all three tiers stack: row 6 resolves 10/11/13, row 9
+  resolves 10/12/13 (mezzanine strip), row 12 resolves 19/20/21 (carts).
+  All three read as distinct surfaces — marble-topped mezzanines above,
+  a green velvet cart deck below, exactly the -14-b "bright marble =
+  stand here" promise with carts as the object-not-architecture
+  exception.
+- assets/sprites/luggage-group.png — 2px per frame, a touch-up.
+
+Reporting gap of mine, corrected here: the MEZZANINE strip (cells
+10-14) is not new today. `git log` on the tilesheet shows it landed in
+3e8ea01 (2026-08-17, the columns/palms commit) — I committed that art
+and reported only the palms, so a whole role went in unremarked. Cells
+10-14 diff as 0px changed against HEAD, which is what surfaced it.
+
+Sheet state now: drawn = 1-8 floor, 9/18 palm, 10-14 mezzanine strip,
+19-21 cart platform, 28-45 bespoke desk. The ONLY undrawn role left is
+cell 24, the wall sconce. Cells 15-17, 22/23, 25-27 and 46-54 are spare
+(22/23/27 freed when the columns were cut).
+
+Tooling note: the scratchpad's analysis harnesses were cleaned between
+sessions, so they were rebuilt as one reusable script (decode + cell
+diff + colour count + luma range + near-black + exclusion-distance).
+Worth knowing these tools are disposable and cheap to rewrite; the
+FINDINGS live in this file, which is why the numbers get recorded here
+rather than left in a terminal.
