@@ -149,14 +149,30 @@ repeating motif wants a period that divides 480 (24px works:
 20 repeats). NOTE: P4 currently fails this in nine rows
 (232–240, lower-wall detail), which is a separate fix.
 
-THE OPEN PROBLEM, from a mock built to this spec and shot
-in-engine: horizontal rows alone read as a striped RIBBON,
-not a stepped cove, because nothing gives the steps
-somewhere to recede to. The finished art wants periodic
-vertical returns or brackets (every 48–96px), or tiers of
-varying width. A real cove reads as stepped because you see
-its returns at the corners. Row-by-row spec, mock and
-constraints:
+BREAKING THE RUN. Horizontal rows alone read as a striped
+RIBBON, not a stepped cove — proven by mock, not argued.
+Two devices, both drawn and shot in-engine:
+
+- A RETURN is where the cornice turns a corner and comes
+  back toward the wall: each tier runs DOWN a ~5px-wide
+  vertical, showing its profile end, so the band breaks into
+  bays. Architecturally the honest device.
+- A BRACKET (corbel) is a small tapered console hanging
+  BELOW the band every so often, reading as if it holds the
+  cornice up. ~5px wide, ~7px tall, tapering downward,
+  Bright lit edge / Mid body / Shadow underside.
+
+RULING FROM THE COMPARISON: brackets do more work at this
+size. A return needs depth to read as a turn and 2D side-on
+gives none, so it lands as a vertical post; a bracket breaks
+the band's SILHOUETTE, and a silhouette break survives the
+squint that an interior line does not. Suggested start:
+brackets every 48px, plus sparse returns every 96–128px to
+mark bays. Both periods divide 480, so the wrap stays
+honest.
+
+All four treatments compared side by side, with the
+row-by-row values and the constraints:
 https://claude.ai/code/artifact/98021083-7b63-4992-a11b-9db16ad8ea36
 
 ## 3. Order & effort

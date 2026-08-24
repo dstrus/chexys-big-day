@@ -4599,3 +4599,35 @@ it wasn't me, it is not mine to revert. Diff or ask first.
 Also noted: scratchpad screenshots are not reachable from the workspace,
 so links to them do not resolve for the human. Deliver visuals either as
 an artifact with the images embedded, or by naming the absolute path.
+
+## 2026-08-24 — P4 seam nearly fixed; crown run-breaking devices drawn
+
+SEAM: the human's fix took the mismatched edge rows from NINE to ONE.
+Row 232 remains — x0 is Lacquer Deep #40101C against x479 Lacquer Dark
+#581826, and that row is 392px of #581826 with a 77px run of #40101C, so
+the left end of a dark band is landing one row proud of where the right
+end leaves off. One row, one pixel each end. Also noted: p4 now exports
+RGBA (colour type 6) where it was indexed (3) — same palette-discipline
+drift as the tilesheet, not blocking.
+
+CROWN: the human could not picture "vertical returns or brackets", so
+four variants were built — identical ramp, differing only in the device
+that breaks the horizontal run — and shot in-engine at identical
+framing: ribbon (no device), returns every 64px, brackets every 48px,
+and both. Comparison added to the reference page.
+
+Ruling recorded in §2, and it came from looking rather than reasoning:
+BRACKETS DO MORE WORK THAN RETURNS AT THIS SIZE. A return is the
+architecturally honest device — it is what a real cornice does at a
+corner — but it needs depth to read as a turn, and a 2D side-on view
+gives none, so it lands as a vertical post. A bracket breaks the band's
+SILHOUETTE, and a silhouette break survives a squint that an interior
+line does not. Suggested start: brackets every 48px plus sparse returns
+every 96-128px for bays; both periods divide 480 so the wrap stays
+honest.
+
+Method note: this is the second time a cheap generated mock earned a
+finding that prose could not (the first being the ribbon problem
+itself). Painting proposals into the human's real art, shooting them
+in-engine, and then reverting is now the established way to answer "what
+would this look like" — and no generated art is ever committed.
