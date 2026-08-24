@@ -198,6 +198,11 @@ export const TUNING = {
   bigDayBonusFactor: 0.25, // 3-hanger clear bonus (DESIGN.md §2.5)
 
   // audio (master/sfx/music mix — AudioBus + synth read these live)
+  // guest-bubble yield (human report 2026-08-24): a bubble dims to this
+  // when an untagged item, a collectible or Chexy is behind it. 1
+  // disables the behaviour; 0 hides the bubble entirely.
+  bubbleYieldAlpha: 0.3,
+
   masterVolume: 1,
   sfxVolume: 1,
   musicVolume: 0.35, // lowered from 0.5 (human, 2026-08-21) — the real
@@ -269,6 +274,7 @@ export const TUNING_SCHEMA = [
   { key: 'insightFactor', label: 'Insight factor', min: 1, max: 4, step: 0.25 },
   { key: 'adaptiveBand', label: 'Adaptive band', min: 0, max: 0.6, step: 0.05 },
   { key: 'multiplierFloor', label: 'Multiplier floor', min: 0.4, max: 1, step: 0.05 },
+  { key: 'bubbleYieldAlpha', label: 'Bubble yield alpha', min: 0, max: 1, step: 0.05 },
   { key: 'masterVolume', label: 'Master volume', min: 0, max: 1, step: 0.05 },
   { key: 'sfxVolume', label: 'SFX volume', min: 0, max: 1, step: 0.05 },
   { key: 'musicVolume', label: 'Music volume', min: 0, max: 1, step: 0.05 },

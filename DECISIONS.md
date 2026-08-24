@@ -4349,3 +4349,44 @@ composed tracks sit louder than the stub they replaced.
 
 Verified after: TITLE tracks 0.1 and 1.0, level tracks 0.1 and the new
 0.35 default, and a PAUSED level tracks 0.8. Build clean, no noise.
+
+## 2026-08-24 — Guest bubbles yield to the job
+
+Human report: the incoming-SMS bubbles bottom-right cover important
+items. They do: the stack grows upward from y 262, and the floor band
+where items rest is y ~210-240, so a bubble can hide the very item it
+is congratulating you for.
+
+Rejected moving them. On a 480×270 screen every other corner is either
+HUD (hangers top-left, timer top-centre, score top-right) or play
+surface, and a bubble that relocates is more disorienting than one that
+dims. Bubbles are flavour; items are the work; so the flavour gets out
+of the way.
+
+Implemented as a per-frame yield in UIOverlayScene: a bubble whose rect
+overlaps something you still have to REACH fades to
+`TUNING.bubbleYieldAlpha` (0.3, panel slider — 1 disables it, 0 hides
+bubbles entirely behind gameplay). "Something you have to reach" is
+deliberately narrow: UNTAGGED items, collectibles, and Chexy. A tagged
+item is finished work, so covering it costs nothing.
+
+Two details that matter more than they look:
+
+- The fade EASES (0.18 per frame) rather than snapping, so an item
+  passing beneath reads as the bubble getting out of the way instead of
+  a flicker.
+- Alpha ownership is explicit. The entrance tween owns alpha until it
+  completes (`arrived`), the yield owns it after, and dismissal hands it
+  back — otherwise the per-frame write would fight both tweens.
+
+Verified: bubble at 1.0 over a clear corner; 0.3 with an untagged bag
+behind it; back to 1.0 when the same bag is marked tagged; 0.3 again
+when untagged; 1.0 when it despawns. No console noise.
+
+Also landed (human, unfinished by their own note): the first Bell Desk
+parallax — p2 1280×270, p3 960×270, p4 480×270, all INDEXED. They wire
+themselves; the level already renders crimson lacquer walls with a
+brass panel grid, the chandelier, the curved-stair hero passage, brass
+mezzanine rails and the elevator door. Consequence worth flagging: the
+crimson-WALL half of the -14-a composite guard, untestable since drop
+1, is now runnable whenever the art is ready to be judged.

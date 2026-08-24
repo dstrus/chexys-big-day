@@ -270,12 +270,19 @@ export default class UIOverlayScene extends Phaser.Scene {
 
     const bubble = this.add.container(GAME_WIDTH - 8 - w, GAME_HEIGHT, [g, text]).setDepth(25)
     bubble.bubbleH = h
+    bubble.bubbleW = w // the yield pass needs the footprint
+    bubble.yieldAlpha = 1 // eased toward the target each frame
     bubble.setAlpha(0)
 
     this.bubbles.unshift(bubble)
     while (this.bubbles.length > 3) this.dismissBubble(this.bubbles[3], true)
     this.layoutBubbles()
-    this.tweens.add({ targets: bubble, alpha: 1, duration: 120 })
+    this.tweens.add({
+      targets: bubble,
+      alpha: 1,
+      duration: 120,
+      onComplete: () => (bubble.arrived = true), // the yield pass owns alpha from here
+    })
     bubble.dismissTimer = this.time.delayedCall(opts.holdMs ?? 2500, () =>
       this.dismissBubble(bubble)
     )
@@ -295,6 +302,7 @@ export default class UIOverlayScene extends Phaser.Scene {
   dismissBubble(bubble, instant = false) {
     const idx = this.bubbles.indexOf(bubble)
     if (idx === -1) return
+    bubble.arrived = false // hand alpha back to the dismiss tween
     this.bubbles.splice(idx, 1)
     bubble.dismissTimer?.remove()
     if (instant) {
@@ -417,6 +425,56 @@ export default class UIOverlayScene extends Phaser.Scene {
     this.time.paused = true
   }
 
+  // BUBBLES YIELD TO THE JOB (human report 2026-08-24). The stack sits
+  // bottom-right, which is also the floor band where items rest, so an
+  // SMS could hide the very thing it is congratulating you for. Bubbles
+  // are flavour and items are the work, so the bubble fades — it never
+  // moves, because every other corner of a 480x270 screen is either HUD
+  // or play surface, and a bubble that jumps around is worse than one
+  // that dims.
+  //
+  // Only things you still have to REACH count as occluded: untagged
+  // items, collectibles, and Chexy herself. A tagged item is done, and
+  // hiding it costs nothing.
+  updateBubbleYield() {
+    if (!this.bubbles.length) return
+    const key = this.levelKey()
+    const level = this.game.scene.isActive(key) ? this.game.scene.getScene(key) : null
+    const cam = level?.cameras?.main
+    const targets = []
+    if (level && cam) {
+      for (const i of level.items?.getChildren() ?? []) {
+        if (i.active && !i.getData('tagged')) targets.push(i)
+      }
+      for (const c of level.collectibles?.getChildren() ?? []) if (c.active) targets.push(c)
+      if (level.player?.sprite) targets.push(level.player.sprite)
+    }
+    for (const b of this.bubbles) {
+      if (!b.arrived) continue
+      let hit = false
+      for (const t of targets) {
+        const sx = t.x - cam.scrollX
+        const sy = t.y - cam.scrollY
+        const hw = (t.displayWidth ?? 16) / 2
+        const hh = (t.displayHeight ?? 16) / 2
+        if (
+          sx + hw > b.x &&
+          sx - hw < b.x + b.bubbleW &&
+          sy + hh > b.y &&
+          sy - hh < b.y + b.bubbleH
+        ) {
+          hit = true
+          break
+        }
+      }
+      // ease rather than snap: an item passing under a bubble should
+      // read as the bubble getting out of the way, not as a flicker
+      const want = hit ? TUNING.bubbleYieldAlpha : 1
+      b.yieldAlpha += (want - b.yieldAlpha) * 0.18
+      b.setAlpha(b.yieldAlpha)
+    }
+  }
+
   onPaused() {
     this.pausedAt = this.time.now
     this.setPauseMode('menu')
@@ -438,6 +496,7 @@ export default class UIOverlayScene extends Phaser.Scene {
   update(time) {
     if (this.freezeKey && Phaser.Input.Keyboard.JustDown(this.freezeKey)) this.toggleFreeze()
     if (this.frozen) return // a frozen frame stays exactly as captured
+    this.updateBubbleYield()
     this.updateInsightChip()
     this.muteIcon.setVisible(audio.muted)
     if (!this.pausePanel.visible) return
