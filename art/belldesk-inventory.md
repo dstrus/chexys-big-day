@@ -144,7 +144,9 @@ each one's standable edge has to read at a glance while running.
   ambient are one decision, not two.
 - **Parallax drops in unannounced**: `assets/parallax/belldesk/p1.png`
   … `p4.png` at the sizes in §2, plus `glow.png` for the chandelier
-  pulse (screen-fixed, additive, alpha-pulsed — the same overlay the
+  pulse — draw it 960×270 (P3's canvas) and it scrolls with P3 in
+  FRONT of it; draw it 480×270 and it stays a screen-fixed wash behind
+  P3, which is the older behaviour the
   Coatroom uses). Any subset works; a lone P4 is fine.
 
 ## (e) Order, restated against the map

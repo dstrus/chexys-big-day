@@ -85,13 +85,36 @@ zone. Draw to the inventory, not the memory.
 | Layer | Content | Size | Palette center |
 |---|---|---|---|
 | P4 | upper crimson wall + the gold-leaf stepped COVE CROWN running its full length — the ceiling identity, unbroken (dusk windows DELETED) | 480×270 static | lacquer darks + gold leaf, cove glow (sparse) |
-| P3 | the chandelier tier — one grand chandelier (the P4-glow-overlay trick: crystals as a separate warm overlay PNG for the pulse) against the brass wall-grid mid-band | 960×270 | lacquer deeps, brass seams, brass glints |
+| P3 | the chandelier tier — one grand chandelier (crystals as a separate `glow.png` overlay for the pulse — see the note below) against the brass wall-grid mid-band | 960×270 | lacquer deeps, brass seams, brass glints |
 | P2 | mezzanine rail + the curved-stair hero passage + the revolving-door glow (appears once per ~1.5 screens) | 1280×270 | lacquer mids, brass rail, one warm door-glow |
 | P1 | near dressing: luggage cart silhouettes, brass stanchion line, palm silhouettes | 1600×270 | fullest range, ceilinged below play-plane brightness |
 
 Seam and value rules per ART-02 §2 verbatim. The cove glow
 in P4 is the one hot passage allowed in the far field — it
 reads as gilding catching light, not as competition.
+
+**The chandelier pulse overlay** (`glow.png`, wired 2026-08-24).
+Draw it at **960×270 — the same canvas as P3** — and it
+becomes a P3-ALIGNED overlay: it scrolls at P3's factor
+(0.2, including the ±1px sway) and draws IN FRONT of P3, so
+the bloom travels with the fixture it belongs to. A 480×270
+glow instead keeps the old Coatroom behaviour: a
+screen-fixed wash behind P3, for light with no source in
+frame. The canvas size is the only switch — there is no flag.
+
+It composites ADDITIVELY, so draw only the light: hot
+crystal points and a soft halo, everything else black or
+transparent (both vanish). Its alpha breathes between 0.3
+and 1.0 every ~2.51s, and the WHOLE image shares that one
+rhythm — a sconce that should flicker on its own timing
+belongs on the `fg` tile layer instead, which has an
+independent pulse.
+
+Alignment is a draw-time matter: the overlay has no anchor
+to the chandelier, it lines up because it was drawn at the
+same coordinates on the same-size canvas. Practical
+workflow: copy belldesk-p3.aseprite, delete everything
+except the light, export as glow.png.
 
 ## 3. Order & effort
 

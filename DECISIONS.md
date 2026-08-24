@@ -4488,3 +4488,39 @@ diff + colour count + luma range + near-black + exclusion-distance).
 Worth knowing these tools are disposable and cheap to rewrite; the
 FINDINGS live in this file, which is why the numbers get recorded here
 rather than left in a terminal.
+
+## 2026-08-24 — Glow overlay gains a p3-aligned shape
+
+The human asked how the chandelier pulse overlay would actually work.
+Reading the loader rather than the brief turned up that the one shape it
+had was wrong for a chandelier in two ways: `glow.png` was created
+screen-fixed (scrollFactor 0), so it could not travel with a fixture
+that lives in p3 and scrolls at 0.2; and it sat at depth -8.5, which is
+BEHIND p3 (-8), so p3's own art painted over the bloom it was meant to
+add. Both were fine for the Coatroom, whose glow is a diffuse sourceless
+wash — and wrong for light that belongs to a drawn object.
+
+Wired two shapes, selected by the CANVAS SIZE the artist draws on, with
+no flag:
+
+- glow.png exactly one screen wide (480) → unchanged: screen-fixed
+  Image, depth -8.5, behind p3. The Coatroom keeps its wash.
+- glow.png wider than a screen → TileSprite at p3's factor (0.2) and
+  depth -7.5, in FRONT of p3. Its tilePositionX includes p3's ±1px sway
+  term, because a bloom that ignored the sway would drift off its own
+  fixture by a pixel.
+
+Additive and the 0.3-1.0 / ~2.51s pulse are unchanged in both.
+
+Verified with a 960×270 stand-in: belldesk reports tracksP3 true, factor
+0.2, depth -7.5 against p3's -8, blend ADD, and a tilePositionX
+identical to p3's to 0.00px after walking the camera; the pulse keeps
+running. The Coatroom's 480-wide glow still reports tracksP3 false,
+factor 0, depth -8.5, and an Image rather than a TileSprite. Build
+clean, no noise. Stand-in deleted — no glow art ships yet.
+
+Brief §2 and the inventory now carry the contract, including the two
+things the artist has to know that the code cannot enforce: the WHOLE
+overlay shares one rhythm (a sconce wanting its own timing belongs on
+the fg layer), and alignment is a draw-time matter — copy
+belldesk-p3.aseprite, delete all but the light, export.
