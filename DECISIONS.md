@@ -4931,3 +4931,39 @@ two-line subject pool cannot be starved by the generic pool's history.
 
 The copy itself is placeholder, like everything else in that file — the
 mechanism is the deliverable.
+
+## 2026-08-25 — Specific guest lines MIX with the generic pool
+
+Human ruling: specific copy should not replace the generic pool. "There
+is only one valet-unhappy line, so returning a vehicle should also have
+the possibility of triggering a message from the generic unhappy pool."
+
+Replaced the exclusive most-specific-wins lookup with a WEIGHTED MIX: a
+line from the item's subject or category table is
+TUNING.subjectLineWeight times as likely as a generic one (default 3,
+panel slider 1–10; 1 means no preference). Both grains contribute at
+once, so luggage-group draws on its own jokes, the luggage jokes and the
+generic jokes together.
+
+Weighting rather than a fixed share because it scales with however much
+copy exists, which a percentage cannot. Measured over 4000 draws:
+
+  one valet line vs nine generic — w=1 → 9.8%, w=3 → 21.1%, w=8 → 33.1%
+  luggage-group (2 subject + 2 category) vs 20 generic — w=3 → 45.0%
+
+So a lone bespoke line lands about one time in five at the default and
+can never crowd out the pool, while a subject that grows to several
+lines starts to carry its own weight without a config change.
+
+Also confirmed all three tiers reach the bubble: subject, category and
+generic lines were each observed in a 3000-draw sample. No-repeat now
+compares the picked TEXT rather than an index into a pool, since the bag
+is composite.
+
+Test-method note, and the fourth stale assertion of the week: my
+distribution check matched line PROSE, and the human was rewriting the
+copy while I worked — the valet line became "taking my car for a joy
+ride", so a regex for "driving off with my car" reported 0% and looked
+like a broken feature. The test now identifies specific lines by
+MEMBERSHIP in SUBJECT_LINES, so it survives copy edits. Assertions
+should key on structure, never on words someone else owns.

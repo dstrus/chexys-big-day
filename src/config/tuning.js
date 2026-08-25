@@ -210,6 +210,13 @@ export const TUNING = {
   bigDayBonusFactor: 0.25, // 3-hanger clear bonus (DESIGN.md §2.5)
 
   // audio (master/sfx/music mix — AudioBus + synth read these live)
+  // guest copy (src/config/guestLines.js): a line written for THIS item
+  // — its subject or category — is this many times as likely as a
+  // generic one. Specific copy is MIXED with the generic pool, never
+  // exclusive (ruling 2026-08-25), so one bespoke line can't become the
+  // only thing a guest ever says. 1 = no preference at all.
+  subjectLineWeight: 3,
+
   // guest-bubble yield (human report 2026-08-24): a bubble dims to this
   // when an untagged item, a collectible or Chexy is behind it. 1
   // disables the behaviour; 0 hides the bubble entirely.
@@ -289,6 +296,7 @@ export const TUNING_SCHEMA = [
   { key: 'glowMin', label: 'Glow pulse min alpha', min: 0, max: 1, step: 0.02 },
   { key: 'glowMax', label: 'Glow pulse max alpha', min: 0, max: 1, step: 0.02 },
   { key: 'glowPeriodMs', label: 'Glow pulse period (ms)', min: 400, max: 8000, step: 100 },
+  { key: 'subjectLineWeight', label: 'Specific line weight', min: 1, max: 10, step: 1 },
   { key: 'bubbleYieldAlpha', label: 'Bubble yield alpha', min: 0, max: 1, step: 0.05 },
   { key: 'masterVolume', label: 'Master volume', min: 0, max: 1, step: 0.05 },
   { key: 'sfxVolume', label: 'SFX volume', min: 0, max: 1, step: 0.05 },

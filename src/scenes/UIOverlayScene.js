@@ -230,12 +230,18 @@ export default class UIOverlayScene extends Phaser.Scene {
     this.requestChips.clear()
   }
 
-  // Pick a line for an outcome, preferring copy written for THIS item.
-  // Order is most specific first: the item's subject (`luggage-group`,
-  // `car-sedan`), then its category (`luggage`, `coat`), then the
-  // generic pool. A subject table need only carry the outcomes it has
-  // something to say about — anything it omits falls through, so the
-  // exodus hand-back swap still applies to whatever reaches the bottom.
+  // Pick a line for an outcome, MIXING copy written for this item with
+  // the generic pool rather than replacing it (human ruling 2026-08-25).
+  // A specific line is TUNING.subjectLineWeight times as likely as a
+  // generic one, which scales the right way as copy is added: with one
+  // valet line against eight generic it lands ~27% of the time, and a
+  // subject that grows to five lines starts to dominate on its own
+  // merits. Exclusive pools were wrong because one line then became the
+  // ONLY thing that guest could ever say.
+  //
+  // Both grains contribute: an item's subject lines AND its category
+  // lines are in the mix together, so luggage-group can have its own
+  // joke and still draw on the luggage jokes.
   pickLine(kind, { subject, category } = {}) {
     // fiction flip (BRIEF-07): the exodus hands items BACK — its map
     // property swaps the guest pools (card lines stay: still a save)
@@ -250,31 +256,31 @@ export default class UIOverlayScene extends Phaser.Scene {
           : handback
             ? EXODUS_UNHAPPY_LINES
             : UNHAPPY_LINES
-    let pool = generic
-    let poolKey = kind // no-repeat is tracked PER POOL, not per outcome
-    // The bubble KINDS are happy / angry / card, but the generic pools
-    // are named HAPPY_LINES / UNHAPPY_LINES — so a subject table may key
-    // its sad copy either way. Accepting both spellings costs one line
-    // and removes a trap: keying it "unhappy" used to fall through
-    // silently, which reads as "my copy is being ignored".
+    // The bubble KINDS are happy / angry / card while the generic pools
+    // are named HAPPY_LINES / UNHAPPY_LINES, so a subject table may key
+    // its sad copy either way — accepting both removes a trap where
+    // "unhappy" silently contributed nothing.
     const outcomes = kind === 'angry' ? ['angry', 'unhappy'] : [kind]
-    outer: for (const key of [subject, category]) {
-      if (!key || !SUBJECT_LINES[key]) continue
+    const weight = Math.max(1, TUNING.subjectLineWeight)
+    const bag = []
+    // subject and category are the SAME string for most items (a coat is
+    // both), so de-duplicate or that table would count twice
+    for (const key of [...new Set([subject, category].filter(Boolean))]) {
+      const table = SUBJECT_LINES[key]
+      if (!table) continue
       for (const outcome of outcomes) {
-        const lines = SUBJECT_LINES[key][outcome]
-        if (lines?.length) {
-          pool = lines
-          poolKey = `${key}:${outcome}`
-          break outer
+        for (const line of table[outcome] ?? []) {
+          for (let n = 0; n < weight; n++) bag.push(line)
         }
       }
     }
-    let i
+    for (const line of generic) bag.push(line)
+    let pick
     do {
-      i = Phaser.Math.Between(0, pool.length - 1)
-    } while (pool.length > 1 && i === this.lastLine[poolKey])
-    this.lastLine[poolKey] = i
-    return pool[i]
+      pick = bag[Phaser.Math.Between(0, bag.length - 1)]
+    } while (bag.length > 1 && pick === this.lastLine[kind] && new Set(bag).size > 1)
+    this.lastLine[kind] = pick
+    return pick
   }
 
   showBubble(kind, opts = {}) {

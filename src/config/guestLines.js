@@ -3,7 +3,6 @@
 // workplace satire per DESIGN.md §1; the villain is paper, never people.
 
 export const HAPPY_LINES = [
-  'Got my coat, thanks! 🎉',
   'That was FAST!',
   '⭐️⭐️⭐️⭐️⭐️',
   'I *am* my claim ticket?! 🤯',
@@ -15,19 +14,18 @@ export const HAPPY_LINES = [
   'Last time I waited 45 minutes. This took 4 seconds.',
   "Chexy is this season's It Squirrel!",
   'Who needs flying cars? This is the future!',
-  'chexmaxxing at da club is the new meta',
   'no paper lol so random lol',
-  'got my coat kthnxbai',
   'Atta squirrel, Chexy!',
   'I think I have a squirrel crush!',
   'Squirrel Power!',
   'Squirrels 5eva!',
   'Chexy is such a squirrelboss!',
+  'Aww yeaaah!',
 ]
 
 // Contact Card saves — "got the text just in time" (BRIEF-04 §2)
 export const CARD_LINES = [
-  'Got your text — lifesaver!',
+  'Got your text. THANK U!',
   'Saved by the text! You rock, Chexy!',
 ]
 
@@ -58,50 +56,94 @@ export const EXODUS_UNHAPPY_LINES = [
 // ---------------------------------------------------------------------
 // SUBJECT LINES — copy specific to WHAT was checked in or lost.
 //
-// Keys are tried MOST SPECIFIC FIRST, so a table may be keyed either by
-// the item's subject (the finest identity it has: `luggage-single`,
-// `car-sedan`) or by its category (`coat`, `luggage`, `valet`). A key
-// need only carry the outcomes it has something to say about; anything
-// missing falls through to the generic pools above, including the
-// exodus hand-back swap.
+// A table may be keyed by the item's subject (the finest identity it
+// has: `luggage-single`, `car-sedan`) or by its category (`coat`,
+// `luggage`, `valet`), and it need only carry the outcomes it has
+// something to say about.
+//
+// Specific copy is MIXED WITH the generic pool, never a replacement for
+// it (ruling 2026-08-25): a subject or category line is
+// TUNING.subjectLineWeight times as likely as a generic one, and both
+// grains contribute at once — luggage-group draws on its own jokes, the
+// luggage jokes, and the generic jokes together. So one bespoke line can
+// never become the only thing a guest says, and the generic pool still
+// carries the exodus hand-back swap when it is drawn from.
 //
 // Placeholder copy, like everything else in this file — the mechanism is
 // the deliverable, the jokes are the human's.
 export const SUBJECT_LINES = {
   // --- by category
   coat: {
-    happy: ['Warm already. Thank you!', 'My coat! And it still smells fine!'],
-    unhappy: ['That ticket is WEARING my coat!'],
+    happy: [
+      'Warm already. Thank you!',
+      'My coat! And it still smells ok!',
+      'Got my coat, thanks! 🎉',
+      'chexmaxxing at da club is the new meta',
+      'got my coat kthnxbai',
+    ],
+    unhappy: [
+      'That ticket is wearing my coat!',
+      'Ugh, I hate paper!',
+    ],
   },
   luggage: {
-    happy: ['Bags away! You are a machine.', 'All of it? In one go? Legend.'],
-    unhappy: ['My bags!! Those have my whole trip in them!'],
+    happy: [
+      'You are a machine! In a good way!',
+    ],
+    unhappy: [
+      'Really?! 🤨',
+    ],
   },
   valet: {
-    happy: ['That was my car in SECONDS.'],
-    unhappy: ['A piece of paper is driving off with my car.'],
+    happy: [
+      'That was my car in SECONDS!',
+      'Like a well-oiled machine!',
+    ],
+    unhappy: [
+      'A piece of paper is taking my car for a joy ride!',
+    ],
   },
   stroller: {
-    happy: ['You caught it! Bless you.'],
-    unhappy: ['THE STROLLER IS ROLLING AWAY'],
-  },
-  backpack: {
-    happy: ['His backpack! He would have cried.'],
+    happy: ['You caught it! 😅'],
+    unhappy: ['THE STROLLER!!'],
   },
 
   // --- by subject: finer than category, wins over it
   'luggage-single': {
-    happy: ['One bag, one tap. Beautiful.'],
+    happy: [
+      "One bag, one tap. It's so easy!",
+      'My bag!! My itenerary is in there!'
+    ],
+    unhappy: [
+      'It was one bag. ONE BAG! smh',
+    ],
   },
   'luggage-pair': {
-    happy: ['Both of them! Together!'],
+    happy: [
+      'Both of them, together? Amazing!',
+    ],
   },
   'luggage-group': {
-    happy: ['That is the whole cart. THE WHOLE CART.', 'Six bags. One ticket. No paper.'],
-    unhappy: ['There goes the entire cart!!'],
+    happy: [
+      'All of it? In one go? Legend.',
+      'That is the whole cart. THE WHOLE CART.',
+      'Six bags. One ticket. No paper.',
+      'Multi-tagging magic!',
+    ],
+    unhappy: [
+      'There goes the entire cart!!',
+      'All of it?! 😡',
+    ],
+  },
+  'car-suv': {
+    unhappy: [
+      'How do you lose an entire SUV??!',
+    ],
   },
   'car-lux': {
-    happy: ['She rides. Thank you, Chexy.'],
+    happy: [
+      'Service as elegant as a fine automobile!'
+    ],
   },
 }
 
@@ -109,10 +151,10 @@ export const UNHAPPY_LINES = [
   'Hey!! That ticket took my coat!',
   "losing my stuff is nobody's vibe",
   'My stuff!! It went THAT way!',
-  'Where is that piece of paper taking my bag?!',
+  'Where is that piece of paper taking my stuff?!',
   'One star. ONE. STAR.',
   'The paper has gone feral again.',
   'my stuuuuuuff',
   'ughghgh',
-  
+  'NOT COOL!',
 ]
