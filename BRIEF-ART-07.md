@@ -77,8 +77,8 @@ zone. Draw to the inventory, not the memory.
 - **Dressing:** COLUMNS CUT (2026-08-17). A single 16×32
   potted palm (Palm Silhouette — the sheet's only other green
   is the desk's malachite), placed as a matched pair flanking
-  the hero desk; wall sconce flicker pair (warm); elevator
-  door suggestion with a dim gold indicator.
+  the hero desk. SCONCES ARE NOT TILES (2026-08-25) — see §2.
+  The elevator door is likewise parallax art, not a tile.
 
 ## 2. Parallax (four layers, Coatroom depth grammar)
 
@@ -104,17 +104,47 @@ frame. The canvas size is the only switch — there is no flag.
 
 It composites ADDITIVELY, so draw only the light: hot
 crystal points and a soft halo, everything else black or
-transparent (both vanish). Its alpha breathes between 0.3
-and 1.0 every ~2.51s, and the WHOLE image shares that one
-rhythm — a sconce that should flicker on its own timing
-belongs on the `fg` tile layer instead, which has an
-independent pulse.
+transparent (both vanish). Its alpha breathes between
+`glowMin` and `glowMax` every `glowPeriodMs` — all three on
+the `` ` `` panel, currently 0.30–0.48 at 2200ms, with the
+Coatroom PINNED to its own original values.
+
+The WHOLE image shares that one rhythm, which is why the
+sconces ride it too (below): one dimmer for the room. Note
+the `fg` tile layer has an independent pulse, but it is a
+TILE layer — usable for light on play-plane geometry (the
+garage's sodium pools sit on its floor), never for anything
+that must hang on a parallax wall.
 
 Alignment is a draw-time matter: the overlay has no anchor
 to the chandelier, it lines up because it was drawn at the
 same coordinates on the same-size canvas. Practical
 workflow: copy belldesk-p3.aseprite, delete everything
 except the light, export as glow.png.
+
+**WALL FIXTURES BELONG IN THE PARALLAX** (ruling 2026-08-25).
+The tile layers (bg1/bg2/main/fg) are the PLAY PLANE and
+scroll 1:1 with the camera; the wall is parallax at
+0.2–0.45. A sconce tiled on bg1 therefore slides 264px off
+the P2 wall — 384px off the P3 wall — within ONE SCREEN of
+walking, and 1152px across the level. No drawing fixes that:
+the fixture and its wall are on different planes. The twelve
+bg1 sconce placements are removed and sheet cell 24 is free.
+
+So the SCONCES ARE DRAWN INTO P3, where the brass wall-grid
+mid-band already lives, and their light goes into
+`glow.png`. That buys three things for nothing: they scroll
+with the wall exactly (same layer), their bloom is already
+p3-aligned and additive, and they inherit the pulse. The one
+cost is that they share the chandelier's rhythm — one dimmer
+for the room, which a lobby can carry. A separate rhythm
+would need a second overlay layer.
+
+If a LIGHT FIXTURE on the play plane is ever wanted, the fix
+is to re-anchor rather than redraw: pendants hung from the
+mezzanine undersides, or lamps on the desk. Those work as
+tiles because the mezzanine and desk are play-plane geometry
+— nothing drifts, because everything moves together.
 
 **The gold-leaf stepped COVE CROWN** — P4's ceiling
 identity, speced 2026-08-24. A cornice where the ceiling

@@ -106,20 +106,17 @@ const TILE_SKINS = {
     // the marble is drawn 7px down so the service bell has room to
     // stand; collision follows the art (see insetCounterTops)
     counterTopInset: 7,
-    // Dressing is bg1 only now: the column rank was CUT (human ruling
-    // 2026-08-17) and bg2 is empty, so this can branch on the row with
-    // no risk of a floor-level tile being mistaken for a column segment.
-    //   row 3      — the sconce line, twelve 1×1 tiles
-    //   rows 13/14 — the potted palms flanking the hero desk, one 16×32
-    //                plant per side: fronds above (9), pot below (18).
-    //                Those two indices sit one above the other on the
-    //                sheet, which is why the plant is drawn upright.
-    dressing: (x, y) => {
-      if (y === 3) return 24 // sconce line
-      if (y === 13) return 9 // palm fronds
-      if (y === 14) return 18 // palm pot
-      return 24
-    },
+    // Dressing is bg1 only, and now holds ONLY the potted palms flanking
+    // the hero desk — one 16×32 plant per side, fronds above (9), pot
+    // below (18). Those two indices sit one above the other on the sheet,
+    // which is why the plant is drawn upright.
+    //
+    // The sconce line was CUT from the tile layers (ruling 2026-08-25):
+    // bg1 scrolls 1:1 with the camera while the wall it would hang on is
+    // parallax at 0.2-0.45, so a tiled sconce slid 264-384px off its own
+    // wall within a single screen of walking. Wall fixtures belong in the
+    // parallax ART; sconces move to p3 with their light in glow.png.
+    dressing: (x, y) => (y === 13 ? 9 : 18),
   },
 }
 

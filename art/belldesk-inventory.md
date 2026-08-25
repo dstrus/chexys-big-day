@@ -36,7 +36,7 @@ keeps its placeholder look until each role is filled.
 | | 18 | **palm pot** — lower half of the palm; sits directly under index 9 on the sheet, so the plant is drawn upright |
 | 2 | 19,20,21 | **cart platform**: left cap, middle, right cap (brass frame + red velvet deck) |
 | | 22,23 | *free (columns CUT 2026-08-17)* |
-| | 24 | wall sconce (warm) |
+| | 24 | *free (sconces moved to P3 art, 2026-08-25 — wall fixtures cannot be tiles; see BRIEF-ART-07 §2)* |
 | | 25,26,27 | *free — 25/26 were the speculative palm slots, 27 the column plinth; the palm shipped at 9/18 instead* |
 | 3 | **28–36** | **desk hero block, TOP row** — nine bespoke tiles, marble top with the standable light edge, drawn left-to-right as one 144px run |
 | 4 | **37–45** | **desk hero block, FACE row** — nine bespoke tiles, wood panelling / key cubbies / bell glint, same run |
@@ -65,7 +65,7 @@ are all the map uses, and all it can use without a code change:
 | 1 | `ground` | rows **15 and 16**, full width (x 0–119). Row 15 is walked, row 16 is fill beneath it — the skin branches on `y`, exactly like the garage's asphalt. The carpet runs unbroken beneath the hero desk (no apron; -14-c). |
 | 6 / 2 / 7 | `leftCap` / `middle` / `rightCap` | ten platforms in **three tiers** — see below |
 | 3 | `counter` | **x 55–63, rows 13–14** — 9 wide × 2 high, sitting on the floor |
-| 4 | `dressing` (bg1) | twelve **1×1** tiles at **row 3**, every 10 columns from x 5 (the sconce line), plus the two palm columns at **x53 and x65, rows 13–14** |
+| 4 | `dressing` (bg1) | the two palm columns at **x53 and x65, rows 13–14**. The row-3 sconce line was REMOVED 2026-08-25 — bg1 scrolls 1:1 and the wall is parallax, so a tiled wall fixture drifts off its own wall |
 | 5 | `dressing` (bg2) | **EMPTY** — the column rank was cut 2026-08-17 |
 
 ### The three platform tiers
@@ -160,5 +160,7 @@ each one's standable edge has to read at a glance while running.
 3. Desk hero block (18 tiles — the bespoke 144×32 run) — after this
    the level stops wearing the Coatroom's bones, which is §3's own
    milestone.
-4. Cart platform strip (3), sconce (1). Palms are DONE (9/18).
+4. Cart platform strip (3) — DONE. Palms DONE (9/18). Sconces are no
+   longer a tile job: they belong in the P3 painting with their light in
+   glow.png (BRIEF-ART-07 §2).
 5. Parallax P4 → P3 → P2 → P1, then the glow overlay.

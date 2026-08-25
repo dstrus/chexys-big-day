@@ -4780,3 +4780,41 @@ indexed, p2, p4 and glow RGBA.
 
 Remaining Bell Desk art: the wall sconce (sheet cell 24), which §3
 lists as deferrable. That is the whole level.
+
+## 2026-08-25 — Wall fixtures belong in the parallax (sconces → P3)
+
+Human report: the sconces make no sense — "wall sconces without a wall",
+floating in front of the chandelier attached to nothing. Correct, and it
+is structural rather than artistic.
+
+MEASURED: bg1 has scrollFactorX 1 — it is a TILE layer, the play plane,
+moving 1:1 with the camera — while the wall it would hang on is parallax
+at 0.2 (P3) to 0.45 (P2). A sconce tiled on bg1 therefore slides 264px
+off the P2 wall and 384px off the P3 wall within ONE SCREEN of walking,
+and 792/1152px across the level. No drawing fixes a plane mismatch.
+
+RULING (human choice: p3 + glow). Sconces are drawn INTO P3, where the
+brass wall-grid mid-band already lives, with their light in glow.png.
+Three things come free: they scroll with the wall exactly because they
+ARE the wall layer, their bloom is already p3-aligned and additive, and
+they inherit the pulse. Cost: they share the chandelier's rhythm — one
+dimmer for the room, which a lobby carries. A separate rhythm would need
+a second overlay.
+
+The general rule, now in §2: the tile layers are the play plane;
+anything that must appear attached to the wall is parallax ART. The
+level already worked this way — the elevator door and brass grid are
+painted, not tiled. And the converse: a play-plane light fixture must
+have a play-plane ANCHOR — pendants under the mezzanine strips, or
+lamps on the desk — which is why those would work as tiles when a wall
+sconce cannot.
+
+Applied: twelve bg1 row-3 placements removed (bg1 now holds only the
+four palm tiles), the skin's dressing function collapses to the palms,
+sheet cell 24 freed, and §2's advice to put an independently-flickering
+sconce on the `fg` layer is corrected — fg is still right for light on
+play-plane geometry (the garage's sodium pools) and wrong for anything
+on a parallax wall.
+
+Verified: the palms still draw at x53/x65, bg1 reports exactly 4 tiles,
+the five-layer stack still tracks its factors, build clean, no noise.
