@@ -4631,3 +4631,37 @@ finding that prose could not (the first being the ribbon problem
 itself). Painting proposals into the human's real art, shooting them
 in-engine, and then reverting is now the established way to answer "what
 would this look like" — and no generated art is ever committed.
+
+## 2026-08-24 — Crown brackets landed; the band above it examined
+
+The human added BRACKETS (the device the four-way comparison favoured)
+and left the band above the crown dark, unsure about it. Crown now
+occupies y32-48 with corbels below; wrap seam still one row (232).
+
+First finding: THE BAND IS NOT BLACK. It is #2E1A10 — Wood Dark, from
+the palette's WOOD family — which is very likely why it feels off. It
+carries a brown cast, so it reads as a timber soffit above the gilding
+rather than as dark air. Diagnosing that took one histogram; no amount
+of describing it would have.
+
+Four ceilings built and shot WITH THE HUD IN FRAME, since the HUD is
+the real constraint (hangers y5, timer y6, tag counter y24 all sit on
+this band):
+
+- wood #2E1A10 (as drawn) — brown cast, HUD text contrast ×5.7
+- void #2A0A12 — the room's own black, ×7.5, no brown
+- deep #40101C — the wall carrying up; this is the "red" the human
+  rejected, and the picture agrees: with no darker band above it, the
+  moulding stops reading as an overhang
+- washed — void at the top, warming through the last few rows into the
+  crown
+
+RECOMMENDED: washed. A cove crown exists to throw light UPWARD; if the
+ceiling above is uniformly dark the gilding has nothing to do, and the
+whole device is decoration. Grading only the last rows warm gives it a
+job while the HUD keeps a near-black backdrop where its text sits.
+Fallback if that is more work than it is worth: Lacquer Void, a
+one-value change that is darker than the current Wood Dark and drops
+the brown.
+
+All four are in the reference page. No generated art committed.
