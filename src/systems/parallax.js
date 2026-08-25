@@ -58,39 +58,54 @@ export function createParallax(scene, levelId) {
       .setDepth(spec.depth)
     layers.push({ sprite, ...spec })
   }
-  // optional glow overlay (BRIEF-ART-02 §3): additive, alpha-pulsed.
-  // TWO SHAPES, chosen by the canvas the artist draws on — no flag:
+  // GLOW OVERLAYS — additive, alpha-pulsed light that belongs to another
+  // layer's art. Two naming forms:
   //
-  //   exactly one screen wide (480) -> a screen-fixed WASH, behind p3 at
-  //     depth -8.5. The Coatroom's stage glow: diffuse, sourceless, and
-  //     it should not slide when the camera moves.
-  //   wider than one screen        -> a P3-ALIGNED overlay: it scrolls at
-  //     p3's own factor and sits IN FRONT of p3 (depth -7.5). This is
-  //     what a chandelier needs — the light belongs to an object in p3,
-  //     so it has to travel with it and bloom over it, not behind it
-  //     (ruling 2026-08-24; the old single shape did neither).
-  if (urlFor(levelId, 'glow')) {
-    const key = `parallax-${levelId}-glow`
-    const src = scene.textures.get(key).getSourceImage()
-    const tracksP3 = src.width > w
-    const p3 = PARALLAX_LAYERS.find((l) => l.name === 'p3')
-    const glow = tracksP3
+  //   glow.png        legacy: 480 wide = a screen-fixed WASH behind p3
+  //                   (the Coatroom's sourceless stage glow); wider =
+  //                   P3-ALIGNED, in front of p3 (the Bell Desk
+  //                   chandelier).
+  //   glow-p4.png     tracks THAT layer: same scroll factor, drawn just
+  //   glow-p1..p3.png in front of it. Light must ride the plane its
+  //                   fixture is painted on, or it slides off — which is
+  //                   why the sconces need glow-p4 and not glow (ruling
+  //                   2026-08-25: the wall is p4, the chandelier is p3).
+  const addGlow = (key, { factor, depth, tiled, name }) => {
+    const glow = tiled
       ? scene.add.tileSprite(0, 0, w, h, key)
       : scene.add.image(0, 0, key)
-    glow
-      .setOrigin(0, 0)
-      .setScrollFactor(0)
-      .setDepth(tracksP3 ? -7.5 : -8.5)
-      .setBlendMode(1) // ADD
+    glow.setOrigin(0, 0).setScrollFactor(0).setDepth(depth).setBlendMode(1) // ADD
     layers.push({
       sprite: glow,
-      name: 'glow',
+      name,
+      factor,
+      depth,
+      isGlow: true,
+      tracksP3: name === 'glow' && tiled,
+      scrolls: tiled,
+      pulse: pulseFor(levelId),
+      levelId,
+    })
+  }
+  if (urlFor(levelId, 'glow')) {
+    const key = `parallax-${levelId}-glow`
+    const tracksP3 = scene.textures.get(key).getSourceImage().width > w
+    const p3 = PARALLAX_LAYERS.find((l) => l.name === 'p3')
+    addGlow(key, {
       factor: tracksP3 ? p3.factor : 0,
       depth: tracksP3 ? -7.5 : -8.5,
-      isGlow: true,
-      tracksP3,
-      pulse: pulseFor(levelId), // null = follow the panel
-      levelId,
+      tiled: tracksP3,
+      name: 'glow',
+    })
+  }
+  for (const spec of PARALLAX_LAYERS) {
+    const file = `glow-${spec.name}`
+    if (!urlFor(levelId, file)) continue
+    addGlow(`parallax-${levelId}-${file}`, {
+      factor: spec.factor,
+      depth: spec.depth + 0.5, // just in front of the art it lights
+      tiled: true,
+      name: file,
     })
   }
   return layers
@@ -138,7 +153,12 @@ export function updateParallax(layers, cam, time) {
       }
       // a p3-aligned glow must travel with p3 — including the crowd
       // sway, or the bloom would drift off its own fixture by a pixel
-      if (l.tracksP3) l.sprite.tilePositionX = cam.scrollX * l.factor + Math.sin(time / 2400)
+      // a tracking glow rides its layer exactly — including p3's ±1px
+      // sway, or a bloom drifts off its own fixture
+      if (l.scrolls) {
+        l.sprite.tilePositionX =
+          cam.scrollX * l.factor + (l.factor === 0.2 ? Math.sin(time / 2400) : 0)
+      }
       continue
     }
     let x = cam.scrollX * l.factor

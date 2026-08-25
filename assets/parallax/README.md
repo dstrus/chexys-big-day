@@ -25,3 +25,19 @@ just omit p4.png).
 Layers render at depths −9…−6, BEHIND the tile map's own bg2/bg1
 dressing layers (−4/−3). The crowd sway and glow pulse (BRIEF-ART-02
 §3 autonomous motion) are code-side — no extra frames needed.
+
+## Glow overlays
+
+`glow.png` is the legacy form: drawn 480 wide it is a screen-fixed wash
+behind p3; drawn wider it tracks p3 and draws in front of it.
+
+`glow-p1.png` … `glow-p4.png` each track THAT layer — same scroll
+factor, drawn just in front of its art. Use these when the light belongs
+to a fixture painted on a specific layer: light has to ride the plane
+its source is on, or it slides off as the camera moves. The Bell Desk's
+chandelier bloom is `glow.png` (p3); its wall sconces are `glow-p4.png`,
+because the wall is p4.
+
+All glow layers composite ADDITIVELY and share the pulse
+(`TUNING.glowMin` / `glowMax` / `glowPeriodMs`, or a level's pinned
+values in GLOW_PULSE).

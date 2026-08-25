@@ -4818,3 +4818,42 @@ on a parallax wall.
 
 Verified: the palms still draw at x53/x65, bg1 reports exactly 4 tiles,
 the five-layer stack still tracks its factors, build clean, no noise.
+
+## 2026-08-25 — CORRECTION: the wall is P4, not P3; sconces move there
+
+The human caught my previous ruling: "p3 doesn't scroll with the wall.
+p3 is where the chandelier is." Correct, and I had quoted the BRIEF's
+plan instead of measuring the finished art. Measured now:
+
+  p4  100.0% ink, rows 0-269, all 480 columns  — THE WALL + cove crown
+  p3    1.7% ink, rows 0-107, 80 of 960 cols   — the chandelier, alone
+  p2   13.2% ink, rows 86-241, all columns     — rails, stair, elevator
+  p1    1.1% ink, rows 168-241                 — near dressing
+
+The brief's §2 table assigns a "brass wall-grid mid-band" to P3; in
+practice that got drawn into P4, so P4 is the wall and P3 is a fixture
+hanging in front of it. A sconce in P3 would have been no better than a
+tiled one — sliding against the wall at 0.2 versus 0.05 instead of at
+1.0 versus 0.45. Smaller error, same class of error.
+
+RULING CORRECTED: sconces are drawn into P4, and their light goes into
+`glow-p4.png`.
+
+That needed a small generalisation, since the glow overlay only knew how
+to track p3: a glow file may now be named `glow-p1..p4.png` and it
+tracks THAT layer — same factor, drawn at the layer's depth + 0.5, just
+in front of the art it lights. `glow.png` keeps its existing two
+behaviours untouched, so the Coatroom wash and the Bell Desk chandelier
+are unaffected. Verified with a stand-in: glow-p4 built at factor 0.05
+and depth -8.5 (p4 is -9), and its offset tracked p4's exactly at both
+ends of the level — 3/3 at the start, 72/72 at the end. Stand-in
+deleted.
+
+The principle, now in assets/parallax/README.md as well as §2: LIGHT
+MUST RIDE THE PLANE ITS SOURCE IS PAINTED ON. Everything else follows
+from it — the tiled sconce, the p3 sconce, and the chandelier bloom that
+already works are all the same rule, passed or failed.
+
+Lesson for me, twice over in two days: when the brief and the art
+disagree about where something lives, the ART is the fact. Measure the
+layer before recommending it.

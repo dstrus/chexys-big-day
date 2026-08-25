@@ -131,14 +131,24 @@ walking, and 1152px across the level. No drawing fixes that:
 the fixture and its wall are on different planes. The twelve
 bg1 sconce placements are removed and sheet cell 24 is free.
 
-So the SCONCES ARE DRAWN INTO P3, where the brass wall-grid
-mid-band already lives, and their light goes into
-`glow.png`. That buys three things for nothing: they scroll
-with the wall exactly (same layer), their bloom is already
-p3-aligned and additive, and they inherit the pulse. The one
-cost is that they share the chandelier's rhythm — one dimmer
-for the room, which a lobby can carry. A separate rhythm
-would need a second overlay layer.
+So the SCONCES ARE DRAWN INTO P4 — the layer that actually
+holds the wall — and their light goes into a new
+`glow-p4.png`, which tracks P4's factor and draws just in
+front of it.
+
+MEASURED, because the plan in this table and the finished
+art diverged: P4 carries 100% ink across every row, i.e. the
+entire crimson panelled wall AND the cove crown. P3 is 1.7%
+ink in 80 of its 960 columns — the chandelier, alone. P2
+(13.2%, rows 86–241) is the mezzanine rails, stair and
+elevator; P1 (1.1%) the near dressing. The "brass wall-grid
+mid-band" this table assigns to P3 was drawn into P4 in
+practice, so P4 is the wall and P3 is a fixture hanging in
+front of it.
+
+A sconce in P3 would therefore be no better than a tiled
+one: it would slide against the wall at 0.2 versus 0.05.
+Light must ride the plane its fixture is painted on.
 
 If a LIGHT FIXTURE on the play plane is ever wanted, the fix
 is to re-anchor rather than redraw: pendants hung from the

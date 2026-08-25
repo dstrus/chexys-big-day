@@ -36,7 +36,7 @@ keeps its placeholder look until each role is filled.
 | | 18 | **palm pot** — lower half of the palm; sits directly under index 9 on the sheet, so the plant is drawn upright |
 | 2 | 19,20,21 | **cart platform**: left cap, middle, right cap (brass frame + red velvet deck) |
 | | 22,23 | *free (columns CUT 2026-08-17)* |
-| | 24 | *free (sconces moved to P3 art, 2026-08-25 — wall fixtures cannot be tiles; see BRIEF-ART-07 §2)* |
+| | 24 | *free (sconces moved to P4 art, 2026-08-25 — wall fixtures cannot be tiles, and P4 is the layer holding the wall; see BRIEF-ART-07 §2)* |
 | | 25,26,27 | *free — 25/26 were the speculative palm slots, 27 the column plinth; the palm shipped at 9/18 instead* |
 | 3 | **28–36** | **desk hero block, TOP row** — nine bespoke tiles, marble top with the standable light edge, drawn left-to-right as one 144px run |
 | 4 | **37–45** | **desk hero block, FACE row** — nine bespoke tiles, wood panelling / key cubbies / bell glint, same run |
@@ -161,6 +161,6 @@ each one's standable edge has to read at a glance while running.
    the level stops wearing the Coatroom's bones, which is §3's own
    milestone.
 4. Cart platform strip (3) — DONE. Palms DONE (9/18). Sconces are no
-   longer a tile job: they belong in the P3 painting with their light in
-   glow.png (BRIEF-ART-07 §2).
+   longer a tile job: they belong in the P4 painting (the wall) with
+   their light in glow-p4.png (BRIEF-ART-07 §2).
 5. Parallax P4 → P3 → P2 → P1, then the glow overlay.
