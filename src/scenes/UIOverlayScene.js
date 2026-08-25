@@ -7,7 +7,9 @@ import {
   CARD_LINES,
   EXODUS_HAPPY_LINES,
   EXODUS_UNHAPPY_LINES,
+  SUBJECT_LINES,
 } from '../config/guestLines.js'
+
 import { audio } from '../systems/AudioBus.js'
 import { createHanger } from '../ui/hanger.js'
 
@@ -119,17 +121,17 @@ export default class UIOverlayScene extends Phaser.Scene {
   // ---- guest bubbles: brand-styled (art/palette-brand.md), queued
   // bottom-right, max 3 visible, auto-dismiss; translucent per DESIGN.md §5
 
-  onGuestHappy() {
-    this.showBubble('happy')
+  onGuestHappy(payload = {}) {
+    this.showBubble('happy', payload)
   }
 
-  onGuestAngry() {
-    this.showBubble('angry')
+  onGuestAngry(payload = {}) {
+    this.showBubble('angry', payload)
   }
 
   // Contact Card save — "got the text" variant pool (BRIEF-04 §2)
-  onGuestCard() {
-    this.showBubble('card')
+  onGuestCard(payload = {}) {
+    this.showBubble('card', payload)
   }
 
   // scripted (non-guest) bubbles — e.g. the Bell Desk dash beat
@@ -228,11 +230,17 @@ export default class UIOverlayScene extends Phaser.Scene {
     this.requestChips.clear()
   }
 
-  pickLine(kind) {
+  // Pick a line for an outcome, preferring copy written for THIS item.
+  // Order is most specific first: the item's subject (`luggage-group`,
+  // `car-sedan`), then its category (`luggage`, `coat`), then the
+  // generic pool. A subject table need only carry the outcomes it has
+  // something to say about — anything it omits falls through, so the
+  // exodus hand-back swap still applies to whatever reaches the bottom.
+  pickLine(kind, { subject, category } = {}) {
     // fiction flip (BRIEF-07): the exodus hands items BACK — its map
     // property swaps the guest pools (card lines stay: still a save)
     const handback = this.game.registry.get('handbackCopy') === true
-    const pool =
+    const generic =
       kind === 'happy'
         ? handback
           ? EXODUS_HAPPY_LINES
@@ -242,16 +250,35 @@ export default class UIOverlayScene extends Phaser.Scene {
           : handback
             ? EXODUS_UNHAPPY_LINES
             : UNHAPPY_LINES
+    let pool = generic
+    let poolKey = kind // no-repeat is tracked PER POOL, not per outcome
+    // The bubble KINDS are happy / angry / card, but the generic pools
+    // are named HAPPY_LINES / UNHAPPY_LINES — so a subject table may key
+    // its sad copy either way. Accepting both spellings costs one line
+    // and removes a trap: keying it "unhappy" used to fall through
+    // silently, which reads as "my copy is being ignored".
+    const outcomes = kind === 'angry' ? ['angry', 'unhappy'] : [kind]
+    outer: for (const key of [subject, category]) {
+      if (!key || !SUBJECT_LINES[key]) continue
+      for (const outcome of outcomes) {
+        const lines = SUBJECT_LINES[key][outcome]
+        if (lines?.length) {
+          pool = lines
+          poolKey = `${key}:${outcome}`
+          break outer
+        }
+      }
+    }
     let i
     do {
       i = Phaser.Math.Between(0, pool.length - 1)
-    } while (pool.length > 1 && i === this.lastLine[kind])
-    this.lastLine[kind] = i
+    } while (pool.length > 1 && i === this.lastLine[poolKey])
+    this.lastLine[poolKey] = i
     return pool[i]
   }
 
   showBubble(kind, opts = {}) {
-    const text = this.add.text(0, 0, opts.text ?? this.pickLine(kind), {
+    const text = this.add.text(0, 0, opts.text ?? this.pickLine(kind, opts), {
       fontFamily: 'monospace',
       fontSize: '9px',
       color: '#344054', // Gray-700 text on light

@@ -916,7 +916,7 @@ export default class LevelScene extends Phaser.Scene {
     item.destroy()
     enemy.destroy()
     audio.play('lose', pan)
-    this.game.events.emit('guest-angry', { guest })
+    this.game.events.emit('guest-angry', { guest, ...this.guestSubject(item) })
     this.onStruggle()
     if (!TUNING.godMode) {
       this.lostItems += 1
@@ -1207,7 +1207,10 @@ export default class LevelScene extends Phaser.Scene {
       },
     })
     audio.play('cardReturn', this.panFor(item.x))
-    this.game.events.emit('guest-card', { guest: item.getData('guest') })
+    this.game.events.emit('guest-card', {
+      guest: item.getData('guest'),
+      ...this.guestSubject(item),
+    })
     this.emitHud()
   }
 
@@ -1283,6 +1286,9 @@ export default class LevelScene extends Phaser.Scene {
     item.setData('heavy', heavy)
     item.setData('tier', tier)
     item.setData('category', category)
+    // luggage tiers are distinct objects (a bag, a pair, a cart), so they
+    // get their own subject key; other categories are their own subject
+    item.setData('subject', bagArt ? bagArt.key : category)
     item.setData('spawnedAt', this.time.now) // fresh-item grace (DESIGN.md §2.4)
     item.setData('guest', ++this.guestCounter) // every item belongs to a guest
     if (useCoatArt) {
@@ -1317,6 +1323,19 @@ export default class LevelScene extends Phaser.Scene {
     item.body.setDragX(TUNING.itemDragX)
     audio.play('spawn', this.panFor(x))
     return item
+  }
+
+  // The finest identity an item has, for copy that wants to be specific
+  // (src/config/guestLines.js SUBJECT_LINES). Luggage answers with its
+  // tier's art key — luggage-single / -pair / -group — because the tiers
+  // are different objects, not different sizes; cars answer with their
+  // silhouette; everything else is just its category. Returned alongside
+  // the category so a table can be keyed at either grain.
+  guestSubject(item) {
+    return {
+      subject: item.getData('subject') ?? item.getData('category') ?? null,
+      category: item.getData('category') ?? null,
+    }
   }
 
   isTaggable(item) {
@@ -1725,7 +1744,10 @@ export default class LevelScene extends Phaser.Scene {
     // from the reserved-but-never-drawn 'tag' key, 2026-08-04); plays on
     // hold completions too, as the shared check-in beat
     this.player.triggerAnim('tap')
-    this.game.events.emit('guest-happy', { guest: item.getData('guest') })
+    this.game.events.emit('guest-happy', {
+      guest: item.getData('guest'),
+      ...this.guestSubject(item),
+    })
 
     // diegetic tagged-state (handoff 2026-08-01-b): apply the category
     // tag chip. It position-syncs to the item every frame, so it

@@ -178,7 +178,10 @@ export default class ExodusScene extends MuseumScene {
     this.tagParticles.emitParticleAt(item.x, item.y)
     audio.play(item.getData('heavy') ? 'heavyTag' : 'tag', this.panFor(item.x))
     if (!viaCard) this.player.triggerAnim('tap')
-    this.game.events.emit('guest-happy', { guest: item.getData('guest') })
+    this.game.events.emit('guest-happy', {
+      guest: item.getData('guest'),
+      ...this.guestSubject(item),
+    })
     this.rackItem(item)
     this.onItemTagged(item.getData('tier') ?? 1)
   }

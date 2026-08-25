@@ -55,6 +55,56 @@ export const EXODUS_UNHAPPY_LINES = [
   'my ride is HERE and my coat is THERE',
 ]
 
+// ---------------------------------------------------------------------
+// SUBJECT LINES — copy specific to WHAT was checked in or lost.
+//
+// Keys are tried MOST SPECIFIC FIRST, so a table may be keyed either by
+// the item's subject (the finest identity it has: `luggage-single`,
+// `car-sedan`) or by its category (`coat`, `luggage`, `valet`). A key
+// need only carry the outcomes it has something to say about; anything
+// missing falls through to the generic pools above, including the
+// exodus hand-back swap.
+//
+// Placeholder copy, like everything else in this file — the mechanism is
+// the deliverable, the jokes are the human's.
+export const SUBJECT_LINES = {
+  // --- by category
+  coat: {
+    happy: ['Warm already. Thank you!', 'My coat! And it still smells fine!'],
+    unhappy: ['That ticket is WEARING my coat!'],
+  },
+  luggage: {
+    happy: ['Bags away! You are a machine.', 'All of it? In one go? Legend.'],
+    unhappy: ['My bags!! Those have my whole trip in them!'],
+  },
+  valet: {
+    happy: ['That was my car in SECONDS.'],
+    unhappy: ['A piece of paper is driving off with my car.'],
+  },
+  stroller: {
+    happy: ['You caught it! Bless you.'],
+    unhappy: ['THE STROLLER IS ROLLING AWAY'],
+  },
+  backpack: {
+    happy: ['His backpack! He would have cried.'],
+  },
+
+  // --- by subject: finer than category, wins over it
+  'luggage-single': {
+    happy: ['One bag, one tap. Beautiful.'],
+  },
+  'luggage-pair': {
+    happy: ['Both of them! Together!'],
+  },
+  'luggage-group': {
+    happy: ['That is the whole cart. THE WHOLE CART.', 'Six bags. One ticket. No paper.'],
+    unhappy: ['There goes the entire cart!!'],
+  },
+  'car-lux': {
+    happy: ['She rides. Thank you, Chexy.'],
+  },
+}
+
 export const UNHAPPY_LINES = [
   'Hey!! That ticket took my coat!',
   "losing my stuff is nobody's vibe",

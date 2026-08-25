@@ -4884,3 +4884,50 @@ and by play where it did not.
 BELL DESK ART IS COMPLETE. Tiles (floor, mezzanine, cart, desk, palms),
 items (three luggage tiers), music, and the full six-layer parallax
 field with two glow overlays. Nothing on the level's art list remains.
+
+## 2026-08-25 — Guest copy can be specific to the item
+
+Human request: lines keyed to item category — coat, luggage-single,
+sedan — alongside the existing happy/unhappy pools and the exodus
+variants.
+
+SUBJECT_LINES in src/config/guestLines.js is the new table, and the
+lookup runs MOST SPECIFIC FIRST:
+
+  1. the item's SUBJECT — its finest identity
+  2. its CATEGORY
+  3. the generic pool (which still carries the exodus hand-back swap)
+
+The human's examples mixed two grains — "coat" is a category, while
+"luggage-single" and "sedan" are finer than one — so both are accepted
+as keys and the finer wins. Subjects are stamped at spawn: luggage
+answers with its tier's art key (luggage-single / -pair / -group,
+because the tiers are different OBJECTS, not sizes), cars answer with
+their silhouette (car-sedan / -suv / -lux), everything else is its own
+category. `guestSubject(item)` on LevelScene is the single place that
+decides, and all five emit sites — happy, angry, card, across Level,
+Museum, Exodus and Garage — pass it through.
+
+A table need only carry the outcomes it has something to say about;
+anything missing falls through. Verified: luggage-group draws its own
+happy copy, luggage-pair (happy only) falls to the LUGGAGE table for
+sad copy, car-suv (no subject table) falls to the VALET category, and
+an unknown key falls to generic.
+
+Two bugs caught in my own work before commit:
+
+- OUTCOME KEY MISMATCH. The bubble kinds are happy / angry / card, but I
+  keyed the tables happy / UNHAPPY, mirroring the constant names — so
+  every sad subject pool silently fell through and looked ignored.
+  pickLine now accepts either spelling, because both are reasonable
+  guesses and a silent miss is the worst outcome.
+- Cars gained `category: 'valet'` for the copy lookup, and chips tint
+  from category in three places. Checked rather than assumed: the Garage
+  overrides completeTag and tints CHIP_TEAL explicitly, and a tagged car
+  still reports 0x006483 — Tag Red never reaches the windshield.
+
+No-repeat tracking is now PER POOL rather than per outcome, so a
+two-line subject pool cannot be starved by the generic pool's history.
+
+The copy itself is placeholder, like everything else in that file — the
+mechanism is the deliverable.

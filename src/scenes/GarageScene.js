@@ -146,6 +146,8 @@ export default class GarageScene extends LevelScene {
     }
     car.setData('tier', tier)
     car.setData('kind', kind) // silhouette, for the HUD request chip
+    car.setData('category', 'valet') // ChexApp tag colour + guest copy
+    car.setData('subject', kind) // car-sedan / car-suv / car-lux
     car.setData('heavy', tier >= 3)
     car.setData('bodyColor', hue ? CAR_HUES[hue] : color)
     car.setData('spawnedAt', this.time.now)
@@ -332,7 +334,7 @@ export default class GarageScene extends LevelScene {
     // untagged car crossing the trailing edge = 1 lost item
     this.game.events.emit('request-done', { key: car.name, ok: false })
     audio.play('lose', this.panFor(car.x))
-    this.game.events.emit('guest-angry', { guest: car.name })
+    this.game.events.emit('guest-angry', { guest: car.name, ...this.guestSubject(car) })
     this.onStruggle()
     if (!TUNING.godMode) {
       this.lostItems += 1
@@ -381,7 +383,10 @@ export default class GarageScene extends LevelScene {
       const factor = (item.getData('tier') ?? 1) >= 3 ? TUNING.tier3ScoreFactor : 1
       this.addScore(TUNING.standardItemScore * factor)
       if (!viaCard) this.onCleanProgress() // card saves stay streak-neutral
-      this.game.events.emit(viaCard ? 'guest-card' : 'guest-happy', { guest: item.name })
+      this.game.events.emit(viaCard ? 'guest-card' : 'guest-happy', {
+        guest: item.name,
+        ...this.guestSubject(item),
+      })
     }
 
     this.scheduleDriveOff(item)

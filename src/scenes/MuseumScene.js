@@ -81,7 +81,10 @@ export default class MuseumScene extends LevelScene {
     this.tagParticles.emitParticleAt(item.x, item.y)
     audio.play('tag')
     this.player.triggerAnim('tap')
-    this.game.events.emit('guest-happy', { guest: item.getData('guest') })
+    this.game.events.emit('guest-happy', {
+      guest: item.getData('guest'),
+      ...this.guestSubject(item),
+    })
     const chip = this.add.image(0, 0, 'tag-chip').setDepth(1)
     chip.setTint(categoryColor('stroller'))
     item.setData('chip', chip)
