@@ -5054,3 +5054,36 @@ squeezed.
 `I` re-opens a briefing in dev (README), because a once-only screen is
 otherwise unreviewable during a playtest, and resetBriefings() exists
 for clearing the flags wholesale.
+
+## 2026-08-25 — Garage seams resolved; one deliberate, one a false alarm
+
+p2 and p3 re-exported after the human's seam pass. Verdict: both are
+DONE, and only one of the two remaining mismatch sets was ever real.
+
+p2: the genuine seam is gone. Its worst edge delta drops from 33 to 6,
+and 19 rows still differ by 1-6 units per channel — dither noise below
+perception. Nothing to do.
+
+p3: two sets remain, and NEITHER needs work.
+  rows 0-10 (delta 23-43) are the human's INTENTIONAL groove: the far
+    right carries a dark vertical channel, so at the wrap it butts
+    against the lighter wall and reads as architecture. Rendered the
+    wrap join as the player sees it — right 28 columns spliced directly
+    onto the left 28 — and it reads as a groove, not a break.
+  rows 16-23 (delta 82) are a DITHER PHASE offset, not an edge. The
+    night-sky band is a 2px checkerboard of #1528A6 and #0B1354, and the
+    two edges sit one pixel out of phase, so the per-pixel delta is
+    large while the join is invisible. Confirmed in-engine at scrollX
+    3634, which puts p3's join at screen centre: the sky is continuous.
+
+METRIC LIMITATION, recorded because it has now produced two false
+alarms (this and the cart's brass shadow line): per-pixel edge delta
+measures difference, not continuity. It cannot tell a hard edge from a
+dithered gradient or a thin line from a mass. When it fires, splice the
+edges and look before asking for a repaint.
+
+HARNESS TRAP, from breaking my own tooling: briefings PAUSE the level
+they explain, so `scene.isActive(levelKey)` is false on a first visit
+and every harness that waits on it times out. Twenty scratchpad
+harnesses needed `briefingsShown` seeded; the seed is now in the
+README's testing notes so the next one starts correct.

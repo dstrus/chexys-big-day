@@ -31,6 +31,12 @@ game.
 
 ## Testing notes
 
+- Seed `briefingsShown` or a level never becomes ACTIVE. A level that
+  introduces a mechanic shows a briefing on its first visit, and that
+  briefing PAUSES the level — so `scene.isActive('Garage')` is false and
+  any harness waiting on it times out. Seed
+  `{"briefingsShown":{"coatroom":true,"belldesk":true,"garage":true,"museum":true,"exodus":true}}`
+  alongside the other progress keys.
 - Reach TUNING through the URL the page actually loaded. Vite stamps
   edited modules (`/src/config/tuning.js?t=<ts>`), and a bare dynamic
   import of the unstamped path hands back a second instance the running
