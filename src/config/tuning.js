@@ -91,8 +91,10 @@ export const TUNING = {
   // glow.png — there is no per-level pulse today.
   glowMin: 0.3, // human note 2026-08-12: a deep low end reads as the
   // glow breathing OUT rather than merely dimming
-  glowMax: 1.0,
-  glowPeriodMs: 2500,
+  glowMax: 0.48, // human, dialled in play 2026-08-24: the ceiling is a
+  // sustained warmth, not a beacon — the band now runs 0.30-0.48, a
+  // sixth of the range it shipped with
+  glowPeriodMs: 2200,
 
   // fg light pools (art/garage-inventory §(d)). Two dials:
   //

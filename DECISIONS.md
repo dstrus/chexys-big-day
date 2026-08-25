@@ -4695,3 +4695,25 @@ nothing and simply narrows the band; min == max holds a steady alpha
 3.2s; a 0.7/0.9 band stays inside it; a 700ms period turns 8 times in
 the same window; reversed bounds behave; equal bounds hold flat. No
 console noise.
+
+## 2026-08-24 — Glow pulse dialled in play
+
+Panel dump diffed against tuning.js: TWO keys moved, nothing else.
+
+- glowMax  1.0 → 0.48
+- glowPeriodMs 2500 → 2200
+
+Character worth naming: the band collapses from 0.30-1.00 to 0.30-0.48
+— a sixth of the range it shipped with — and breathes slightly faster.
+The chandelier stops being a beacon that swells to full and becomes a
+sustained warmth that merely stirs. That reads as a room that is always
+lit rather than a light being switched, which is right for a lobby the
+player crosses at speed.
+
+CONSEQUENCE FOR THE COATROOM, flagged because these three values are
+GLOBAL: its stage wash now breathes 0.30-0.48 too, where it used to
+reach 1.0. Verified live — the Coatroom glow runs the same band on the
+new numbers. That level was signed off long ago under the old range, so
+if its wash now reads too flat, the fix is a per-level pulse table
+rather than a slider, and it is a small change. Worth a look next time
+the Coatroom is on screen.
