@@ -4742,3 +4742,41 @@ sweeping 0.30-1.00 while the panel sat at 0.30/0.48/2200; belldesk
 pinned false and sweeping 0.30-0.48; the panel driven hard to
 0.05/0.12/900 moved BELLDESK to 0.05-0.12; and the coatroom, revisited
 under that same panel state, still swept 0.30-1.00. No console noise.
+
+## 2026-08-25 — Bell Desk parallax stack COMPLETE (p1 + p2 landed)
+
+p1 arrived (1600×270, indexed) and p2 was reworked (1280×270, now RGBA).
+The level now runs a full five-layer field for the first time: p4 0.05 /
+p3 0.2 / glow 0.2 / p2 0.45 / p1 0.7, at depths -9 / -8 / -7.5 / -7 /
+-6, each tracking its own factor exactly — measured at three points
+across the level (scrollX 20 / 700 / 1440 giving p1 offsets 14 / 490 /
+1008, and every other layer in proportion).
+
+WRAP EXPOSURE, computed once so it never has to be guessed again. The
+level scrolls 1440px, so each layer's visible window reaches
+factor×1440 + 480 into its own image:
+
+  p1   1008 + 480 = 1488 of 1600  — never wraps on screen
+  p2    648 + 480 = 1128 of 1280  — never wraps
+  p3    288 + 480 =  768 of  960  — never wraps
+  glow  288 + 480 =  768 of  960  — never wraps
+  p4     72 + 480 =  552 of  480  — WRAPS
+
+So P4 was the only layer whose left and right edges ever meet on screen,
+which is why its seam mattered and why nothing needs checking on the
+others. Any future layer is seamless iff factor×1440 + 480 ≤ its width.
+
+COMPOSITE GUARD re-run against the finished field — the last unmeasured
+state of the level. Against the wall (luma 45): luggage tiers 117 / 53 /
+96 clear, crimson coat control 55 clear, Chexy 160 clear. Alert Red is
+again the PALETTE figure (127, an 82 gap) rather than a composited
+sample: the staged off-screen enemy produced no edge arrow for the third
+time, and the right-edge scan picked up p1 dressing instead. The
+"AlertRed vs coat 6 luma" line in the raw output is that bad sample, not
+a finding.
+
+Format drift noted, not blocking: the stack is now mixed — p1 and p3
+indexed, p2, p4 and glow RGBA.
+
+Remaining Bell Desk art: the wall sconce (sheet cell 24), which §3
+lists as deferrable. That is the whole level.
