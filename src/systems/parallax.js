@@ -12,6 +12,8 @@
 // The tile map's own bg2/bg1 layers (depth -4/-3) render IN FRONT of
 // the whole painted stack (depths -9..-6).
 
+import { TUNING } from '../config/tuning.js'
+
 const PARALLAX_URLS = import.meta.glob('../../assets/parallax/*/*.png', {
   eager: true,
   query: '?url',
@@ -91,19 +93,23 @@ export function createParallax(scene, levelId) {
   return layers
 }
 
-// stage-glow pulse range (human note 2026-08-12: deeper low end — the
-// dip should read as the glow breathing out, not just dimming)
-const GLOW_MIN = 0.3
-const GLOW_MAX = 1.0
+// Pulse values moved to TUNING (2026-08-24) so the panel can dial them
+// live — same treatment the fg lamp flicker already had. They are
+// GLOBAL: both the Coatroom's stage wash and the Bell Desk's chandelier
+// breathe on these. The period is now an explicit millisecond figure
+// rather than the old sin(time/400) divisor, whose real period was
+// 2513ms; the 2500 default is that feel to within 13ms.
 
 // per frame: scroll offsets + the §3 autonomous motion (crowd sway on
 // p3, glow pulse) — cheap sines, no art needed
 export function updateParallax(layers, cam, time) {
   for (const l of layers) {
     if (l.isGlow) {
-      const mid = (GLOW_MAX + GLOW_MIN) / 2
-      const amp = (GLOW_MAX - GLOW_MIN) / 2
-      l.sprite.setAlpha(mid + amp * Math.sin(time / 400))
+      const lo = Math.min(TUNING.glowMin, TUNING.glowMax)
+      const hi = Math.max(TUNING.glowMin, TUNING.glowMax)
+      const mid = (hi + lo) / 2
+      const amp = (hi - lo) / 2
+      l.sprite.setAlpha(mid + amp * Math.sin((time / TUNING.glowPeriodMs) * Math.PI * 2))
       // a p3-aligned glow must travel with p3 — including the crowd
       // sway, or the bloom would drift off its own fixture by a pixel
       if (l.tracksP3) l.sprite.tilePositionX = cam.scrollX * l.factor + Math.sin(time / 2400)

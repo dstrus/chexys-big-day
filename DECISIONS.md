@@ -4665,3 +4665,33 @@ one-value change that is darker than the current Wood Dark and drops
 the brown.
 
 All four are in the reference page. No generated art committed.
+
+## 2026-08-24 — P4 finished; glow pulse moved onto the panel
+
+P4 IS DONE. The washed ceiling landed exactly as speced — Lacquer Void
+#2A0A12 holding flat through y0-14 where the HUD sits, then warming
+#340E16 → #3E101B → #40101C → #3C1A1A into the crown at y31 — and the
+wrap seam is GONE (0 mismatched edge rows, down from nine then one). The
+crown carries brackets. So P4 satisfies every constraint §2 sets: HUD
+band respected, one hot passage, seamless wrap.
+
+GLOW PULSE ON THE PANEL. The pulse was three module constants in
+parallax.js with no way to dial them; it is now TUNING.glowMin (0.3),
+glowMax (1.0) and glowPeriodMs (2500), all three on the `` ` `` panel and
+read live. Two notes:
+
+- The period is now an explicit millisecond figure. The old
+  sin(time / 400) had a real period of 2513ms, so the 2500 default is
+  the shipped feel to within 13ms — no perceptible change.
+- The values are GLOBAL. The Coatroom's stage wash and the Bell Desk's
+  chandelier breathe on the same three numbers; there is no per-level
+  pulse. If those two ever want different rhythms, that is a per-level
+  table, not a slider.
+
+Guarded the obvious slider accidents rather than assuming good input:
+min and max are sorted before use, so dragging min above max inverts
+nothing and simply narrows the band; min == max holds a steady alpha
+(pulse off). Verified live: defaults sweep 0.30-1.00 with one turn per
+3.2s; a 0.7/0.9 band stays inside it; a 700ms period turns 8 times in
+the same window; reversed bounds behave; equal bounds hold flat. No
+console noise.

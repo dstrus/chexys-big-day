@@ -85,6 +85,15 @@ export const TUNING = {
   insightDurationMs: 10000,
   insightFactor: 2.0, // Insights Report: score gains ×, MULTIPLICATIVE with adaptive
 
+  // parallax glow overlay (the Coatroom's stage wash and the Bell Desk's
+  // chandelier): alpha breathes between glowMin and glowMax once per
+  // glowPeriodMs. Values are shared by every level that ships a
+  // glow.png — there is no per-level pulse today.
+  glowMin: 0.3, // human note 2026-08-12: a deep low end reads as the
+  // glow breathing OUT rather than merely dimming
+  glowMax: 1.0,
+  glowPeriodMs: 2500,
+
   // fg light pools (art/garage-inventory §(d)). Two dials:
   //
   // AMBIENT is the one that makes the pools work at all. Additive light
@@ -274,6 +283,9 @@ export const TUNING_SCHEMA = [
   { key: 'insightFactor', label: 'Insight factor', min: 1, max: 4, step: 0.25 },
   { key: 'adaptiveBand', label: 'Adaptive band', min: 0, max: 0.6, step: 0.05 },
   { key: 'multiplierFloor', label: 'Multiplier floor', min: 0.4, max: 1, step: 0.05 },
+  { key: 'glowMin', label: 'Glow pulse min alpha', min: 0, max: 1, step: 0.02 },
+  { key: 'glowMax', label: 'Glow pulse max alpha', min: 0, max: 1, step: 0.02 },
+  { key: 'glowPeriodMs', label: 'Glow pulse period (ms)', min: 400, max: 8000, step: 100 },
   { key: 'bubbleYieldAlpha', label: 'Bubble yield alpha', min: 0, max: 1, step: 0.05 },
   { key: 'masterVolume', label: 'Master volume', min: 0, max: 1, step: 0.05 },
   { key: 'sfxVolume', label: 'SFX volume', min: 0, max: 1, step: 0.05 },
