@@ -4967,3 +4967,41 @@ ride", so a regex for "driving off with my car" reported 0% and looked
 like a broken feature. The test now identifies specific lines by
 MEMBERSHIP in SUBJECT_LINES, so it survives copy edits. Assertions
 should key on structure, never on words someone else owns.
+
+## 2026-08-25 — Garage parallax updated; glow-p2 lands; seams matter here
+
+p2 and p3 reworked and glow-p2.png added (1280×270, 5.7% ink). glow-p2
+takes the name-based path and tracks p2 EXACTLY — offsets 150.3/150.3,
+1899/1899 and 3699.5/3699.5 at three points across the level — so the
+ceiling fixtures' light cones stay welded to the fixtures. Depth -6.5,
+in front of p2's -7. Verified in-engine.
+
+THE GARAGE IS NOT THE BELL DESK on wrapping, and this is the fact worth
+keeping. The garage world is 9024px and scrolls 8544px, so EVERY layer
+wraps several times over — reach = factor × 8544 + 480 against image
+width:
+
+  p2  4325 of 1280  (~3.4 wraps)
+  p3  2189 of  960  (~2.3 wraps)
+  p1  6461 of 1600  (~4.0)   p4  907 of 480  (~1.9)   when they exist
+
+In the Bell Desk only p4 wrapped, so only p4 needed matching edges. Here
+EVERY layer's left and right columns meet on screen, repeatedly, during
+a single run.
+
+Measured seams, graded by how visible they are rather than merely
+counted:
+
+  glow-p2  SEAMLESS.
+  p2       18 mismatched rows, but 13 are within 4 units per channel —
+           invisible. Two are real: rows 113-114, deltas 26 and 33
+           (#212632 vs #3F4752), a girder edge landing one shade off.
+  p3       9 mismatched rows and NONE are subtle: rows 16-23 run
+           delta 82 — #1528A6 against #0B1354, a lit night-sky window
+           against its own dark frame. That one will read as a seam
+           sliding through the sky about twice a run.
+
+So p3 rows 16-23 are worth a fix and p2 rows 113-114 are optional. The
+general rule, now proven twice with different answers: a layer needs
+matching edges iff factor × (worldWidth - 480) + 480 exceeds its width,
+which is per LEVEL, not per layer type.

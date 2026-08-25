@@ -92,12 +92,14 @@ export const SUBJECT_LINES = {
     ],
     unhappy: [
       'Really?! 🤨',
+      'What gives??!',
     ],
   },
   valet: {
     happy: [
       'That was my car in SECONDS!',
       'Like a well-oiled machine!',
+      'Vroom vroom!',
     ],
     unhappy: [
       'A piece of paper is taking my car for a joy ride!',
@@ -112,10 +114,10 @@ export const SUBJECT_LINES = {
   'luggage-single': {
     happy: [
       "One bag, one tap. It's so easy!",
-      'My bag!! My itenerary is in there!'
     ],
     unhappy: [
       'It was one bag. ONE BAG! smh',
+      'My bag!! My itenerary is in there!'
     ],
   },
   'luggage-pair': {
