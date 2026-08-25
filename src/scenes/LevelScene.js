@@ -2,12 +2,13 @@ import Phaser from 'phaser'
 import { TUNING } from '../config/tuning.js'
 import { categoryColor } from '../config/itemCategories.js'
 import { luggageArtFor, BAG_BODY_INSET } from '../config/itemArt.js'
+import { briefingFor } from '../config/briefings.js'
 import { COLLECTIBLES } from '../config/collectibles.js'
 import { getWaveSchedule } from '../config/waveRegistry.js'
 import Player from '../entities/Player.js'
 import WaveRunner from '../systems/WaveRunner.js'
 import { audio } from '../systems/AudioBus.js'
-import { recordRun, isDashUnlocked, unlockDash } from '../systems/progress.js'
+import { recordRun, isDashUnlocked, unlockDash, isBriefingShown } from '../systems/progress.js'
 import { isTuningPanelOpen, setPanelReadout } from '../debug/tuningPanel.js'
 import { createParallax, updateParallax } from '../systems/parallax.js'
 
@@ -282,6 +283,20 @@ export default class LevelScene extends Phaser.Scene {
     audio.play('rushStart')
     audio.startMusic(this.levelProps.levelId ?? this.mapKey) // loop hook per level
     this.emitHud()
+
+    // BRIEFING (2026-08-25): levels that introduce a mechanic explain it
+    // once, on a screen that PAUSES this scene so the rush clock cannot
+    // run while the player reads. `I` re-opens it in dev, because a
+    // once-only screen is otherwise unreviewable during a playtest.
+    this.briefingKey = import.meta.env.DEV ? this.input.keyboard.addKey('I') : null
+    const levelId = this.levelProps.levelId ?? this.mapKey
+    // delayedCall(0) fires after create() returns — including a
+    // SUBCLASS's create, which is where the garage's car textures and the
+    // museum's movers are generated. Launching inline would show a
+    // briefing whose sprites do not exist yet.
+    if (briefingFor(levelId) && !isBriefingShown(levelId)) {
+      this.time.delayedCall(0, () => this.showBriefing())
+    }
 
     // dash unlock beat (BRIEF-03): a 10s scripted open — the bell
     // captain (text bubble, no sprite) gifts "the Bell Desk hustle".
@@ -1836,6 +1851,10 @@ export default class LevelScene extends Phaser.Scene {
         accent: 0x12b76a, // Success Green
       })
     }
+    if (this.briefingKey && Phaser.Input.Keyboard.JustDown(this.briefingKey)) {
+      this.showBriefing()
+      return
+    }
     this.updateCamera()
     updateParallax(this.parallaxLayers, this.cameras.main, time)
     this.updateFgLight(time)
@@ -1884,6 +1903,13 @@ export default class LevelScene extends Phaser.Scene {
       0.65 * Math.sin((time / TUNING.fgFlickerHumMs) * Math.PI * 2) +
       0.35 * Math.sin((time / TUNING.fgFlickerBuzzMs) * Math.PI * 2)
     this.fgLayer.setAlpha((max + min) / 2 + ((max - min) / 2) * wave)
+  }
+
+  showBriefing() {
+    const levelId = this.levelProps.levelId ?? this.mapKey
+    if (!briefingFor(levelId) || this.scene.isActive('Briefing')) return
+    this.scene.pause()
+    this.scene.launch('Briefing', { levelKey: this.scene.key, levelId })
   }
 
   updateCamera() {

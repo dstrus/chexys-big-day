@@ -8,6 +8,7 @@ import GarageScene from './scenes/GarageScene.js'
 import MuseumScene from './scenes/MuseumScene.js'
 import ExodusScene from './scenes/ExodusScene.js'
 import UIOverlayScene from './scenes/UIOverlayScene.js'
+import BriefingScene from './scenes/BriefingScene.js'
 import { initTuningPanel } from './debug/tuningPanel.js'
 
 export const GAME_WIDTH = 480
@@ -54,7 +55,7 @@ const game = new Phaser.Game({
     mode: Phaser.Scale.NONE,
     zoom: integerZoom(),
   },
-  scene: [BootScene, TitleScene, LevelSelectScene, LevelScene, GarageScene, MuseumScene, ExodusScene, UIOverlayScene],
+  scene: [BootScene, TitleScene, LevelSelectScene, LevelScene, GarageScene, MuseumScene, ExodusScene, UIOverlayScene, BriefingScene],
 })
 
 window.addEventListener('resize', () => game.scale.setZoom(integerZoom()))

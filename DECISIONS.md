@@ -5005,3 +5005,52 @@ So p3 rows 16-23 are worth a fix and p2 rows 113-114 are optional. The
 general rule, now proven twice with different answers: a layer needs
 matching edges iff factor × (worldWidth - 480) + 480 exceeds its width,
 which is per LEVEL, not per layer type.
+
+## 2026-08-25 — Level briefings: one screen per new mechanic
+
+Human request: instructions for the player, with illustrative sprites,
+one screen for each level that introduces a mechanic.
+
+Scope note first, since CLAUDE.md forbids cutscenes and dialogue
+systems: this is neither. It is a static panel over a PAUSED level,
+dismissed with any key — the same family as the one-time tutorial
+bubbles that already ship (the garage dash tip, the Bell Desk beat), and
+it carries no branching, no sequence and no speaker.
+
+Shape: src/config/briefings.js holds the copy per levelId as title,
+subtitle and rows; each row is sprites plus a line. BriefingScene renders
+it and LevelScene launches it once per level (isBriefingShown /
+markBriefingShown in progress.js, per-level flags). Mechanics covered
+follow DESIGN §3's own "New mechanic" lines: coatroom = the controls
+(§3.1 has no new mechanic, it IS the tutorial), belldesk = hold tags +
+dash, garage = the request queue and dash-through, museum = rolling
+items, exodus = the hand-back flip.
+
+Four things this took that the request did not mention, all found by
+looking at the rendered screen rather than the code:
+
+1. It PAUSES the level. A tutorial screen that lets the rush clock run
+   while you read is worse than no screen; verified the clock holds
+   across 90 stepped frames.
+2. Sprite keys are a CANDIDATE LIST, best first. The paper enemy has
+   arted frames under `enemy-atlas` and a placeholder rect under
+   `ticket`; the first draft showed the rect, which reads as a blank box.
+   Same for Chexy: `chexy` is a 44px orange placeholder while the real
+   art is `chexy-idle` / `chexy-atlas`.
+3. Rows may declare a TINT. Request chips and the museum's movers ship
+   WHITE and are tinted at runtime in play, so on a tan panel they were
+   invisible. The briefing now tints them to what the player sees —
+   cobalt and crimson chips, pink stroller, brown backpack.
+4. The launch is deferred by delayedCall(0), i.e. until after create()
+   returns. A subclass generates its own textures — the garage's cars in
+   GarageScene.create AFTER super.create() — so launching inline showed
+   a briefing whose sprites did not exist yet.
+
+Layout follows the pixel-art law: sprites draw at SCALE 1 only, and the
+row height was cut to fit Chexy's 48px frames rather than scaling her
+down to fit the row. A sprite taller than a row is dropped rather than
+squeezed.
+
+`I` re-opens a briefing in dev (README), because a once-only screen is
+otherwise unreviewable during a playtest, and resetBriefings() exists
+for clearing the flags wholesale.

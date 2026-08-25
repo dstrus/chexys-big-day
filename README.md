@@ -25,6 +25,7 @@ game.
 | `` ` `` | anywhere | tuning panel: live sliders, flags, readouts |
 | `B` | The Mass Exodus, Act 1 | **skip to the boss** — banks the run as it stands and opens the Boss Door, taking the real transition path |
 | `F` | in a level | jitter capture: logs 60 frames of movement deltas |
+| `I` | in a level | re-open the level's **briefing** — the once-only screen that explains a new mechanic. Shown automatically on a level's first visit; this key is the only way to see it again without clearing progress. |
 | `H` | in a level | **clean freeze for screenshots** — halts the level with no dim, no menu and no music change, and holds the HUD's own tweens and timers so a guest bubble can't expire out of the shot. `H` again to resume; `Esc` cannot, because the level scene is paused and never sees it. |
 | `M` | anywhere | mute toggle (ships; not debug) |
 

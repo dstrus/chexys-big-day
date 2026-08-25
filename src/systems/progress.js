@@ -73,6 +73,27 @@ export function markGarageDashTipShown() {
   save(all)
 }
 
+// level briefings (2026-08-25): one screen per level that introduces a
+// mechanic, shown ONCE. A control tip like the dash bubbles, not a
+// score — so the godMode guard does not apply here either.
+export function isBriefingShown(levelId) {
+  return load().briefingsShown?.[levelId] === true
+}
+
+export function markBriefingShown(levelId) {
+  const all = load()
+  all.briefingsShown = all.briefingsShown ?? {}
+  if (all.briefingsShown[levelId]) return
+  all.briefingsShown[levelId] = true
+  save(all)
+}
+
+export function resetBriefings() {
+  const all = load()
+  delete all.briefingsShown
+  save(all)
+}
+
 export function recordRun(levelId, { finalScore, hangers }) {
   // god-mode runs never write persisted bests (standing rule,
   // handoffs 2026-07-29-g / 2026-07-30-h)
