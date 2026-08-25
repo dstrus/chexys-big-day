@@ -4857,3 +4857,30 @@ already works are all the same rule, passed or failed.
 Lesson for me, twice over in two days: when the brief and the art
 disagree about where something lives, the ART is the fact. Measure the
 layer before recommending it.
+
+## 2026-08-25 — Sconces land on P4; the composite guard's last gap closed
+
+p4.png updated with wall sconces and glow-p4.png added (480×270, 7.8%
+ink — sparse and hot, as additive wants). Both are SEAMLESS at the wrap,
+which matters only for these two: p4 is the one layer whose edges meet
+on screen, and glow-p4 inherits that because it shares p4's factor.
+
+Verified live: the stack now builds six layers, and glow-p4 tracks p4
+EXACTLY at both ends of the level — offset 3/3 at scrollX 60 and 72/72
+at 1440. The sconce and its bloom stay welded to the wall they are
+painted on, which is the whole point of the glow-p<layer> form. At 6×
+the fixture reads as a wall lamp with its light spilling up the lacquer.
+
+ALERT RED CLOSED BY PLAYTEST. The composite guard has carried one
+unmeasured item since it was armed: my harness never produced a live
+edge arrow, so the Alert Red separation was always the palette figure
+(127 against the wall's 45) rather than a composited sample, and I
+flagged it as needing a real playtest three times. The human has now
+confirmed in play that the red enemy arrows read fine against the
+crimson wall. That was the last thing the guard could not measure, so
+the guard is fully satisfied — by measurement where measurement worked,
+and by play where it did not.
+
+BELL DESK ART IS COMPLETE. Tiles (floor, mezzanine, cart, desk, palms),
+items (three luggage tiers), music, and the full six-layer parallax
+field with two glow overlays. Nothing on the level's art list remains.
