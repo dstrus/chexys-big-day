@@ -4717,3 +4717,28 @@ new numbers. That level was signed off long ago under the old range, so
 if its wash now reads too flat, the fix is a per-level pulse table
 rather than a slider, and it is a small change. Worth a look next time
 the Coatroom is on screen.
+
+## 2026-08-24 — Coatroom pulse pinned to its original values
+
+The human asked for the Coatroom to keep its previous pulse, which is
+the per-level table flagged one entry ago rather than a new idea.
+
+GLOW_PULSE in src/systems/parallax.js now holds per-level overrides:
+coatroom is pinned to { 0.3, 1.0, 2500ms } — the wide swell it was
+signed off under. Any level ABSENT from the table follows TUNING and the
+panel sliders, which is what keeps the sliders useful while dialling a
+new level; the Bell Desk stays on the dialled 0.30-0.48 / 2200ms.
+
+Design note on the wart: a pinned level ignores the sliders, which is
+exactly the shape of the bug we fixed on the music volume — a control
+that silently does nothing. So the panel now SAYS SO: while a pinned
+level is on screen with the panel open, readout slot 3 reads "glow
+pulse: PINNED for coatroom (0.30–1.00 @ 2500ms) — sliders ignored here".
+Cheaper than making the sliders level-aware, and it removes the only
+confusing thing about the design.
+
+Verified live, all four states in one run: coatroom pinned true and
+sweeping 0.30-1.00 while the panel sat at 0.30/0.48/2200; belldesk
+pinned false and sweeping 0.30-0.48; the panel driven hard to
+0.05/0.12/900 moved BELLDESK to 0.05-0.12; and the coatroom, revisited
+under that same panel state, still swept 0.30-1.00. No console noise.

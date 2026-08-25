@@ -85,10 +85,11 @@ export const TUNING = {
   insightDurationMs: 10000,
   insightFactor: 2.0, // Insights Report: score gains ×, MULTIPLICATIVE with adaptive
 
-  // parallax glow overlay (the Coatroom's stage wash and the Bell Desk's
-  // chandelier): alpha breathes between glowMin and glowMax once per
-  // glowPeriodMs. Values are shared by every level that ships a
-  // glow.png — there is no per-level pulse today.
+  // parallax glow overlay: alpha breathes between glowMin and glowMax
+  // once per glowPeriodMs. These are the DEFAULT for any level shipping
+  // a glow.png; a level PINNED in GLOW_PULSE (src/systems/parallax.js)
+  // keeps its own values and ignores these sliders — the Coatroom is
+  // pinned to the original wide swell it was signed off under.
   glowMin: 0.3, // human note 2026-08-12: a deep low end reads as the
   // glow breathing OUT rather than merely dimming
   glowMax: 0.48, // human, dialled in play 2026-08-24: the ceiling is a

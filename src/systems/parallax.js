@@ -13,6 +13,7 @@
 // the whole painted stack (depths -9..-6).
 
 import { TUNING } from '../config/tuning.js'
+import { isTuningPanelOpen, setPanelReadout } from '../debug/tuningPanel.js'
 
 const PARALLAX_URLS = import.meta.glob('../../assets/parallax/*/*.png', {
   eager: true,
@@ -88,28 +89,53 @@ export function createParallax(scene, levelId) {
       depth: tracksP3 ? -7.5 : -8.5,
       isGlow: true,
       tracksP3,
+      pulse: pulseFor(levelId), // null = follow the panel
+      levelId,
     })
   }
   return layers
 }
 
-// Pulse values moved to TUNING (2026-08-24) so the panel can dial them
-// live — same treatment the fg lamp flicker already had. They are
-// GLOBAL: both the Coatroom's stage wash and the Bell Desk's chandelier
-// breathe on these. The period is now an explicit millisecond figure
-// rather than the old sin(time/400) divisor, whose real period was
-// 2513ms; the 2500 default is that feel to within 13ms.
+// Pulse values live in TUNING so the panel can dial them live — the same
+// treatment the fg lamp flicker has. The period is an explicit
+// millisecond figure, replacing the old sin(time/400) divisor whose real
+// period was 2513ms.
+//
+// PINNED LEVELS (2026-08-24). The TUNING values are the DEFAULT, not the
+// law: a level listed here keeps its own pulse and ignores the sliders.
+// The Coatroom was signed off under the original wide swell and should
+// not inherit the Bell Desk's narrow one just because the chandelier
+// wanted a sustained warmth. A level absent from this table follows the
+// panel — which is what makes the sliders useful while dialling a NEW
+// level.
+const GLOW_PULSE = {
+  coatroom: { min: 0.3, max: 1.0, periodMs: 2500 },
+}
+
+function pulseFor(levelId) {
+  return GLOW_PULSE[levelId] ?? null
+}
 
 // per frame: scroll offsets + the §3 autonomous motion (crowd sway on
 // p3, glow pulse) — cheap sines, no art needed
 export function updateParallax(layers, cam, time) {
   for (const l of layers) {
     if (l.isGlow) {
-      const lo = Math.min(TUNING.glowMin, TUNING.glowMax)
-      const hi = Math.max(TUNING.glowMin, TUNING.glowMax)
+      const p = l.pulse ?? { min: TUNING.glowMin, max: TUNING.glowMax, periodMs: TUNING.glowPeriodMs }
+      const lo = Math.min(p.min, p.max)
+      const hi = Math.max(p.min, p.max)
       const mid = (hi + lo) / 2
       const amp = (hi - lo) / 2
-      l.sprite.setAlpha(mid + amp * Math.sin((time / TUNING.glowPeriodMs) * Math.PI * 2))
+      l.sprite.setAlpha(mid + amp * Math.sin((time / p.periodMs) * Math.PI * 2))
+      // say so, rather than letting a pinned level look like broken
+      // sliders — the same class of bug as the music volume poll
+      if (l.pulse && isTuningPanelOpen()) {
+        setPanelReadout(
+          `glow pulse: PINNED for ${l.levelId} (${lo.toFixed(2)}–${hi.toFixed(2)} @ ${p.periodMs}ms) — sliders ignored here`,
+          true,
+          3
+        )
+      }
       // a p3-aligned glow must travel with p3 — including the crowd
       // sway, or the bloom would drift off its own fixture by a pixel
       if (l.tracksP3) l.sprite.tilePositionX = cam.scrollX * l.factor + Math.sin(time / 2400)
