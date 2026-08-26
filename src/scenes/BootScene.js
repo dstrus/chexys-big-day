@@ -276,6 +276,10 @@ export default class BootScene extends Phaser.Scene {
     make('item-standard', 14, 14, 0xffffff)
     make('item-medium', 20, 22, 0xffffff)
     make('item-heavy', 26, 30, 0xffffff)
+    // the museum's movers live here too, not in MuseumScene: a briefing
+    // preview opened from the console has no museum scene to make them
+    make('item-stroller', 26, 18, 0xffffff)
+    make('item-backpack', 14, 14, 0xffffff)
     make('ticket', 18, 12, 0xf2ecd8) // paper claim ticket enemy
     make('pixel', 2, 2, 0xffffff)
     // tag chip: neutral 8x8 template, runtime-tinted per category

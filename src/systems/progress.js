@@ -88,6 +88,25 @@ export function markBriefingShown(levelId) {
   save(all)
 }
 
+// ---- dev console helpers (wired to window.__dev in main.js, DEV only)
+
+// Unlock every level by recording the minimum clear each one requires:
+// unlocking is progression-driven (isLevelUnlocked reads bestHangers),
+// so there is no "unlocked" flag to set — a level opens because the one
+// before it was cleared. Scores are left at 0 so this cannot be mistaken
+// for a real result.
+export function unlockAllLevels(levelIds) {
+  const all = load()
+  for (const id of levelIds) {
+    const d = all[id] ?? {}
+    d.bestHangers = Math.max(d.bestHangers ?? 0, 1)
+    d.bestScore = d.bestScore ?? 0
+    all[id] = d
+  }
+  save(all)
+  return levelIds
+}
+
 export function resetBriefings() {
   const all = load()
   delete all.briefingsShown

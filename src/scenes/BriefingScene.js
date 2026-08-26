@@ -25,8 +25,12 @@ export default class BriefingScene extends Phaser.Scene {
   }
 
   init(data) {
-    this.levelKey = data.levelKey ?? 'Level'
+    // no levelKey = PREVIEW: opened from the console with no level
+    // underneath, so there is nothing to pause or resume and nothing to
+    // mark as seen. Dismissing just closes it.
+    this.levelKey = data.levelKey ?? null
     this.levelId = data.levelId
+    this.preview = !data.levelKey
   }
 
   create() {
@@ -112,6 +116,17 @@ export default class BriefingScene extends Phaser.Scene {
     // A dismiss can't be honoured instantly: the keypress that opened a
     // retry (or the level-select ENTER) is often still down, and the
     // level resumes into it. Same guard the pause menu uses.
+    // In PREVIEW there is no level holding the input, so the scene
+    // underneath would also hear the dismissing key — the Title screen
+    // advances on any key, so a preview dismissed there fell straight
+    // into Shift Select. Pause whatever is running and restore it after.
+    if (this.preview) {
+      this.paused = this.game.scene
+        .getScenes(true)
+        .filter((s) => s !== this && s.scene.key !== 'Briefing')
+        .map((s) => s.scene.key)
+      for (const key of this.paused) this.scene.pause(key)
+    }
     this.openedAt = this.time.now
     this.input.keyboard.on('keydown', this.tryFinish, this)
     this.input.on('pointerdown', this.tryFinish, this)
@@ -124,8 +139,13 @@ export default class BriefingScene extends Phaser.Scene {
   }
 
   finish() {
-    if (this.levelId) markBriefingShown(this.levelId)
+    if (this.levelId && !this.preview) markBriefingShown(this.levelId)
     this.input.keyboard.off('keydown', this.tryFinish, this)
+    if (this.preview) {
+      for (const key of this.paused ?? []) this.scene.resume(key)
+      this.scene.stop()
+      return
+    }
     // resume a beat later so the dismissing key is released first — the
     // level polls JustDown and would otherwise eat it as a tag or jump
     this.time.delayedCall(120, () => {

@@ -5087,3 +5087,39 @@ they explain, so `scene.isActive(levelKey)` is false on a first visit
 and every harness that waits on it times out. Twenty scratchpad
 harnesses needed `briefingsShown` seeded; the seed is now in the
 README's testing notes so the next one starts correct.
+
+## 2026-08-26 — Dev console: unlock everything, preview any briefing
+
+The human cleared localStorage to see the briefings again and needed it
+back. `window.__dev` (DEV only) now carries the two things localStorage
+is actually wanted for, plus the obvious neighbours: unlockAll(),
+briefing(levelId), resetBriefings(), progress(), wipe().
+
+unlockAll() records a clear rather than setting a flag, because
+unlocking is PROGRESSION-DRIVEN — isLevelUnlocked reads bestHangers on
+the previous level, so there is no unlocked field to set. It writes
+bestHangers 1 with score 0, which opens everything while reading
+unmistakably as a dev unlock rather than a real result.
+
+briefing(levelId) previews a briefing over whatever is on screen without
+entering its level — the loop the human actually needs while editing the
+copy, since the alternative is play the level, press I, edit, and repeat.
+
+Three things the first draft got wrong, all found by running the helpers
+rather than reading them:
+
+1. THE DISMISS KEY LEAKED. A preview has no level holding input, and the
+   Title screen advances on any key — so dismissing a preview there fell
+   straight into Shift Select. A preview now pauses every other running
+   scene and restores them on dismiss, the same guarantee level mode
+   gets for free.
+2. It used scene.start, which REPLACED the scene underneath instead of
+   overlaying it. Now launches.
+3. The museum preview showed one sprite of three: item-stroller and
+   item-backpack were generated inside MuseumScene, which does not exist
+   when previewing from the Title. They move to BootScene alongside the
+   other interim item rects, where they always existed logically —
+   MuseumScene's generator already no-ops when they are present.
+
+A preview also never marks a briefing as seen, verified: briefingsShown
+stays null across one.

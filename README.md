@@ -29,6 +29,19 @@ game.
 | `H` | in a level | **clean freeze for screenshots** — halts the level with no dim, no menu and no music change, and holds the HUD's own tweens and timers so a guest bubble can't expire out of the shot. `H` again to resume; `Esc` cannot, because the level scene is paused and never sees it. |
 | `M` | anywhere | mute toggle (ships; not debug) |
 
+## Dev console (dev server only)
+
+`window.__dev` — gated on `import.meta.env.DEV`, so none of it exists in
+a built game.
+
+| Call | Does |
+|---|---|
+| `__dev.unlockAll()` | opens every level. Unlocking is progression-driven, so this records the clear each level requires (1 hanger, score 0 — it reads as a dev unlock, not a result). Return to Shift Select to see them. |
+| `__dev.briefing('museum')` | **previews any briefing right now**, over whatever is on screen, without entering the level. Pauses what's underneath, and does NOT mark the briefing as seen. The fast loop while editing copy. |
+| `__dev.resetBriefings()` | every level explains itself again on its next visit |
+| `__dev.progress()` | dump the saved progress object |
+| `__dev.wipe()` | clear progress entirely — reload for a first-time player |
+
 ## Testing notes
 
 - Seed `briefingsShown` or a level never becomes ACTIVE. A level that
