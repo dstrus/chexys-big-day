@@ -164,6 +164,42 @@ export default class BootScene extends Phaser.Scene {
   }
 
   preload() {
+    // A LOADING BAR, because Boot queues every asset — and the music is
+    // ~12MB of a ~14MB payload, so on a first visit a player waits
+    // several seconds on a black screen and concludes the game is
+    // broken. Drawn with graphics rather than art: it has to work before
+    // any texture has loaded.
+    const w = this.scale.width
+    const h = this.scale.height
+    const barW = 200
+    const barX = Math.round((w - barW) / 2)
+    const barY = Math.round(h / 2)
+    this.add
+      .text(w / 2, barY - 18, "CHEXY'S BIG DAY", {
+        fontFamily: 'monospace',
+        fontSize: '11px',
+        color: '#f2ecd8',
+      })
+      .setOrigin(0.5)
+    const frame = this.add.graphics()
+    frame.lineStyle(1, 0x59595b, 1)
+    frame.strokeRect(barX - 1, barY - 1, barW + 2, 6)
+    const fill = this.add.graphics()
+    const pct = this.add
+      .text(w / 2, barY + 12, '', { fontFamily: 'monospace', fontSize: '8px', color: '#98a2b3' })
+      .setOrigin(0.5)
+    this.load.on('progress', (value) => {
+      fill.clear()
+      fill.fillStyle(0xfe701e, 1) // Chexology Orange
+      fill.fillRect(barX, barY, Math.round(barW * value), 4)
+      pct.setText(`${Math.round(value * 100)}%`)
+    })
+    this.load.once('complete', () => {
+      fill.destroy()
+      frame.destroy()
+      pct.destroy()
+    })
+
     audio.preload(this) // queue any dropped-in audio files
     preloadParallax(this) // queue any dropped-in parallax paintings
     for (const [path, url] of Object.entries(TILESET_PNGS)) {

@@ -1,0 +1,49 @@
+# Build and publish to GitHub Pages on every push to main.
+#
+# One-time setup in the repo: Settings → Pages → Build and deployment →
+# Source: GitHub Actions. Without that, this workflow builds fine and
+# then fails at the deploy step with "Pages is not enabled".
+#
+# vite.config.js sets base: './', so the bundle works from the project
+# subpath (dstrus.github.io/chexys-big-day/) with no per-host config.
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: # so a deploy can be re-run without a commit
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Never let two deploys race; a later push wins.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .tool-versions # Node 22, the version the game is developed on
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

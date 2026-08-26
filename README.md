@@ -29,6 +29,26 @@ game.
 | `H` | in a level | **clean freeze for screenshots** — halts the level with no dim, no menu and no music change, and holds the HUD's own tweens and timers so a guest bubble can't expire out of the shot. `H` again to resume; `Esc` cannot, because the level scene is paused and never sees it. |
 | `M` | anywhere | mute toggle (ships; not debug) |
 
+## Deploying
+
+Pushing to `main` builds and publishes to GitHub Pages via
+`.github/workflows/deploy.yml`.
+
+**One-time repo setup:** Settings → Pages → Build and deployment →
+Source: **GitHub Actions**. Until that is set the workflow builds fine
+and then fails at the deploy step.
+
+`vite.config.js` sets `base: './'`, so the bundle works from the project
+subpath (`dstrus.github.io/chexys-big-day/`) with no per-host config.
+Debug tooling is gated on `import.meta.env.DEV` and is absent from a
+built game — verified against the built bundle, not assumed.
+
+Payload is ~13.8MB, of which **12.1MB is music**, and Boot loads all of
+it before the title screen (~3s on a fast connection, proportionally
+worse on a slow one). A loading bar covers the wait. If that becomes a
+problem for testers, the fix is per-level music loading rather than
+smaller files — one track is ever playing.
+
 ## Dev console (dev server only)
 
 `window.__dev` — gated on `import.meta.env.DEV`, so none of it exists in

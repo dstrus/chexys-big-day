@@ -14,7 +14,12 @@ const AUDIO_URLS = import.meta.glob('../../assets/audio/*', {
   query: '?url',
   import: 'default',
 })
-const MUSIC_URLS = import.meta.glob('../../assets/audio/music/*', {
+// The `!_*` negation is load-bearing, not tidiness: skipping archived
+// takes inside fileMap keeps them out of MEMORY, but Vite bundles
+// whatever the glob imports, so without this the retired Coatroom and
+// Title takes shipped anyway — 1.5MB of a 15MB payload (caught while
+// preparing the first deploy).
+const MUSIC_URLS = import.meta.glob(['../../assets/audio/music/*', '!../../assets/audio/music/_*'], {
   eager: true,
   query: '?url',
   import: 'default',

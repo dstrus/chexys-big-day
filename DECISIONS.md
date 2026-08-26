@@ -5147,3 +5147,44 @@ entire purpose is to watch a briefing appear — so it started reporting
 zero sprites and looked like the feature had broken. A blanket fix
 crossed the one place that tests the thing being suppressed. Seed
 removed there specifically.
+
+## 2026-08-26 — Ready for GitHub Pages: workflow, loading bar, and a
+## correction about bundling
+
+Human is deploying for beta testers. Three things done, one of them a
+correction to something I asserted earlier.
+
+DEPLOY WORKFLOW (.github/workflows/deploy.yml): push to main → npm ci,
+npm run build, upload dist, deploy-pages. Node comes from
+.tool-versions so CI matches the dev machine. Concurrency group so two
+pushes cannot race. workflow_dispatch so a deploy can be re-run without
+a commit. ONE-TIME HUMAN STEP, flagged in the README: Settings → Pages →
+Source: GitHub Actions, without which the workflow builds and then fails
+at deploy.
+
+CORRECTION. On 2026-08-17 I said the `_`-prefixed archived tracks were
+"neither downloaded at boot nor bundled into a build". The first half was
+true, the second was WRONG: the skip lived in AudioBus.fileMap, which
+runs at RUNTIME, while Vite bundles whatever `import.meta.glob` imports.
+The retired Coatroom and Title takes were shipping — 1.5MB of a 15MB
+payload. Fixed at the glob with a `!../../assets/audio/music/_*`
+negation, which is where bundling is actually decided. Payload 15MB →
+13.8MB. The lesson generalises: a runtime filter never shrinks a bundle.
+
+LOADING BAR in Boot. The payload is 13.8MB and 12.1MB of that is music,
+all queued before the title screen — measured ~2.7s to first paint on
+localhost, and proportionally worse for a tester on a slow line, with a
+BLACK SCREEN throughout. That reads as a crash, not a load. Drawn with
+graphics primitives because it must work before any texture exists.
+
+Verified against the BUILT bundle served from a subpath, not the dev
+server: `/chexys-big-day/` returns no 404s (the `base: './'` claim
+tested rather than trusted), zero console errors, and `window.__game`
+and `window.__dev` are both undefined in the build — the debug tools
+really are stripped.
+
+Flagged, not done: 88% of the payload is music that loads up front while
+only one track ever plays. Per-level loading would cut first load to
+~2MB. That is an AudioBus change (load-then-play, with the results
+tracks and the level hook to handle) and the human is deploying now, so
+it is offered rather than assumed.
