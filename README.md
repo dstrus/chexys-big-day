@@ -43,11 +43,21 @@ subpath (`dstrus.github.io/chexys-big-day/`) with no per-host config.
 Debug tooling is gated on `import.meta.env.DEV` and is absent from a
 built game — verified against the built bundle, not assumed.
 
-Payload is ~13.8MB, of which **12.1MB is music**, and Boot loads all of
-it before the title screen (~3s on a fast connection, proportionally
-worse on a slow one). A loading bar covers the wait. If that becomes a
-problem for testers, the fix is per-level music loading rather than
-smaller files — one track is ever playing.
+**Music loads per level, not at boot.** Boot fetches code, art and SFX
+only — measured 1.5MB to a live title screen — and each track arrives
+when the level that needs it starts. A track already heard is reused
+from cache, so a retry costs nothing.
+
+Measured on the built bundle over http:
+
+| Moment | Transferred |
+|---|---|
+| title screen on screen and interactive | **1.5MB** |
+| title music streamed in behind it | 4.6MB |
+| entering the Coatroom (its track) | 6.6MB |
+
+The whole bundle is still ~13.8MB on disk, but a tester only ever pays
+for the levels they actually play.
 
 ## Dev console (dev server only)
 

@@ -101,9 +101,14 @@ class AudioBus {
     // independent of the volume sliders — unmute restores prior levels
     this.muted = isMuted()
     this.lastVariant = {} // per-event: the previous pool pick, never repeated
+    this.musicRequest = null // token for the in-flight per-level load
   }
 
-  // Boot.preload: queue every discovered audio file
+  // Boot.preload: SFX only. Music is loaded PER LEVEL, on demand, in
+  // startMusic — it was 12.1MB of a 13.8MB payload sitting in front of
+  // the title screen while only ever one track plays (2026-08-26). SFX
+  // stay eager: the whole set is a few KB and a cue that arrives late is
+  // a cue that was missed.
   preload(scene) {
     for (const [name, entry] of Object.entries(this.files)) {
       if (Array.isArray(entry)) {
@@ -112,7 +117,44 @@ class AudioBus {
       }
       scene.load.audio(`audio-${name}`, entry)
     }
-    for (const [name, url] of Object.entries(this.music)) scene.load.audio(`music-${name}`, url)
+  }
+
+  // Load a track and play it when it arrives. The request is TOKENISED:
+  // by the time a 3MB file lands the player may have left the level, or
+  // asked for a different track, so only the latest request may play.
+  loadAndPlayMusic(levelId) {
+    const key = `music-${levelId}`
+    const url = this.music[levelId]
+    if (!url) {
+      this.stub = startMusicStub() // no file for this level: the synth
+      this.refreshVolumes()
+      return
+    }
+    // A loader belongs to a scene, and startMusic is called from a
+    // scene's create() — at which point that scene is still CREATING, so
+    // getScenes(true) is empty and there is nothing to load with. Wait
+    // one game step for it to count as running. (Diagnosed the hard way:
+    // every level silently fell back to the synth stub.)
+    const scene = this.game?.scene.getScenes(true)[0]
+    if (!scene) {
+      this.game?.events.once('poststep', () => {
+        if (this.currentLevelId === levelId) this.loadAndPlayMusic(levelId)
+      })
+      return
+    }
+    this.musicRequest = levelId
+    scene.load.audio(key, url)
+    scene.load.once(`filecomplete-audio-${key}`, () => {
+      // stale request: the player moved on while this was in flight
+      if (this.musicRequest !== levelId || this.currentLevelId !== levelId) return
+      this.stub?.stop()
+      this.stub = null
+      this.musicSound = this.game.sound.add(key, { loop: true })
+      this.musicSound.play()
+      if (this.musicPaused) this.musicSound.pause()
+      this.refreshVolumes()
+    })
+    if (!scene.load.isLoading()) scene.load.start()
   }
 
   init(game) {
@@ -196,12 +238,18 @@ class AudioBus {
     }
     this.stopMusic()
     this.currentLevelId = levelId
-    if (this.music[levelId] && this.game?.cache.audio.exists(`music-${levelId}`)) {
+    if (this.game?.cache.audio.exists(`music-${levelId}`)) {
+      // already loaded (a retry, or a track heard earlier this session)
       this.musicSound = this.game.sound.add(`music-${levelId}`, { loop: true })
       this.musicSound.play()
-    } else {
-      this.stub = startMusicStub()
+      this.refreshVolumes()
+      return
     }
+    if (this.music[levelId]) {
+      this.loadAndPlayMusic(levelId) // silence for a beat, then the track
+      return
+    }
+    this.stub = startMusicStub() // no file for this level: the synth
     this.refreshVolumes()
   }
 
@@ -210,7 +258,10 @@ class AudioBus {
   // The results screen wants the file or nothing: a stub loop under a
   // summary would be worse than the duck it replaced.
   hasMusic(name) {
-    return Boolean(this.music[name] && this.game?.cache.audio.exists(`music-${name}`))
+    // A track's EXISTENCE, not its load state — with per-level loading
+    // the cache is empty until something asks for it, and the results
+    // screen decides whether to swap tracks before anything has.
+    return Boolean(this.music[name])
   }
 
   // pause holds the track's position; resume continues it — never a
@@ -240,6 +291,7 @@ class AudioBus {
   }
 
   stopMusic() {
+    this.musicRequest = null // an in-flight load must not start playing
     this.musicSound?.stop()
     this.musicSound?.destroy()
     this.musicSound = null

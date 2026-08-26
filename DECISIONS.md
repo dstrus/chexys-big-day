@@ -5188,3 +5188,46 @@ only one track ever plays. Per-level loading would cut first load to
 ~2MB. That is an AudioBus change (load-then-play, with the results
 tracks and the level hook to handle) and the human is deploying now, so
 it is offered rather than assumed.
+
+## 2026-08-26 — Music loads per level (first load 13.8MB → 1.5MB)
+
+Human's call, taken before the beta rather than after. Boot now queues
+SFX only; a music track is loaded when startMusic asks for it and played
+when it lands.
+
+Measured on the BUILT bundle over http, sampling from inside the page so
+the interactive moment is captured rather than polled for:
+
+  canvas up and interactive   170ms   1.51 MB   (zero mp3s fetched)
+  title music arrives         329ms   4.64 MB
+  entering the Coatroom               6.59 MB
+
+So a tester reaches a live title screen having downloaded 1.5MB instead
+of 13.8MB, and only ever pays for the levels they play. The bundle is
+unchanged on disk — this is about what gets FETCHED.
+
+Three things the implementation needed beyond "load it later":
+
+1. A LOADER BELONGS TO A SCENE, and startMusic is called from a scene's
+   create() — at which point that scene is still CREATING, so
+   getScenes(true) is empty and there is nothing to load with. Every
+   level silently fell back to the synth stub. The fix waits one game
+   step (poststep) and retries, checking that the request is still
+   current. This was only visible because a MANUAL startMusic worked
+   perfectly while the automatic one did not.
+2. REQUESTS ARE TOKENISED. A 3MB file can land after the player has left
+   the level or asked for another track, so the completion handler bails
+   unless it is still the current request. Verified: a track stopped
+   mid-flight lands in the cache and never starts playing.
+3. hasMusic() had to stop consulting the CACHE and check for the file
+   instead — the results screen decides whether to swap tracks before
+   anything has been fetched, so a cache test would have said no.
+
+Verified end to end: title loads only its own track; a level loads its
+own on entry; RE-ENTERING costs zero extra fetches; a cleared run pulls
+success.mp3 on demand; a missing file still falls back to the synth.
+
+Test-method note: on the DEV server, Vite serves `?url` glob entries as
+tiny JS modules whose names end in .mp3, so a naive network filter
+reports "all music fetched" when nothing audio-sized moved. Payload
+claims have to be measured against the BUILT bundle.
