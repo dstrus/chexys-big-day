@@ -5123,3 +5123,27 @@ rather than reading them:
 
 A preview also never marks a briefing as seen, verified: briefingsShown
 stays null across one.
+
+## 2026-08-26 — Music auditions ignored; the stray aseprite tracked
+
+.gitignore now excludes assets/audio/music/candidates/ — 24MB of
+auditions and growing. Worth recording WHY it is safe to keep them
+there: the audio glob only reaches one level deep, so a track in that
+folder is neither bundled nor loaded at boot. Moving a keeper UP into
+assets/audio/music/ is what ships it, and that is the whole promotion
+step. Comment in .gitignore says so.
+
+`art/aseprite/luggage-single 2.aseprite` committed at the human's
+request — the Finder-duplicate name is kept as-is since renaming a
+source the human made is theirs to decide. Nothing exports it: the ICONS
+list names `luggage-single`, so the " 2" copy is inert reference.
+
+Also synced their briefings.js copy pass (11 lines) and re-verified every
+briefing renders with its sprites.
+
+Harness note, and a consequence of my OWN previous fix: seeding
+briefingsShown across twenty harnesses included test-briefing.mjs, whose
+entire purpose is to watch a briefing appear — so it started reporting
+zero sprites and looked like the feature had broken. A blanket fix
+crossed the one place that tests the thing being suppressed. Seed
+removed there specifically.

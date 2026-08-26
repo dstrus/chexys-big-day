@@ -19,7 +19,7 @@ export const BRIEFINGS = {
   // the controls themselves.
   coatroom: {
     title: 'SHIFT ONE — THE COATROOM',
-    subtitle: 'Guests are arriving. Check their coats in before the rush ends.',
+    subtitle: "Almost showtime! Check everyone's coats in before the rush ends.",
     rows: [
       {
         sprites: [{ key: ['chexy-idle', 'chexy-atlas'] }],
@@ -27,11 +27,11 @@ export const BRIEFINGS = {
       },
       {
         sprites: [{ key: 'coats', frame: 0 }, { key: 'coats', frame: 1 }],
-        text: 'Z or J tags the nearest item — that checks it in. No paper needed.',
+        text: 'Z or J tags the nearest item . No paper needed!',
       },
       {
         sprites: [{ key: ['enemy-atlas', 'enemy-stub'] }],
-        text: 'Paper tickets steal items. Tag one to stun it and it drops what it took.',
+        text: 'Paper tickets steal items. Tag one to stun it, and it drops what it took.',
       },
     ],
   },
@@ -39,19 +39,19 @@ export const BRIEFINGS = {
   // §3.2 — weight tiers + the dash unlock
   belldesk: {
     title: 'SHIFT TWO — THE BELL DESK',
-    subtitle: 'Luggage, not coats. Some tickets cover more than one bag.',
+    subtitle: 'Luggage! Luggage pairs! Entire CARTS!',
     rows: [
       {
         sprites: [{ key: 'luggage-single' }],
-        text: 'One bag — TAP Z to check it in.',
+        text: 'One bag - TAP Z to check it in.',
       },
       {
         sprites: [{ key: 'luggage-pair' }, { key: 'luggage-group' }],
-        text: 'A pair or a whole cart — HOLD Z. Multi-tagging takes longer.',
+        text: 'A pair or a whole cart — HOLD Z. Multi-tagging takes a little longer!',
       },
       {
         sprites: [{ key: ['enemy-atlas', 'enemy-stub'] }],
-        text: 'You stand still while holding, and a ticket can interrupt you. Clear the room first.',
+        text: 'You must stand still to multi-tag, and a ticket can interrupt you.',
       },
     ],
   },
@@ -60,22 +60,22 @@ export const BRIEFINGS = {
   // arrives with)
   garage: {
     title: 'SHIFT THREE — THE GARAGE',
-    subtitle: 'Night shift. The floor moves whether you do or not.',
+    subtitle: 'Night shift. Auto-scroller time!',
     rows: [
       {
         sprites: [
           { key: 'request-chips', frame: 0, tint: 0x2e6fd0 }, // Coat Cobalt
           { key: 'request-chips', frame: 2, tint: 0xc22f3a }, // Coat Crimson
         ],
-        text: 'Guests text for their cars. Their chips queue under the timer.',
+        text: 'Guests text for their cars. Their requests appear next to the Golden Hangers.',
       },
       {
         sprites: [{ key: 'car-sedan' }],
-        text: 'A car is taggable only while its chip is up. Tag it and it drives itself out.',
+        text: "A car is taggable only when it's requested. Tag it and it drives away.",
       },
       {
         sprites: [{ key: ['chexy-idle', 'chexy-atlas'] }],
-        text: 'DASH (X, K, or double-tap a direction) goes straight THROUGH a car.',
+        text: "DASH (X, K, or double-tap a direction) goes THROUGH a car. Don't get trapped!",
       },
     ],
   },

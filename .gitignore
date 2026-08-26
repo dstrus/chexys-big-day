@@ -4,3 +4,8 @@ dist/
 *.log
 .claude/settings.local.json
 *~lock~
+
+# Music auditions — 24MB and growing, and none of it is loaded: the audio
+# glob only reaches one level deep, so a track here is neither bundled
+# nor played. Move a keeper UP to assets/audio/music/ to ship it.
+assets/audio/music/candidates/
