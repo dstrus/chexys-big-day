@@ -5231,3 +5231,34 @@ Test-method note: on the DEV server, Vite serves `?url` glob entries as
 tiny JS modules whose names end in .mp3, so a naive network filter
 reports "all music fetched" when nothing audio-sized moved. Payload
 claims have to be measured against the BUILT bundle.
+
+## 2026-08-26 — HELP on the pause menu
+
+Human request: the level briefing reachable from the pause screen. The
+pause menu is now RESUME / HELP / RESTART LEVEL / EXIT TO SHIFT SELECT.
+
+HELP sits SECOND deliberately: after the common case, and above the two
+destructive options so those stay adjacent behind the shared -e confirm.
+pauseDestinations gained a null for it, so the confirm mapping still
+lines up by index.
+
+It reuses the briefing's PREVIEW mode — the one built for the console
+helper — which turns out to be exactly right here: preview pauses the
+scenes that are RUNNING and restores them on dismiss, so reading help
+returns to the PAUSE MENU rather than dropping the player into a live
+rush they were not looking at. The level itself is already paused and
+therefore not in the active list, so it is never touched, and the rush
+clock cannot move: verified unchanged across 60 stepped frames.
+
+Copy detail worth the two minutes: the dismiss prompt now reads by mode —
+"ANY KEY TO START" on a first-visit briefing, "ANY KEY TO CLOSE" for HELP
+and console previews. A control should say what it does, and nothing was
+starting.
+
+HELP does not mark a briefing as seen, which follows from preview mode
+and is what you want: asking for help should never suppress the
+explanation a first-time player is owed.
+
+Verified: options in order, HELP opens the briefing over the pause
+panel, dismissal lands back on the pause menu in menu mode, and ESC from
+there still resumes play.

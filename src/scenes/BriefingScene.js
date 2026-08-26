@@ -99,8 +99,11 @@ export default class BriefingScene extends Phaser.Scene {
       rowY += ROW_H
     }
 
+    // the prompt says what dismissing actually DOES: a first-visit
+    // briefing starts the shift, while HELP (or a console preview) just
+    // closes and puts back whatever it covered
     this.prompt = this.add
-      .text(x + PANEL.w / 2, y + PANEL.h - 16, 'ANY KEY TO START', {
+      .text(x + PANEL.w / 2, y + PANEL.h - 16, this.preview ? 'ANY KEY TO CLOSE' : 'ANY KEY TO START', {
         ...TEXT,
         color: '#101828',
       })

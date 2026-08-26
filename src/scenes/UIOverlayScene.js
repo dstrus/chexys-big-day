@@ -12,6 +12,7 @@ import {
 
 import { audio } from '../systems/AudioBus.js'
 import { createHanger } from '../ui/hanger.js'
+import { briefingFor } from '../config/briefings.js'
 
 const TEXT_STYLE = {
   fontFamily: 'monospace',
@@ -365,13 +366,16 @@ export default class UIOverlayScene extends Phaser.Scene {
       .text(GAME_WIDTH / 2, 100, 'PAUSED', { ...TEXT_STYLE, fontSize: '16px', fontStyle: 'bold' })
       .setOrigin(0.5)
     this.pauseOptions = [
-      this.add.text(GAME_WIDTH / 2, 132, 'RESUME', optStyle).setOrigin(0.5),
-      this.add.text(GAME_WIDTH / 2, 150, 'RESTART LEVEL', optStyle).setOrigin(0.5),
-      this.add.text(GAME_WIDTH / 2, 168, 'EXIT TO SHIFT SELECT', optStyle).setOrigin(0.5),
+      this.add.text(GAME_WIDTH / 2, 126, 'RESUME', optStyle).setOrigin(0.5),
+      this.add.text(GAME_WIDTH / 2, 144, 'HELP', optStyle).setOrigin(0.5),
+      this.add.text(GAME_WIDTH / 2, 162, 'RESTART LEVEL', optStyle).setOrigin(0.5),
+      this.add.text(GAME_WIDTH / 2, 180, 'EXIT TO SHIFT SELECT', optStyle).setOrigin(0.5),
     ]
-    // both destructive options share the -e confirm; this maps menu
-    // index -> teardown destination once confirmed
-    this.pauseDestinations = [null, 'retry', 'exit']
+    // HELP sits second — after the common case, and before the pair that
+    // shares the -e confirm, so the destructive options stay adjacent.
+    // null = handled directly; a string = a teardown destination that
+    // must be confirmed first.
+    this.pauseDestinations = [null, null, 'retry', 'exit']
     this.pendingDestination = null
     this.pauseHint = this.add
       .text(GAME_WIDTH / 2, 200, 'ESC OR P TO RESUME', { ...TEXT_STYLE, color: '#98a2b3' })
@@ -520,6 +524,19 @@ export default class UIOverlayScene extends Phaser.Scene {
     return this.game.registry.get('activeLevelKey') ?? 'Level'
   }
 
+  // HELP from the pause menu: the level's own briefing, over the pause
+  // screen. Launched in PREVIEW mode (no levelKey), which pauses this
+  // scene and restores it on dismiss — so reading help returns to the
+  // pause menu rather than dropping the player back into a live rush
+  // they were not looking at. The level itself is already paused and is
+  // not in the active list, so it is never touched.
+  showHelp() {
+    const levelId = this.scene.get(this.levelKey())?.levelProps?.levelId ?? null
+    if (!levelId || !briefingFor(levelId)) return
+    audio.play('uiSelect')
+    this.scene.launch('Briefing', { levelId })
+  }
+
   resumeLevel() {
     this.pausePanel.setVisible(false)
     audio.resumeMusic() // track continues from where the pause held it
@@ -553,6 +570,7 @@ export default class UIOverlayScene extends Phaser.Scene {
       nav(this.pauseOptions.length)
       if (JD(k.ENTER) || JD(k.Z) || JD(k.SPACE)) {
         if (this.pauseIdx === 0) this.resumeLevel()
+        else if (this.pauseIdx === 1) this.showHelp()
         else {
           // restart and exit both abandon the live run -> same confirm
           this.pendingDestination = this.pauseDestinations[this.pauseIdx]
