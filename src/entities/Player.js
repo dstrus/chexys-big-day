@@ -24,12 +24,16 @@ export default class Player {
     if (this.mode === 'rect') {
       this.sprite.setDisplaySize(TUNING.playerSize, TUNING.playerSize)
     } else {
-      // DESIGN.md §5 (locked): art canvas over a 32x32 physics body,
+      // DESIGN.md §5 (locked): art canvas over a 32-TALL physics body,
       // bottom-centers aligned — tail/ear overhang never collides.
-      // Offset (8, 16) per handoff 2026-07-29-e: horizontally centered,
-      // flush with the texture bottom (texture bottom == body bottom).
-      this.sprite.body.setSize(32, 32)
-      this.sprite.body.setOffset((this.sprite.width - 32) / 2, this.sprite.height - 32)
+      // Offset per handoff 2026-07-29-e: horizontally centered, flush
+      // with the texture bottom (texture bottom == body bottom).
+      //
+      // The WIDTH is TUNING.playerBodyWidth (2026-08-26) and narrower
+      // than the old 32: the box stays CENTRED, so nothing about
+      // targeting, carrying or teetering moves — it just stops claiming
+      // the empty air behind her as solid.
+      this.applyBodyWidth()
       this.sprite.setFlipX(true) // default spawn facing: right (levels scroll rightward)
     }
 
@@ -76,6 +80,18 @@ export default class Player {
   // Identical on the grey-box rect, but once the 48x48 art sprite anchors
   // bottom-center over the 32x32 body they diverge (DESIGN.md §5 locks
   // targeting to the body).
+  // Body width is read live so the panel can dial the feel mid-run;
+  // centred, so the body's CENTRE never moves and every system measuring
+  // from it (auto-target, carry, teeter) is unaffected by the change.
+  applyBodyWidth() {
+    if (this.mode !== 'atlas') return
+    const w = Math.round(TUNING.playerBodyWidth)
+    if (this.appliedBodyWidth === w) return
+    this.appliedBodyWidth = w
+    this.sprite.body.setSize(w, 32)
+    this.sprite.body.setOffset((this.sprite.width - w) / 2, this.sprite.height - 32)
+  }
+
   get x() {
     return this.body.center.x
   }
@@ -100,6 +116,7 @@ export default class Player {
     }
 
     const dashing = time < this.dashUntil
+    this.applyBodyWidth() // live from the panel
     body.setMaxVelocity(dashing ? TUNING.dashSpeed : TUNING.maxSpeed, TUNING.fallMaxSpeed)
 
     if (this.onGround()) {

@@ -10,6 +10,13 @@ export const TUNING = {
   moveDecel: 2400,
   maxSpeed: 150,
   playerSize: 32,
+  // Physics-body WIDTH (height stays 32, bottom-aligned to the art).
+  // DESIGN §5 puts a 48px canvas over a 32px body so tail and ears never
+  // collide — but at shoulder height Chexy's torso ends ~26px across and
+  // the rest of a 32px box is tail and empty air behind her. That made
+  // emerging from under a ledge feel late: the box was still under the
+  // tile when her body plainly was not (human report 2026-08-26).
+  playerBodyWidth: 26,
   jumpVelocity: -340, // max jump height = v^2/2g ≈ 61px at gravity 950
   jumpCutMultiplier: 0.45,
   coyoteMs: 100,
@@ -242,6 +249,7 @@ export const TUNING = {
 export const TUNING_SCHEMA = [
   { key: 'gravity', label: 'Gravity', min: 300, max: 2000, step: 10 },
   { key: 'playerSize', label: 'Player size', min: 24, max: 72, step: 2 },
+  { key: 'playerBodyWidth', label: 'Player body width', min: 16, max: 32, step: 1 },
   { key: 'moveAccel', label: 'Move accel', min: 400, max: 4000, step: 50 },
   { key: 'moveDecel', label: 'Move decel', min: 400, max: 5000, step: 50 },
   { key: 'maxSpeed', label: 'Max speed', min: 60, max: 320, step: 5 },

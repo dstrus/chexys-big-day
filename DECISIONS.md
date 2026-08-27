@@ -5262,3 +5262,37 @@ explanation a first-time player is owed.
 Verified: options in order, HELP opens the briefing over the pause
 panel, dismissal lands back on the pause menu in menu mode, and ESC from
 there still resumes play.
+
+## 2026-08-26 — Player body narrowed 32 → 26 (tail stops colliding)
+
+Human report: emerging from under a platform, Chexy feels blocked from
+jumping later than she looks. Their read — that the tail tip shouldn't
+count — is supported by the art.
+
+MEASURED against the sprite's ink. DESIGN §5 puts a 48px canvas over a
+32-TALL body, bottom-aligned, so ears and tail never collide vertically.
+Horizontally, though, the body ran the full 32px while at SHOULDER
+HEIGHT — the rows that decide whether a ceiling blocks a jump — her
+torso ends around x34 of the frame and x35-39 is the gap between her
+back and her tail. Rows y19-22 of the idle frame show it plainly: solid
+torso to x34, empty to x39, tail resuming at x40. The box was claiming
+about 5px of empty air behind her as solid.
+
+Body is now TUNING.playerBodyWidth (26), on the panel at 16-32 so the
+feel can be dialled in play. Verified directly at both settings: width
+32 → offset 8, body spans spriteLeft+8..+40; width 26 → offset 11, spans
++11..+37, and the body CENTRE stays exactly on the sprite in both cases,
+so auto-target, carrying and teeter — all of which measure from the
+centre — are untouched. 3px comes off each side.
+
+HONESTY ABOUT THE MEASUREMENT: I could not get a trustworthy number for
+"how many pixels sooner can she jump". Three successive harnesses gave
+contradictory answers (24px for every width; identical body.left at
+different widths), which means the harness was wrong, not that the
+change does nothing — the direct geometry read above is unambiguous. I
+stopped rather than keep burning effort on a probe whose failures I had
+already caught twice. The acceptance test here is a playtest: the
+difference should be about 3px of travel, which is small, so if it still
+feels late, drag the slider down and tell me the number that feels
+right — that is the fastest path to the answer and it is why the value
+is tunable.
