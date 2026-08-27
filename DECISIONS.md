@@ -5296,3 +5296,33 @@ difference should be about 3px of travel, which is small, so if it still
 feels late, drag the slider down and tell me the number that feels
 right — that is the fastest path to the answer and it is why the value
 is tunable.
+
+2026-08-26 — Player body width 26 ACCEPTED (playtest sign-off)
+-------------------------------------------------------------
+Davey played it and reported it feels good at the shipped default, so
+26 stands; the open acceptance test from the entry above is closed. No
+number needed dialling, so nothing changed in code — this entry exists
+only to record that the value was confirmed by hand rather than left
+provisional.
+
+Footprint audit run before closing, since a narrower body could in
+principle let her fit somewhere she previously could not:
+
+- No hardcoded player width in any edge math. Every consumer reads
+  body.width live — the garage pinch threshold (GarageScene.js:260),
+  the dash-through clearance scan (:295), the wedge headroom probe
+  (:311), the edge push (:809), and the teeter tile sweep
+  (Player.js:306). The only TUNING.playerSize references left are the
+  rect-placeholder branch, which never runs in atlas mode.
+- Traversal is unchanged. Solid geometry sits on the 16px tile grid,
+  so gaps come in multiples of 16: both a 26 and a 32 body fit a 32px
+  gap and neither fits a 16px one. Narrowing cannot open a route that
+  was closed, so no level's intended blocking changes.
+- What DID change is sub-tile clearance against non-grid bodies —
+  ledge overhangs (the reported case) and cars. Both thresholds are
+  parametric, so they scaled with the body rather than drifting.
+
+The garage dash-through and wedge suites were not re-run: those
+harnesses had been cleaned out of the scratchpad, and the audit above
+answers the same question by reading the code that the suites exercise.
+Recording that so nobody later reads this as "the suites passed".
