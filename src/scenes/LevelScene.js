@@ -5,6 +5,7 @@ import { luggageArtFor, BAG_BODY_INSET } from '../config/itemArt.js'
 import { briefingFor } from '../config/briefings.js'
 import { COLLECTIBLES } from '../config/collectibles.js'
 import { getWaveSchedule } from '../config/waveRegistry.js'
+import { currentMode, diff, scaled } from '../config/difficulty.js'
 import Player from '../entities/Player.js'
 import WaveRunner from '../systems/WaveRunner.js'
 import { audio } from '../systems/AudioBus.js'
@@ -147,9 +148,12 @@ export default class LevelScene extends Phaser.Scene {
     this.insightUntil = 0
     this.itemsReturned = 0
     this.cleanStreak = 0
-    this.intensity = 1.0
-    this.multiplier = 1.0
-    this.bestMultiplier = 1.0
+    // the selected mode sets where the adaptive band is CENTRED, and the
+    // multiplier it pays out at that centre (config/difficulty.js)
+    this.mode = currentMode()
+    this.intensity = this.mode.intensityBase
+    this.multiplier = this.mode.multiplierBase
+    this.bestMultiplier = this.mode.multiplierBase
     this.runOver = false
 
     this.buildMap()
@@ -542,7 +546,7 @@ export default class LevelScene extends Phaser.Scene {
     let enemyTime = Infinity
     for (const enemy of this.enemies.getChildren()) {
       if (!enemy.active || enemy.getData('carrying') || enemy.getData('stunnedUntil')) continue
-      const t = Phaser.Math.Distance.Between(enemy.x, enemy.y, pt.x, pt.y) / TUNING.enemySpeed
+      const t = Phaser.Math.Distance.Between(enemy.x, enemy.y, pt.x, pt.y) / diff('enemySpeed')
       if (t < enemyTime) enemyTime = t
     }
     if (enemyTime === Infinity) return Infinity // no threats: always fair
@@ -607,7 +611,7 @@ export default class LevelScene extends Phaser.Scene {
         let culpritTime = Infinity
         for (const enemy of this.enemies.getChildren()) {
           if (!enemy.active || enemy.getData('carrying') || enemy.getData('stunnedUntil')) continue
-          const t = Phaser.Math.Distance.Between(enemy.x, enemy.y, pt.x, pt.y) / TUNING.enemySpeed
+          const t = Phaser.Math.Distance.Between(enemy.x, enemy.y, pt.x, pt.y) / diff('enemySpeed')
           if (t < culpritTime) {
             culpritTime = t
             culprit = enemy
@@ -628,7 +632,7 @@ export default class LevelScene extends Phaser.Scene {
   // when dash is enabled, its burst gain is added assuming ~one dash/sec.
   checkStealFairness() {
     const escapeMs =
-      ((this.worldHeight + 24) / (TUNING.enemySpeed * TUNING.carrierSpeedFactor)) * 1000 +
+      ((this.worldHeight + 24) / (diff('enemySpeed') * TUNING.carrierSpeedFactor)) * 1000 +
       TUNING.gloatMs
     const dashBonus = this.isDashAvailable()
       ? (TUNING.dashSpeed - TUNING.maxSpeed) * (TUNING.dashDurationMs / 1000)
@@ -709,12 +713,12 @@ export default class LevelScene extends Phaser.Scene {
       const deficit = Math.round(traverseMs + TUNING.stealFairnessMarginMs - escapeMs)
       const needFactor =
         (this.worldHeight + 24) /
-        (((traverseMs + TUNING.stealFairnessMarginMs - TUNING.gloatMs) / 1000) * TUNING.enemySpeed)
+        (((traverseMs + TUNING.stealFairnessMarginMs - TUNING.gloatMs) / 1000) * diff('enemySpeed'))
       const needGloat = Math.round(TUNING.gloatMs + deficit)
       console.warn(
         `Steal fairness (c) VIOLATED by ${deficit}ms for this level ` +
           `(width ${this.worldWidth}px): carrierSpeedFactor=${TUNING.carrierSpeedFactor}, ` +
-          `gloatMs=${TUNING.gloatMs}, enemySpeed=${TUNING.enemySpeed}, ` +
+          `gloatMs=${TUNING.gloatMs}, enemySpeed=${diff('enemySpeed')}, ` +
           `maxSpeed=${TUNING.maxSpeed}, dashEnabled=${TUNING.dashEnabled}. ` +
           `To pass: carrierSpeedFactor <= ${needFactor.toFixed(2)} OR gloatMs >= ${needGloat}.`
       )
@@ -788,7 +792,7 @@ export default class LevelScene extends Phaser.Scene {
         // wake up, with a short no-steal grace so it can't instantly
         // re-grab the item it just dropped
         enemy.setData('stunnedUntil', null)
-        enemy.setData('stealGraceUntil', time + TUNING.enemyStealGraceMs)
+        enemy.setData('stealGraceUntil', time + diff('enemyStealGraceMs'))
         enemy.clearTint()
       }
 
@@ -800,7 +804,7 @@ export default class LevelScene extends Phaser.Scene {
           this.setEnemyAnim(enemy, 'grab')
         } else {
           // encumbered getaway: carrying slows the ticket (steal fairness)
-          const speed = TUNING.enemySpeed * TUNING.carrierSpeedFactor
+          const speed = diff('enemySpeed') * TUNING.carrierSpeedFactor
           enemy.body.setVelocity(enemy.getData('carryDriftX') ?? 0, -speed)
           this.setEnemyAnim(enemy, 'carry')
         }
@@ -855,8 +859,8 @@ export default class LevelScene extends Phaser.Scene {
       const angle = Phaser.Math.Angle.Between(enemy.x, enemy.y, goalX, goalY)
       const bob = Math.sin(time / 300 + enemy.getData('seed')) * 18
       enemy.body.setVelocity(
-        Math.cos(angle) * TUNING.enemySpeed,
-        Math.sin(angle) * TUNING.enemySpeed + bob
+        Math.cos(angle) * diff('enemySpeed'),
+        Math.sin(angle) * diff('enemySpeed') + bob
       )
       // left-facing native, same flip convention as Chexy
       enemy.setFlipX(enemy.body.velocity.x > 0)
@@ -870,7 +874,7 @@ export default class LevelScene extends Phaser.Scene {
 
   // per-level steal-initiation spacing; map property overrides the default
   stealCooldown() {
-    return this.levelProps.stealCooldownMs ?? TUNING.stealCooldownMs
+    return scaled('stealCooldownMs', this.levelProps.stealCooldownMs ?? TUNING.stealCooldownMs)
   }
 
   // dash is available where the LEVEL permits it (dashAllowed map
@@ -944,17 +948,23 @@ export default class LevelScene extends Phaser.Scene {
 
   setIntensity(value) {
     const band = TUNING.adaptiveBand
-    this.intensity = Phaser.Math.Clamp(value, 1 - band, 1 + band)
-    // 1.0x at baseline, multiplierFloor at the easiest band edge, and a
-    // symmetric bonus above baseline so full heat pays
+    // The band rides the MODE's centre, not a fixed 1.0 — otherwise
+    // FIRST DAY's easier baseline would just be adaptation's low edge
+    // and the player would have no room left to be eased further.
+    const base = this.mode.intensityBase
+    const payAtBase = this.mode.multiplierBase
+    this.intensity = Phaser.Math.Clamp(value, base - band, base + band)
+    // payAtBase at the mode's centre, its share of multiplierFloor at
+    // the easiest edge, and a symmetric bonus above centre so pushing
+    // for full heat pays inside either mode
     if (band === 0) {
-      this.multiplier = 1
+      this.multiplier = payAtBase
     } else {
-      const slope = (1 - TUNING.multiplierFloor) / band
-      this.multiplier = Math.round((1 + (this.intensity - 1) * slope) * 100) / 100
-      this.multiplier = Math.max(TUNING.multiplierFloor, this.multiplier)
+      const slope = (payAtBase - payAtBase * TUNING.multiplierFloor) / band
+      this.multiplier = Math.round((payAtBase + (this.intensity - base) * slope) * 100) / 100
+      this.multiplier = Math.max(payAtBase * TUNING.multiplierFloor, this.multiplier)
     }
-    this.bestMultiplier = Math.max(this.bestMultiplier ?? 1, this.multiplier)
+    this.bestMultiplier = Math.max(this.bestMultiplier ?? this.multiplier, this.multiplier)
   }
 
   onStruggle() {
@@ -1695,7 +1705,7 @@ export default class LevelScene extends Phaser.Scene {
     this.player.triggerAnim('hit')
     this.player.sprite.setTint(0xff6666)
     this.time.delayedCall(150, () => this.player.sprite.clearTint())
-    if (fromEnemy) this.graceUntil = this.time.now + TUNING.iframesMs
+    if (fromEnemy) this.graceUntil = this.time.now + diff('iframesMs')
     this.onHoldInterrupted()
   }
 

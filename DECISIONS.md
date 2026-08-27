@@ -5326,3 +5326,59 @@ The garage dash-through and wedge suites were not re-run: those
 harnesses had been cleaned out of the scratchpad, and the audit above
 answers the same question by reading the code that the suites exercise.
 Recording that so nobody later reads this as "the suites passed".
+
+2026-08-26 — Selectable difficulty; FIRST DAY becomes the default
+-----------------------------------------------------------------
+SPEC CHANGE, human ruling in session. The current balance is enjoyable
+but the game is likely to be presented as a brief arcade experience,
+possibly at a convention booth, so the tuned balance becomes a
+selectable hard mode and an easier setting becomes the default.
+
+This AMENDS DESIGN §2.5, which was RESOLVED as adaptive-only with no
+player-facing selection; §2.5 now leads with the mode layer. Not a
+guardrail item — no new level and no new §3 mechanic — so no amendment
+to CLAUDE.md's hard-NO list was needed.
+
+Shape, per three human rulings taken before building:
+1. SELECTOR — a mode row on shift select, ←/→, outside the up/down
+   cursor so ENTER always means "start the highlighted shift". Session
+   -scoped, never persisted (config/difficulty.js holds it in a module
+   variable, deliberately NOT progress.js): a booth machine must come
+   up gentle for the next stranger even if the last player switched.
+2. SCORING — the mode sets the multiplier BASELINE rather than getting
+   its own table, extending §2.5's existing "easier play scores less"
+   rule instead of inventing a second one. FIRST DAY 0.70x, FULL RUSH
+   1.00x, shown on the mode row itself so the trade is legible where
+   it is chosen.
+3. LEVERS — thin the PRESSURE and widen the RECOVERY only. Human
+   explicitly declined easier tagging and a longer clock, so
+   targetRadius, hold durations and rushSeconds are untouched: easier
+   is the same game running cooler, not a different game with a bigger
+   hitbox, and the 15-20 minute full-clear target is what makes this
+   booth-viable at all.
+
+The mode moves the CENTRE of the adaptive band rather than replacing
+it. Centring on 1.0 would have made FIRST DAY merely adaptation's low
+edge, leaving a struggling player nothing left to be eased into.
+
+Implementation note worth keeping: every read of a modded key goes
+through diff()/scaled(), INCLUDING the §2.4 fairness instruments, which
+predict enemy travel from enemySpeed. Had the sim used the effective
+speed while the prediction used the raw one, the spawn- and steal-
+fairness guarantees would have been computed against an enemy that does
+not exist. The factors are never written back into TUNING, so the debug
+panel and "Copy values" still dump the true tuned numbers.
+
+Verified headless, 22/22 and no console errors: FULL RUSH is identical
+to pre-amendment behaviour on every lever and at both band edges;
+FIRST DAY scales each lever as specified and recentres the band
+(0.45-1.05 intensity, 0.49-0.91x multiplier).
+
+FLAGGED, not decided: (a) FIRST DAY's hot edge reaches intensity 1.05,
+just above FULL RUSH's baseline — a player doing well on easy briefly
+plays hotter than hard mode's centre while still paying 0.91x. That
+reads as adaptation working, but it is a real overlap. (b) Golden
+hangers from a FIRST DAY clear record on the same MAX-across-runs
+counter as FULL RUSH ones, so a booth player can max a level's hangers
+on the gentler setting. Both follow from the one-table ruling; raise
+them if either bites in play.

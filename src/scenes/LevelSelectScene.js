@@ -4,10 +4,14 @@ import { LEVELS, isLevelUnlocked } from '../config/levels.js'
 import { levelBest } from '../systems/progress.js'
 import { createHanger } from '../ui/hanger.js'
 import { audio } from '../systems/AudioBus.js'
+import { currentMode, cycleMode } from '../config/difficulty.js'
 
 const ROW_X = 96
 const ROW_Y0 = 76
 const ROW_H = 32
+// below the five shift rows (last sits at ROW_Y0 + 4 * ROW_H = 204),
+// above the key hint
+const MODE_Y = 226
 
 // Level select (BRIEF-02 Chunk 6): Title → here → level → results →
 // back here. Locked slots stay visible as "?" so the shape of the whole
@@ -79,8 +83,34 @@ export default class LevelSelectScene extends Phaser.Scene {
       .text(ROW_X - 18, ROW_Y0, '▶', { fontFamily: 'monospace', fontSize: '11px', color: '#fe701e' })
       .setOrigin(0, 0.5)
 
+    // Difficulty row (DESIGN §2.5 as amended 2026-08-26). It sits OUTSIDE
+    // the up/down cursor and answers to ←/→ at any time, so ENTER always
+    // means "start the highlighted shift" and a booth player who never
+    // touches the arrows still gets the gentler default.
     this.add
-      .text(GAME_WIDTH / 2, 244, 'ARROWS SELECT · ENTER START · ESC TITLE', {
+      .text(ROW_X - 18, MODE_Y, 'MODE', {
+        fontFamily: 'monospace',
+        fontSize: '10px',
+        color: '#667085',
+      })
+      .setOrigin(0, 0.5)
+    this.modeText = this.add
+      .text(ROW_X + 34, MODE_Y, '', {
+        fontFamily: 'monospace',
+        fontSize: '11px',
+        color: '#fe701e',
+      })
+      .setOrigin(0, 0.5)
+    this.modeBlurb = this.add
+      .text(GAME_WIDTH - 16, MODE_Y, '', {
+        fontFamily: 'monospace',
+        fontSize: '9px',
+        color: '#667085',
+      })
+      .setOrigin(1, 0.5)
+
+    this.add
+      .text(GAME_WIDTH / 2, 246, '↑↓ SHIFT · ←→ MODE · ENTER START · ESC TITLE', {
         fontFamily: 'monospace',
         fontSize: '9px',
         color: '#667085',
@@ -88,7 +118,7 @@ export default class LevelSelectScene extends Phaser.Scene {
       .setOrigin(0.5)
 
     this.idx = 0
-    this.keys = this.input.keyboard.addKeys('UP,DOWN,W,S,ENTER,Z,SPACE,ESC')
+    this.keys = this.input.keyboard.addKeys('UP,DOWN,W,S,LEFT,RIGHT,A,D,ENTER,Z,SPACE,ESC')
     this.refresh()
   }
 
@@ -97,6 +127,11 @@ export default class LevelSelectScene extends Phaser.Scene {
     this.rowTexts.forEach((row, i) =>
       row.setColor(i === this.idx ? '#f2ecd8' : this.unlockedNow[i] ? '#98a2b3' : '#475467')
     )
+    const mode = currentMode()
+    // the score consequence is part of the label, not fine print — §2.5
+    // requires the trade to be legible wherever it is chosen
+    this.modeText.setText(`◀ ${mode.label} ▶   ${mode.multiplierBase.toFixed(2)}× SCORE`)
+    this.modeBlurb.setText(mode.blurb)
   }
 
   update() {
@@ -109,6 +144,13 @@ export default class LevelSelectScene extends Phaser.Scene {
     }
     if (JustDown(this.keys.DOWN) || JustDown(this.keys.S)) {
       this.idx = (this.idx + 1) % LEVELS.length
+      audio.play('uiSelect')
+      this.refresh()
+    }
+    const dir = JustDown(this.keys.RIGHT) || JustDown(this.keys.D) ? 1
+      : JustDown(this.keys.LEFT) || JustDown(this.keys.A) ? -1 : 0
+    if (dir !== 0) {
+      cycleMode(dir)
       audio.play('uiSelect')
       this.refresh()
     }

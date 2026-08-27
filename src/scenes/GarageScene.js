@@ -1,6 +1,7 @@
 import Phaser from 'phaser'
 import LevelScene from './LevelScene.js'
 import { TUNING } from '../config/tuning.js'
+import { diff } from '../config/difficulty.js'
 import { audio } from '../systems/AudioBus.js'
 import { isGarageDashTipShown, markGarageDashTipShown } from '../systems/progress.js'
 import { isTuningPanelOpen, setPanelReadout } from '../debug/tuningPanel.js'
@@ -638,7 +639,7 @@ export default class GarageScene extends LevelScene {
           continue
         }
         enemy.setData('stunnedUntil', null)
-        enemy.setData('stealGraceUntil', time + TUNING.enemyStealGraceMs)
+        enemy.setData('stealGraceUntil', time + diff('enemyStealGraceMs'))
         enemy.clearTint()
         if (enemy.getData('elite')) enemy.setTint(ELITE_ACCENT)
       }
@@ -661,7 +662,7 @@ export default class GarageScene extends LevelScene {
       if (chipCar) {
         // flee WITH the scroll, encumbered — always interceptable from
         // behind (fleeSpeed < player maxSpeed by construction)
-        const fleeSpeed = TUNING.enemySpeed * TUNING.carrierSpeedFactor + this.scrollSpeed
+        const fleeSpeed = diff('enemySpeed') * TUNING.carrierSpeedFactor + this.scrollSpeed
         enemy.body.setVelocity(fleeSpeed, Math.sin(time / 300 + enemy.getData('seed')) * 10)
         this.setEnemyAnim(enemy, 'carry')
         enemy.setFlipX(true)
@@ -726,8 +727,8 @@ export default class GarageScene extends LevelScene {
       const angle = Phaser.Math.Angle.Between(enemy.x, enemy.y, goalX, goalY)
       const bob = Math.sin(time / 300 + enemy.getData('seed')) * 18
       enemy.body.setVelocity(
-        Math.cos(angle) * TUNING.enemySpeed,
-        Math.sin(angle) * TUNING.enemySpeed + bob
+        Math.cos(angle) * diff('enemySpeed'),
+        Math.sin(angle) * diff('enemySpeed') + bob
       )
       this.setEnemyAnim(enemy, 'move')
       enemy.setFlipX(enemy.body.velocity.x > 0)

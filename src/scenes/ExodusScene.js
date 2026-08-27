@@ -2,6 +2,7 @@ import Phaser from 'phaser'
 import MuseumScene from './MuseumScene.js'
 import PaperTicketKing from '../entities/PaperTicketKing.js'
 import { TUNING } from '../config/tuning.js'
+import { diff } from '../config/difficulty.js'
 import { audio } from '../systems/AudioBus.js'
 import WaveRunner from '../systems/WaveRunner.js'
 import { getWaveSchedule } from '../config/waveRegistry.js'
@@ -490,7 +491,7 @@ export default class ExodusScene extends MuseumScene {
     if (this.anyKeyPressed()) g.until -= TUNING.grabMashRelief
     this.player.body.setVelocity(0, 0)
     if (time >= g.until) {
-      this.graceUntil = time + TUNING.iframesMs // released with grace, as any interrupt
+      this.graceUntil = time + diff('iframesMs') // released with grace, as any interrupt
       this.endGrab()
     }
   }

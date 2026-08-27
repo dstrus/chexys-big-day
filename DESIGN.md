@@ -206,6 +206,35 @@ position is the garage's currency).
 
 ## 2.5 Difficulty & Run Length (RESOLVED)
 
+- **Selectable mode sets the baseline; adaptation still runs on top**
+  (amended 2026-08-26 — the game is likely to be shown at a
+  convention booth, where a first-timer gets one short run and no
+  coaching). Two modes on the shift-select screen, changed with
+  ←/→ and defaulting to the gentler one every fresh session:
+  - **FIRST DAY** (default) — baseline intensity 0.75, paying
+    **0.70×**. Thins wave counts and widens the gaps between them,
+    slows the paper tickets (0.85×), spaces steal initiations
+    (1.4×), and widens post-interrupt recovery (iframes and
+    post-stun grace, 1.5×).
+  - **FULL RUSH** — the balance the game was tuned and signed off
+    at, paying **1.00×**. Baseline 1.0 with every lever at its raw
+    `tuning.js` value; it must stay bit-identical to pre-amendment
+    behaviour.
+
+  The mode moves the **centre** of the adaptive band, it does not
+  replace it: intensity still floats ±`adaptiveBand` around the
+  mode's baseline, and the multiplier floor becomes the mode's
+  share of `multiplierFloor` (FIRST DAY bottoms out at 0.49×).
+  Mode is **session-scoped, never persisted** — a booth machine
+  must come up on FIRST DAY for the next stranger.
+
+  Two things the mode deliberately does NOT touch: the **tag verb**
+  (`targetRadius`, hold durations) and the **rush clock**. Easier
+  play must be the same game running cooler, not a different game
+  with a bigger hitbox, and must not stretch the 15–20 minute
+  full-clear target that makes this booth-viable in the first place.
+  One shared high-score table, since the multiplier already prices
+  the difference.
 - **Adaptive difficulty with a score trade-off.** Each level has a
   baseline intensity (spawn rate, enemy count, heavy-item mix). If
   the player is struggling (lost items / interrupted holds above a
