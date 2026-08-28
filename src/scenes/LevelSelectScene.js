@@ -9,9 +9,11 @@ import { currentMode, cycleMode } from '../config/difficulty.js'
 const ROW_X = 96
 const ROW_Y0 = 76
 const ROW_H = 32
-// below the five shift rows (last sits at ROW_Y0 + 4 * ROW_H = 204),
-// above the key hint
-const MODE_Y = 226
+// TOP of the mode row (origin-y 0, so this is a real scanline), with
+// its divider 8px above. The five shift rows are centred, the last
+// ending at y210, so the rule sits at 216 — any tighter and it reads as
+// a strikethrough under "5 ???" rather than a separator.
+const MODE_Y = 224
 
 // Level select (BRIEF-02 Chunk 6): Title → here → level → results →
 // back here. Locked slots stay visible as "?" so the shape of the whole
@@ -87,30 +89,39 @@ export default class LevelSelectScene extends Phaser.Scene {
     // the up/down cursor and answers to ←/→ at any time, so ENTER always
     // means "start the highlighted shift" and a booth player who never
     // touches the arrows still gets the gentler default.
+    // A hairline between the roster and the control. Without it the mode
+    // row inherits the list's rhythm and left edge and reads as a sixth
+    // shift — orange, in the cursor's colour, directly under "5 ???".
     this.add
-      .text(ROW_X - 18, MODE_Y, 'MODE', {
+      .rectangle(ROW_X - 18, MODE_Y - 8, GAME_WIDTH - 16 - (ROW_X - 18), 1, 0x344054)
+      .setOrigin(0, 0)
+
+    // No "MODE" caption (human, 2026-08-28) — the ◀ ▶ arrows already say
+    // it is a choice, and the third element made the line read as a
+    // heading, a value and a note rather than one row.
+    //
+    // Both halves are ONE size at origin-y 0 on an integer baseline. The
+    // earlier row centred three different sizes on a shared midpoint,
+    // which put its tops on half-pixels (measured 219.6) — at 480x270
+    // with nearest-neighbour that is exactly the kind of misalignment
+    // the eye catches without being able to name.
+    this.modeText = this.add
+      .text(ROW_X, MODE_Y, '', {
+        fontFamily: 'monospace',
+        fontSize: '10px',
+        color: '#fe701e',
+      })
+      .setOrigin(0, 0)
+    this.modeBlurb = this.add
+      .text(GAME_WIDTH - 16, MODE_Y, '', {
         fontFamily: 'monospace',
         fontSize: '10px',
         color: '#667085',
       })
-      .setOrigin(0, 0.5)
-    this.modeText = this.add
-      .text(ROW_X + 34, MODE_Y, '', {
-        fontFamily: 'monospace',
-        fontSize: '11px',
-        color: '#fe701e',
-      })
-      .setOrigin(0, 0.5)
-    this.modeBlurb = this.add
-      .text(GAME_WIDTH - 16, MODE_Y, '', {
-        fontFamily: 'monospace',
-        fontSize: '9px',
-        color: '#667085',
-      })
-      .setOrigin(1, 0.5)
+      .setOrigin(1, 0)
 
     this.add
-      .text(GAME_WIDTH / 2, 246, '↑↓ SHIFT · ←→ MODE · ENTER START · ESC TITLE', {
+      .text(GAME_WIDTH / 2, 252, '↑↓ SHIFT · ←→ MODE · ENTER START · ESC TITLE', {
         fontFamily: 'monospace',
         fontSize: '9px',
         color: '#667085',

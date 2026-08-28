@@ -5398,3 +5398,29 @@ a rush starts. §2.5's legibility requirement is still met there, and the
 overlap was real: measured, the label ran to x210 against a blurb
 starting at x268 only after the suffix came off (58px clear on
 STANDARD, 82px on EXPERT).
+
+2026-08-28 — Shift-select mode row: caption dropped, block re-spaced
+--------------------------------------------------------------------
+Human: the mode line looked awkward, "in part due to vertical
+misalignment", and the MODE caption should go. Both done, plus two
+things the screenshot showed once the caption was gone:
+
+- The misalignment was real and measurable. The row centred three
+  different font sizes (10/11/9px) on one midpoint, which put their
+  tops on half-pixels — measured top 219.6. At 480x270 with
+  nearest-neighbour that is exactly the kind of drift the eye catches
+  without being able to name it. Both halves are now ONE size (10px)
+  at origin-y 0 on an integer scanline (220, then 224).
+- Without the caption the row inherited the roster's left edge and
+  rhythm and read as a SIXTH SHIFT sitting under "5 ???" — in the
+  cursor's own orange, no less. Added a hairline rule above it, and
+  moved the block down (rule 216, row 224, key hint 246 -> 252) after
+  a first attempt put the rule 2px under row 5, where it read as a
+  strikethrough rather than a separator.
+
+Verified by measurement AND by looking at the frame: both label and
+blurb top at exactly 224.0, 78px of clear space between them on
+STANDARD and 102px on EXPERT, no console errors. Recording the "look
+at the render" step because the measurement passed at the point the
+divider still looked like a strikethrough — the numbers said the row
+was fine while the screen said otherwise.
