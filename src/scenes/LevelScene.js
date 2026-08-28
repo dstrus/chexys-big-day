@@ -949,7 +949,7 @@ export default class LevelScene extends Phaser.Scene {
   setIntensity(value) {
     const band = TUNING.adaptiveBand
     // The band rides the MODE's centre, not a fixed 1.0 — otherwise
-    // FIRST DAY's easier baseline would just be adaptation's low edge
+    // STANDARD's easier baseline would just be adaptation's low edge
     // and the player would have no room left to be eased further.
     const base = this.mode.intensityBase
     const payAtBase = this.mode.multiplierBase

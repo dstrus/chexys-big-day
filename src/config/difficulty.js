@@ -8,10 +8,10 @@ import { TUNING } from './tuning.js'
 // it, because the game is likely to be shown at a convention booth where
 // a first-timer gets one short run and no coaching.
 //
-// The mode does not replace adaptation, it MOVES ITS CENTRE. FULL RUSH
+// The mode does not replace adaptation, it MOVES ITS CENTRE. EXPERT
 // is the balance the game was tuned and signed off at (base 1.0, and
 // every factor 1 — it must be bit-identical to pre-mode behaviour).
-// FIRST DAY recentres the same band lower and pays the same way §2.5
+// STANDARD recentres the same band lower and pays the same way §2.5
 // already established: easier play scores less, visibly, on one shared
 // table.
 //
@@ -23,7 +23,7 @@ import { TUNING } from './tuning.js'
 export const MODES = [
   {
     id: 'firstDay',
-    label: 'FIRST DAY',
+    label: 'STANDARD',
     blurb: 'Fewer tickets. More room to recover.',
     // wave counts scale by this and intervals divide by it (WaveRunner),
     // so 0.75 is both thinner waves and longer gaps between them
@@ -38,7 +38,7 @@ export const MODES = [
   },
   {
     id: 'fullRush',
-    label: 'FULL RUSH',
+    label: 'EXPERT',
     blurb: 'The balance the game was tuned at.',
     intensityBase: 1,
     multiplierBase: 1,
@@ -47,7 +47,7 @@ export const MODES = [
 ]
 
 // SESSION-SCOPED on purpose: not in progress.js, not in localStorage.
-// A booth machine must come up on FIRST DAY for the next stranger even
+// A booth machine must come up on STANDARD for the next stranger even
 // if the last player switched — persistence would leave full heat armed
 // for someone who never chose it.
 let index = 0

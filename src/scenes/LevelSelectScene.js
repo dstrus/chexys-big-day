@@ -128,9 +128,10 @@ export default class LevelSelectScene extends Phaser.Scene {
       row.setColor(i === this.idx ? '#f2ecd8' : this.unlockedNow[i] ? '#98a2b3' : '#475467')
     )
     const mode = currentMode()
-    // the score consequence is part of the label, not fine print — §2.5
-    // requires the trade to be legible wherever it is chosen
-    this.modeText.setText(`◀ ${mode.label} ▶   ${mode.multiplierBase.toFixed(2)}× SCORE`)
+    // No score multiplier here (human, 2026-08-28): it collided with the
+    // blurb at 480px wide. The HUD already carries the live multiplier
+    // once a rush starts, which is where §2.5 wants the trade legible.
+    this.modeText.setText(`◀ ${mode.label} ▶`)
     this.modeBlurb.setText(mode.blurb)
   }
 

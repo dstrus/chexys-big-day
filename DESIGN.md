@@ -211,12 +211,12 @@ position is the garage's currency).
   convention booth, where a first-timer gets one short run and no
   coaching). Two modes on the shift-select screen, changed with
   ←/→ and defaulting to the gentler one every fresh session:
-  - **FIRST DAY** (default) — baseline intensity 0.75, paying
+  - **STANDARD** (default) — baseline intensity 0.75, paying
     **0.70×**. Thins wave counts and widens the gaps between them,
     slows the paper tickets (0.85×), spaces steal initiations
     (1.4×), and widens post-interrupt recovery (iframes and
     post-stun grace, 1.5×).
-  - **FULL RUSH** — the balance the game was tuned and signed off
+  - **EXPERT** — the balance the game was tuned and signed off
     at, paying **1.00×**. Baseline 1.0 with every lever at its raw
     `tuning.js` value; it must stay bit-identical to pre-amendment
     behaviour.
@@ -224,9 +224,14 @@ position is the garage's currency).
   The mode moves the **centre** of the adaptive band, it does not
   replace it: intensity still floats ±`adaptiveBand` around the
   mode's baseline, and the multiplier floor becomes the mode's
-  share of `multiplierFloor` (FIRST DAY bottoms out at 0.49×).
+  share of `multiplierFloor` (STANDARD bottoms out at 0.49×).
   Mode is **session-scoped, never persisted** — a booth machine
-  must come up on FIRST DAY for the next stranger.
+  must come up on STANDARD for the next stranger.
+
+  The multiplier is **not printed on the mode row** — it collided
+  with the blurb at 480px wide (2026-08-28). The HUD carries the
+  live multiplier once a rush starts, which is where the trade
+  actually needs to read.
 
   Two things the mode deliberately does NOT touch: the **tag verb**
   (`targetRadius`, hold durations) and the **rush clock**. Easier

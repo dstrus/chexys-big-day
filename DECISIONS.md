@@ -5382,3 +5382,19 @@ hangers from a FIRST DAY clear record on the same MAX-across-runs
 counter as FULL RUSH ones, so a booth player can max a level's hangers
 on the gentler setting. Both follow from the one-table ruling; raise
 them if either bites in play.
+
+2026-08-28 — Mode row: labels renamed, multiplier dropped from the screen
+------------------------------------------------------------------------
+Human renamed the modes in difficulty.js: FIRST DAY -> STANDARD and
+FULL RUSH -> EXPERT. The ids (firstDay / fullRush) are unchanged, so
+nothing keyed on them moved; DESIGN §2.5 and the code comments are
+synced to the new labels.
+
+Human also reported the score multiplier overlapping the mode
+description on shift select, and ruled it OFF the screen. Removed.
+Note this partly walks back the 2026-08-26 ruling that put the trade
+"where it is chosen" — the multiplier now first appears on the HUD once
+a rush starts. §2.5's legibility requirement is still met there, and the
+overlap was real: measured, the label ran to x210 against a blurb
+starting at x268 only after the suffix came off (58px clear on
+STANDARD, 82px on EXPERT).
