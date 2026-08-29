@@ -68,6 +68,17 @@ select, and no mode in which one of them stops working (added
 | Dash (unlocks at Bell Desk start) | X or K | E | LB or RB |
 | Pause | Esc / P | Esc / P | Start |
 | Confirm / Back (menus) | Enter / Esc | Enter / Esc | A / B |
+| Next shift (after a clear) | C or Enter | C or Enter | A |
+| Retry (after a clear) | R | R | Y |
+| Shift Select (after a clear) | Esc | Esc | B |
+
+**After a clear, CONTINUE means the NEXT shift** (ruled
+2026-08-29), on the keyboard as well as the pad — a player who
+just beat a level wants the one after it, not a replay and not
+the board. Retry keeps a key and a button of its own so it stays
+one press away. Where there is no next shift — the finale, a run
+that failed, or a "clear" that recorded nothing (godMode) — the
+first action falls back to RETRY and the prompt says so.
 
 **Controller support** (added 2026-08-28; this was on CLAUDE.md's
 hard-NO list and the human struck it, ranking it above finishing

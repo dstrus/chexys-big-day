@@ -5606,3 +5606,45 @@ every screen; it is deliberately not part of the centred block.
 
 Verified by measurement and by looking at the render, and the mode row
 still clears its blurb in both modes.
+
+2026-08-29 — Results screen: CONTINUE means the next shift
+------------------------------------------------------------
+Human ruling: after a successful clear, A goes straight to the next
+level rather than retrying the one just beaten; B stays Shift Select;
+Y becomes retry. Explicitly extended to the keyboard — "even with
+keyboard controls, it feels like CONTINUE should go to the next level,
+not back to Shift Select."
+
+  cleared, next shift exists:  C/Enter or (A) NEXT · R or (Y) RETRY · Esc or (B) SHIFTS
+  otherwise:                   R/Enter or (A) RETRY · C/Esc or (B) SHIFTS
+
+The old screen was "R RETRY · C CONTINUE" where CONTINUE meant the
+board — which is what the ruling corrects.
+
+Three things the change had to get right:
+- recordRun BEFORE resolving the next level. Clearing a level is what
+  unlocks its successor (requiresClear), so the order decides whether
+  NEXT SHIFT can be offered at all.
+- The offer is gated on isLevelUnlocked, not merely on a successor
+  existing in the roster. A godMode run records nothing, so the next
+  level can still be locked after a "clear"; the results screen must
+  not open a door Shift Select would refuse.
+- No next shift is a real state with three causes — the finale, a
+  failed run, and the godMode case above. All fall back to RETRY as
+  the first action, and the prompt relabels rather than offering a
+  dead option.
+
+The prompt names the device in the player's hands and relabels live if
+a controller is plugged in while the screen is up. Y was free on the
+pad, so retry cost nothing to bind.
+
+Verified 13/13, no console errors: both devices, both outcomes, the
+next-shift hop landing on belldesk rather than a coatroom replay, and
+the mid-screen relabel.
+
+Note for whoever reads the diff: an earlier pass inserted the prompt
+setup into onRunReset as well as onRunOver, because the anchor text
+appeared in both and Python's str.replace takes every occurrence. It
+threw on an undefined `cleared` the first time the results screen was
+dismissed. Caught by the harness, but a plain reminder that scripted
+edits need anchors that are actually unique.

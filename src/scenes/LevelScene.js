@@ -5,6 +5,7 @@ import { luggageArtFor, BAG_BODY_INSET } from '../config/itemArt.js'
 import { briefingFor } from '../config/briefings.js'
 import { COLLECTIBLES } from '../config/collectibles.js'
 import { getWaveSchedule } from '../config/waveRegistry.js'
+import { LEVELS, isLevelUnlocked } from '../config/levels.js'
 import { currentMode, diff, scaled } from '../config/difficulty.js'
 import { padJustDown } from '../systems/gamepad.js'
 import Player from '../entities/Player.js'
@@ -235,6 +236,7 @@ export default class LevelScene extends Phaser.Scene {
 
     this.keyR = this.input.keyboard.addKey('R')
     this.keyC = this.input.keyboard.addKey('C')
+    this.keyEnter = this.input.keyboard.addKey('ENTER')
     this.pauseKeys = this.input.keyboard.addKeys('ESC,P')
 
     // jitter instrumentation (bug investigation 2026-08-01): the panel
@@ -1031,10 +1033,15 @@ export default class LevelScene extends Phaser.Scene {
     const contested = this.itemsReturned + this.lostItems
     const returnRate = contested === 0 ? 100 : Math.round((this.itemsReturned / contested) * 100)
     const levelId = this.levelProps.levelId ?? this.mapKey
+    // recordRun BEFORE resolving the next level: clearing this one is
+    // what unlocks it (requiresClear), so the order decides whether the
+    // results screen can offer NEXT SHIFT at all
     if (cleared) recordRun(levelId, { finalScore: this.score + bonus, hangers })
+    this.clearedRun = cleared
 
     this.game.events.emit('run-over', {
       cleared,
+      nextName: this.nextLevel()?.name ?? null,
       score: this.score,
       bonus,
       itemsReturned: this.itemsReturned,
@@ -1049,6 +1056,21 @@ export default class LevelScene extends Phaser.Scene {
       // ITEM RETURN RATE (BOSS-SPEC's ending)
       finale: this.finaleWin === true,
     })
+  }
+
+  // The shift after this one, or null. Only ever offered on a CLEARED
+  // run, and only when it is genuinely unlocked — a godMode run records
+  // nothing, so the next level can still be locked after a "clear", and
+  // the results screen must not offer a door that Shift Select would
+  // refuse to open.
+  nextLevel() {
+    if (!this.clearedRun) return null
+    const levelId = this.levelProps.levelId ?? this.mapKey
+    const i = LEVELS.findIndex((l) => l.id === levelId)
+    if (i < 0) return null
+    const next = LEVELS[i + 1]
+    if (!next || !isLevelUnlocked(next)) return null
+    return next
   }
 
   // ---- collectibles (BRIEF-04): registry-driven, shared plumbing ----
@@ -1252,7 +1274,19 @@ export default class LevelScene extends Phaser.Scene {
   teardownRun(destination) {
     audio.play('uiSelect')
     this.game.events.emit('run-reset')
-    if (destination === 'retry') {
+    if (destination === 'next') {
+      // straight into the next shift, keeping UIOverlay up — the level
+      // scene swaps underneath it exactly as it does from Shift Select
+      const next = this.nextLevel()
+      if (next) {
+        this.scene.start(next.sceneKey ?? 'Level', { mapKey: next.mapKey })
+        return
+      }
+      // no next shift: fall through to the board rather than dead-end
+      audio.stopMusic()
+      this.scene.stop('UIOverlay')
+      this.scene.start('LevelSelect')
+    } else if (destination === 'retry') {
       this.scene.restart({ mapKey: this.mapKey })
     } else {
       // exit: back to the shift board, music to menu state
@@ -1833,11 +1867,22 @@ export default class LevelScene extends Phaser.Scene {
 
   update(time, delta) {
     if (this.runOver) {
-      // results screen: A retries, B exits to the roster — the same
-      // confirm/back pair the menus use, so the pad never needs the
-      // keyboard's R/C mnemonics
-      if (Phaser.Input.Keyboard.JustDown(this.keyR) || padJustDown('confirm')) this.teardownRun('retry')
-      else if (Phaser.Input.Keyboard.JustDown(this.keyC) || padJustDown('back')) this.teardownRun('exit')
+      // Results screen (human ruling 2026-08-29). After a CLEAR that has
+      // a next shift, CONTINUE means the next shift — not the board, and
+      // not a replay of the level just beaten. Retry moves to its own
+      // key/button so it stays one press away.
+      //   cleared + next:  C/Enter or A = NEXT · R or Y = RETRY · Esc or B = SHIFTS
+      //   otherwise:       R/Enter or A = RETRY · C/Esc or B = SHIFTS
+      const JD = Phaser.Input.Keyboard.JustDown
+      const esc = JD(this.pauseKeys.ESC)
+      if (this.nextLevel()) {
+        if (JD(this.keyC) || JD(this.keyEnter) || padJustDown('confirm')) this.teardownRun('next')
+        else if (JD(this.keyR) || padJustDown('retry')) this.teardownRun('retry')
+        else if (esc || padJustDown('back')) this.teardownRun('exit')
+      } else {
+        if (JD(this.keyR) || JD(this.keyEnter) || padJustDown('confirm')) this.teardownRun('retry')
+        else if (JD(this.keyC) || esc || padJustDown('back')) this.teardownRun('exit')
+      }
       return
     }
 

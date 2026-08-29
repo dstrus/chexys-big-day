@@ -11,7 +11,7 @@ import {
 } from '../config/guestLines.js'
 
 import { audio } from '../systems/AudioBus.js'
-import { padJustDown } from '../systems/gamepad.js'
+import { padConnected, padJustDown } from '../systems/gamepad.js'
 import { createHanger } from '../ui/hanger.js'
 import { briefingFor } from '../config/briefings.js'
 
@@ -546,6 +546,7 @@ export default class UIOverlayScene extends Phaser.Scene {
 
   update(time) {
     if (this.freezeKey && Phaser.Input.Keyboard.JustDown(this.freezeKey)) this.toggleFreeze()
+    if (this.resultsPrompt?.visible) this.refreshResultsPrompt()
     if (this.frozen) return // a frozen frame stays exactly as captured
     this.updateBubbleYield()
     this.updateInsightChip()
@@ -601,6 +602,23 @@ export default class UIOverlayScene extends Phaser.Scene {
     }
   }
 
+  // The prompt names the DEVICE in the player's hands and the OUTCOME.
+  // After a clear with a shift still to come, the first action is that
+  // shift; retry keeps its own key so a replay is still one press.
+  refreshResultsPrompt() {
+    const pad = padConnected()
+    if (pad === this.promptPad) return
+    this.promptPad = pad
+    const next = this.resultsNextName
+    if (next) {
+      this.resultsPrompt.setText(
+        pad ? '(A) NEXT SHIFT · (Y) RETRY · (B) SHIFTS' : 'C NEXT SHIFT · R RETRY · ESC SHIFTS'
+      )
+    } else {
+      this.resultsPrompt.setText(pad ? '(A) RETRY · (B) SHIFTS' : 'R RETRY · C SHIFTS')
+    }
+  }
+
   buildResultsPanel() {
     this.resultsTitle = this.add
       .text(GAME_WIDTH / 2, 84, '', { ...TEXT_STYLE, fontSize: '16px', fontStyle: 'bold' })
@@ -609,7 +627,7 @@ export default class UIOverlayScene extends Phaser.Scene {
       .text(GAME_WIDTH / 2, 130, '', { ...TEXT_STYLE, align: 'center', lineSpacing: 6 })
       .setOrigin(0.5)
     this.resultsPrompt = this.add
-      .text(GAME_WIDTH / 2, 185, 'R RETRY · C CONTINUE', { ...TEXT_STYLE, color: '#ffffff' })
+      .text(GAME_WIDTH / 2, 185, '', { ...TEXT_STYLE, color: '#ffffff' })
       .setOrigin(0.5)
     // Golden Hanger row: the screen's visual second beat (handoff -i)
     this.resultHangers = [0, 1, 2].map(() => createHanger(this, 0, 0, 2))
@@ -714,6 +732,7 @@ export default class UIOverlayScene extends Phaser.Scene {
 
   onRunOver({
     cleared,
+    nextName = null,
     score,
     bonus,
     itemsReturned,
@@ -726,6 +745,12 @@ export default class UIOverlayScene extends Phaser.Scene {
     returnRate,
     finale = false,
   }) {
+    // remembered so the prompt can be relabelled if a controller is
+    // plugged in or unplugged while the results screen is up
+    this.resultsNextName = cleared ? nextName : null
+    this.promptPad = null
+    this.refreshResultsPrompt()
+
     this.hangerTimers.forEach((t) => t.remove())
     this.hangerTimers = []
     this.resultHangers.forEach((h) => h.setVisible(false)) // fail layout shows none
