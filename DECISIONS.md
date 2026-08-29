@@ -5569,3 +5569,13 @@ body.acceleration.x — the direct consequence of the binding, and
 independent of collision. The signal that it was the probe both times:
 padDown('right') read true and acceleration read 1600 while velocity
 sat at 0. Assert the thing the code under test actually controls.
+
+2026-08-29 — LB dashes as well as RB
+--------------------------------------
+Human: dash on LB in addition to RB. Both shoulders now feed the same
+'dash' action — which hand throws it is the player's business, and a
+second source costs nothing because the action is read as one edge
+downstream. Holding both is a no-op beyond the single dash (verified),
+since the dash reads one consumed edge and is cooldown-gated anyway.
+
+DESIGN §2.2's controller column now reads "LB or RB". Verified 28/28.

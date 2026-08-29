@@ -65,7 +65,7 @@ select, and no mode in which one of them stops working (added
 | Move | ← / → | A / D | Left stick or d-pad |
 | Jump | ↑ or Space | W | A |
 | Tag (primary action) | Z or J | F | X |
-| Dash (unlocks at Bell Desk start) | X or K | E | RB |
+| Dash (unlocks at Bell Desk start) | X or K | E | LB or RB |
 | Pause | Esc / P | Esc / P | Start |
 | Confirm / Back (menus) | Enter / Esc | Enter / Esc | A / B |
 
@@ -76,7 +76,7 @@ dependency. It drives the menus as well as play (title, shift
 select, briefings, pause, results), so a booth player never has
 to reach for the keyboard between runs. Dash sits on the shoulder
 so the stick hand never leaves the stick and a dash can be thrown
-mid-tag. Stick deadzone 0.35; stick and d-pad are interchangeable
+mid-tag; EITHER shoulder dashes (added 2026-08-29). Stick deadzone 0.35; stick and d-pad are interchangeable
 everywhere.
 
 CAVEAT, unsolvable in code: a gamepad press is not a browser

@@ -10,7 +10,7 @@
 // can be awake at once (a level under its pause overlay), and without
 // it one button press would be handled twice.
 //
-// Mapping (human ruling): A jump, X tag, RB dash, START pause, B back.
+// Mapping (human ruling): A jump, X tag, LB/RB dash, START pause, B back.
 // Dash sits on the shoulder so the stick hand never leaves the stick
 // and a dash can be thrown mid-tag.
 const DEADZONE = 0.35
@@ -22,7 +22,7 @@ const DEADZONE = 0.35
 // enumerated with a different button count when Phaser first saw it has
 // its d-pad wired to a dummy forever. Reading raw each frame cannot go
 // stale that way. (Human report 2026-08-29: stick worked, d-pad did not.)
-const BTN = { A: 0, B: 1, X: 2, RB: 5, SELECT: 8, START: 9, UP: 12, DOWN: 13, LEFT: 14, RIGHT: 15 }
+const BTN = { A: 0, B: 1, X: 2, LB: 4, RB: 5, SELECT: 8, START: 9, UP: 12, DOWN: 13, LEFT: 14, RIGHT: 15 }
 
 const state = { down: new Set(), prev: new Set(), edges: new Set(), upEdges: new Set(), pads: 0 }
 
@@ -57,7 +57,9 @@ function readPad(pad, down) {
   hatDirections(axes, down)
   if (pressed(pad, BTN.A)) down.add('jump')
   if (pressed(pad, BTN.X)) down.add('tag')
-  if (pressed(pad, BTN.RB)) down.add('dash')
+  // dash on EITHER shoulder (human, 2026-08-29) — which hand throws it
+  // is the player's business, and it costs nothing to accept both
+  if (pressed(pad, BTN.RB) || pressed(pad, BTN.LB)) down.add('dash')
   if (pressed(pad, BTN.B)) down.add('back')
   if (pressed(pad, BTN.START)) down.add('pause')
   if (pressed(pad, BTN.SELECT)) down.add('back')
