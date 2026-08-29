@@ -56,13 +56,21 @@ violence against people — the only thing you ever destroy is paper.
 
 ### 2.2 Controls (v1)
 
-| Input | Action |
-|-------|--------|
-| ← / → | Move |
-| ↑ or Space | Jump |
-| Z or J | Tag (primary action) |
-| X or K | Dash (unlocks at Bell Desk start; double-tap direction or X/K) |
-| Esc / P | Pause |
+Two schemes, both live at ALL times — there is no scheme to
+select, and no mode in which one of them stops working (added
+2026-08-28).
+
+| Action | Default | Expert (left hand) |
+|--------|---------|--------------------|
+| Move | ← / → | A / D |
+| Jump | ↑ or Space | W |
+| Tag (primary action) | Z or J | F |
+| Dash (unlocks at Bell Desk start) | X or K | E |
+| Pause | Esc / P | Esc / P |
+
+Double-tapping a direction also dashes, on either scheme's keys,
+and the two feed one detector: ← then A is still a double-tap
+left.
 
 ### 2.3 Tagging model (RESOLVED — hybrid)
 

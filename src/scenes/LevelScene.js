@@ -237,9 +237,12 @@ export default class LevelScene extends Phaser.Scene {
     this.pauseKeys = this.input.keyboard.addKeys('ESC,P')
 
     // jitter instrumentation (bug investigation 2026-08-01): the panel
-    // shows live render-fps vs physics-step rate; F logs 60 consecutive
-    // frames of per-render-frame movement deltas to the console
-    this.keyF = this.input.keyboard.addKey('F')
+    // shows live render-fps vs physics-step rate; this logs 60
+    // consecutive frames of per-render-frame movement deltas.
+    // Moved F -> G and DEV-gated (2026-08-28): F is now a TAG key in the
+    // expert scheme, so in a shipped build every tag would have fired a
+    // console capture. A player-facing binding outranks a dev probe.
+    this.keyJitter = import.meta.env.DEV ? this.input.keyboard.addKey('G') : null
     this.stepCount = 0
     this.stepRate = 0
     this.physics.world.on(Phaser.Physics.Arcade.Events.WORLD_STEP, () => this.stepCount++)
@@ -1950,7 +1953,7 @@ export default class LevelScene extends Phaser.Scene {
     this.prevCamX = cx
     this.prevCamY = cy
 
-    if (Phaser.Input.Keyboard.JustDown(this.keyF) && !this.jitterCapture) {
+    if (this.keyJitter && Phaser.Input.Keyboard.JustDown(this.keyJitter) && !this.jitterCapture) {
       this.jitterCapture = []
       console.log('[jitter-probe] capturing 60 frames — keep moving...')
     }

@@ -46,7 +46,18 @@ export default class Player {
 
     const kb = scene.input.keyboard
     this.cursors = kb.createCursorKeys()
-    this.keys = kb.addKeys('SPACE,Z,J,X,K')
+    this.keys = kb.addKeys('SPACE,Z,J,X,K,W,A,D,F,E')
+    // Every action is a LIST of keys, all live at once (human 2026-08-28):
+    // the arrow/Z/X scheme plus a left-hand "expert" scheme in the WASD
+    // family. Nothing is modal — there is no scheme to select, so a booth
+    // player and a keyboard player can trade the stick mid-queue.
+    this.bind = {
+      left: [this.cursors.left, this.keys.A],
+      right: [this.cursors.right, this.keys.D],
+      jump: [this.cursors.up, this.keys.SPACE, this.keys.W],
+      tag: [this.keys.Z, this.keys.J, this.keys.F],
+      dash: [this.keys.X, this.keys.K, this.keys.E],
+    }
 
     this.lastGroundedAt = -Infinity
     this.jumpPressedAt = -Infinity
@@ -74,6 +85,24 @@ export default class Player {
 
   get body() {
     return this.sprite.body
+  }
+
+  // Multi-key readers. JustDown/JustUp CONSUME the key's edge flag, so
+  // these must evaluate every key in the list — a short-circuiting
+  // .some() would leave a later key's press unread this frame and fire
+  // it on the next one, which reads as a phantom double input. map()
+  // first, reduce after. Each physical key belongs to exactly one
+  // action, so no key is ever sampled twice in a frame.
+  static anyDown(list) {
+    return list.some((k) => k.isDown) // isDown is stateless — safe to short-circuit
+  }
+
+  static anyJustDown(list) {
+    return list.map((k) => Phaser.Input.Keyboard.JustDown(k)).includes(true)
+  }
+
+  static anyJustUp(list) {
+    return list.map((k) => Phaser.Input.Keyboard.JustUp(k)).includes(true)
   }
 
   // Gameplay position = physics body center, NOT the sprite center.
@@ -106,8 +135,6 @@ export default class Player {
 
   update(time, delta) {
     const { body } = this
-    const JustDown = Phaser.Input.Keyboard.JustDown
-    const JustUp = Phaser.Input.Keyboard.JustUp
 
     // live-sync sprite size with the tuning slider (arcade body follows
     // scale) — rect only; art modes' canvas/body split is fixed
@@ -124,8 +151,8 @@ export default class Player {
       this.airDashUsed = false // the air dash refreshes on landing, not on cooldown (-g)
     }
 
-    const left = this.cursors.left.isDown
-    const right = this.cursors.right.isDown
+    const left = Player.anyDown(this.bind.left)
+    const right = Player.anyDown(this.bind.right)
     if (left !== right) this.facing = left ? -1 : 1
     // Facing convention (DESIGN.md §5, locked): character sprites are
     // LEFT-FACING native; flipX for rightward movement. Mirror-flip is
@@ -150,7 +177,7 @@ export default class Player {
     }
 
     // jump: buffered press meeting a coyote-time ground window
-    if (JustDown(this.cursors.up) || JustDown(this.keys.SPACE)) {
+    if (Player.anyJustDown(this.bind.jump)) {
       this.jumpPressedAt = time
     }
     const buffered = time - this.jumpPressedAt <= TUNING.bufferMs
@@ -164,8 +191,8 @@ export default class Player {
     }
 
     // variable jump height: releasing while rising cuts the jump short
-    const jumpReleased = JustUp(this.cursors.up) || JustUp(this.keys.SPACE)
-    const jumpStillHeld = this.cursors.up.isDown || this.keys.SPACE.isDown
+    const jumpReleased = Player.anyJustUp(this.bind.jump)
+    const jumpStillHeld = Player.anyDown(this.bind.jump)
     if (jumpReleased && !jumpStillHeld && body.velocity.y < 0) {
       body.setVelocityY(body.velocity.y * TUNING.jumpCutMultiplier)
     }
@@ -174,12 +201,14 @@ export default class Player {
     // Desk unlock beat (persists via progress) or the debug panel flag.
     // Locked out during a hold unless dashCancelsHold trials the opposite.
     let dashDir = 0
-    if (JustDown(this.keys.X) || JustDown(this.keys.K)) dashDir = this.facing
-    for (const [key, name, dir] of [
-      [this.cursors.left, 'left', -1],
-      [this.cursors.right, 'right', 1],
+    if (Player.anyJustDown(this.bind.dash)) dashDir = this.facing
+    // double-tap works on EITHER key for a direction, and both feed the
+    // same slot — tapping ← then A is still a double-tap left
+    for (const [keys, name, dir] of [
+      [this.bind.left, 'left', -1],
+      [this.bind.right, 'right', 1],
     ]) {
-      if (JustDown(key)) {
+      if (Player.anyJustDown(keys)) {
         if (time - this.lastTapAt[name] <= TUNING.dashDoubleTapMs) dashDir = dir
         this.lastTapAt[name] = time
       }
@@ -232,8 +261,8 @@ export default class Player {
     }
     this.wasDashing = dashingNow
 
-    this.tagPressed = JustDown(this.keys.Z) || JustDown(this.keys.J)
-    this.tagHeld = this.keys.Z.isDown || this.keys.J.isDown
+    this.tagPressed = Player.anyJustDown(this.bind.tag)
+    this.tagHeld = Player.anyDown(this.bind.tag)
 
     if (this.mode === 'atlas') this.updateAnimState()
     this.traction = 1 // consumed: surfaces re-assert every frame

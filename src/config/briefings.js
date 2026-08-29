@@ -10,9 +10,11 @@
 // display time and skipped when absent, so a briefing never blocks on
 // art that has not landed (the same drop-in contract as everything else).
 //
-// Keys, for reference when writing copy: arrows or A/D run, Up or Space
-// jumps, Z or J tags, X or K dashes (double-tapping a direction dashes
-// too). Esc or P pauses.
+// Keys, for reference when writing copy (DESIGN §2.2 — two schemes,
+// both always live): arrows or A/D run, Up/Space or W jumps, Z/J or F
+// tags, X/K or E dashes (double-tapping a direction dashes too). Esc
+// or P pauses. Briefing copy names the DEFAULT scheme only — a rule is
+// easier to read as "TAP Z" than as an exhaustive binding list.
 
 export const BRIEFINGS = {
   // Level 1 has no NEW mechanic — it is the tutorial, so its briefing is

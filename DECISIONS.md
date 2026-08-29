@@ -5424,3 +5424,45 @@ STANDARD and 102px on EXPERT, no console errors. Recording the "look
 at the render" step because the measurement passed at the point the
 divider still looked like a strikethrough — the numbers said the row
 was fine while the screen said otherwise.
+
+2026-08-28 — Expert control scheme (A/D/W/F/E), always live
+-----------------------------------------------------------
+Human request: a left-hand scheme inspired by WASD, available at all
+times as an alternative to the existing controls. a=left, d=right,
+w=jump, f=tag, e=dash. Nothing is modal — there is no scheme to
+select and no state in which one of them stops working, so a player
+can switch hands mid-queue. DESIGN §2.2's table is now two columns.
+
+Implementation: every action is a LIST of keys behind Player.anyDown /
+anyJustDown / anyJustUp, rather than growing the || chains. The one
+trap worth recording: JustDown/JustUp CONSUME a key's edge flag, so
+anyJustDown must map() over the whole list before reducing — a
+short-circuiting .some() would leave a later key's press unread that
+frame and fire it on the next one, i.e. a phantom double input. The
+double-tap dash detector is shared across both schemes: <- then A is
+still a double-tap left.
+
+CONFLICT RESOLVED: F was already bound, to the jitter probe from the
+2026-08-01 bug investigation (logs 60 frames of movement deltas). It
+was not DEV-gated, so in a shipped build every tag press would have
+fired a console capture. Moved to G and DEV-gated to match the other
+dev keys (I briefing, H freeze, B boss skip). A player-facing binding
+outranks a dev probe.
+
+Briefing copy still names the DEFAULT scheme only ("TAP Z"), because a
+rule reads better than an exhaustive binding list. That leaves the
+expert scheme discoverable only via DESIGN — flagged for the human,
+not decided here.
+
+HARNESS NOTE, worth more than the feature. The first run failed 3 of
+15, including X and arrow-up, which this change does not touch. That
+mismatch was the signal: the page's own requestAnimationFrame loop was
+still running, so a real frame landed between dispatchKeyEvent and my
+step() and consumed the press edge. My second "fix" (sleeping 30ms
+after dispatch) widened the window and took it to 6 of 15. The actual
+fix is window.__game.loop.stop() so that step() is the ONLY thing
+advancing the game, plus a monotonic virtual clock (stepping from
+performance.now() each call rewinds game time and breaks the 250ms
+double-tap window) and stepping until grounded before a jump case
+rather than a fixed 4 frames. 17/17 after that, no console errors.
+Any future input harness in this repo should stop the loop FIRST.
