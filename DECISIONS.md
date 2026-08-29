@@ -5525,3 +5525,47 @@ performance.now()), so a fake pad counting 1, 2, 3 is ignored forever
 and every button reads false; the fake's timestamps have to sit
 permanently ahead. And a scene must finish create() BEFORE the rAF loop
 is stopped, or it is stranded half-built and every read throws.
+
+2026-08-29 — D-pad: stop reading through Phaser's named getters
+----------------------------------------------------------------
+Human report: on real hardware the left stick moved Chexy but the d-pad
+did nothing — while the 2026-08-28 harness passed a d-pad case against
+a stubbed pad. Both were true, which located the bug.
+
+Phaser's Gamepad binds its named getters to button OBJECTS at
+CONSTRUCTION: this._LCLeft = buttons[14] ? buttons[14] : _noButton. A
+pad that enumerates with a different button count (or a different
+layout) when Phaser first sees it therefore has its d-pad wired to a
+permanent dummy, and no later refresh repairs it. The stub always
+enumerated fully, so the harness never saw it.
+
+systems/gamepad.js now reads the RAW navigator.getGamepads() snapshot by
+index every frame instead — which is what Phaser polls anyway — so
+there is no construction-time binding left to go stale. Phaser's plugin
+stays enabled (it owns connect/disconnect events) but nothing reads
+through it, which also removed the scene-plugin lookup.
+
+Added HAT support while here: non-standard pads commonly report the
+d-pad as a direction packed into axis 9 (-1 up, -0.428 right, 0.142
+down, 0.714 left, ~1.286 at rest) rather than as buttons 12-15. Decoded
+only when that axis exists AND is in range, so a pad without a hat can
+never see a phantom direction.
+
+Added window.__dev.pad() — id, mapping, pressed button indices and all
+axes for every connected pad. If a controller still misbehaves, that
+says what it actually reports instead of inviting another guess.
+
+Verified 26/26, including a pad that enumerates SHORT (zero buttons on
+the frame Phaser first wraps it) and a hat-only pad.
+
+HARNESS NOTE: three failures in this round were all the probe, not the
+code, and each cost a cycle. Chexy had been walked into the level's
+left world bound, where a LEFT press correctly yields vx 0; teleporting
+her out dropped her through a gap and the level respawned her right
+back there; and by the end she was wedged with blocked.left AND
+blocked.right, so velocity could not move at all. The fix was to stop
+asserting on VELOCITY, which needs free space, and assert on
+body.acceleration.x — the direct consequence of the binding, and
+independent of collision. The signal that it was the probe both times:
+padDown('right') read true and acceleration read 1600 while velocity
+sat at 0. Assert the thing the code under test actually controls.

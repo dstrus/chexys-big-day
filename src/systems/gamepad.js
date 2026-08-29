@@ -15,46 +15,71 @@
 // and a dash can be thrown mid-tag.
 const DEADZONE = 0.35
 
-// Standard-mapping button indices, used where Phaser exposes no named
-// property. 9 = Start, 8 = Select/Back.
-const BTN_START = 9
-const BTN_SELECT = 8
+// Standard-mapping indices. We read the RAW navigator.getGamepads()
+// snapshot by index rather than Phaser's named getters (pad.A, pad.left)
+// — those bind to button OBJECTS at Gamepad construction
+// (this._LCLeft = buttons[14] ? buttons[14] : _noButton), so a pad that
+// enumerated with a different button count when Phaser first saw it has
+// its d-pad wired to a dummy forever. Reading raw each frame cannot go
+// stale that way. (Human report 2026-08-29: stick worked, d-pad did not.)
+const BTN = { A: 0, B: 1, X: 2, RB: 5, SELECT: 8, START: 9, UP: 12, DOWN: 13, LEFT: 14, RIGHT: 15 }
 
 const state = { down: new Set(), prev: new Set(), edges: new Set(), upEdges: new Set(), pads: 0 }
 
+// Non-standard pads often expose the d-pad as a HAT: one axis holding a
+// direction in eighths, -1 = up and going clockwise, with a rest value
+// outside [-1,1] (7/7 = 1.2857 on many, or exactly 9 on others). Decoded
+// only when the axis is present AND in range, so a pad without a hat
+// never sees a phantom direction.
+function hatDirections(axes, down) {
+  const v = axes.length > 9 ? axes[9] : null
+  if (v === null || v < -1.01 || v > 1.01) return
+  // eighths around the circle from up
+  const oct = Math.round(((v + 1) * 7) / 2)
+  if ([7, 0, 1].includes(oct)) down.add('up')
+  if ([1, 2, 3].includes(oct)) down.add('right')
+  if ([3, 4, 5].includes(oct)) down.add('down')
+  if ([5, 6, 7].includes(oct)) down.add('left')
+}
+
+const pressed = (pad, i) => !!pad.buttons?.[i]?.pressed
+
 function readPad(pad, down) {
+  const axes = pad.axes ?? []
   // stick and d-pad both drive the same directions — a booth player
   // will reach for whichever their hands know
-  const sx = pad.leftStick ? pad.leftStick.x : 0
-  const sy = pad.leftStick ? pad.leftStick.y : 0
-  if (pad.left || sx < -DEADZONE) down.add('left')
-  if (pad.right || sx > DEADZONE) down.add('right')
-  if (pad.up || sy < -DEADZONE) down.add('up')
-  if (pad.down || sy > DEADZONE) down.add('down')
-  if (pad.A) down.add('jump')
-  if (pad.X) down.add('tag')
-  if (pad.R1) down.add('dash')
-  if (pad.B) down.add('back')
-  if (pad.buttons?.[BTN_START]?.pressed) down.add('pause')
-  if (pad.buttons?.[BTN_SELECT]?.pressed) down.add('back')
+  const sx = axes[0] ?? 0
+  const sy = axes[1] ?? 0
+  if (pressed(pad, BTN.LEFT) || sx < -DEADZONE) down.add('left')
+  if (pressed(pad, BTN.RIGHT) || sx > DEADZONE) down.add('right')
+  if (pressed(pad, BTN.UP) || sy < -DEADZONE) down.add('up')
+  if (pressed(pad, BTN.DOWN) || sy > DEADZONE) down.add('down')
+  hatDirections(axes, down)
+  if (pressed(pad, BTN.A)) down.add('jump')
+  if (pressed(pad, BTN.X)) down.add('tag')
+  if (pressed(pad, BTN.RB)) down.add('dash')
+  if (pressed(pad, BTN.B)) down.add('back')
+  if (pressed(pad, BTN.START)) down.add('pause')
+  if (pressed(pad, BTN.SELECT)) down.add('back')
   // CONFIRM is A in menus — the same physical button as jump, which is
   // safe because menus and play never read the pad in the same frame.
-  if (pad.A) down.add('confirm')
+  if (pressed(pad, BTN.A)) down.add('confirm')
   // 'any' backs the press-any-button screens (Title, briefing dismiss)
   if (pad.buttons?.some((b) => b.pressed)) down.add('any')
 }
 
-function poll(plugin) {
+function poll() {
   state.prev = state.down
   const down = new Set()
-  // Refresh before reading. The plugin's own refreshPads() runs during
-  // its scene's update, which is AFTER prestep — without this we would
-  // read last frame's pad and compute edges against stale data.
-  plugin.refreshPads()
-  const pads = plugin.getAll()
-  state.pads = pads.length
+  const pads = navigator.getGamepads ? navigator.getGamepads() : []
+  let count = 0
   // OR across every connected pad: a booth may well have two plugged in
-  for (const pad of pads) if (pad) readPad(pad, down)
+  for (const pad of pads) {
+    if (!pad || !pad.connected) continue
+    count++
+    readPad(pad, down)
+  }
+  state.pads = count
   state.down = down
   // fresh edges for this frame, consumed by the first reader
   state.edges = new Set([...down].filter((a) => !state.prev.has(a)))
@@ -64,35 +89,31 @@ function poll(plugin) {
   state.upEdges = new Set([...state.prev].filter((a) => !down.has(a)))
 }
 
-// Phaser registers GamepadPlugin as a SCENE input plugin (scene.input
-// .gamepad) — there is no game-level instance, so game.input.gamepad is
-// undefined and an early return on it would silently disable everything
-// here. Every scene's plugin reads the same navigator.getGamepads(), so
-// any live one will do.
-function findPlugin(game) {
-  for (const scene of game.scene.getScenes(true)) {
-    if (scene.input?.gamepad) return scene.input.gamepad
-  }
-  return null
-}
-
 export function initPad(game) {
   // prestep, so every scene's update() in this frame sees the same
   // snapshot — polling per scene would let the first scene's read race
-  // the second's
-  game.events.on('prestep', () => {
-    const plugin = findPlugin(game)
-    if (!plugin) {
-      // no scene awake yet, or a browser without the Gamepad API
-      state.prev = state.down
-      state.down = new Set()
-      state.edges = new Set()
-      state.upEdges = new Set()
-      state.pads = 0
-      return
-    }
-    poll(plugin)
-  })
+  // the second's.
+  //
+  // Phaser's own GamepadPlugin is left enabled in main.js (it owns the
+  // connect/disconnect events), but nothing here reads through it: it
+  // registers as a SCENE plugin, so there is no game-level instance to
+  // hang this on, and its named getters have the construction-time
+  // binding problem described above.
+  game.events.on('prestep', poll)
+}
+
+// Raw snapshot of every connected pad — dev diagnostic, so a controller
+// that misbehaves can be identified by what it actually reports rather
+// than by guesswork about its mapping.
+export function padReport() {
+  const pads = navigator.getGamepads ? navigator.getGamepads() : []
+  return [...pads].filter(Boolean).map((p) => ({
+    id: p.id,
+    mapping: p.mapping,
+    buttons: p.buttons.length,
+    pressed: p.buttons.map((b, i) => (b.pressed ? i : null)).filter((i) => i !== null),
+    axes: [...p.axes].map((a) => Math.round(a * 100) / 100),
+  }))
 }
 
 export function padDown(action) {

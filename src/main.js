@@ -1,6 +1,6 @@
 import Phaser from 'phaser'
 import { TUNING } from './config/tuning.js'
-import { initPad } from './systems/gamepad.js'
+import { initPad, padReport } from './systems/gamepad.js'
 import BootScene from './scenes/BootScene.js'
 import TitleScene from './scenes/TitleScene.js'
 import LevelSelectScene from './scenes/LevelSelectScene.js'
@@ -77,6 +77,11 @@ if (import.meta.env.DEV) {
   // localStorage — every level open, and a briefing shown again — are
   // otherwise a page of hand-written JSON.
   window.__dev = {
+    // What the connected controllers actually report — id, mapping,
+    // which button indices are down, and every axis. Hold a direction
+    // and call this: if the d-pad shows up as an axis rather than
+    // buttons 12-15, that is the pad's mapping, not a binding bug.
+    pad: () => padReport(),
     // open every level (progression-driven: this records the clear each
     // one requires, with a score of 0 so it reads as a dev unlock)
     unlockAll() {
