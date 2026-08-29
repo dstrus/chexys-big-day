@@ -1,5 +1,6 @@
 import Phaser from 'phaser'
 import { TUNING } from '../config/tuning.js'
+import { padDown, padJustDown, padJustUp } from '../systems/gamepad.js'
 
 // Chexy (grey-box: a 44x44 rect). Platformer feel baseline per BRIEF-01:
 // acceleration/deceleration movement, variable jump height, coyote time,
@@ -51,12 +52,16 @@ export default class Player {
     // the arrow/Z/X scheme plus a left-hand "expert" scheme in the WASD
     // family. Nothing is modal — there is no scheme to select, so a booth
     // player and a keyboard player can trade the stick mid-queue.
+    // keys[] plus the pad action of the same name (systems/gamepad.js).
+    // A controller is not a third scheme — it feeds the SAME actions, so
+    // a player can hold the pad and still hit Esc, and nothing downstream
+    // knows which device produced an input.
     this.bind = {
-      left: [this.cursors.left, this.keys.A],
-      right: [this.cursors.right, this.keys.D],
-      jump: [this.cursors.up, this.keys.SPACE, this.keys.W],
-      tag: [this.keys.Z, this.keys.J, this.keys.F],
-      dash: [this.keys.X, this.keys.K, this.keys.E],
+      left: { keys: [this.cursors.left, this.keys.A], pad: 'left' },
+      right: { keys: [this.cursors.right, this.keys.D], pad: 'right' },
+      jump: { keys: [this.cursors.up, this.keys.SPACE, this.keys.W], pad: 'jump' },
+      tag: { keys: [this.keys.Z, this.keys.J, this.keys.F], pad: 'tag' },
+      dash: { keys: [this.keys.X, this.keys.K, this.keys.E], pad: 'dash' },
     }
 
     this.lastGroundedAt = -Infinity
@@ -87,22 +92,31 @@ export default class Player {
     return this.sprite.body
   }
 
-  // Multi-key readers. JustDown/JustUp CONSUME the key's edge flag, so
-  // these must evaluate every key in the list — a short-circuiting
-  // .some() would leave a later key's press unread this frame and fire
-  // it on the next one, which reads as a phantom double input. map()
-  // first, reduce after. Each physical key belongs to exactly one
-  // action, so no key is ever sampled twice in a frame.
-  static anyDown(list) {
-    return list.some((k) => k.isDown) // isDown is stateless — safe to short-circuit
+  // Binding readers, across every key AND the pad action for a binding.
+  // JustDown/JustUp CONSUME the edge flag, so these must evaluate every
+  // key in the list — a short-circuiting .some() would leave a later
+  // key's press unread this frame and fire it on the next one, which
+  // reads as a phantom double input. map() first, reduce after. Each
+  // physical key belongs to exactly one action, so no key is ever
+  // sampled twice in a frame.
+  //
+  // The pad term is deliberately LAST in the JustDown readers: padJustDown
+  // consumes too, and evaluating it first would let a key press short out
+  // before the pad edge is cleared, stranding it for a frame.
+  static anyDown(b) {
+    return b.keys.some((k) => k.isDown) || padDown(b.pad) // both stateless
   }
 
-  static anyJustDown(list) {
-    return list.map((k) => Phaser.Input.Keyboard.JustDown(k)).includes(true)
+  static anyJustDown(b) {
+    const keys = b.keys.map((k) => Phaser.Input.Keyboard.JustDown(k)).includes(true)
+    const pad = padJustDown(b.pad)
+    return keys || pad
   }
 
-  static anyJustUp(list) {
-    return list.map((k) => Phaser.Input.Keyboard.JustUp(k)).includes(true)
+  static anyJustUp(b) {
+    const keys = b.keys.map((k) => Phaser.Input.Keyboard.JustUp(k)).includes(true)
+    const pad = padJustUp(b.pad)
+    return keys || pad
   }
 
   // Gameplay position = physics body center, NOT the sprite center.

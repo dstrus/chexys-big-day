@@ -1,5 +1,6 @@
 import Phaser from 'phaser'
 import { TUNING } from './config/tuning.js'
+import { initPad } from './systems/gamepad.js'
 import BootScene from './scenes/BootScene.js'
 import TitleScene from './scenes/TitleScene.js'
 import LevelSelectScene from './scenes/LevelSelectScene.js'
@@ -37,6 +38,10 @@ const game = new Phaser.Game({
   pixelArt: true,
   roundPixels: true,
   backgroundColor: '#101018',
+  // controller support (DESIGN §2.2, amended 2026-08-28). Phaser's
+  // gamepad plugin is opt-in; systems/gamepad.js owns everything above
+  // this flag. No new dependency — this is engine-native.
+  input: { gamepad: true },
   physics: {
     default: 'arcade',
     arcade: {
@@ -62,6 +67,8 @@ const game = new Phaser.Game({
 })
 
 window.addEventListener('resize', () => game.scale.setZoom(integerZoom()))
+
+initPad(game)
 
 // dev-only handles for debugging/verification tooling
 if (import.meta.env.DEV) {

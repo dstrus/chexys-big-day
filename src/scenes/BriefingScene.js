@@ -3,6 +3,7 @@ import { GAME_WIDTH, GAME_HEIGHT } from '../main.js'
 import { briefingFor } from '../config/briefings.js'
 import { markBriefingShown } from '../systems/progress.js'
 import { audio } from '../systems/AudioBus.js'
+import { padJustDown } from '../systems/gamepad.js'
 
 // One briefing screen, over a PAUSED level, for levels that introduce a
 // mechanic. Its own scene rather than another UIOverlay panel: it needs
@@ -133,6 +134,12 @@ export default class BriefingScene extends Phaser.Scene {
     this.openedAt = this.time.now
     this.input.keyboard.on('keydown', this.tryFinish, this)
     this.input.on('pointerdown', this.tryFinish, this)
+  }
+
+  update() {
+    // any button dismisses, same as any key — a briefing a controller
+    // player cannot close would strand them before the shift starts
+    if (padJustDown('any')) this.tryFinish()
   }
 
   tryFinish() {

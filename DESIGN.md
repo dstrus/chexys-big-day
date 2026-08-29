@@ -60,13 +60,29 @@ Two schemes, both live at ALL times — there is no scheme to
 select, and no mode in which one of them stops working (added
 2026-08-28).
 
-| Action | Default | Expert (left hand) |
-|--------|---------|--------------------|
-| Move | ← / → | A / D |
-| Jump | ↑ or Space | W |
-| Tag (primary action) | Z or J | F |
-| Dash (unlocks at Bell Desk start) | X or K | E |
-| Pause | Esc / P | Esc / P |
+| Action | Default | Expert (left hand) | Controller |
+|--------|---------|--------------------|------------|
+| Move | ← / → | A / D | Left stick or d-pad |
+| Jump | ↑ or Space | W | A |
+| Tag (primary action) | Z or J | F | X |
+| Dash (unlocks at Bell Desk start) | X or K | E | RB |
+| Pause | Esc / P | Esc / P | Start |
+| Confirm / Back (menus) | Enter / Esc | Enter / Esc | A / B |
+
+**Controller support** (added 2026-08-28; this was on CLAUDE.md's
+hard-NO list and the human struck it, ranking it above finishing
+levels 4 and 5). Engine-native — Phaser's gamepad plugin, no new
+dependency. It drives the menus as well as play (title, shift
+select, briefings, pause, results), so a booth player never has
+to reach for the keyboard between runs. Dash sits on the shoulder
+so the stick hand never leaves the stick and a dash can be thrown
+mid-tag. Stick deadzone 0.35; stick and d-pad are interchangeable
+everywhere.
+
+CAVEAT, unsolvable in code: a gamepad press is not a browser
+"user gesture", so a session started entirely from the pad runs
+SILENT until any key or click unlocks the AudioContext. At a
+booth, touch the keyboard once after loading.
 
 Double-tapping a direction also dashes, on either scheme's keys,
 and the two feed one detector: ← then A is still a double-tap

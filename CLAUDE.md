@@ -53,7 +53,8 @@ on gameplay or art-spec questions.
 - Cutscenes, dialogue systems
 - Second playable character
 - Procedural generation
-- Mobile/touch controls, gamepad support
+- Mobile/touch controls (gamepad support was struck from this
+  list 2026-08-28 — controller play is IN for v1, see DESIGN §2.2)
 - New levels or mechanics not in DESIGN.md §3
 
 If the human asks for one of these in a prompt, point at this list

@@ -6,6 +6,7 @@ import { briefingFor } from '../config/briefings.js'
 import { COLLECTIBLES } from '../config/collectibles.js'
 import { getWaveSchedule } from '../config/waveRegistry.js'
 import { currentMode, diff, scaled } from '../config/difficulty.js'
+import { padJustDown } from '../systems/gamepad.js'
 import Player from '../entities/Player.js'
 import WaveRunner from '../systems/WaveRunner.js'
 import { audio } from '../systems/AudioBus.js'
@@ -1832,16 +1833,20 @@ export default class LevelScene extends Phaser.Scene {
 
   update(time, delta) {
     if (this.runOver) {
-      if (Phaser.Input.Keyboard.JustDown(this.keyR)) this.teardownRun('retry')
-      else if (Phaser.Input.Keyboard.JustDown(this.keyC)) this.teardownRun('exit')
+      // results screen: A retries, B exits to the roster — the same
+      // confirm/back pair the menus use, so the pad never needs the
+      // keyboard's R/C mnemonics
+      if (Phaser.Input.Keyboard.JustDown(this.keyR) || padJustDown('confirm')) this.teardownRun('retry')
+      else if (Phaser.Input.Keyboard.JustDown(this.keyC) || padJustDown('back')) this.teardownRun('exit')
       return
     }
 
-    // Esc/P pauses the whole scene (physics, timers, tweens);
+    // Esc/P/START pauses the whole scene (physics, timers, tweens);
     // UIOverlay stays live and owns the resume
     if (
       Phaser.Input.Keyboard.JustDown(this.pauseKeys.ESC) ||
-      Phaser.Input.Keyboard.JustDown(this.pauseKeys.P)
+      Phaser.Input.Keyboard.JustDown(this.pauseKeys.P) ||
+      padJustDown('pause')
     ) {
       audio.pauseMusic() // position held; menu SFX stay audible (-07-d)
       this.game.events.emit('paused')

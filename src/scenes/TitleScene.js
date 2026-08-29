@@ -2,6 +2,7 @@ import Phaser from 'phaser'
 import { GAME_WIDTH, GAME_HEIGHT } from '../main.js'
 import { unlockAudio } from '../systems/sfx.js'
 import { audio } from '../systems/AudioBus.js'
+import { padJustDown } from '../systems/gamepad.js'
 
 export default class TitleScene extends Phaser.Scene {
   constructor() {
@@ -54,14 +55,23 @@ export default class TitleScene extends Phaser.Scene {
       .setDepth(40)
       .setVisible(audio.muted)
 
-    this.input.keyboard.once('keydown', () => {
+    this.started = false
+    this.start = () => {
+      if (this.started) return
+      this.started = true
       unlockAudio() // first user gesture — safe to create the AudioContext
       audio.play('uiSelect')
       this.scene.start('LevelSelect')
-    })
+    }
+    this.input.keyboard.once('keydown', this.start)
   }
 
   update() {
     this.muteIcon.setVisible(audio.muted)
+    // "PRESS ANY KEY" means any BUTTON too (2026-08-28). Note the audio
+    // caveat: a gamepad press is not a browser user-gesture, so starting
+    // from the pad leaves the AudioContext locked until a key or click.
+    // unlockAudio() is still called — it is a no-op until then.
+    if (padJustDown('any')) this.start()
   }
 }

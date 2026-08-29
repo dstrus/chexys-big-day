@@ -5466,3 +5466,62 @@ performance.now() each call rewinds game time and breaks the 250ms
 double-tap window) and stepping until grounded before a jump case
 rather than a fixed 4 frames. 17/17 after that, no console errors.
 Any future input harness in this repo should stop the loop FIRST.
+
+2026-08-28 — GUARDRAIL AMENDED: controller support is in v1
+------------------------------------------------------------
+Human: "I'd like to add controller support. That's more important than
+finishing levels 4 and 5 to me." Gamepad support was on CLAUDE.md's
+hard-NO list, so per the workflow rules I pointed at the list and asked
+before building; the human confirmed the amendment. CLAUDE.md now reads
+"Mobile/touch controls" only, with a pointer to DESIGN §2.2.
+
+PRIORITY, recorded because it reorders the roadmap: controller support
+outranks the museum and finale (levels 4 and 5). Those remain unbuilt
+and are no longer the next thing.
+
+Rulings taken before building:
+1. Mapping — A jump, X tag, RB dash, START pause, B back. Dash on the
+   shoulder so the stick hand never leaves the stick and a dash can go
+   out mid-tag.
+2. Menus too, not just gameplay — title, shift select, briefings,
+   pause, results. Without this a controller can only play a run that
+   somebody else started from the keyboard, which is useless at a booth.
+
+Engine-native: Phaser's gamepad plugin, enabled by one config flag. No
+new runtime dependency. src/systems/gamepad.js owns all pad internals;
+scenes only ever ask for named actions, so nothing downstream knows
+which device produced an input.
+
+Three things worth keeping:
+- Phaser registers GamepadPlugin as a SCENE plugin (scene.input.gamepad).
+  There is NO game-level instance, so my first cut — an early return on
+  game.input.gamepad — silently disabled the entire feature while
+  building and passing lint clean. Now it finds a live scene's plugin
+  and calls refreshPads() itself before reading, because the plugin's
+  own refresh runs during scene update, i.e. after prestep.
+- padJustDown/padJustUp CONSUME their edge, matching Phaser's JustDown.
+  This matters because a level and its pause overlay are awake in the
+  same frame; without consumption the START that opens the pause would
+  be re-read by the overlay and close it again.
+- RELEASE edges are tracked, not just presses. Variable jump height is
+  driven by the release, so without them a pad jump would always be
+  full height while a keyboard jump could be cut short. Verified: a
+  tapped A leaves vy -51 where a held A leaves -245.
+
+CAVEAT, not fixable in code: a gamepad press is not a browser user
+gesture, so a session started entirely from the pad runs SILENT until
+any key or click unlocks the AudioContext. Documented in DESIGN §2.2;
+at a booth, touch the keyboard once after loading.
+
+Verified 20/20 against a stubbed standard-mapping pad, no console
+errors: nav, mode toggle, deadzone, both stick and d-pad, all four
+verbs, variable jump height, pause open/close.
+
+HARNESS NOTE: CDP cannot inject gamepad input, so the harness overrides
+navigator.getGamepads — which is exactly what Phaser polls. Two traps
+cost real time. Phaser's Gamepad.update() DISCARDS any snapshot whose
+timestamp predates the Gamepad object's creation (_created =
+performance.now()), so a fake pad counting 1, 2, 3 is ignored forever
+and every button reads false; the fake's timestamps have to sit
+permanently ahead. And a scene must finish create() BEFORE the rAF loop
+is stopped, or it is stranded half-built and every read throws.
