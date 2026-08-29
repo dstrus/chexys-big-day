@@ -7,7 +7,18 @@ import { audio } from '../systems/AudioBus.js'
 import { currentMode, cycleMode } from '../config/difficulty.js'
 import { padConnected, padJustDown } from '../systems/gamepad.js'
 
-const ROW_X = 96
+// Horizontal layout is anchored to ONE left edge so the block stays
+// centred. It did not used to be: the roster sat at a fixed x96 while
+// every right-hand element hung off GAME_WIDTH, which put the content
+// at 78..464 — a 78px left margin against a 16px right one, i.e. 31px
+// right of centre. The divider added 2026-08-28 drew those edges as an
+// actual line and made it visible (human report 2026-08-29). Internal
+// spacing is unchanged; the whole block moved left.
+const BLOCK_L = 48 // marker column; content is 384 wide, so 48..432
+const BLOCK_R = BLOCK_L + 384
+const ROW_X = BLOCK_L + 18
+const BEST_X = BLOCK_L + 254
+const HANGER_X = BLOCK_L + 338 // three at +0/+17/+34, each 12 wide
 const ROW_Y0 = 76
 const ROW_H = 32
 // TOP of the mode row (origin-y 0, so this is a real scanline), with
@@ -65,7 +76,7 @@ export default class LevelSelectScene extends Phaser.Scene {
         const best = levelBest(lvl.id)
         if (best.bestScore > 0) {
           this.add
-            .text(GAME_WIDTH - 148, y, `BEST ${best.bestScore}`, {
+            .text(BEST_X, y, `BEST ${best.bestScore}`, {
               fontFamily: 'monospace',
               fontSize: '10px',
               color: '#667085',
@@ -74,7 +85,7 @@ export default class LevelSelectScene extends Phaser.Scene {
         }
         // best hangers earned (0-3 icons), max across runs
         for (let h = 0; h < 3; h++) {
-          createHanger(this, GAME_WIDTH - 64 + h * 17, y - 6, 1).setState(
+          createHanger(this, HANGER_X + h * 17, y - 6, 1).setState(
             h < best.bestHangers ? 'golden' : 'tarnished'
           )
         }
@@ -83,7 +94,7 @@ export default class LevelSelectScene extends Phaser.Scene {
     })
 
     this.marker = this.add
-      .text(ROW_X - 18, ROW_Y0, '▶', { fontFamily: 'monospace', fontSize: '11px', color: '#fe701e' })
+      .text(BLOCK_L, ROW_Y0, '▶', { fontFamily: 'monospace', fontSize: '11px', color: '#fe701e' })
       .setOrigin(0, 0.5)
 
     // Difficulty row (DESIGN §2.5 as amended 2026-08-26). It sits OUTSIDE
@@ -94,7 +105,7 @@ export default class LevelSelectScene extends Phaser.Scene {
     // row inherits the list's rhythm and left edge and reads as a sixth
     // shift — orange, in the cursor's colour, directly under "5 ???".
     this.add
-      .rectangle(ROW_X - 18, MODE_Y - 8, GAME_WIDTH - 16 - (ROW_X - 18), 1, 0x344054)
+      .rectangle(BLOCK_L, MODE_Y - 8, BLOCK_R - BLOCK_L, 1, 0x344054)
       .setOrigin(0, 0)
 
     // No "MODE" caption (human, 2026-08-28) — the ◀ ▶ arrows already say
@@ -114,7 +125,7 @@ export default class LevelSelectScene extends Phaser.Scene {
       })
       .setOrigin(0, 0)
     this.modeBlurb = this.add
-      .text(GAME_WIDTH - 16, MODE_Y, '', {
+      .text(BLOCK_R, MODE_Y, '', {
         fontFamily: 'monospace',
         fontSize: '10px',
         color: '#667085',

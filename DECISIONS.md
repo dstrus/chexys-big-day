@@ -5579,3 +5579,30 @@ downstream. Holding both is a no-op beyond the single dash (verified),
 since the dash reads one consumed edge and is cooldown-gated anyway.
 
 DESIGN §2.2's controller column now reads "LB or RB". Verified 28/28.
+
+2026-08-29 — Shift select was never horizontally centred
+---------------------------------------------------------
+Human report: the screen's contents sit noticeably closer to the right
+edge, at every aspect ratio. Measured, and it was exactly that: content
+spanned x78..464 — a 78px left margin against a 16px right one, putting
+the block's centre at 271 against the screen's 240.
+
+The cause was two competing anchors. The roster was pinned to a fixed
+ROW_X = 96 while every right-hand element hung off GAME_WIDTH (BEST at
+-148, hangers at -64, the mode blurb at -16), so nothing held the two
+sides in any relationship and the block drifted right by 31px.
+
+HONESTY ABOUT WHOSE BUG: this predates the difficulty work — the
+hangers already ended at 462. What changed is that the divider added
+2026-08-28 draws the block's edges as an actual line, which turned a
+latent imbalance into a visible one. Reported as a regression, and in
+the sense that matters to a player it was one.
+
+Fixed by anchoring the whole layout to ONE left edge (BLOCK_L = 48)
+with the right edge derived from it. Internal spacing is untouched —
+the block moved left by 30px as a unit. Now 48..432, centre exactly
+240. The mute icon stays at the bottom-right corner, where it sits on
+every screen; it is deliberately not part of the centred block.
+
+Verified by measurement and by looking at the render, and the mode row
+still clears its blurb in both modes.
