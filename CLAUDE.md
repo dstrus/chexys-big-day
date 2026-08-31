@@ -31,7 +31,10 @@ on gameplay or art-spec questions.
 
 ## Rendering rules (locked — see DESIGN.md §5)
 
-- Internal resolution 480×270. Integer scaling only.
+- Internal resolution 480×270. Integer scaling only ON DESKTOP.
+  Touch devices scale fractionally (amended 2026-08-30): no phone
+  fits ×2, so integer-only left the game a small island in the
+  middle of the screen. Desktop remains pixel-exact.
 - `pixelArt: true` in Phaser config; nearest-neighbor everywhere.
 - 60fps on mid-range laptop is an acceptance criterion for every
   task that touches rendering. If a change drops frames, flag it.
@@ -53,9 +56,11 @@ on gameplay or art-spec questions.
 - Cutscenes, dialogue systems
 - Second playable character
 - Procedural generation
-- Mobile/touch controls (gamepad support was struck from this
-  list 2026-08-28 — controller play is IN for v1, see DESIGN §2.2)
 - New levels or mechanics not in DESIGN.md §3
+
+(Input restrictions are gone from this list: gamepad struck
+2026-08-28, mobile/touch struck 2026-08-30. Both are IN for v1 —
+see DESIGN §2.2. Touch also amends the integer-scaling rule below.)
 
 If the human asks for one of these in a prompt, point at this list
 and confirm they want to amend it first.

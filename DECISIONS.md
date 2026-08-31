@@ -5648,3 +5648,66 @@ appeared in both and Python's str.replace takes every occurrence. It
 threw on an undefined `cleared` the first time the results screen was
 dismissed. Caught by the harness, but a plain reminder that scripted
 edits need anchors that are actually unique.
+
+2026-08-30 — GUARDRAIL AMENDED: touch controls, and fractional scaling
+-----------------------------------------------------------------------
+Human: add touch controls for mobile. "Mobile/touch controls" was the
+last input item on CLAUDE.md's hard-NO list; pointed at it, human
+confirmed the amendment. That list now has no input restrictions left.
+
+A SECOND locked rule was in the way, and it mattered more than the
+guardrail. DESIGN §5 and CLAUDE.md both lock integer scaling, never
+fractional. No handset fits x2 (480x270 needs 960x540; an iPhone
+landscape is 844x390), so integer-only would have shipped the game as
+a small island in the middle of the phone with dead margins all round
+— technically "mobile support", practically not. Surfaced it as the
+human's call rather than quietly picking one; ruled: fractional on
+touch devices ONLY, desktop stays pixel-exact. Measured on an emulated
+844x390 handset: zoom 1.444, canvas 693px wide against 480px at x1.
+
+Rulings: discrete ◀ ▶ rather than a virtual stick (Chexy only moves at
+full speed, so an analogue axis would add a deadzone for input the game
+cannot express), verbs under the right thumb, and touch drives the
+MENUS too.
+
+ARCHITECTURE, the part worth keeping: systems/gamepad.js became
+systems/deviceInput.js, a multi-SOURCE action layer. A source is a
+function that adds action names to the frame's set; the pad is built in
+and the touch overlay registers itself. Because touch produces the same
+named actions a pad does, adding an entire second input device needed
+NO new term at any call site — only the import rename. The scene draws
+buttons and reports which are held; it never touches gameplay.
+
+Two things the implementation had to get right:
+- Sources are PULLED at prestep, not pushed from scene update. The
+  first cut hit-tested in TouchScene.update(), which runs after the
+  poll, so every touch arrived a frame late — visible as a TAG press
+  edge landing on frame 2. Pointer state is set by the DOM handlers
+  between frames, so testing at poll time is both correct and current.
+- Hit-testing by POSITION each frame, not per-button pointer events.
+  That is what makes a thumb sliding from ◀ to ▶ change direction
+  without lifting, and two thumbs work at once, with no enter/leave
+  bookkeeping.
+
+Also fixed while looking at a real frame: the pause button at y40 sat
+on top of the multiplier readout (y19-31) — the one HUD element §2.5
+requires to stay legible. Moved to y58.
+
+Boot failure worth recording: TouchScene read GAME_WIDTH/GAME_HEIGHT at
+MODULE level. main.js imports the scene and the scene imports main.js,
+so that hits the temporal dead zone and the whole game fails to boot
+with "Cannot access 'GAME_HEIGHT' before initialization". Every other
+scene gets away with the same cycle by only reading those inside
+create(). The layouts are now built lazily.
+
+Verified 24/24 on an emulated phone (CDP device metrics + touch
+emulation): detection, fractional zoom, both layouts, the layout swap
+at rush start/end, every verb, the dash button staying hidden until
+dash is available, multi-touch, the slide, and pause. Desktop
+re-verified unchanged afterwards — keyboard 17/17, controller 28/28,
+results 13/13, integer zoom x2, no overlay.
+
+STILL UNTESTED, and it is the real acceptance test: an actual phone.
+Emulation gets the plumbing right but says nothing about whether a
+42px target suits a thumb, whether the controls sit where hands
+naturally rest, or what the game feels like at 60fps on a handset.

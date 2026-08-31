@@ -2,7 +2,7 @@ import Phaser from 'phaser'
 import { GAME_WIDTH, GAME_HEIGHT } from '../main.js'
 import { unlockAudio } from '../systems/sfx.js'
 import { audio } from '../systems/AudioBus.js'
-import { padJustDown } from '../systems/gamepad.js'
+import { deviceJustDown } from '../systems/deviceInput.js'
 
 export default class TitleScene extends Phaser.Scene {
   constructor() {
@@ -72,6 +72,6 @@ export default class TitleScene extends Phaser.Scene {
     // caveat: a gamepad press is not a browser user-gesture, so starting
     // from the pad leaves the AudioContext locked until a key or click.
     // unlockAudio() is still called — it is a no-op until then.
-    if (padJustDown('any')) this.start()
+    if (deviceJustDown('any')) this.start()
   }
 }

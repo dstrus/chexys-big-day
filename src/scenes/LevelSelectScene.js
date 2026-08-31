@@ -5,7 +5,7 @@ import { levelBest } from '../systems/progress.js'
 import { createHanger } from '../ui/hanger.js'
 import { audio } from '../systems/AudioBus.js'
 import { currentMode, cycleMode } from '../config/difficulty.js'
-import { padConnected, padJustDown } from '../systems/gamepad.js'
+import { padConnected, deviceJustDown } from '../systems/deviceInput.js'
 
 // Horizontal layout is anchored to ONE left edge so the block stays
 // centred. It did not used to be: the roster sat at a fixed x96 while
@@ -177,24 +177,24 @@ export default class LevelSelectScene extends Phaser.Scene {
     // pad terms sit LAST in each ||, because padJustDown consumes its
     // edge: first position would swallow the edge on a frame where a
     // key already answered
-    if (JustDown(this.keys.UP) || JustDown(this.keys.W) || padJustDown('up')) {
+    if (JustDown(this.keys.UP) || JustDown(this.keys.W) || deviceJustDown('up')) {
       this.idx = (this.idx + LEVELS.length - 1) % LEVELS.length
       audio.play('uiSelect')
       this.refresh()
     }
-    if (JustDown(this.keys.DOWN) || JustDown(this.keys.S) || padJustDown('down')) {
+    if (JustDown(this.keys.DOWN) || JustDown(this.keys.S) || deviceJustDown('down')) {
       this.idx = (this.idx + 1) % LEVELS.length
       audio.play('uiSelect')
       this.refresh()
     }
-    const dir = JustDown(this.keys.RIGHT) || JustDown(this.keys.D) || padJustDown('right') ? 1
-      : JustDown(this.keys.LEFT) || JustDown(this.keys.A) || padJustDown('left') ? -1 : 0
+    const dir = JustDown(this.keys.RIGHT) || JustDown(this.keys.D) || deviceJustDown('right') ? 1
+      : JustDown(this.keys.LEFT) || JustDown(this.keys.A) || deviceJustDown('left') ? -1 : 0
     if (dir !== 0) {
       cycleMode(dir)
       audio.play('uiSelect')
       this.refresh()
     }
-    if (JustDown(this.keys.ENTER) || JustDown(this.keys.Z) || JustDown(this.keys.SPACE) || padJustDown('confirm')) {
+    if (JustDown(this.keys.ENTER) || JustDown(this.keys.Z) || JustDown(this.keys.SPACE) || deviceJustDown('confirm')) {
       const lvl = LEVELS[this.idx]
       if (this.unlockedNow[this.idx]) {
         audio.play('uiSelect')
@@ -204,7 +204,7 @@ export default class LevelSelectScene extends Phaser.Scene {
         audio.play('interrupt') // locked
       }
     }
-    if (JustDown(this.keys.ESC) || padJustDown('back')) {
+    if (JustDown(this.keys.ESC) || deviceJustDown('back')) {
       this.scene.start('Title')
     }
   }

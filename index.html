@@ -2,7 +2,14 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- mobile (2026-08-30): no pinch-zoom or double-tap zoom, and the
+      canvas extends under the notch. user-scalable=no is normally an
+      accessibility smell, but a touch-controlled action game cannot have
+      a stray two-finger drag zooming the play area mid-rush. -->
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
+    />
     <title>Chexy's BIG DAY</title>
     <!-- inline favicon: keeps the console clean (no 404) with zero asset files -->
     <link
@@ -17,6 +24,16 @@
         height: 100%;
         background: #101018;
         overflow: hidden;
+      }
+      /* a swipe on the controls must never scroll or rubber-band the page */
+      html,
+      body,
+      #game,
+      canvas {
+        touch-action: none;
+        -webkit-user-select: none;
+        user-select: none;
+        -webkit-tap-highlight-color: transparent;
       }
       #game {
         display: flex;

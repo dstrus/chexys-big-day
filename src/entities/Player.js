@@ -1,6 +1,6 @@
 import Phaser from 'phaser'
 import { TUNING } from '../config/tuning.js'
-import { padDown, padJustDown, padJustUp } from '../systems/gamepad.js'
+import { deviceDown, deviceJustDown, deviceJustUp } from '../systems/deviceInput.js'
 
 // Chexy (grey-box: a 44x44 rect). Platformer feel baseline per BRIEF-01:
 // acceleration/deceleration movement, variable jump height, coyote time,
@@ -104,18 +104,18 @@ export default class Player {
   // consumes too, and evaluating it first would let a key press short out
   // before the pad edge is cleared, stranding it for a frame.
   static anyDown(b) {
-    return b.keys.some((k) => k.isDown) || padDown(b.pad) // both stateless
+    return b.keys.some((k) => k.isDown) || deviceDown(b.pad) // both stateless
   }
 
   static anyJustDown(b) {
     const keys = b.keys.map((k) => Phaser.Input.Keyboard.JustDown(k)).includes(true)
-    const pad = padJustDown(b.pad)
+    const pad = deviceJustDown(b.pad)
     return keys || pad
   }
 
   static anyJustUp(b) {
     const keys = b.keys.map((k) => Phaser.Input.Keyboard.JustUp(k)).includes(true)
-    const pad = padJustUp(b.pad)
+    const pad = deviceJustUp(b.pad)
     return keys || pad
   }
 

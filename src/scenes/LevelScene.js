@@ -7,7 +7,7 @@ import { COLLECTIBLES } from '../config/collectibles.js'
 import { getWaveSchedule } from '../config/waveRegistry.js'
 import { LEVELS, isLevelUnlocked } from '../config/levels.js'
 import { currentMode, diff, scaled } from '../config/difficulty.js'
-import { padJustDown } from '../systems/gamepad.js'
+import { deviceJustDown } from '../systems/deviceInput.js'
 import Player from '../entities/Player.js'
 import WaveRunner from '../systems/WaveRunner.js'
 import { audio } from '../systems/AudioBus.js'
@@ -1876,12 +1876,12 @@ export default class LevelScene extends Phaser.Scene {
       const JD = Phaser.Input.Keyboard.JustDown
       const esc = JD(this.pauseKeys.ESC)
       if (this.nextLevel()) {
-        if (JD(this.keyC) || JD(this.keyEnter) || padJustDown('confirm')) this.teardownRun('next')
-        else if (JD(this.keyR) || padJustDown('retry')) this.teardownRun('retry')
-        else if (esc || padJustDown('back')) this.teardownRun('exit')
+        if (JD(this.keyC) || JD(this.keyEnter) || deviceJustDown('confirm')) this.teardownRun('next')
+        else if (JD(this.keyR) || deviceJustDown('retry')) this.teardownRun('retry')
+        else if (esc || deviceJustDown('back')) this.teardownRun('exit')
       } else {
-        if (JD(this.keyR) || JD(this.keyEnter) || padJustDown('confirm')) this.teardownRun('retry')
-        else if (JD(this.keyC) || esc || padJustDown('back')) this.teardownRun('exit')
+        if (JD(this.keyR) || JD(this.keyEnter) || deviceJustDown('confirm')) this.teardownRun('retry')
+        else if (JD(this.keyC) || esc || deviceJustDown('back')) this.teardownRun('exit')
       }
       return
     }
@@ -1891,7 +1891,7 @@ export default class LevelScene extends Phaser.Scene {
     if (
       Phaser.Input.Keyboard.JustDown(this.pauseKeys.ESC) ||
       Phaser.Input.Keyboard.JustDown(this.pauseKeys.P) ||
-      padJustDown('pause')
+      deviceJustDown('pause')
     ) {
       audio.pauseMusic() // position held; menu SFX stay audible (-07-d)
       this.game.events.emit('paused')

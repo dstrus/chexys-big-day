@@ -11,7 +11,7 @@ import {
 } from '../config/guestLines.js'
 
 import { audio } from '../systems/AudioBus.js'
-import { padConnected, padJustDown } from '../systems/gamepad.js'
+import { padConnected, deviceJustDown } from '../systems/deviceInput.js'
 import { createHanger } from '../ui/hanger.js'
 import { briefingFor } from '../config/briefings.js'
 
@@ -557,8 +557,8 @@ export default class UIOverlayScene extends Phaser.Scene {
     const JD = Phaser.Input.Keyboard.JustDown
     const k = this.pauseKeys
     const nav = (count) => {
-      const dir = JD(k.UP) || JD(k.W) || padJustDown('up') ? -1
-        : JD(k.DOWN) || JD(k.S) || padJustDown('down') ? 1 : 0
+      const dir = JD(k.UP) || JD(k.W) || deviceJustDown('up') ? -1
+        : JD(k.DOWN) || JD(k.S) || deviceJustDown('down') ? 1 : 0
       if (dir !== 0) {
         this.pauseIdx = (this.pauseIdx + dir + count) % count
         audio.play('uiSelect')
@@ -567,12 +567,12 @@ export default class UIOverlayScene extends Phaser.Scene {
     }
     if (this.pauseMode === 'menu') {
       // START closes the pause it opened; B is the menu's back button
-      if (JD(k.ESC) || JD(k.P) || padJustDown('pause') || padJustDown('back')) {
+      if (JD(k.ESC) || JD(k.P) || deviceJustDown('pause') || deviceJustDown('back')) {
         this.resumeLevel()
         return
       }
       nav(this.pauseOptions.length)
-      if (JD(k.ENTER) || JD(k.Z) || JD(k.SPACE) || padJustDown('confirm')) {
+      if (JD(k.ENTER) || JD(k.Z) || JD(k.SPACE) || deviceJustDown('confirm')) {
         if (this.pauseIdx === 0) this.resumeLevel()
         else if (this.pauseIdx === 1) this.showHelp()
         else {
@@ -584,12 +584,12 @@ export default class UIOverlayScene extends Phaser.Scene {
       }
     } else {
       // confirm view: ESC/P or B backs out, same as CANCEL
-      if (JD(k.ESC) || JD(k.P) || padJustDown('back') || padJustDown('pause')) {
+      if (JD(k.ESC) || JD(k.P) || deviceJustDown('back') || deviceJustDown('pause')) {
         this.setPauseMode('menu')
         return
       }
       nav(this.confirmOptions.length)
-      if (JD(k.ENTER) || JD(k.Z) || JD(k.SPACE) || padJustDown('confirm')) {
+      if (JD(k.ENTER) || JD(k.Z) || JD(k.SPACE) || deviceJustDown('confirm')) {
         if (this.pauseIdx === 1) {
           this.setPauseMode('menu') // CANCEL
         } else {

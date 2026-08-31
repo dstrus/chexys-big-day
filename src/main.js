@@ -1,6 +1,6 @@
 import Phaser from 'phaser'
 import { TUNING } from './config/tuning.js'
-import { initPad, padReport } from './systems/gamepad.js'
+import { initDeviceInput, isTouchDevice, padReport } from './systems/deviceInput.js'
 import BootScene from './scenes/BootScene.js'
 import TitleScene from './scenes/TitleScene.js'
 import LevelSelectScene from './scenes/LevelSelectScene.js'
@@ -10,6 +10,7 @@ import MuseumScene from './scenes/MuseumScene.js'
 import ExodusScene from './scenes/ExodusScene.js'
 import UIOverlayScene from './scenes/UIOverlayScene.js'
 import BriefingScene from './scenes/BriefingScene.js'
+import TouchScene from './scenes/TouchScene.js'
 import { LEVELS } from './config/levels.js'
 import { BRIEFINGS } from './config/briefings.js'
 import { unlockAllLevels, resetBriefings } from './systems/progress.js'
@@ -18,16 +19,19 @@ import { initTuningPanel } from './debug/tuningPanel.js'
 export const GAME_WIDTH = 480
 export const GAME_HEIGHT = 270
 
-// Largest whole-number zoom that fits the window — integer scaling only,
-// never fractional (DESIGN.md §5).
-function integerZoom() {
-  return Math.max(
-    1,
-    Math.min(
-      Math.floor(window.innerWidth / GAME_WIDTH),
-      Math.floor(window.innerHeight / GAME_HEIGHT)
-    )
-  )
+// Largest zoom that fits the window.
+//
+// DESIGN §5 locks integer scaling, and on desktop that still holds
+// absolutely. TOUCH DEVICES are the amended exception (2026-08-30): no
+// phone fits ×2 (480×270 needs 960×540, and even an iPhone landscape is
+// 844×390), so integer-only would leave the game a small island in the
+// middle of the screen with dead margins on every side. Fractional zoom
+// there is the honest trade — uneven pixel sizes on a display nobody is
+// pixel-peeping, in exchange for a game that fills the phone.
+function bestZoom() {
+  const fit = Math.min(window.innerWidth / GAME_WIDTH, window.innerHeight / GAME_HEIGHT)
+  if (isTouchDevice()) return Math.max(0.5, fit)
+  return Math.max(1, Math.floor(fit))
 }
 
 const game = new Phaser.Game({
@@ -61,14 +65,23 @@ const game = new Phaser.Game({
   },
   scale: {
     mode: Phaser.Scale.NONE,
-    zoom: integerZoom(),
+    zoom: bestZoom(),
   },
-  scene: [BootScene, TitleScene, LevelSelectScene, LevelScene, GarageScene, MuseumScene, ExodusScene, UIOverlayScene, BriefingScene],
+  scene: [BootScene, TitleScene, LevelSelectScene, LevelScene, GarageScene, MuseumScene, ExodusScene, UIOverlayScene, BriefingScene, TouchScene],
 })
 
-window.addEventListener('resize', () => game.scale.setZoom(integerZoom()))
+// resize AND orientationchange: a phone rotated in play changes both
+// dimensions at once and only fires resize on some browsers
+const rezoom = () => game.scale.setZoom(bestZoom())
+window.addEventListener('resize', rezoom)
+window.addEventListener('orientationchange', () => setTimeout(rezoom, 100))
 
-initPad(game)
+initDeviceInput(game)
+
+// On-screen controls, only where there is a touchscreen to need them.
+// Launched last so it draws above every other scene, and never stopped —
+// it swaps its own layout between menus and play.
+if (isTouchDevice()) game.events.once('ready', () => game.scene.start('Touch'))
 
 // dev-only handles for debugging/verification tooling
 if (import.meta.env.DEV) {

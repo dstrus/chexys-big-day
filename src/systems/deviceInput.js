@@ -1,6 +1,11 @@
-// Controller support (DESIGN §2.2, guardrail amended 2026-08-28 — this
-// was on CLAUDE.md's hard-NO list and the human struck it, ranking it
-// above finishing levels 4 and 5).
+// Non-keyboard input: controllers (2026-08-28) and touch (2026-08-30),
+// both of which were struck from CLAUDE.md's hard-NO list by the human.
+//
+// One action vocabulary, many SOURCES. A source is a function that adds
+// action names to the frame's set; the pad is a built-in source and the
+// touch overlay registers itself as another. Call sites ask "is 'jump'
+// down" and never learn which device answered — which is why adding
+// touch needed no new term at any of them.
 //
 // Phaser's gamepad plugin is enabled in main.js; everything else lives
 // here so the scenes never touch pad internals. Actions are named the
@@ -26,6 +31,34 @@ const DEADZONE = 0.35
 const BTN = { A: 0, B: 1, X: 2, Y: 3, LB: 4, RB: 5, SELECT: 8, START: 9, UP: 12, DOWN: 13, LEFT: 14, RIGHT: 15 }
 
 const state = { down: new Set(), prev: new Set(), edges: new Set(), upEdges: new Set(), pads: 0 }
+
+// A CAPABILITY, not an activity: answered the same whether or not a
+// finger is currently down, because the on-screen controls and the key
+// hints have to decide what to show before anyone touches anything.
+// Coarse pointer covers phones and tablets; maxTouchPoints catches
+// touch laptops, which get the overlay too — harmless, since the
+// keyboard keeps working alongside it.
+const TOUCH_DEVICE =
+  typeof window !== 'undefined' &&
+  (window.matchMedia?.('(pointer: coarse)')?.matches === true || navigator.maxTouchPoints > 0)
+
+export function isTouchDevice() {
+  return TOUCH_DEVICE
+}
+
+// Extra input sources (the touch overlay). Each is called once per
+// frame, at poll time, and adds action names to the set — pulled rather
+// than pushed, so a source can never write state for a frame that has
+// already been read.
+const sources = new Set()
+
+export function addInputSource(fn) {
+  sources.add(fn)
+}
+
+export function removeInputSource(fn) {
+  sources.delete(fn)
+}
 
 // Non-standard pads often expose the d-pad as a HAT: one axis holding a
 // direction in eighths, -1 = up and going clockwise, with a rest value
@@ -77,6 +110,7 @@ function readPad(pad, down) {
 function poll() {
   state.prev = state.down
   const down = new Set()
+  for (const source of sources) source(down)
   const pads = navigator.getGamepads ? navigator.getGamepads() : []
   let count = 0
   // OR across every connected pad: a booth may well have two plugged in
@@ -95,7 +129,7 @@ function poll() {
   state.upEdges = new Set([...state.prev].filter((a) => !down.has(a)))
 }
 
-export function initPad(game) {
+export function initDeviceInput(game) {
   // prestep, so every scene's update() in this frame sees the same
   // snapshot — polling per scene would let the first scene's read race
   // the second's.
@@ -122,17 +156,17 @@ export function padReport() {
   }))
 }
 
-export function padDown(action) {
+export function deviceDown(action) {
   return state.down.has(action)
 }
 
-export function padJustDown(action) {
+export function deviceJustDown(action) {
   if (!state.edges.has(action)) return false
   state.edges.delete(action)
   return true
 }
 
-export function padJustUp(action) {
+export function deviceJustUp(action) {
   if (!state.upEdges.has(action)) return false
   state.upEdges.delete(action)
   return true

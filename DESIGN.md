@@ -4,7 +4,7 @@
 catchphrase; BIGGEST reserved for v2)*
 **Status:** v1.0 — APPROVED (Gate 0 passed 2026-07-29). Changes now require a logged amendment in DECISIONS.md.
 **Genre:** 32-bit-style pixel-art side-scrolling action game
-**Platform:** Browser (HTML5), desktop keyboard only for v1
+**Platform:** Browser (HTML5). Keyboard, controller and touch for v1 (see §2.2)
 **Engine:** Phaser 3
 **Audience:** Chexology team (internal fun project); developer learning project
 
@@ -68,6 +68,9 @@ select, and no mode in which one of them stops working (added
 | Dash (unlocks at Bell Desk start) | X or K | E | LB or RB |
 | Pause | Esc / P | Esc / P | Start |
 | Confirm / Back (menus) | Enter / Esc | Enter / Esc | A / B |
+
+Touch: on-screen ◀ ▶ / TAG / JUMP / DASH / pause while a rush
+runs, and cursor + OK/BACK everywhere else. See below.
 | Next shift (after a clear) | C or Enter | C or Enter | A |
 | Retry (after a clear) | R | R | Y |
 | Shift Select (after a clear) | Esc | Esc | B |
@@ -79,6 +82,27 @@ the board. Retry keeps a key and a button of its own so it stays
 one press away. Where there is no next shift — the finale, a run
 that failed, or a "clear" that recorded nothing (godMode) — the
 first action falls back to RETRY and the prompt says so.
+
+**Touch controls** (added 2026-08-30; "Mobile/touch controls"
+was the last input item on CLAUDE.md's hard-NO list and the human
+struck it). On-screen controls appear only on touch devices
+(coarse pointer or a positive maxTouchPoints): discrete ◀ ▶ under
+the left thumb, TAG/JUMP/DASH under the right, and a pause button
+clear of the HUD. DASH is hidden until it is actually available,
+so the first shift never shows a dead button. A second layout —
+cursor plus OK/BACK — covers the title, roster, briefings, pause
+and results, so a phone never needs a keyboard. Discrete pads
+rather than a virtual stick: Chexy only moves at full speed, so
+an analogue axis would add a deadzone for input the game cannot
+express. Multi-touch is required (move while tagging), and a
+thumb sliding from ◀ to ▶ changes direction without lifting.
+
+**Scaling on touch is FRACTIONAL** — the one amendment to §5's
+integer-scaling law, and desktop is unaffected. 480×270 needs
+960×540 for ×2, which no handset has, so integer-only meant a
+small island with dead margins (an iPhone landscape at 844×390
+would run ×1). Uneven pixel sizes on a phone are the better trade
+than a game occupying a third of the display.
 
 **Controller support** (added 2026-08-28; this was on CLAUDE.md's
 hard-NO list and the human struck it, ranking it above finishing
