@@ -5758,3 +5758,53 @@ and the target size all stand as shipped, unchanged.
 
 Recording it because those entries end with "emulation cannot say
 whether 56px suits a thumb". Now it has been felt, and it does.
+
+2026-08-31 — On-screen help names the device in use
+----------------------------------------------------
+Human: provide alternate on-screen help for touch and gamepad based on
+what the player is using, and "if they've used a mix of keyboard and
+controller, provide controller instructions."
+
+That last clause is the whole rule, so it is worth stating plainly:
+KEYBOARD IS ONLY EVER THE FALLBACK. Once a richer device has been used
+it keeps the copy, and returning to the keys does not take it back.
+Between pad and touch the most recent wins — both are richer, so
+recency is the only sensible tiebreak.
+
+It tracks USE, not availability. deviceInput sources now carry a device
+name so input can be attributed; keyboard use is observed with a
+window keydown listener, since keys never flow through that module.
+Session-scoped, like the difficulty mode and for the same reason: a
+booth machine must not describe a controller to the next stranger
+because the last player brought one.
+
+BEHAVIOUR CHANGE worth flagging: the results prompt previously keyed
+off padConnected(), so a controller merely plugged in relabelled a
+keyboard player's prompt. It now keys off use. Three assertions in the
+results suite encoded the old behaviour and were updated — they were
+testing what the code did, which is exactly what this ruling changes.
+
+Copy resolved through config/controlHints.js: pass an object keyed by
+keyboard/pad/touch, or a plain string for device-neutral copy (most
+briefing rows say nothing about buttons). Covered: briefing rows for
+the Coatroom, Bell Desk and Garage, the briefing prompt, the title
+prompt, the pause resume hint, the results prompt, and the dash-unlock
+bubble.
+
+GAP FOUND AND FIXED while doing this: on touch the results screen had
+no way to RETRY. Retry is R on a keyboard and (Y) on a pad, and the
+touch menu layout has only OK and BACK — so a touch player literally
+could not replay a shift. The results screen is now its own touch mode
+with a third button.
+
+Verified: 11/11 on a new help-device suite (including the mixed-input
+rule and a connected-but-unused pad), 33/33 on touch, and the other
+suites re-run — keyboard 17/17, controller 28/28, results 14/14.
+
+Harness note: driving menus with real keypresses to mark "keyboard
+used" also walks Title -> Shift Select and can consume a first-visit
+briefing, so the copy checks launch the briefing in PREVIEW mode and
+retry the launch — a launch landing mid-transition gets stopped again.
+Two of my first failures were that, not the code. Also: test-briefing
+.mjs no longer exists in the scratchpad, so "briefings" is covered by
+the new suite rather than the old one.

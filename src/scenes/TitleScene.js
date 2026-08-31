@@ -3,6 +3,7 @@ import { GAME_WIDTH, GAME_HEIGHT } from '../main.js'
 import { unlockAudio } from '../systems/sfx.js'
 import { audio } from '../systems/AudioBus.js'
 import { deviceJustDown } from '../systems/deviceInput.js'
+import { hint } from '../config/controlHints.js'
 
 export default class TitleScene extends Phaser.Scene {
   constructor() {
@@ -27,8 +28,14 @@ export default class TitleScene extends Phaser.Scene {
       })
       .setOrigin(0.5)
 
+    // named for the device in their hands — though on a first-ever visit
+    // nothing has been used yet, so this reads "ANY KEY" until it has
     const prompt = this.add
-      .text(GAME_WIDTH / 2, GAME_HEIGHT - 70, 'PRESS ANY KEY', {
+      .text(GAME_WIDTH / 2, GAME_HEIGHT - 70, hint({
+        keyboard: 'PRESS ANY KEY',
+        pad: 'PRESS ANY BUTTON',
+        touch: 'TAP TO START',
+      }), {
         fontFamily: 'monospace',
         fontSize: '12px',
         color: '#ffffff',

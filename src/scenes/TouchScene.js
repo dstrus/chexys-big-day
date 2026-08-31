@@ -67,7 +67,7 @@ function playLayout() {
   ]
 }
 
-function menuLayout() {
+function menuLayout({ results = false } = {}) {
   const y = GAME_HEIGHT - 36
   return [
     { action: 'up', label: '▲', x: 44, y: y - R_CURSOR * 2 - PAD, r: R_CURSOR },
@@ -82,6 +82,20 @@ function menuLayout() {
     },
     { action: 'confirm', label: 'OK', x: GAME_WIDTH - 36, y },
     { action: 'back', label: 'BACK', x: GAME_WIDTH - 36 - R_ACTION * 2 - PAD, y },
+    // RETRY exists only on the results screen, and only for touch: on a
+    // keyboard it is R and on a pad it is (Y), but the menu layout has
+    // no third face button — without this a touch player could not
+    // replay a shift at all (gap found 2026-08-31).
+    ...(results
+      ? [
+          {
+            action: 'retry',
+            label: 'RETRY',
+            x: GAME_WIDTH - 36 - (R_ACTION * 2 + PAD) * 2,
+            y,
+          },
+        ]
+      : []),
   ]
 }
 
@@ -116,7 +130,9 @@ export default class TouchScene extends Phaser.Scene {
     this.source = (down) => {
       const mode = this.currentMode()
       this.stickActive = mode === 'play'
-      this.buttons = this.buttonsFor(mode === 'play' ? playLayout() : menuLayout())
+      const layout =
+        mode === 'play' ? playLayout() : menuLayout({ results: mode === 'results' })
+      this.buttons = this.buttonsFor(layout)
       // stick first: it decides which pointer is steering, and
       // computeHeld must then ignore that pointer
       this.updateStick(down, this.stickActive)
@@ -136,8 +152,9 @@ export default class TouchScene extends Phaser.Scene {
       .getScenes(true)
       .find((s) => s.player && !s.scene.isPaused(s.scene.key))
     if (!level) return 'menu'
-    // a results screen is a menu even though its level scene is awake
-    if (level.runOver) return 'menu'
+    // a results screen is a menu even though its level scene is awake —
+    // but it needs one extra control (RETRY), so it is its own mode
+    if (level.runOver) return 'results'
     return 'play'
   }
 

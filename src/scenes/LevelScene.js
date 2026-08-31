@@ -8,6 +8,7 @@ import { getWaveSchedule } from '../config/waveRegistry.js'
 import { LEVELS, isLevelUnlocked } from '../config/levels.js'
 import { currentMode, diff, scaled } from '../config/difficulty.js'
 import { deviceJustDown } from '../systems/deviceInput.js'
+import { hint } from '../config/controlHints.js'
 import Player from '../entities/Player.js'
 import WaveRunner from '../systems/WaveRunner.js'
 import { audio } from '../systems/AudioBus.js'
@@ -318,7 +319,11 @@ export default class LevelScene extends Phaser.Scene {
       unlockDash()
       this.dashConfirmPending = true
       this.game.events.emit('system-bubble', {
-        text: 'Double-tap ← or → (or X/K) to dash!',
+        text: hint({
+          keyboard: 'Double-tap ← or → (or X/K) to dash!',
+          pad: 'Press LB or RB to dash!',
+          touch: 'Tap DASH to dash!',
+        }),
         accent: 0xfe701e, // Chexology Orange — the captain's gift
         holdMs: 10000, // the 10s beat
       })

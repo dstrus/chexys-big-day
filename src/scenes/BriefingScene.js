@@ -4,6 +4,7 @@ import { briefingFor } from '../config/briefings.js'
 import { markBriefingShown } from '../systems/progress.js'
 import { audio } from '../systems/AudioBus.js'
 import { deviceJustDown } from '../systems/deviceInput.js'
+import { hint } from '../config/controlHints.js'
 
 // One briefing screen, over a PAUSED level, for levels that introduce a
 // mechanic. Its own scene rather than another UIOverlay panel: it needs
@@ -93,7 +94,7 @@ export default class BriefingScene extends Phaser.Scene {
         if (s.tint !== undefined) img.setTint(s.tint)
         sx += img.displayWidth + 4
       }
-      this.add.text(x + 96, rowY + 6, row.text, {
+      this.add.text(x + 96, rowY + 6, hint(row.text), {
         ...TEXT,
         wordWrap: { width: PANEL.w - 116 },
       })
@@ -104,10 +105,14 @@ export default class BriefingScene extends Phaser.Scene {
     // briefing starts the shift, while HELP (or a console preview) just
     // closes and puts back whatever it covered
     this.prompt = this.add
-      .text(x + PANEL.w / 2, y + PANEL.h - 16, this.preview ? 'ANY KEY TO CLOSE' : 'ANY KEY TO START', {
-        ...TEXT,
-        color: '#101828',
-      })
+      .text(
+        x + PANEL.w / 2,
+        y + PANEL.h - 16,
+        this.preview
+          ? hint({ keyboard: 'ANY KEY TO CLOSE', pad: 'ANY BUTTON TO CLOSE', touch: 'TAP TO CLOSE' })
+          : hint({ keyboard: 'ANY KEY TO START', pad: 'ANY BUTTON TO START', touch: 'TAP TO START' }),
+        { ...TEXT, color: '#101828' }
+      )
       .setOrigin(0.5, 0)
     this.tweens.add({
       targets: this.prompt,

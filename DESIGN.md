@@ -69,8 +69,23 @@ select, and no mode in which one of them stops working (added
 | Pause | Esc / P | Esc / P | Start |
 | Confirm / Back (menus) | Enter / Esc | Enter / Esc | A / B |
 
-Touch: on-screen ◀ ▶ / TAG / JUMP / DASH / pause while a rush
-runs, and cursor + OK/BACK everywhere else. See below.
+Touch: on-screen stick / TAG / JUMP / DASH / pause while a rush
+runs, cursor + OK/BACK everywhere else, and a RETRY button on the
+results screen (retry has no third face button to live on). See
+below.
+
+**On-screen help names the device in use** (ruled 2026-08-31).
+Briefing rows, the title and briefing prompts, the pause hint, the
+results prompt and the dash-unlock bubble all resolve per device
+via `config/controlHints.js`. The rule: keyboard is only ever the
+FALLBACK, so a player who has used a mix of keyboard and
+controller gets CONTROLLER instructions, and going back to the
+keys does not take the copy back. Between controller and touch,
+most recent wins. It tracks USE, not availability — a controller
+sitting connected and untouched must not relabel a keyboard
+player's help. Session-scoped: a booth machine must not describe
+a controller to the next stranger because the last player brought
+one.
 | Next shift (after a clear) | C or Enter | C or Enter | A |
 | Retry (after a clear) | R | R | Y |
 | Shift Select (after a clear) | Esc | Esc | B |

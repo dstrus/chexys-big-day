@@ -13,8 +13,13 @@
 // Keys, for reference when writing copy (DESIGN §2.2 — two schemes,
 // both always live): arrows or A/D run, Up/Space or W jumps, Z/J or F
 // tags, X/K or E dashes (double-tapping a direction dashes too). Esc
-// or P pauses. Briefing copy names the DEFAULT scheme only — a rule is
-// easier to read as "TAP Z" than as an exhaustive binding list.
+// or P pauses. Copy names ONE scheme, not an exhaustive binding list —
+// a rule reads better as "TAP Z" than as three alternatives.
+//
+// WHICH scheme depends on the device the player is using (human
+// 2026-08-31): a row's `text` may be an object keyed by keyboard / pad /
+// touch, resolved at display time by config/controlHints.js. Rows that
+// say nothing about buttons stay plain strings.
 
 export const BRIEFINGS = {
   // Level 1 has no NEW mechanic — it is the tutorial, so its briefing is
@@ -25,11 +30,19 @@ export const BRIEFINGS = {
     rows: [
       {
         sprites: [{ key: ['chexy-idle', 'chexy-atlas'] }],
-        text: 'ARROWS run · UP or SPACE jumps',
+        text: {
+          keyboard: 'ARROWS run · UP or SPACE jumps',
+          pad: 'STICK or D-PAD runs · (A) jumps',
+          touch: 'The STICK runs · JUMP jumps',
+        },
       },
       {
         sprites: [{ key: 'coats', frame: 0 }, { key: 'coats', frame: 1 }],
-        text: 'Z or J tags the nearest item . No paper needed!',
+        text: {
+          keyboard: 'Z or J tags the nearest item . No paper needed!',
+          pad: '(X) tags the nearest item . No paper needed!',
+          touch: 'TAG tags the nearest item . No paper needed!',
+        },
       },
       {
         sprites: [{ key: ['enemy-atlas', 'enemy-stub'] }],
@@ -45,11 +58,19 @@ export const BRIEFINGS = {
     rows: [
       {
         sprites: [{ key: 'luggage-single' }],
-        text: 'One bag - TAP Z to check it in.',
+        text: {
+          keyboard: 'One bag - TAP Z to check it in.',
+          pad: 'One bag - TAP (X) to check it in.',
+          touch: 'One bag - TAP the TAG button to check it in.',
+        },
       },
       {
         sprites: [{ key: 'luggage-pair' }, { key: 'luggage-group' }],
-        text: 'A pair or a whole cart — HOLD Z. Multi-tagging takes a little longer!',
+        text: {
+          keyboard: 'A pair or a whole cart — HOLD Z. Multi-tagging takes a little longer!',
+          pad: 'A pair or a whole cart — HOLD (X). Multi-tagging takes a little longer!',
+          touch: 'A pair or a whole cart — HOLD TAG. Multi-tagging takes a little longer!',
+        },
       },
       {
         sprites: [{ key: ['enemy-atlas', 'enemy-stub'] }],
@@ -77,7 +98,11 @@ export const BRIEFINGS = {
       },
       {
         sprites: [{ key: ['chexy-idle', 'chexy-atlas'] }],
-        text: "DASH (X, K, or double-tap a direction) goes THROUGH a car. Don't get trapped!",
+        text: {
+          keyboard: "DASH (X, K, or double-tap a direction) goes THROUGH a car. Don't get trapped!",
+          pad: "DASH (LB or RB) goes THROUGH a car. Don't get trapped!",
+          touch: "DASH goes THROUGH a car. Don't get trapped!",
+        },
       },
     ],
   },

@@ -11,7 +11,8 @@ import {
 } from '../config/guestLines.js'
 
 import { audio } from '../systems/AudioBus.js'
-import { padConnected, deviceJustDown } from '../systems/deviceInput.js'
+import { padConnected, deviceJustDown, helpDevice } from '../systems/deviceInput.js'
+import { hint } from '../config/controlHints.js'
 import { createHanger } from '../ui/hanger.js'
 import { briefingFor } from '../config/briefings.js'
 
@@ -379,7 +380,7 @@ export default class UIOverlayScene extends Phaser.Scene {
     this.pauseDestinations = [null, null, 'retry', 'exit']
     this.pendingDestination = null
     this.pauseHint = this.add
-      .text(GAME_WIDTH / 2, 200, 'ESC OR P TO RESUME', { ...TEXT_STYLE, color: '#98a2b3' })
+      .text(GAME_WIDTH / 2, 200, '', { ...TEXT_STYLE, color: '#98a2b3' })
       .setOrigin(0.5)
     this.confirmPrompt = this.add
       .text(GAME_WIDTH / 2, 118, "Abandon your shift? Progress won't be saved.", {
@@ -547,6 +548,7 @@ export default class UIOverlayScene extends Phaser.Scene {
   update(time) {
     if (this.freezeKey && Phaser.Input.Keyboard.JustDown(this.freezeKey)) this.toggleFreeze()
     if (this.resultsPrompt?.visible) this.refreshResultsPrompt()
+    if (this.pausePanel?.visible) this.refreshPauseHint()
     if (this.frozen) return // a frozen frame stays exactly as captured
     this.updateBubbleYield()
     this.updateInsightChip()
@@ -605,18 +607,40 @@ export default class UIOverlayScene extends Phaser.Scene {
   // The prompt names the DEVICE in the player's hands and the OUTCOME.
   // After a clear with a shift still to come, the first action is that
   // shift; retry keeps its own key so a replay is still one press.
+  refreshPauseHint() {
+    const device = helpDevice()
+    if (device === this.pauseHintDevice) return
+    this.pauseHintDevice = device
+    this.pauseHint.setText(
+      hint({
+        keyboard: 'ESC OR P TO RESUME',
+        pad: '(B) OR START TO RESUME',
+        touch: 'TAP BACK TO RESUME',
+      })
+    )
+  }
+
   refreshResultsPrompt() {
-    const pad = padConnected()
-    if (pad === this.promptPad) return
-    this.promptPad = pad
+    // keyed to what the player has USED, not merely what is plugged in
+    // (human 2026-08-31) — a connected-but-untouched pad used to relabel
+    // a keyboard player's prompt
+    const device = helpDevice()
+    if (device === this.promptDevice) return
+    this.promptDevice = device
     const next = this.resultsNextName
-    if (next) {
-      this.resultsPrompt.setText(
-        pad ? '(A) NEXT SHIFT · (Y) RETRY · (B) SHIFTS' : 'C NEXT SHIFT · R RETRY · ESC SHIFTS'
-      )
-    } else {
-      this.resultsPrompt.setText(pad ? '(A) RETRY · (B) SHIFTS' : 'R RETRY · C SHIFTS')
-    }
+    this.resultsPrompt.setText(
+      next
+        ? hint({
+            keyboard: 'C NEXT SHIFT · R RETRY · ESC SHIFTS',
+            pad: '(A) NEXT SHIFT · (Y) RETRY · (B) SHIFTS',
+            touch: 'NEXT SHIFT · RETRY · SHIFTS below',
+          })
+        : hint({
+            keyboard: 'R RETRY · C SHIFTS',
+            pad: '(A) RETRY · (B) SHIFTS',
+            touch: 'RETRY or SHIFTS below',
+          })
+    )
   }
 
   buildResultsPanel() {
@@ -748,7 +772,7 @@ export default class UIOverlayScene extends Phaser.Scene {
     // remembered so the prompt can be relabelled if a controller is
     // plugged in or unplugged while the results screen is up
     this.resultsNextName = cleared ? nextName : null
-    this.promptPad = null
+    this.promptDevice = null
     this.refreshResultsPrompt()
 
     this.hangerTimers.forEach((t) => t.remove())

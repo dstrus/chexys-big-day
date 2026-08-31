@@ -52,12 +52,45 @@ export function isTouchDevice() {
 // already been read.
 const sources = new Set()
 
-export function addInputSource(fn) {
-  sources.add(fn)
+// device is what the source ATTRIBUTES its input to, so the help copy
+// can name the right buttons (see helpDevice)
+export function addInputSource(fn, device = 'touch') {
+  sources.add({ fn, device })
 }
 
 export function removeInputSource(fn) {
-  sources.delete(fn)
+  for (const s of sources) if (s.fn === fn) sources.delete(s)
+}
+
+// ---- which device the player is actually USING (human 2026-08-31) ----
+//
+// On-screen help names buttons, so it has to know what is in their
+// hands. The rule is the human's: a KEYBOARD-plus-controller mix shows
+// CONTROLLER instructions. So keyboard is only ever the fallback — once
+// a richer device has been used, it keeps the copy, even if the player
+// goes back to the keys. Between pad and touch, the most recent wins;
+// both are "richer", so recency is the only sensible tiebreak.
+//
+// Tracks USE, not availability: a controller sitting connected and
+// untouched must not relabel a keyboard player's help.
+//
+// Session-scoped, deliberately. A booth machine should not describe a
+// controller to the next stranger because the last player brought one.
+let usedDevice = null // 'pad' | 'touch' | null
+let usedKeyboard = false
+
+function markUsed(device) {
+  if (device === 'keyboard') usedKeyboard = true
+  else usedDevice = device
+}
+
+export function helpDevice() {
+  return usedDevice ?? 'keyboard'
+}
+
+// for tests and the dev report
+export function inputUsage() {
+  return { usedDevice, usedKeyboard, helpDevice: helpDevice() }
 }
 
 // Non-standard pads often expose the d-pad as a HAT: one axis holding a
@@ -110,16 +143,23 @@ function readPad(pad, down) {
 function poll() {
   state.prev = state.down
   const down = new Set()
-  for (const source of sources) source(down)
+  for (const source of sources) {
+    const before = down.size
+    source.fn(down)
+    if (down.size > before) markUsed(source.device)
+  }
   const pads = navigator.getGamepads ? navigator.getGamepads() : []
   let count = 0
+  const sizeBeforePads = down.size
   // OR across every connected pad: a booth may well have two plugged in
   for (const pad of pads) {
     if (!pad || !pad.connected) continue
     count++
     readPad(pad, down)
   }
+  const padDownCount = down.size - sizeBeforePads
   state.pads = count
+  if (padDownCount > 0) markUsed('pad')
   state.down = down
   // fresh edges for this frame, consumed by the first reader
   state.edges = new Set([...down].filter((a) => !state.prev.has(a)))
@@ -130,6 +170,10 @@ function poll() {
 }
 
 export function initDeviceInput(game) {
+  // keyboard never flows through this module — the scenes read Phaser
+  // keys directly — so its USE is observed at the DOM instead
+  window.addEventListener('keydown', () => markUsed('keyboard'), { passive: true })
+
   // prestep, so every scene's update() in this frame sees the same
   // snapshot — polling per scene would let the first scene's read race
   // the second's.
