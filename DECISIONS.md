@@ -5748,3 +5748,13 @@ two thumbs steer and tag at once.
 
 STILL the real test: another pass on the actual phone. Emulation cannot
 say whether 56px suits a thumb any better than 42px did.
+
+2026-08-31 — Touch controls ACCEPTED (real-device playtest)
+------------------------------------------------------------
+Human played the floating stick and the 56px action targets on an
+actual phone: "that plays pretty well." The acceptance test left open
+by the 2026-08-30 entries is closed — the stick placement, the deadzone
+and the target size all stand as shipped, unchanged.
+
+Recording it because those entries end with "emulation cannot say
+whether 56px suits a thumb". Now it has been felt, and it does.
