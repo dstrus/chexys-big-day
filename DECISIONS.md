@@ -5711,3 +5711,40 @@ STILL UNTESTED, and it is the real acceptance test: an actual phone.
 Emulation gets the plumbing right but says nothing about whether a
 42px target suits a thumb, whether the controls sit where hands
 naturally rest, or what the game feels like at 60fps on a handset.
+
+2026-08-30 — Touch: floating stick, and bigger action targets
+---------------------------------------------------------------
+First real-device playtest. Human: switch to the floating stick, and
+"the action buttons are pretty easy to miss... they need to be larger
+targets." Both are the same complaint — fixed targets you have to find.
+
+- MOVEMENT is now a floating stick. It springs up wherever the left
+  thumb lands (anywhere left of x216 that is not a button) and holds
+  that pointer until it lifts, so the thumb can wander outside the zone
+  mid-swipe without losing steering. There is nothing to miss.
+- Output stays BINARY past a 7px deadzone. This was the argument
+  AGAINST the stick when the layout was chosen — Chexy has one speed,
+  so an analogue axis expresses input the game cannot use. That
+  argument was about the axis, not about placement, and it still holds:
+  the stick is here to be unmissable, not to be analogue.
+- A faint ghost marks the resting place. A stick invisible until
+  touched is undiscoverable — a player would have to already know it
+  is there. First pass drew it at 0.08 alpha, which was invisible in a
+  real frame; 0.11 after looking.
+- ACTION TARGETS 42px -> 56px across (radius 21 -> 28), about 12mm of
+  glass at the ~1.44 zoom a handset runs, measured at 81 CSS px. The
+  verbs moved to ONE bottom row (DASH, TAG, JUMP): stacking three at
+  the new size climbed into the play area.
+
+The old ◀ ▶ pads are gone from the play layout entirely. The MENU
+layout keeps its discrete cursor — a stick would need repeat-scroll
+behaviour to drive a list, and nobody reported missing those.
+
+Verified 28/28 on the emulated handset, including the cases that only
+matter for a stick: a thumb resting on it does not move her, dragging
+past the deadzone each way steers, returning inside it stops her, it
+springs up at an arbitrary point (150,120) and steers from there, and
+two thumbs steer and tag at once.
+
+STILL the real test: another pass on the actual phone. Emulation cannot
+say whether 56px suits a thumb any better than 42px did.

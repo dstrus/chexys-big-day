@@ -86,16 +86,24 @@ first action falls back to RETRY and the prompt says so.
 **Touch controls** (added 2026-08-30; "Mobile/touch controls"
 was the last input item on CLAUDE.md's hard-NO list and the human
 struck it). On-screen controls appear only on touch devices
-(coarse pointer or a positive maxTouchPoints): discrete ◀ ▶ under
-the left thumb, TAG/JUMP/DASH under the right, and a pause button
-clear of the HUD. DASH is hidden until it is actually available,
-so the first shift never shows a dead button. A second layout —
-cursor plus OK/BACK — covers the title, roster, briefings, pause
-and results, so a phone never needs a keyboard. Discrete pads
-rather than a virtual stick: Chexy only moves at full speed, so
-an analogue axis would add a deadzone for input the game cannot
-express. Multi-touch is required (move while tagging), and a
-thumb sliding from ◀ to ▶ changes direction without lifting.
+(coarse pointer or a positive maxTouchPoints): a FLOATING STICK
+under the left thumb, TAG/JUMP/DASH under the right, and a pause
+button clear of the HUD. DASH is hidden until it is actually
+available, so the first shift never shows a dead button. A second
+layout — cursor plus OK/BACK — covers the title, roster,
+briefings, pause and results, so a phone never needs a keyboard.
+Multi-touch is required: steering and tagging at once.
+
+The stick springs up wherever the left thumb lands (anywhere left
+of x216) and holds that finger until it lifts, so there is
+nothing to miss — it replaced fixed ◀ ▶ pads after a real-device
+playtest found them missable (2026-08-30). Its output is still
+BINARY past a 7px deadzone, since Chexy has one speed: the stick
+is there to be unmissable, not to be analogue. A faint ghost
+marks its resting place, because a control that is invisible
+until touched cannot be discovered. Action targets are 56px
+across (28px radius) — roughly 12mm of glass at the ~1.44 zoom a
+handset runs — raised from 42px in the same playtest.
 
 **Scaling on touch is FRACTIONAL** — the one amendment to §5's
 integer-scaling law, and desktop is unaffected. 480×270 needs
