@@ -169,7 +169,7 @@ export default class LevelSelectScene extends Phaser.Scene {
       this.padHint = pad
       this.hint.setText(
         pad
-          ? 'D-PAD SHIFT · ←→ MODE · (A) START · (B) TITLE'
+          ? 'D-PAD SELECT SHIFT · ←→ MODE · (A) START · (B) TITLE'
           : '↑↓ SHIFT · ←→ MODE · ENTER START · ESC TITLE'
       )
     }

@@ -31,17 +31,17 @@ export const BRIEFINGS = {
       {
         sprites: [{ key: ['chexy-idle', 'chexy-atlas'] }],
         text: {
-          keyboard: 'ARROWS run · UP or SPACE jumps',
-          pad: 'STICK or D-PAD runs · (A) jumps',
-          touch: 'The STICK runs · JUMP jumps',
+          keyboard: 'ARROWS run. UP or SPACE jumps',
+          pad: 'STICK or D-PAD runs. (A) jumps',
+          touch: 'The STICK runs. JUMP jumps',
         },
       },
       {
         sprites: [{ key: 'coats', frame: 0 }, { key: 'coats', frame: 1 }],
         text: {
-          keyboard: 'Z or J tags the nearest item . No paper needed!',
-          pad: '(X) tags the nearest item . No paper needed!',
-          touch: 'TAG tags the nearest item . No paper needed!',
+          keyboard: 'Z or J tags the nearest item. No paper needed!',
+          pad: '(X) tags the nearest item. No paper needed!',
+          touch: 'TAG tags the nearest item. No paper needed!',
         },
       },
       {
