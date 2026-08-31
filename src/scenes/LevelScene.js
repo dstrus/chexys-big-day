@@ -314,6 +314,25 @@ export default class LevelScene extends Phaser.Scene {
     // No modal, no pause; the unlock is immediate and persists for all
     // subsequent levels (DESIGN.md §3.2). Driven by the dashUnlockBeat
     // map property so later levels never re-run it.
+    // A level that DECLARES dash must PROVIDE it, whatever route the
+    // player took to reach it. DESIGN §3.2 fixes each level's ability
+    // set precisely so scores, hangers and fairness certification stay
+    // comparable across runs — and the (c) traversal model reads
+    // isDashAvailable(), so a route-dependent dash would make the
+    // Garage's own certification route-dependent too. With shifts 1-3
+    // open from the start (2026-08-31) the Garage is reachable without
+    // the Bell Desk beat, and its dash gaps are load-bearing.
+    //
+    // The Bell Desk is excluded: its beat is the unlock, and it owns the
+    // bubble that teaches it.
+    if (
+      this.levelProps.dashAllowed === true &&
+      !this.levelProps.dashUnlockBeat &&
+      !isDashUnlocked()
+    ) {
+      unlockDash()
+    }
+
     this.dashConfirmPending = false
     if (this.levelProps.dashUnlockBeat) {
       unlockDash()

@@ -367,6 +367,16 @@ them before the rush timer runs out. Teaches: move, jump, tag,
 scoring.
 **New mechanic:** none (tutorial).
 
+### 3.0 Progression
+Shifts 1-3 (Coatroom, Bell Desk, Garage) are OPEN FROM THE
+START (ruled 2026-08-31, superseding BRIEF-03's "Bell Desk opens
+after a Coatroom clear"). The finished levels are the ones anyone
+should be able to reach; gating them behind clears mostly punished
+a returning player whose localStorage had been cleared. Shifts 4-5
+remain gated behind a clear of the one before, and are still
+unbuilt. Golden hangers and best scores are unaffected — they were
+always records, never keys (§2.5).
+
 ### 3.2 Level 2 — The Bell Desk
 Boutique hotel lobby. Luggage in three weight tiers; heavy bags need
 a charged (held) tag per §2.3. **New mechanic:** weight tiers +
@@ -375,7 +385,11 @@ Dash is locked out during an active hold (tunable dashCancelsHold,
 default false). Dash unlocks via the Bell Desk scripted beat and is
 available in levels that declare it (dashAllowed map
 property — Bell Desk onward; every post-Bell-Desk map must
-declare it). Earlier levels remain dashless even on replay:
+declare it). Since shifts 1-3 are open from the start
+(§3.0), a declaring level GRANTS dash on entry if the beat
+was never seen: the ability set below is fixed per level, so
+it cannot depend on the route taken there — and the Garage's
+own fairness certification reads it. Earlier levels remain dashless even on replay:
 each level's ability set is fixed so its scores, hangers,
 and fairness certification stay comparable across all runs.
 (Ruled 2026-08-04, superseding the ambiguous 'persists for

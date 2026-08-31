@@ -5808,3 +5808,34 @@ retry the launch — a launch landing mid-transition gets stopped again.
 Two of my first failures were that, not the code. Also: test-briefing
 .mjs no longer exists in the scratchpad, so "briefings" is covered by
 the new suite rather than the old one.
+
+2026-08-31 — Shifts 1-3 open from the start
+---------------------------------------------
+Human: unlock levels 1, 2 and 3 from the start. Supersedes BRIEF-03's
+"Bell Desk opens after a Coatroom clear". Shifts 4-5 stay gated behind a
+clear of the one before — they are still unbuilt, so their "???" slots
+are honest. Recorded as DESIGN §3.0, which did not exist before; there
+was no written progression rule to amend, only the roster's data.
+
+THE CONSEQUENCE, which mattered more than the change itself: dash is
+granted by the Bell Desk's scripted beat, and the Garage's dash gaps
+are load-bearing (the roof routes are not optional — 2026-08-10
+ruling). Opening shift 3 directly would have handed a new player a
+level they could not clear, and the ruling gives no instruction about
+it, so it needed deciding rather than transcribing.
+
+DESIGN §3.2 already settled it: "each level's ability set is fixed so
+its scores, hangers, and fairness certification stay comparable across
+all runs." A level that DECLARES dashAllowed therefore grants dash on
+entry when the beat was never seen — otherwise the Garage's ability set
+would depend on the route taken to it, and so would its (c) fairness
+certification, which reads isDashAvailable() to model traversal. The
+Bell Desk is excluded from the grant: its beat IS the unlock and it
+owns the bubble that teaches the verb.
+
+Verified 14/14 against EMPTY progress: the roster opens 1-3 by name and
+still shows 4-5 as "???", a new player has no dash, the Coatroom stays
+dashless (it declares nothing), entering the Garage cold grants dash
+and records it, the fairness model sees the same dash the player has,
+and after a reset the Bell Desk still unlocks via its own beat with the
+teaching bubble pending.
